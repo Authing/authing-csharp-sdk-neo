@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net40</TargetFramework>
+    <RootNamespace>Authing.ApiClient</RootNamespace>
+    <LangVersion>8</LangVersion>
+    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authing.ApiClient.Core\Authing.ApiClient.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+  </ItemGroup>
+
+</Project>

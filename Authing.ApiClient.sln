@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Netstandard20", "Authing.ApiClient.Netstandard20\Authing.ApiClient.Netstandard20.csproj", "{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Core", "Authing.ApiClient.Core\Authing.ApiClient.Core.csproj", "{6C36F6BC-E4BF-4A09-9A6C-5C7BAD459C45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Framework", "Authing.ApiClient.Framework\Authing.ApiClient.Framework.csproj", "{04794E1B-2566-4A25-BDE0-664896750B81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Netstandard20.Test", "Test\Authing.ApiClient.Netstandard20.Test\Authing.ApiClient.Netstandard20.Test.csproj", "{0BF2034C-088A-45D3-9708-3D9F4DD9242F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Framework.Test", "Test\Authing.ApiClient.Framework.Test\Authing.ApiClient.Framework.Test.csproj", "{EFFE944D-D59F-4327-9B88-752323F4E364}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C36F6BC-E4BF-4A09-9A6C-5C7BAD459C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C36F6BC-E4BF-4A09-9A6C-5C7BAD459C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C36F6BC-E4BF-4A09-9A6C-5C7BAD459C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C36F6BC-E4BF-4A09-9A6C-5C7BAD459C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04794E1B-2566-4A25-BDE0-664896750B81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04794E1B-2566-4A25-BDE0-664896750B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04794E1B-2566-4A25-BDE0-664896750B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04794E1B-2566-4A25-BDE0-664896750B81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFFE944D-D59F-4327-9B88-752323F4E364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFFE944D-D59F-4327-9B88-752323F4E364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFFE944D-D59F-4327-9B88-752323F4E364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFFE944D-D59F-4327-9B88-752323F4E364}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
