@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Netstanda
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Framework.Test", "Test\Authing.ApiClient.Framework.Test\Authing.ApiClient.Framework.Test.csproj", "{EFFE944D-D59F-4327-9B88-752323F4E364}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient", "Authing.ApiClient\Authing.ApiClient.csproj", "{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{EFFE944D-D59F-4327-9B88-752323F4E364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFFE944D-D59F-4327-9B88-752323F4E364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFFE944D-D59F-4327-9B88-752323F4E364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

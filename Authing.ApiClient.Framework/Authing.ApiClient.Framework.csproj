@@ -4,6 +4,7 @@
     <RootNamespace>Authing.ApiClient</RootNamespace>
     <LangVersion>8</LangVersion>
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

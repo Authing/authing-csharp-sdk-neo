@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Authing.ApiClient.Framework\Authing.ApiClient.Framework.csproj" />
+    <ProjectReference Include="..\..\Authing.ApiClient\Authing.ApiClient.csproj" />
   </ItemGroup>
 
 </Project>

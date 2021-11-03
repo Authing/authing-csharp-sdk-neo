@@ -1,4 +1,4 @@
-﻿using Authing.ApiClient.Mgmt;
+﻿using Authing.ApiClient.Domain.Client;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.SDKInit
