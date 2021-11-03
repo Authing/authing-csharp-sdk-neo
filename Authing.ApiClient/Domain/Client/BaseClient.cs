@@ -126,6 +126,11 @@ GKl64GDcIq3au+aqJQIDAQAB
                 headers["Authorization"] = token;
             }
 
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-app-id"] = AppId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+
             var bodyString = preprocessedRequest.ToHttpRequestBody();
 
             return await client.SendRequest<string, TResponse>(GraphQLEndpoint, "Post", bodyString, headers);
