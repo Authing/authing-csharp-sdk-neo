@@ -1,17 +1,18 @@
 ﻿using Authing.ApiClient.Mgmt;
+using Authing.ApiClient.Test.Base;
 using Xunit;
 
 namespace Authing.ApiClient.Netstandard20.Test.Users
 {
-    public class get_user_detail
+    public class get_user_detail : TestBase
     {
         [Fact]
         public async void should_get_user_detail_correct()
         {
             var client =
-                await ManagementClient.InitManagementClient("61797ac183d49f46bcd3574a",
-                    "c9dbab9f4dd0547768a58c5c8a5a83ea");
-            var user = await client.Users.Detail("61797b1465176060e42f6d01", true);
+                await ManagementClient.InitManagementClient(UserPoolId,
+                    Secret);
+            var user = await client.Users.Detail(TestUserId, true);
             Assert.NotNull(user);
             Assert.Equal("16666667777", user.Phone);
         }

@@ -1,14 +1,15 @@
 ﻿using Authing.ApiClient.Domain.Client;
+using Authing.ApiClient.Test.Base;
 using Xunit;
 
 namespace Authing.ApiClient.Netstandard20_up.Test.SDKInit
 {
-    public class Class1
+    public class Class1 : TestBase
     {
         [Fact]
         public async void should_init_authing_sdk_with_userpool_and_secret()
         {
-            var client = await ManagementClient.InitManagementClient("61797ac183d49f46bcd3574a", "c9dbab9f4dd0547768a58c5c8a5a83ea");
+            var client = await ManagementClient.InitManagementClient(UserPoolId, Secret);
             Assert.NotEmpty(client.AccessToken); 
             Assert.NotNull(client.Users);
         }
@@ -18,8 +19,8 @@ namespace Authing.ApiClient.Netstandard20_up.Test.SDKInit
         {
             var client = await ManagementClient.InitManagementClient(init: opt =>
             {
-                opt.UserPoolId = "61797ac183d49f46bcd3574a";
-                opt.Secret = "c9dbab9f4dd0547768a58c5c8a5a83ea";
+                opt.UserPoolId = UserPoolId;
+                opt.Secret = Secret;
             });
             Assert.NotEmpty(client.AccessToken); 
             Assert.NotNull(client.Users);

@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient", "Authin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Netstandard20-up.Test", "Test\Authing.ApiClient.Netstandard20-up.Test\Authing.ApiClient.Netstandard20-up.Test.csproj", "{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Test.Base", "Test\Authing.ApiClient.Test.Base\Authing.ApiClient.Test.Base.csproj", "{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
