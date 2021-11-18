@@ -1,4 +1,5 @@
-﻿using Authing.ApiClient.Auth;
+﻿using System;
+using Authing.ApiClient.Auth;
 using Authing.ApiClient.Auth.Types;
 using Authing.ApiClient.Test.Base;
 using Authing.ApiClient.Types;
@@ -11,13 +12,18 @@ namespace Authing.ApiClient.Netstandard20.Test.Authentication.Users
         [Fact]
         public async void should_register_user_by_email()
         {
-            RegisterProfile profile = null;
-            RegisterAndLoginOptions registerAndLoginOptions = null;
             var authenticationClient = new AuthenticationClient(
-                opt => { opt.AppId = AppId; }
+                opt =>
+                {
+                    opt.AppId = AppId;
+                    opt.Host = Host;
+                }
             );
-            var res = await authenticationClient.RegisterByEmail("test@test.com", "123456", profile, registerAndLoginOptions);
+            var email = "test" + new Random().Next(100000, 999999) + "@test.com";
+            var res = await authenticationClient.RegisterByEmail(email, "123456", null,
+                null);
             Assert.NotNull(res);
+            Assert.Equal(email, res.Email);
         }
     }
 }

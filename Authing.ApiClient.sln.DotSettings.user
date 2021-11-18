@@ -26,10 +26,10 @@
     &lt;TestId&gt;xUnit::0BF2034C-088A-45D3-9708-3D9F4DD9242F::.NETCoreApp,Version=v2.1::Authing.ApiClient.Netstandard20.Test.SDKInit.Class1.should_init_authing_sdk_with_userpool_and_secret&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb96fcd7_002D4c8a_002D4cb7_002D9057_002Df90ad31ab97d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="should_init_authing_sdk_with_userpool_and_secret #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb96fcd7_002D4c8a_002D4cb7_002D9057_002Df90ad31ab97d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="should_init_authing_sdk_with_userpool_and_secret #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb9fd219_002D1d9f_002D401c_002D8625_002D05017ac102d4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="should_init_authing_sdk_with_userpool_and_secret" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fb9fd219_002D1d9f_002D401c_002D8625_002D05017ac102d4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="should_init_authing_sdk_with_userpool_and_secret" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=userpool/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

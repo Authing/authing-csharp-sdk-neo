@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Client.Impl.Client;
 using Authing.ApiClient.Domain.Exceptions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 
-namespace Authing.ApiClient.Domain.Client
+namespace Authing.ApiClient.Domain.Client.Impl.Client
 {
     public abstract class BaseClient
     {
@@ -21,7 +20,13 @@ namespace Authing.ApiClient.Domain.Client
         /// <summary>
         /// Authing 接口 URL，默认为 https://core.authing.cn
         /// </summary>
+#if TEST_ENV
+        public string Host { get; set; } = "https://core.test.authing-inc.co";
+#elif DEV_ENV
+        public string Host { get; set; } = "https://core.dev.authing-inc.co";
+#else
         public string Host { get; set; } = "https://core.authing.cn";
+#endif
 
         protected string GraphQLEndpoint
         {

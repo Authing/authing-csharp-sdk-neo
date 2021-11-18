@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Authing.ApiClient.Netstandard20_up.Test</RootNamespace>
+    <DefineConstants>TEST_ENV</DefineConstants>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>

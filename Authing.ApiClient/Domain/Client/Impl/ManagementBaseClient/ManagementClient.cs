@@ -7,23 +7,24 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
     public partial class ManagementClient : BaseManagementClient
     {
         public Action<InitAuthenticationClientOptions> Init { get; }
-        private ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
+        public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {
         }
 
-        private ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
+        public ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
         {
             if (init is null)
             {
                 throw new ArgumentNullException(nameof(init));
             }
+            Users = new ManagementClient.UsersManagementClient(this);
             Init = init;
         }
 
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)
         {
             var manageClient = new ManagementClient(userPoolId, secret);
-            manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
+            manageClient.Users = new UsersManagementClient(manageClient);
             await manageClient.GetAccessToken();
             return manageClient;
         }

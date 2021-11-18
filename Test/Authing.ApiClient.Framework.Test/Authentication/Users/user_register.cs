@@ -1,19 +1,18 @@
-﻿using Authing.ApiClient.Domain.Client.Impl.AuthenticationClient;
-using Authing.ApiClient.Test.Base;
+﻿using System;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication.Users
 {
-    public class user_register : TestBase
+    public class user_register : BaseTest
     {
         [Fact]
         public async void should_register_user_by_email()
         {
-            var authenticationClient = new AuthenticationClient(
-                opt => { opt.AppId = AppId; }
-            );
-            // authenticationClient.RegisterByEmail(string email, string password, RegisterProfile profile = null,
-            //     RegisterAndLoginOptions options = null)
+            // var email = new Random().Next(100000, 999999) + "test@test.com";
+            // var res = await authenticationClient.RegisterByEmail(email + "test@test.com", "123456", null,
+            //     null);
+            // Assert.NotNull(res);
+            // Assert.Equal(email, res.Email);
         }
     }
 }
