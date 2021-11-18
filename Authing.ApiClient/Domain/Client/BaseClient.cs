@@ -110,7 +110,13 @@ GKl64GDcIq3au+aqJQIDAQAB
         }
 
 
-        protected async Task<TResponse> Post<TResponse>(GraphQLRequest body)
+        protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
+        {
+            var defaultOption = new RequestOption();
+            return await Post<GraphQLResponse<TResponse>>(body, defaultOption);
+        }
+        
+        protected async Task<TResponse> PostGraphQLRequestButReturnNotGraphQLResponse<TResponse>(GraphQLRequest body)
         {
             var defaultOption = new RequestOption();
             return await Post<TResponse>(body, defaultOption);

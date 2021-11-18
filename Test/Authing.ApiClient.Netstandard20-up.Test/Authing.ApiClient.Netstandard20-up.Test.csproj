@@ -20,4 +20,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Authing.ApiClient\Authing.ApiClient.csproj" />
+  </ItemGroup>
+
 </Project>

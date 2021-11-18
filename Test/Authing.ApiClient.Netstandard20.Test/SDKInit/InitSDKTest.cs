@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net.Http;
+using Authing.ApiClient.Auth;
 using Authing.ApiClient.Mgmt;
 using Xunit;
 
@@ -43,6 +43,22 @@ namespace Authing.ApiClient.Netstandard20.Test.SDKInit
             Assert.NotNull(client.Userpool);
             Assert.NotNull(client.Policies);
 
+        }
+        
+        [Fact]
+        public async void should_init_authing_authentication_sdk_with_init_option()
+        {
+            var authenticationClient = new AuthenticationClient(
+                opt =>
+                {
+                    opt.AppId = "61797ac1a82627891342af49";
+                }
+            );
+            var res = await authenticationClient.CheckLoginStatus();
+            Assert.Equal(2206, res.Code);
+            Assert.Equal(false, res.Status);
+            Assert.Equal("登录信息已过期", res.Message);
+            // authenticationClient.RegisterByEmail(string email, string password, RegisterProfile profile = null, RegisterAndLoginOptions options = null)
         }
         
     }
