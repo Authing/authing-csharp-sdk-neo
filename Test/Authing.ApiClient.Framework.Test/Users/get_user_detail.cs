@@ -1,4 +1,4 @@
-﻿using Authing.ApiClient.Domain.Client;
+﻿using Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient;
 using Authing.ApiClient.Test.Base;
 using Xunit;
 

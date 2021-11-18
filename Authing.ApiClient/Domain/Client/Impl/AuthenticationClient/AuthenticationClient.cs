@@ -1,27 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Exceptions;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
-using Newtonsoft.Json;
 
-namespace Authing.ApiClient.Domain.Client
+namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
     /// <summary>
     /// Authing 认证客户端类
     /// </summary>
-    public partial class AuthenticationClient : BaseClient
+    public class AuthenticationClient : BaseAuthenticationClient
     {
-        [Obsolete("建议使用委托完成初始化")]
+        
+
         /// <summary>
-        /// 通过用户池 ID 初始化
+        /// 通过应用 ID 初始化
         /// </summary>
-        /// <param name="userPoolId">用户池 ID，可以在控制台获取</param>
-        public AuthenticationClient(string userPoolId, string secret) : base(userPoolId, secret)
+        /// <param name="appId">应用 ID</param>
+        public AuthenticationClient(string appId): base(appId)
         {
         }
 
@@ -35,16 +33,14 @@ namespace Authing.ApiClient.Domain.Client
 
         private User User
         {
-            get
-            {
-                return user;
-            }
+            get => user;
             set
             {
                 user = value;
                 AccessToken = value?.Token ?? AccessToken;
             }
         }
+
         private User user;
 
         /// <summary>
@@ -57,6 +53,7 @@ namespace Authing.ApiClient.Domain.Client
             {
                 return user.Id;
             }
+
             if (string.IsNullOrEmpty(AccessToken))
             {
                 throw new Exception("请先登录!");
@@ -67,6 +64,7 @@ namespace Authing.ApiClient.Domain.Client
             {
                 throw new Exception("不合法的 accessToken");
             }
+
             return "userId";
         }
 
@@ -102,8 +100,25 @@ namespace Authing.ApiClient.Domain.Client
             CancellationToken cancellationToken = default)
         {
             var param = new UserParam();
-            var res = await Post<UserResponse>(param.CreateRequest());
+            var res = await Post<GraphQLResponse<UserResponse>>(param.CreateRequest());
             user = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 检查登录状态
+        /// </summary>
+        /// <param name="accessToken">用户的 access token</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>JWTTokenStatus</returns>
+        public async Task<JWTTokenStatus> CheckLoginStatus(
+            string accessToken = null)
+        {
+            var param = new CheckLoginStatusParam()
+            {
+                Token = accessToken
+            };
+            var res = await Post<GraphQLResponse<CheckLoginStatusResponse>>(param.CreateRequest());
             return res.Data.Result;
         }
     }

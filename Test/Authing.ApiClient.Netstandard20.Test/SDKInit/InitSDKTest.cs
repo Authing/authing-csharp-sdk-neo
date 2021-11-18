@@ -53,7 +53,6 @@ namespace Authing.ApiClient.Netstandard20.Test.SDKInit
             Assert.Equal(2206, res.Code);
             Assert.Equal(false, res.Status);
             Assert.Equal("登录信息已过期", res.Message);
-            // authenticationClient.RegisterByEmail(string email, string password, RegisterProfile profile = null, RegisterAndLoginOptions options = null)
         }
     }
 }

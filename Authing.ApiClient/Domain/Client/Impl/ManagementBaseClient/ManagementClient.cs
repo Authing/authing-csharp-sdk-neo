@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Authing.ApiClient.Types;
 
-namespace Authing.ApiClient.Domain.Client
+namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
-    public partial class ManagementClient : BaseClient
+    public partial class ManagementClient : BaseManagementClient
     {
         public Action<InitAuthenticationClientOptions> Init { get; }
         private ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
@@ -23,7 +23,7 @@ namespace Authing.ApiClient.Domain.Client
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)
         {
             var manageClient = new ManagementClient(userPoolId, secret);
-            manageClient.Users = new UsersManagementClient(manageClient);
+            manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
             await manageClient.GetAccessToken();
             return manageClient;
         }
@@ -33,7 +33,7 @@ namespace Authing.ApiClient.Domain.Client
         {
             var manageClient = new ManagementClient(init);
             await manageClient.GetAccessToken();
-            manageClient.Users = new UsersManagementClient(manageClient);
+            manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
             return manageClient;
         }
     }
