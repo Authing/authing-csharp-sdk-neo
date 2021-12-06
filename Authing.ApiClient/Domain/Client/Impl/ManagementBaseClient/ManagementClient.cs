@@ -1,11 +1,15 @@
 using System;
 using System.Threading.Tasks;
+using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
     public partial class ManagementClient : BaseManagementClient
     {
+
+        public IManagementClientUdf Udf { get; private set; }
+
         public Action<InitAuthenticationClientOptions> Init { get; }
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {
@@ -18,6 +22,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 throw new ArgumentNullException(nameof(init));
             }
             Users = new ManagementClient.UsersManagementClient(this);
+            Udf = new UdfManagementClient(this);
             Init = init;
         }
 
@@ -25,6 +30,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var manageClient = new ManagementClient(userPoolId, secret);
             manageClient.Users = new UsersManagementClient(manageClient);
+            manageClient.Udf = new UdfManagementClient(manageClient);
             await manageClient.GetAccessToken();
             return manageClient;
         }
@@ -35,6 +41,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var manageClient = new ManagementClient(init);
             await manageClient.GetAccessToken();
             manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
+            manageClient.Udf = new UdfManagementClient(manageClient);
             return manageClient;
         }
     }

@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Authing.ApiClient.Core.Model;
+using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Types;
 using JWT.Algorithms;
 using JWT.Builder;
+using Newtonsoft.Json;
 
 namespace Authing.ApiClient.Domain.Utils
 {
@@ -22,6 +25,34 @@ namespace Authing.ApiClient.Domain.Utils
                 .Decode<IDictionary<string, object>>(token);                    
             Console.WriteLine(json);
             return json;
+        }
+
+        public static IEnumerable<ResUdv> ConvertUdv(IEnumerable<UserDefinedData> udvList)
+        {
+            var resUdvList = new List<ResUdv>();
+            foreach (var udv in udvList)
+            {
+                object value = udv.DataType switch
+                {
+                    UdfDataType.STRING => udv.Value,
+                    UdfDataType.NUMBER => int.Parse(udv.Value),
+                    UdfDataType.DATETIME => new DateTime(int.Parse(udv.Value), DateTimeKind.Utc),
+                    UdfDataType.BOOLEAN => JsonConvert.DeserializeObject<bool>(udv.Value),
+                    UdfDataType.OBJECT
+                        => JsonConvert.DeserializeObject<object>(udv.Value),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                resUdvList.Add(new ResUdv()
+                {
+                    DataType = udv.DataType,
+                    Key = udv.Key,
+                    Value = value,
+                    Label = udv.Label,
+                });
+            }
+
+            return resUdvList;
         }
     }
 }
