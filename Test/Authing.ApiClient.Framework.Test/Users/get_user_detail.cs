@@ -10,7 +10,7 @@ namespace Authing.ApiClient.Framework.Test.Users
             var client = managementClient;
             var user = await client.Users.Detail(TestUserId);
             Assert.NotNull(user);
-            Assert.Equal("16666667777", user.Phone);
+            Assert.Equal("17620671314", user.Phone);
         }
     }
 }

@@ -75,6 +75,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Post<TResponse>(body, headers);
         }
 
+        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
+        {
+            var headers = new Dictionary<string, string>();
+            var token = await GetAccessToken();
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await Request<TResponse>(body, headers);
+        }
+
         protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
@@ -88,8 +99,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             return new
             {
-                x_authing_userpool_id =
-                    UserPoolId,
+                x_authing_userpool_id = UserPoolId,
                 x_authing_request_from = type,
                 x_authing_sdk_version = version,
             };

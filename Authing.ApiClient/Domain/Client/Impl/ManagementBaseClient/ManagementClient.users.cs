@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Infrastructure.GraphQL;
 
@@ -14,7 +16,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 this.client = client;
             }
-            
+
             public async Task<User> Detail(
                 string userId,
                 bool withCustomData = false)
@@ -33,7 +35,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return res.Data.Result;
             }
         }
-        
-       
     }
+
 }

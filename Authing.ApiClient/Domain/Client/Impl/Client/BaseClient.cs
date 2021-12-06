@@ -48,7 +48,7 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         protected BaseClient()
         {
-            this.client = AuthingClient.Of();
+            this.client = AuthingClient.CreateAhtingClient();
         }
 
         public async Task<TResponse> Post<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)
@@ -60,8 +60,19 @@ GKl64GDcIq3au+aqJQIDAQAB
         {
             var preprocessedRequest = new GraphQLHttpRequest(body);
             var bodyString = preprocessedRequest.ToHttpRequestBody();
-            return await client.SendRequest<string, TResponse>(GraphQLEndpoint, "Post", bodyString,
+            var result = await client.SendRequest<string, TResponse>(GraphQLEndpoint, "Post", bodyString,
                 headers ?? new Dictionary<string, string>());
+            return result;
+        }
+
+        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, Dictionary<string, string> headers)
+        {
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            var bodyString = preprocessedRequest.ToHttpRequestBody();
+            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(GraphQLEndpoint, "Post", bodyString,
+                headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
         }
 
         public async Task<TResponse> Get<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)

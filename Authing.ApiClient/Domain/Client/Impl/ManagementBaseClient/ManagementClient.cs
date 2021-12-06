@@ -13,18 +13,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
         {
-            if (init is null)
-            {
-                throw new ArgumentNullException(nameof(init));
-            }
             Users = new ManagementClient.UsersManagementClient(this);
-            Init = init;
+            Whitelist = new ManagementClient.WhitelistManagementClient(this);
+            Init = init ?? throw new ArgumentNullException(nameof(init));
         }
 
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)
         {
             var manageClient = new ManagementClient(userPoolId, secret);
             manageClient.Users = new UsersManagementClient(manageClient);
+            manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             await manageClient.GetAccessToken();
             return manageClient;
         }
@@ -35,6 +33,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var manageClient = new ManagementClient(init);
             await manageClient.GetAccessToken();
             manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
+            manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             return manageClient;
         }
     }
