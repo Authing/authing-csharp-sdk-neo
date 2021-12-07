@@ -11,12 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Domain\Client\Impl\ManagementBaseClient\ManagementClient.userpool.cs" />
     <Compile Remove="Types\CodeGen.v2.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Interfaces" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
@@ -39,10 +34,6 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="Polly.Net40Async" Version="5.9.0" />
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Domain\Client\Impl\ManagementBaseClient\ManagementClient.userpool.cs" />
   </ItemGroup>
 
   <ItemGroup>

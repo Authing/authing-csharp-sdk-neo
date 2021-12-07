@@ -18,7 +18,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 分组管理类
         /// </summary>
-        public class GroupsManagementClient
+        public class GroupsManagementClient : IGroupsManagementClient
         {
             private readonly ManagementClient client;
 

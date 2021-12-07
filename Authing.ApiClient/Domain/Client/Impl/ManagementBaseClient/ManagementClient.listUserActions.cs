@@ -7,13 +7,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
     public partial class ManagementClient
     {
-        public UserpoolManagement Userpool { get; set; }
+        public StatisticsManagement Statistics { get; set; }
 
-        public class UserpoolManagement
+        public class StatisticsManagement
         {
             private readonly ManagementClient client;
 
-            public UserpoolManagement(ManagementClient client)
+            public StatisticsManagement(ManagementClient client)
             {
                 this.client = client;
             }

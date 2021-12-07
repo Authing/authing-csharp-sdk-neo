@@ -8,6 +8,7 @@ using Authing.ApiClient.Domain.Client.Impl.Client;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
 using Authing.ApiClient.Infrastructure.GraphQL;
+using Authing.ApiClient.Interfaces;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -21,7 +22,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 注册白名单管理类
         /// </summary>
-        public class WhitelistManagementClient
+        public class WhitelistManagementClient : IWhitelistManagementClient
         {
             private readonly ManagementClient client;
 
