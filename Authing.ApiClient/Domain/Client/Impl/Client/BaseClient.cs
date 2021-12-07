@@ -83,6 +83,11 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {
+            if(result.Data == null && result.Errors.Length == 0)
+            {
+                var error = result.Errors[0].Message;
+                throw new AuthingException("Server return data Null !");
+            }
             if (result.Errors != null && result.Errors.Length > 0)
             {
                 var error = result.Errors[0].Message;

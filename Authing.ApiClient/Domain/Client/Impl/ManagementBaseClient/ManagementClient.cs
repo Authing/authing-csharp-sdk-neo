@@ -7,14 +7,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
     public partial class ManagementClient : BaseManagementClient
     {
         public Action<InitAuthenticationClientOptions> Init { get; }
+
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {
+
         }
 
         public ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
         {
             Users = new ManagementClient.UsersManagementClient(this);
             Whitelist = new ManagementClient.WhitelistManagementClient(this);
+            Groups = new GroupsManagementClient(this);
             Init = init ?? throw new ArgumentNullException(nameof(init));
         }
 
@@ -23,6 +26,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var manageClient = new ManagementClient(userPoolId, secret);
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
+            manageClient.Groups = new GroupsManagementClient(manageClient);
             await manageClient.GetAccessToken();
             return manageClient;
         }
@@ -34,6 +38,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             await manageClient.GetAccessToken();
             manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
+            manageClient.Groups = new GroupsManagementClient(manageClient);
             return manageClient;
         }
     }
