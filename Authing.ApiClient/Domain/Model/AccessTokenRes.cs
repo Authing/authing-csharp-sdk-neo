@@ -4,7 +4,7 @@ namespace Authing.ApiClient.Domain.Model
 {
     public class AccessTokenRes
     {
-        #region members
+        #region members     
         [JsonProperty("accessToken")]
         public string AccessToken { get; set; }
 
