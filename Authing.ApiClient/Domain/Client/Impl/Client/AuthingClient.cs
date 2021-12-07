@@ -17,7 +17,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         {
             if (body is string s)
             {
-                return await SendRequest<TResponse>(url, s, headers);
+                return await SendRequest<TResponse>(url, s, headers, method);
             }
             else
             {
@@ -28,7 +28,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     {
                         NullValueHandling = NullValueHandling.Ignore
                     });
-                return await SendRequest<TResponse>(url, bodyStr, headers);
+                return await SendRequest<TResponse>(url, bodyStr, headers,method);
             }
         }
 
@@ -42,16 +42,31 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         }
 
         private async Task<TResponse> SendRequest<TResponse>(string url, string strContent,
-            Dictionary<string, string> headers)
+            Dictionary<string, string> headers,string method="post")
         {
             
             ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
-            
-            var message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+
+            HttpMethod httpMethod = method.ToLower() == "post" ? HttpMethod.Post : HttpMethod.Get;
+
+            HttpRequestMessage message = null;
+
+            if (httpMethod == HttpMethod.Get)
             {
-                Content = new StringContent(strContent, Encoding.UTF8, "application/json")
-            };
+                message = new HttpRequestMessage(httpMethod, new Uri(url))
+                {
+                    
+                };
+            }
+            else
+            {
+                message = new HttpRequestMessage(httpMethod, new Uri(url))
+                {
+                    Content = new StringContent(strContent, Encoding.UTF8, "application/json")
+                };
+            }
+             
 
             if (headers != null)
             {

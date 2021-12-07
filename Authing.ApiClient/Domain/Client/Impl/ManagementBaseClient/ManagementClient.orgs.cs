@@ -14,11 +14,11 @@ using Flurl.Http;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
-    public class ManagementClientOrgs : IManagementClientOrgs
+    public class OrgsManagementClient : IManagementClientOrgs
     {
         private ManagementClient client;
 
-        public ManagementClientOrgs(ManagementClient management)
+        public OrgsManagementClient(ManagementClient management)
         {
             client = management;
         }
@@ -35,7 +35,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<Org> AddNode(string orgId, AddNodeParam addNodeParam)
         {
-            var param = new AddNodeParam(orgId, addNodeParam.Name)
+            var param = new AddNodeParam(orgId,addNodeParam.ParentNodeId, addNodeParam.Name)
             {
                 ParentNodeId = addNodeParam.ParentNodeId,
                 Code = addNodeParam.Code,
@@ -76,8 +76,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<IEnumerable<Node>> ExportAll()
         {
-            var res = await client.Host.AppendPathSegment("api/v2/orgs/export").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<IEnumerable<Node>>();
-            return res;
+            string token = client.AccessToken;
+
+            //headers["Authorization"] = token;
+            //headers["x-authing-userpool-id"] = UserPoolId;
+            //headers["x-authing-request-from"] = type;
+            //headers["x-authing-sdk-version"] = version;
+
+            var res = await client.Host.AppendPathSegment("api/v2/orgs/export").WithAuthingHeader(client).GetJsonAsync();
+
+            await client.Get<GraphQLResponse<PaginatedOrgs>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest());
+
+           //var ss= Newtonsoft.Json.JsonConvert.DeserializeObject<GraphQLResponse<List<Org>>>(res);
+
+            //var res=await client.Post<GraphQLResponse<>>
+
+            return null;
         }
 
         public async Task<Node> ExportByOrgId(string orgId)
@@ -86,9 +100,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res;
         }
 
-        public async Task<Org> FindById(string id)
+        public async Task<Org> FindById(string orgId)
         {
-            var param = new OrgParam(id);
+            var param = new OrgParam(orgId);
             var res = await client.Post<GraphQLResponse<OrgResponse>>(param.CreateRequest());
             return res.Data.Result;
         }
@@ -96,13 +110,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Node> FindNodeById(string nodeId)
         {
             var param = new NodeByIdParam(nodeId);
-            var res = await client.Post<GraphQLResponse<NodeByCodeResponse>>(param.CreateRequest());
+            var res = await client.Post<GraphQLResponse<NodeByIdResponse>>(param.CreateRequest());
             return res.Data.Result;
         }
 
-        public Task<Org> ImportByJson(string json)
+        public async Task<Org> ImportByJson(string json)
         {
-            throw new NotImplementedException();
+            string token = client.AccessToken;
+
+          var result=await  @"http://core.authing.cn".AppendPathSegment($"api/v2/orgs/import").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(json).ReceiveString();
+
+            var res = await client.Host.AppendPathSegment($"api/v2/orgs/import").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(json).ReceiveString();
+            return null;
         }
 
         public async Task<bool?> IsRootNode(string orgId, string nodeId)
@@ -163,7 +182,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam)
+        public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam=default)
         {
             nodeByIdWithMembersParam.Id = nodeId;
             var res = await client.Post<GraphQLResponse<NodeByIdWithMembersResponse>>(nodeByIdWithMembersParam.CreateRequest());
@@ -178,10 +197,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> MoveNode(string orgId, string nodeId, string targetParentId)
+        public async Task<Org> MoveNode(string orgId, string nodeId, string targetParentId)
         {
             var param = new MoveNodeParam(orgId, nodeId, targetParentId);
-            var res = await client.Post<GraphQLResponse<MoveMembersResponse>>(param.CreateRequest());
+            var res = await client.Post<GraphQLResponse<MoveNodeResponse>>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -243,9 +262,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<Node> UpdateNode(string orgId, UpdateNodeParam updateNodeParam)
         {
-            updateNodeParam.Id = orgId;
             var res = await client.Post<GraphQLResponse<UpdateNodeResponse>>(updateNodeParam.CreateRequest());
             return res.Data.Result;
         }
     }
+
+    public static class FlurlAuthingExt
+    {
+        public static IFlurlRequest WithAuthingHeader(
+            this Url url, ManagementClient client)
+        {
+            return (IFlurlRequest)new FlurlRequest(url)
+                .WithHeader("Authorization", client.AccessToken)
+                .WithHeader("x-authing-userpool-id", client.UserPoolId)
+                .WithHeader("x-authing-request-from", "SDK")
+                .WithHeader("x-authing-sdk-version", "c-sharp:4.2.4.7");
+        }
+    }
+
 }

@@ -42,9 +42,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return await Post<TResponse>(body, GetAuthHeaders());
         }
 
+        protected async Task<TResponse> Post<TResponse>(string api, GraphQLRequest body)
+        {
+            return await Post<TResponse>(api, body, GetAuthHeaders());
+        }
+
         private Dictionary<string, string> GetAuthHeaders()
         {
-            return new Dictionary<string, string> {{"x_authing_app_id", AppId}};
+            return new Dictionary<string, string> { { "x_authing_app_id", AppId } };
         }
     }
 }

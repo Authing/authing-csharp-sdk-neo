@@ -64,8 +64,15 @@ namespace Authing.ApiClient.Domain.Model.Management.Orgs
         [JsonProperty("code")]
         public string Code { get; set; }
 
-        public AddNodeParam(string orgId, string name)
+        /// <summary>
+        /// 添加节点构造函数
+        /// </summary>
+        /// <param name="orgId">组织节点 OrgID</param>
+        /// <param name="parentNodeId">节点的ID</param>
+        /// <param name="name">节点名称</param>
+        public AddNodeParam(string orgId,string parentNodeId, string name)
         {
+            this.ParentNodeId = parentNodeId;
             this.OrgId = orgId;
             this.Name = name;
         }

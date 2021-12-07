@@ -10,6 +10,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public IManagementClientUdf Udf { get; private set; }
 
+        public IManagementClientOrgs Orgs { get; private set; }
+
         public Action<InitAuthenticationClientOptions> Init { get; }
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {
@@ -23,6 +25,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
             Users = new ManagementClient.UsersManagementClient(this);
             Udf = new UdfManagementClient(this);
+            Orgs = new OrgsManagementClient(this);
             Init = init;
         }
 
@@ -31,6 +34,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var manageClient = new ManagementClient(userPoolId, secret);
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
+            manageClient.Orgs = new OrgsManagementClient(manageClient);
+
             await manageClient.GetAccessToken();
             return manageClient;
         }
@@ -42,6 +47,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             await manageClient.GetAccessToken();
             manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
+            manageClient.Orgs = new OrgsManagementClient(manageClient);
+
             return manageClient;
         }
     }

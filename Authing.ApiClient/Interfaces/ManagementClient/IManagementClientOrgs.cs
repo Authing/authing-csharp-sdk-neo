@@ -65,7 +65,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="id">组织机构 ID</param>
         /// <returns></returns>
-        Task<Org> FindById(string id);
+        Task<Org> FindById(string orgId);
 
         /// <summary>
         ///  删除组织机构树中的某一个节点
@@ -83,7 +83,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="nodeId">需要移动的节点 ID</param>
         /// /// <param name="targetParentId">目标父节点 ID</param>
         /// <returns></returns>
-        Task<CommonMessage> MoveNode(string orgId, string nodeId,string targetParentId);
+        Task<Org> MoveNode(string orgId, string nodeId,string targetParentId);
 
         /// <summary>
         /// 判断一个节点是不是组织树的根节点
@@ -188,7 +188,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// 根据部门 ID 获取被授权的所有资源列表
         /// </summary>
         /// <param name="nodeId"> 部门 ID</param>
-        /// <param name="nameSpace">权限分组的 Code</param>
+        /// <param name="nameSpace">权限分组的 分组ID</param>
         /// <param name="resourceType">可选，资源类型，默认会返回所有有权限的资源</param>
         /// <returns></returns>
         Task<PaginatedAuthorizedResources> ListAuthorizedResourcesByNodeId(string nodeId, string nameSpace, ResourceType resourceType=default);
@@ -198,7 +198,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="orgId">组织结构ID</param>
         /// <param name="code">部门 Code</param>
-        /// <param name="nameSpace">权限分组的 Code</param>
+        /// <param name="nameSpace">权限分组的 分组ID</param>
         /// <param name="resourceType">可选，资源类型，默认会返回所有有权限的资源</param>
         /// <returns></returns>
         Task<PaginatedAuthorizedResources> ListAuthorizedResourcesByNodeCode(string orgId,string code, string nameSpace, ResourceType resourceType = default);
