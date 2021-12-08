@@ -29,7 +29,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 NodeId = nodeId
             };
-            var res = await client.Post<GraphQLResponse<AddMemberResponse>>(param.CreateRequest());
+            var res = await client.Post<AddMemberResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -44,7 +44,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = addNodeParam.Description,
                 DescriptionI18n = addNodeParam.DescriptionI18n
             };
-            var res = await client.Post<GraphQLResponse<AddNodeResponse>>(param.CreateRequest());
+            var res = await client.Post<AddNodeResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -56,21 +56,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = code
             };
 
-            var res = await client.Post<GraphQLResponse<CreateOrgResponse>>(param.CreateRequest());
+            var res = await client.Post<CreateOrgResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
         public async Task<CommonMessage> DeleteById(string id)
         {
             var param = new DeleteOrgParam(id);
-            var res = await client.Post<GraphQLResponse<DeleteOrgResponse>>(param.CreateRequest());
+            var res = await client.Post<DeleteOrgResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
         public async Task<CommonMessage> DeleteNode(string orgId, string nodeId)
         {
             var param = new DeleteNodeParam(orgId, nodeId);
-            var res = await client.Post<GraphQLResponse<DeleteNodeResponse>>(param.CreateRequest());
+            var res = await client.Post<DeleteNodeResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -103,14 +103,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Org> FindById(string orgId)
         {
             var param = new OrgParam(orgId);
-            var res = await client.Post<GraphQLResponse<OrgResponse>>(param.CreateRequest());
+            var res = await client.Post<OrgResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
         public async Task<Node> FindNodeById(string nodeId)
         {
             var param = new NodeByIdParam(nodeId);
-            var res = await client.Post<GraphQLResponse<NodeByIdResponse>>(param.CreateRequest());
+            var res = await client.Post<NodeByIdResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -127,7 +127,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<bool?> IsRootNode(string orgId, string nodeId)
         {
             var param = new IsRootNodeParam(nodeId, orgId);
-            var res = await client.Post<GraphQLResponse<IsRootNodeResponse>>(param.CreateRequest());
+            var res = await client.Post<IsRootNodeResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -139,7 +139,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Page = page
             };
 
-            var res = await client.Post<GraphQLResponse<OrgsResponse>>(param.CreateRequest());
+            var res = await client.Post<OrgsResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -150,7 +150,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace,
                 ResourceType = resourceType.ToString().ToUpper()
             };
-            var res = await client.Post<GraphQLResponse<ListNodeByCodeAuthorizedResourcesResponse>>(param.CreateRequest());
+            var res = await client.Post<ListNodeByCodeAuthorizedResourcesResponse>(param.CreateRequest());
             var node = res.Data.Result;
             if (node == null)
             {
@@ -166,7 +166,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace,
                 ResourceType = resourceType.ToString().ToUpper()
             };
-            var res = await client.Post<GraphQLResponse<ListNodeByIdAuthorizedResourcesResponse>>(param.CreateRequest());
+            var res = await client.Post<ListNodeByIdAuthorizedResourcesResponse>(param.CreateRequest());
             var node = res.Data.Result;
             if (node == null)
             {
@@ -178,14 +178,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<IEnumerable<Node>> ListChildren(string orgId, string nodeId)
         {
             var param = new ChildrenNodesParam(nodeId);
-            var res = await client.Post<GraphQLResponse<ChildrenNodesResponse>>(param.CreateRequest());
+            var res = await client.Post<ChildrenNodesResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
         public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam=default)
         {
             nodeByIdWithMembersParam.Id = nodeId;
-            var res = await client.Post<GraphQLResponse<NodeByIdWithMembersResponse>>(nodeByIdWithMembersParam.CreateRequest());
+            var res = await client.Post<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest());
             return res.Data.Result.Users;
         }
 
@@ -193,14 +193,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var moveMembersParam = new MoveMembersParam(userIds, sourceNodeId, targetNodeId) { };
 
-            var res = await client.Post<GraphQLResponse<MoveMembersResponse>>(moveMembersParam.CreateRequest());
+            var res = await client.Post<MoveMembersResponse>(moveMembersParam.CreateRequest());
             return res.Data.Result;
         }
 
         public async Task<Org> MoveNode(string orgId, string nodeId, string targetParentId)
         {
             var param = new MoveNodeParam(orgId, nodeId, targetParentId);
-            var res = await client.Post<GraphQLResponse<MoveNodeResponse>>(param.CreateRequest());
+            var res = await client.Post<MoveNodeResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -210,21 +210,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 NodeId = nodeId
             };
-            var res = await client.Post<GraphQLResponse<RemoveMemberResponse>>(param.CreateRequest());
+            var res = await client.Post<RemoveMemberResponse>(param.CreateRequest());
             return res.Data.Result.Users;
         }
 
         public async Task<Node> RootNode(string orgId)
         {
             var param = new RootNodeParam(orgId);
-            var res = await client.Post<GraphQLResponse<RootNodeResponse>>(param.CreateRequest());
+            var res = await client.Post<RootNodeResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
         public async Task<IEnumerable<Node>> SearchNodes(string keyword)
         {
             var param = new SearchNodesParam(keyword);
-            var res = await client.Post<GraphQLResponse<SearchNodesResponse>>(param.CreateRequest());
+            var res = await client.Post<SearchNodesResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -234,7 +234,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 DepartmentId = departmentId
             };
-            var res = await client.Post<GraphQLResponse<SetMainDepartmentResponse>>(param.CreateRequest());
+            var res = await client.Post<SetMainDepartmentResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
@@ -262,7 +262,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<Node> UpdateNode(string orgId, UpdateNodeParam updateNodeParam)
         {
-            var res = await client.Post<GraphQLResponse<UpdateNodeResponse>>(updateNodeParam.CreateRequest());
+            var res = await client.Post<UpdateNodeResponse>(updateNodeParam.CreateRequest());
             return res.Data.Result;
         }
     }

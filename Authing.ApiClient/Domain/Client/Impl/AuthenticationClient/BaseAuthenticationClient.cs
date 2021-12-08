@@ -42,7 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return await Post<TResponse>(body, GetAuthHeaders());
         }
 
-        protected async Task<TResponse> Post<TResponse>(string api, GraphQLRequest body)
+        protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body)
         {
             return await Post<TResponse>(api, body, GetAuthHeaders());
         }

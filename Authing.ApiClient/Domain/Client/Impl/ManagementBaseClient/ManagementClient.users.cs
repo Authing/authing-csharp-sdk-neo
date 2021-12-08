@@ -27,11 +27,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     {
                         Id = userId
                     };
-                    var _res = await client.Post<GraphQLResponse<UserWithCustomDataResponse>>(_param.CreateRequest());
+                    var _res = await client.Post<UserWithCustomDataResponse>(_param.CreateRequest());
                     return _res.Data.Result;
                 }
                 var param = new UserParam { Id = userId };
-                var res = await client.Post<GraphQLResponse<UserResponse>>(param.CreateRequest());
+                var res = await client.Post<UserResponse>(param.CreateRequest());
                 return res.Data.Result;
             }
         }

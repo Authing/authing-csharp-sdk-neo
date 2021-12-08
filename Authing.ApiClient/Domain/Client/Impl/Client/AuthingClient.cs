@@ -55,10 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             if (httpMethod == HttpMethod.Get)
             {
-                message = new HttpRequestMessage(httpMethod, new Uri(url))
-                {
-                    
-                };
+                message = new HttpRequestMessage(httpMethod, new Uri(url));
             }
             else
             {
