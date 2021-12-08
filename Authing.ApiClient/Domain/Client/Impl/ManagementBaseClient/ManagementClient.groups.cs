@@ -171,7 +171,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         Limit = listUsersOption?.Limit,
                     };
                     var _res = await client.Request<GroupWithUsersResponse>(_param.CreateRequest());
-                    return _res.Data?.Result.Users;
+                    return _res.Data?.Result?.Users;
                 }
                 else
                 {

@@ -29,7 +29,23 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         [Fact]
         public async Task Userpool_ListEnv()
         {
+            await managementClient.Userpool.AddEnv("123", "123");
             var result = await managementClient.Userpool.ListEnv();
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public async Task Userpool_AddEnv()
+        {
+            var result = await managementClient.Userpool.AddEnv("123","123");
+            Assert.Equal(result,200);
+        }
+
+        [Fact]
+        public async Task Userpool_RemoveEnv()
+        {
+            var result = await managementClient.Userpool.RemoveEnv("123");
+            Assert.Equal(result, 200);
         }
     }
 }

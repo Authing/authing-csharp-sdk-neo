@@ -77,6 +77,7 @@ namespace Authing.ApiClient.Framework.Test.ManagementClient.Groups
             await managementClient.Groups.Create("testgroup_ListUsers", "testgroup_ListUsers", "testgroup_ListUsers");
             await managementClient.Groups.AddUsers("testgroup_ListUsers", new List<string>() { TestUserId });
             var users = await managementClient.Groups.ListUsers("testgroup_ListUsers", new ListUsersOption());
+            Assert.NotNull(users.List); ;
             Assert.NotEmpty(users.List);;
             Assert.Equal(users.List.Take(1).First().Id,TestUserId);
         }

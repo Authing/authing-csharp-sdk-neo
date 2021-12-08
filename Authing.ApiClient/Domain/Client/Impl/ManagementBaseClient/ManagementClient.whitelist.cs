@@ -44,7 +44,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new WhitelistParam(type);
                 var result = await client.Request<WhitelistResponse>(param.CreateRequest());
-                return result.Data.Result;
+                return result.Data?.Result;
             }
 
             /// <summary>
@@ -57,7 +57,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new AddWhitelistParam(type, list);
                 var result = await client.Request<AddWhitelistResponse>(param.CreateRequest());
-                return result.Data.Result;
+                return result.Data?.Result;
             }
 
             /// <summary>
@@ -71,7 +71,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new RemoveWhitelistParam(type, list);
 
                 var res = await client.Request<RemoveWhitelistResponse>(param.CreateRequest());
-                return res.Data.Result;
+                return res.Data?.Result;
             }
 
             /// <summary>
