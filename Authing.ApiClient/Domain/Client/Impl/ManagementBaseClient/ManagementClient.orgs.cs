@@ -14,7 +14,7 @@ using Flurl.Http;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
-    public class OrgsManagementClient : IManagementClientOrgs
+    public class OrgsManagementClient : IOrgsManagementClient
     {
         private ManagementClient client;
 

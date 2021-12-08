@@ -8,9 +8,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
     public partial class ManagementClient : BaseManagementClient
     {
 
-        public IManagementClientUdf Udf { get; private set; }
+        public IUdfManagementClient Udf { get; private set; }
 
-        public IManagementClientOrgs Orgs { get; private set; }
+        public IOrgsManagementClient Orgs { get; private set; }
 
         public Action<InitAuthenticationClientOptions> Init { get; }
 

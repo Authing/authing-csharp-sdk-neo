@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model;
+using Authing.ApiClient.Domain.Model.Management;
 using Authing.ApiClient.Domain.Model.Management.Groups;
+using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {

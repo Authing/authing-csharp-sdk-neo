@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
 {
-    public interface IManagementClientOrgs
+    public interface IOrgsManagementClient
     {
         /// <summary>
         /// 创建组织机构

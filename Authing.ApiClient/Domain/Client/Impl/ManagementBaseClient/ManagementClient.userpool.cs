@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
+using Authing.ApiClient.Domain.Model.Management.Userpool;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
 using Authing.ApiClient.Types;
 using Flurl;
