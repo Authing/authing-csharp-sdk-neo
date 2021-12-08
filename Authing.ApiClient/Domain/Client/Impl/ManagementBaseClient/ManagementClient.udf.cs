@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
 
-    public class UdfManagementClient : IManagementClientUdf
+    public class UdfManagementClient : IUdfManagementClient
     {
         private readonly ManagementClient client;
 

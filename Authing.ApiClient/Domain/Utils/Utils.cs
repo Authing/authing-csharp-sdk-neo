@@ -54,5 +54,27 @@ namespace Authing.ApiClient.Domain.Utils
 
             return resUdvList;
         }
+
+        public static List<KeyValuePair<string, object>> ConverUdvToKeyValuePair(IEnumerable<UserDefinedData> udvList)
+        {
+            var resUdvList = new List<KeyValuePair<string, object>>();
+            foreach (var udv in udvList)
+            {
+                object value = udv.DataType switch
+                {
+                    UdfDataType.STRING => udv.Value,
+                    UdfDataType.NUMBER => int.Parse(udv.Value),
+                    UdfDataType.DATETIME => new DateTime(int.Parse(udv.Value), DateTimeKind.Utc),
+                    UdfDataType.BOOLEAN => JsonConvert.DeserializeObject<bool>(udv.Value),
+                    UdfDataType.OBJECT
+                        => JsonConvert.DeserializeObject<object>(udv.Value),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                resUdvList.Add(new KeyValuePair<string, object>(udv.Key, value));
+            }
+
+            return resUdvList;
+        }
     }
 }

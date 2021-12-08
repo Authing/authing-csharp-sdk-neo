@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
 {
-   public interface IManagementClientUdf
+   public interface IUdfManagementClient
     {
         /// <summary>
         /// 设置自定义字段元数据，如果字段不存在则会创建，存在会更新

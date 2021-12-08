@@ -146,17 +146,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
 
-
-
-            HttpRequestMessage message = null;
-
-
-            if (httpType == HttpType.Get)
-
-            {
-
-                message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
-
+            if (httpType == HttpType.Get)
+            {
+                message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
+            }
+            else if (httpType == HttpType.Delete)
+            {
+                message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
             }
             else if (httpType == HttpType.Delete)
 

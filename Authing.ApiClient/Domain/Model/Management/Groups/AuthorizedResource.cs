@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Authing.ApiClient.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
