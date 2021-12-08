@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Authing.ApiClient.Auth;
-using Authing.ApiClient.Mgmt;
+using Authing.ApiClient.Domain.Client.Impl.AuthenticationClient;
+using Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient;
 using Authing.ApiClient.Test.Base;
 
 namespace Authing.ApiClient.Netstandard20.Test
@@ -19,6 +19,13 @@ namespace Authing.ApiClient.Netstandard20.Test
                     opt.Host = Host;
                 }
             );
+
+            managementClient = new ManagementClient(init: opt =>
+            {
+                opt.UserPoolId = UserPoolId;
+                opt.Secret = Secret;
+                opt.Host = Host;
+            });
         }
 
         public async Task<ManagementClient> GetManagementClient()

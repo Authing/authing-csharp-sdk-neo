@@ -64,9 +64,22 @@ GKl64GDcIq3au+aqJQIDAQAB
                 headers ?? new Dictionary<string, string>());
         }
 
+        protected async Task<TResponse> Post<TResponse>(string api, GraphQLRequest body, Dictionary<string, string> headers)
+        {
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            var bodyString = preprocessedRequest.ToHttpRequestBody();
+            return await client.SendRequest<string, TResponse>(Host +$"/{api}", "Post", bodyString,
+                headers ?? new Dictionary<string, string>());
+        }
+
         public async Task<TResponse> Get<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)
         {
             return await client.SendRequest<TRequest, TResponse>("", "Get", body, headers);
+        }
+
+        protected async Task<TResponse> Get<TRequest, TResponse>(string api,TRequest body, Dictionary<string, string> headers)
+        {
+            return await client.SendRequest<TRequest, TResponse>(Host + $"/{api}", "Get", body, headers);
         }
 
 
