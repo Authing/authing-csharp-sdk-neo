@@ -5,14 +5,14 @@ namespace Authing.ApiClient.Core.Model
     public enum UdfDataType
     {
         [JsonProperty("STRING")]
-        String,
+        STRING,
         [JsonProperty("NUMBER")]
-        Number,
+        NUMBER,
         [JsonProperty("DATETIME")]
-        Datetime,
+        DATETIME,
         [JsonProperty("BOOLEAN")]
-        Boolean,
+        BOOLEAN,
         [JsonProperty("OBJECT")]
-        Object
+        OBJECT
     }
 }
