@@ -29,7 +29,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 this.client = client;
             }
 
-
+            /// <summary>
+            /// 用户日志
+            /// </summary>
+            /// <param name="options">用户日志查询参数</param>
+            /// <returns></returns>
             public async Task<UserLogs> listUserActions(LogsPageParam options)
             {
                 string endPoint = "api/v2/analysis/user-action?";
@@ -51,7 +55,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return result.Data;
             }
 
-
+            /// <summary>
+            /// 审计日志
+            /// </summary>
+            /// <param name="options">审计日志参数</param>
+            /// <returns></returns>
             public async Task<AdminLogs> listAuditLogs(AuditLogPageParam options)
             {
                 string endPoint = "api/v2/analysis/audit?";

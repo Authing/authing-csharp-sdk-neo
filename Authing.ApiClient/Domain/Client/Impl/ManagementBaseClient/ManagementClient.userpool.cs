@@ -25,7 +25,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// 用户池管理类
         /// </summary>
 
-        public class UserpoolManagement
+        public class UserpoolManagement : IUserpoolManagement
         {
             private readonly ManagementClient client;
 
@@ -55,7 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new UpdateUserpoolParam(updates);
 
                 var res = await client.Request<UpdateUserpoolResponse>(param.CreateRequest());
-                return res.Data.Result;
+                return res.Data?.Result;
             }
 
             /// <summary>
@@ -74,24 +74,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="key">环境变量键</param>
             /// <param name="value">环境变量值</param>
             /// <returns></returns>
-            public async Task<Env> AddEnv(
+            public async Task<int> AddEnv(
                 string key,
                 object value
                 )
             {
-                var res = await client.Host.AppendPathSegment("/api/v2/env").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
-                {
-                    key,
-                    value
-                }).ReceiveJson<RestfulResponse<Env>>();
 
-              var result=  await client.Post<Env>("api/v2/env", new Dictionary<string, string> 
+                var result=  await client.Post<Env>("api/v2/env", new Dictionary<string, string> 
                 { 
                     { "key", key },
                   { "value",value.ToString()}
                 });
 
-                return res.Data;
+                return result.Code;
             }
 
             /// <summary>
@@ -99,15 +94,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// </summary>
             /// <param name="key">环境变量键</param>
             /// <returns></returns>
-            public async Task<Dictionary<string, object>> RemoveEnv(
+            public async Task<int> RemoveEnv(
                 string key)
             {
-                var res = await client.Host.AppendPathSegment($"api/v2/env/{key}").WithOAuthBearerToken(client.AccessToken).DeleteAsync().ReceiveJson<Dictionary<string, object>>();
-
-
                 var result = await client.Delete<Env>($"api/v2/env/{key}", null);
 
-                return res;
+                return result.Code;
             }
 
 

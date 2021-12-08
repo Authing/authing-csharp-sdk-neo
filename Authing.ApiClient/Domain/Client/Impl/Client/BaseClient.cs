@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Exceptions;
-using Authing.ApiClient.Infrastructure.GraphQL;
-using Authing.ApiClient.Types;
+using Authing.ApiClient.Infrastructure.GraphQL;
+
+using Authing.ApiClient.Types;
+
 namespace Authing.ApiClient.Domain.Client.Impl.Client
 {
     public abstract class BaseClient
@@ -93,10 +96,14 @@ GKl64GDcIq3au+aqJQIDAQAB
                 headers ?? new Dictionary<string, string>());
             CheckResult(result);
             return result;
-        }
-
-        protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string,string> body, Dictionary<string, string> headers)
-        {
+        }
+
+
+
+        protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string,string> body, Dictionary<string, string> headers)
+
+        {
+
 
             var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Post, body,
                 headers ?? new Dictionary<string, string>());
@@ -117,8 +124,10 @@ GKl64GDcIq3au+aqJQIDAQAB
             var result= await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Get, body, headers);
             CheckResult(result);
             return result;
-        }
-
+        }
+
+
+
         protected async Task<GraphQLResponse<TResponse>> Delete<TRequest, TResponse>(string api, TRequest body, Dictionary<string, string> headers)
         {
             var result = await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Delete, body, headers);
@@ -129,19 +138,13 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {
-            if (result.Code == 200)
-            {
-                return;
-            }
-
-            if(result.Data == null && result.Errors.Length == 0)
+            //if (result.Code == 200)
+            //{
+            //    return;
+            //}
+            if (result.Errors != null && result.Errors.Any())
             {
-                var error = result.Errors[0].Message;
-                throw new AuthingException("Server return data Null !");
-            }
-            if (result.Errors != null && result.Errors.Length > 0)
-            {
-                var error = result.Errors[0].Message;
+                var error = result.Errors?[0].Message;
                 throw new AuthingException(error.Message, error.Code);
             }
         }
