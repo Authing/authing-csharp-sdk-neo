@@ -35,7 +35,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<Org> AddNode(string orgId, AddNodeParam addNodeParam)
         {
-            var param = new AddNodeParam(orgId,addNodeParam.ParentNodeId, addNodeParam.Name)
+            var param = new AddNodeParam(orgId, addNodeParam.ParentNodeId, addNodeParam.Name)
             {
                 ParentNodeId = addNodeParam.ParentNodeId,
                 Code = addNodeParam.Code,
@@ -74,28 +74,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<IEnumerable<Node>> ExportAll()
+        public async Task<IEnumerable<Org>> ExportAll()
         {
-            string token = client.AccessToken;
-
-            //headers["Authorization"] = token;
-            //headers["x-authing-userpool-id"] = UserPoolId;
-            //headers["x-authing-request-from"] = type;
-            //headers["x-authing-sdk-version"] = version;
-
-           // var res = await client.Host.AppendPathSegment("api/v2/orgs/export").WithAuthingHeader(client).GetJsonAsync();
-
-            await client.Get<GraphQLResponse<PaginatedOrgs>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest());
-
-           //var ss= Newtonsoft.Json.JsonConvert.DeserializeObject<GraphQLResponse<List<Org>>>(res);
-
-            //var res=await client.Post<GraphQLResponse<>>
-
-            return null;
+            var result = await client.Get<IEnumerable<Org>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest());
+            return result.Data;
         }
 
         public async Task<Node> ExportByOrgId(string orgId)
         {
+            var result = await client.Get<Node>($"api/v2/orgs/export?org_id={orgId}",new ExpnadAllRequest().CreateRequest());
+
             var res = await client.Host.AppendPathSegment($"api/v2/orgs/export?org_id={orgId}").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<Node>();
             return res;
         }
@@ -116,11 +104,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<Org> ImportByJson(string json)
         {
-            string token = client.AccessToken;
+            //var res = await client.Host.AppendPathSegment($"api/v2/orgs/import").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(json).ReceiveString();
+            Dictionary<string,string> keyValuePairs = new System.Collections.Generic.Dictionary<string, string>
+            {
+                {  "filetype","json" },
+                { "file",json}
+            };
+            var result = await client.Post<Org>("api/v2/orgs/import", keyValuePairs);
 
-          var result=await  @"http://core.authing.cn".AppendPathSegment($"api/v2/orgs/import").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(json).ReceiveString();
-
-            var res = await client.Host.AppendPathSegment($"api/v2/orgs/import").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(json).ReceiveString();
             return null;
         }
 
@@ -143,7 +134,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<PaginatedAuthorizedResources> ListAuthorizedResourcesByNodeCode(string orgId,string code, string nameSpace, ResourceType resourceType = ResourceType.DATA)
+        public async Task<PaginatedAuthorizedResources> ListAuthorizedResourcesByNodeCode(string orgId, string code, string nameSpace, ResourceType resourceType = ResourceType.DATA)
         {
             var param = new ListNodeByCodeAuthorizedResourcesParam(orgId, code)
             {
@@ -182,7 +173,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam=default)
+        public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam = default)
         {
             nodeByIdWithMembersParam.Id = nodeId;
             var res = await client.Post<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest());

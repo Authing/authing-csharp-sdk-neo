@@ -14,18 +14,24 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         {
             var client = managementClient;
 
+            var ss = await client.Orgs.List();
+
             Root root = new Root();
             root.name = "根节点";
-            root.children = new Node[1];
+            root.code = "9527";
+            //root.children = new Node[1];
 
-            root.children[0] = new Node();
+            //root.children[0] = new Node();
 
-            root.children[0].name = "运营";
-            root.children[0].children = new Node[1];
+            //root.children[0].name = "运营";
+            //root.children[0].children = new Node[1];
 
-            root.children[0].children[0] = new Node();
+            //root.children[0].children[0] = new Node();
 
-            root.children[0].children[0].name = "后端";
+            //root.children[0].children[0].name = "后端";
+
+           await client.Userpool.RemoveEnv("1");
+
 
             string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(root);
 
@@ -52,7 +58,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
     {
         public string name { get; set; }
         public string code { get; set; }
-        public Node[] children { get; set; }
     }
 
     public class Node

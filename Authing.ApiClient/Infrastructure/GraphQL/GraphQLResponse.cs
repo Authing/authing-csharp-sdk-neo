@@ -10,5 +10,11 @@ namespace Authing.ApiClient.Infrastructure.GraphQL
 
         [DataMember(Name = "errors")]
         public GraphQLError[] Errors { get; set; }
+
+        [DataMember(Name ="code")]
+        public int Code { get; set; }
+
+        [DataMember(Name ="message")]
+        public string Message { get; set; }
     }
 }

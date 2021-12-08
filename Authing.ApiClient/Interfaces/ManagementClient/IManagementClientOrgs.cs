@@ -175,7 +175,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// 导出所有组织机构数据
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Node>> ExportAll();
+        Task<IEnumerable<Org>> ExportAll();
 
         /// <summary>
         /// 导出某个组织机构数据
