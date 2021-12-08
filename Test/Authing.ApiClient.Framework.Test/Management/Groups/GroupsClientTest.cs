@@ -65,7 +65,7 @@ namespace Authing.ApiClient.Framework.Test.ManagementClient.Groups
             await managementClient.Groups.Create("testgroup_DeleteMany2", "testgroup_DeleteMany2", "testgroup_DeleteMany2");
             await managementClient.Groups.Create("testgroup_DeleteMany3", "testgroup_DeleteMany3", "testgroup_DeleteMany3");
             var list = await managementClient.Groups.List();
-            Assert.Equal(list.TotalCount,3);
+            Assert.Equal(list.TotalCount,4);
             var result = await managementClient.Groups.DeleteMany(new List<string>()
                 { "testgroup_DeleteMany1", "testgroup_DeleteMany2", "testgroup_DeleteMany3" });
             Assert.Equal(result.Code,200);

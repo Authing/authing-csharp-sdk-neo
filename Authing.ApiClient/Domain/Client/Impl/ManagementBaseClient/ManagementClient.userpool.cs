@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
+using Authing.ApiClient.Domain.Model.Management.UserPool;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
+using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
 using Flurl;
 using Flurl.Http;
@@ -39,13 +41,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<UserPool> Detail()
             {
-                // var param = new UserpoolParam();
-
-                // await client.GetAccessToken();
-                // var res = await client.Request<UserpoolResponse>(param.CreateRequest(), cancellationToken);
-                // return res.Result;
-                var res = await client.Host.AppendPathSegment("/api/v2/userpools/detail").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<UserPool>();
-                return res;
+                var res = await client.Get<UserPool>("api/v2/userpools/detail",new GraphQLRequest());
+                return res.Data;
             }
 
             /// <summary>
@@ -67,7 +64,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<IEnumerable<Env>> ListEnv()
             {
-                var res = await client.Host.AppendPathSegment("/api/v2/env").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<RestfulResponse<IEnumerable<Env>>>();
+                var res = await client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
                 return res.Data;
             }
 

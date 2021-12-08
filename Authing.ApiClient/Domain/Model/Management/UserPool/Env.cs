@@ -1,4 +1,4 @@
-﻿namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
+﻿namespace Authing.ApiClient.Domain.Model.Management.UserPool
 {
     public class Env
     {

@@ -10,6 +10,6 @@ namespace Authing.ApiClient.Domain.Model.Management.WhiteList
     {
 
         [JsonProperty("updateUserpool")]
-        public UserPool Result { get; set; }
+        public Model.UserPool Result { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
         //    await client.Udf.Set(UdfTargetType.USER, "user", Core.Model.UdfDataType.STRING, "userString");
 
-        //    IEnumerable<UserDefinedField> result = await client.Udf.List(UdfTargetType.USER);
+        //    IEnumerable<UserDefinedField> result = await client.Udf.UserLogsInfo(UdfTargetType.USER);
 
         //    Assert.NotNull(result.Count()>0);
 
