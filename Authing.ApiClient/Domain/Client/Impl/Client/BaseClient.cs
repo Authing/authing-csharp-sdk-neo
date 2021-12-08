@@ -43,12 +43,12 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4xKeUgQ+Aoz7TLfAfs9+paePb
 GKl64GDcIq3au+aqJQIDAQAB
 -----END PUBLIC KEY-----";
 
-        protected readonly string type = "SDK";
-        protected readonly string version = "c-sharp:4.2.4.7";
+        public readonly string type = "SDK";
+        public readonly string version = "c-sharp:4.2.4.7";
 
         protected BaseClient()
         {
-            this.client = AuthingClient.Of();
+            this.client = AuthingClient.CreateAhtingClient();
         }
 
         public async Task<TResponse> Post<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)
@@ -60,8 +60,19 @@ GKl64GDcIq3au+aqJQIDAQAB
         {
             var preprocessedRequest = new GraphQLHttpRequest(body);
             var bodyString = preprocessedRequest.ToHttpRequestBody();
-            return await client.SendRequest<string, TResponse>(GraphQLEndpoint, "Post", bodyString,
+            var result = await client.SendRequest<string, TResponse>(GraphQLEndpoint, "Post", bodyString,
                 headers ?? new Dictionary<string, string>());
+            return result;
+        }
+
+        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, Dictionary<string, string> headers)
+        {
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            var bodyString = preprocessedRequest.ToHttpRequestBody();
+            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(GraphQLEndpoint, "Post", bodyString,
+                headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
         }
 
         protected async Task<TResponse> Post<TResponse>(string api, GraphQLRequest body, Dictionary<string, string> headers)
@@ -85,6 +96,11 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {
+            if(result.Data == null && result.Errors.Length == 0)
+            {
+                var error = result.Errors[0].Message;
+                throw new AuthingException("Server return data Null !");
+            }
             if (result.Errors != null && result.Errors.Length > 0)
             {
                 var error = result.Errors[0].Message;

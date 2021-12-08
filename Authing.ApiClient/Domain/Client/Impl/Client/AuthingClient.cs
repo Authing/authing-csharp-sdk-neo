@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Authing.ApiClient.Infrastructure.GraphQL;
 using Newtonsoft.Json;
 using HttpMethod = System.Net.Http.HttpMethod;
 
@@ -36,7 +37,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         {
         }
 
-        public static AuthingClient Of()
+        public static AuthingClient CreateAhtingClient()
         {
             return new AuthingClient();
         }

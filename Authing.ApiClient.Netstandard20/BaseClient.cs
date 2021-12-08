@@ -219,8 +219,7 @@ GKl64GDcIq3au+aqJQIDAQAB
         {
             return new
             {
-                x_authing_userpool_id =
-                UserPoolId,
+                x_authing_userpool_id = UserPoolId,
                 x_authing_app_id = AppId,
                 x_authing_request_from = type,
                 x_authing_sdk_version = version,

@@ -7,7 +7,7 @@ namespace Authing.ApiClient.Framework.Test
     public class BaseTest : TestBase
     {
         protected AuthenticationClient authenticationClient { get; set; }
-        protected ManagementClient managementClient { get; set; }
+        protected Domain.Client.Impl.ManagementBaseClient.ManagementClient managementClient { get; set; }
 
         public BaseTest()
         {
@@ -18,7 +18,7 @@ namespace Authing.ApiClient.Framework.Test
                     opt.Host = Host;
                 }
             );
-            managementClient = new ManagementClient(init: opt =>
+            managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(init: opt =>
             {
                 opt.UserPoolId = UserPoolId;
                 opt.Secret = Secret;

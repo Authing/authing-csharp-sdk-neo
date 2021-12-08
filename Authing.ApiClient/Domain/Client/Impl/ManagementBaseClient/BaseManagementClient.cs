@@ -114,8 +114,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             return new
             {
-                x_authing_userpool_id =
-                    UserPoolId,
+                x_authing_userpool_id = UserPoolId,
                 x_authing_request_from = type,
                 x_authing_sdk_version = version,
             };

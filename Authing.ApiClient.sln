@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Netstandard20", "Authing.ApiClient.Netstandard20\Authing.ApiClient.Netstandard20.csproj", "{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Netstandard20", "Authing.ApiClient.Netstandard20\Authing.ApiClient.Netstandard20.csproj", "{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Netstandard20.Test", "Test\Authing.ApiClient.Netstandard20.Test\Authing.ApiClient.Netstandard20.Test.csproj", "{0BF2034C-088A-45D3-9708-3D9F4DD9242F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Netstandard20.Test", "Test\Authing.ApiClient.Netstandard20.Test\Authing.ApiClient.Netstandard20.Test.csproj", "{0BF2034C-088A-45D3-9708-3D9F4DD9242F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Framework.Test", "Test\Authing.ApiClient.Framework.Test\Authing.ApiClient.Framework.Test.csproj", "{EFFE944D-D59F-4327-9B88-752323F4E364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Framework.Test", "Test\Authing.ApiClient.Framework.Test\Authing.ApiClient.Framework.Test.csproj", "{EFFE944D-D59F-4327-9B88-752323F4E364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient", "Authing.ApiClient\Authing.ApiClient.csproj", "{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient", "Authing.ApiClient\Authing.ApiClient.csproj", "{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Netstandard20-up.Test", "Test\Authing.ApiClient.Netstandard20-up.Test\Authing.ApiClient.Netstandard20-up.Test.csproj", "{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Netstandard20-up.Test", "Test\Authing.ApiClient.Netstandard20-up.Test\Authing.ApiClient.Netstandard20-up.Test.csproj", "{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authing.ApiClient.Test.Base", "Test\Authing.ApiClient.Test.Base\Authing.ApiClient.Test.Base.csproj", "{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Test.Base", "Test\Authing.ApiClient.Test.Base\Authing.ApiClient.Test.Base.csproj", "{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{FAB272F3-A6A5-4860-BFCA-5EA39113F432}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +47,15 @@ Global
 		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAB272F3-A6A5-4860-BFCA-5EA39113F432}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB272F3-A6A5-4860-BFCA-5EA39113F432}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAB272F3-A6A5-4860-BFCA-5EA39113F432}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB272F3-A6A5-4860-BFCA-5EA39113F432}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {66DB6A1D-8E4D-4443-8DB3-FB781294D7F1}
 	EndGlobalSection
 EndGlobal

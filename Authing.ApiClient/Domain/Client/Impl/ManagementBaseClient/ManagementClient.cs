@@ -13,30 +13,37 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public IManagementClientOrgs Orgs { get; private set; }
 
         public Action<InitAuthenticationClientOptions> Init { get; }
+
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {
+
         }
 
         public ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
         {
-            if (init is null)
-            {
-                throw new ArgumentNullException(nameof(init));
-            }
             Users = new ManagementClient.UsersManagementClient(this);
             Udf = new UdfManagementClient(this);
             Orgs = new OrgsManagementClient(this);
-            Init = init;
+            Whitelist = new ManagementClient.WhitelistManagementClient(this);
+            Groups = new GroupsManagementClient(this);
+            Userpool = new UserpoolManagement(this);
+            Statistics = new StatisticsManagement(this);
+            Init = init ?? throw new ArgumentNullException(nameof(init));
         }
 
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)
         {
             var manageClient = new ManagementClient(userPoolId, secret);
+            await manageClient.GetAccessToken();
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
+            manageClient.Whitelist = new WhitelistManagementClient(manageClient);
+            manageClient.Groups = new GroupsManagementClient(manageClient);
 
             await manageClient.GetAccessToken();
+            manageClient.Userpool = new UserpoolManagement(manageClient);
+            manageClient.Statistics = new StatisticsManagement(manageClient);
             return manageClient;
         }
 
@@ -48,7 +55,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
-
+            manageClient.Userpool = new UserpoolManagement(manageClient);
+            manageClient.Statistics = new StatisticsManagement(manageClient);
             return manageClient;
         }
     }
