@@ -75,22 +75,38 @@ GKl64GDcIq3au+aqJQIDAQAB
             return result;
         }
 
-        protected async Task<TResponse> Post<TResponse>(string api, GraphQLRequest body, Dictionary<string, string> headers)
+        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api,GraphQLRequest body, Dictionary<string, string> headers)
         {
             var preprocessedRequest = new GraphQLHttpRequest(body);
             var bodyString = preprocessedRequest.ToHttpRequestBody();
-            return await client.SendRequest<string, TResponse>(Host +$"/{api}", "Post", bodyString,
+            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(GraphQLEndpoint, "Post", bodyString,
                 headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
         }
 
-        public async Task<TResponse> Get<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)
+        protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body, Dictionary<string, string> headers)
         {
-            return await client.SendRequest<TRequest, TResponse>("", "Get", body, headers);
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            var bodyString = preprocessedRequest.ToHttpRequestBody();
+            var result= await client.SendRequest<string, GraphQLResponse<TResponse>>(Host +$"/{api}", "Post", bodyString,
+                headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
         }
 
-        protected async Task<TResponse> Get<TRequest, TResponse>(string api,TRequest body, Dictionary<string, string> headers)
+        public async Task<GraphQLResponse<TResponse>> Get<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)
         {
-            return await client.SendRequest<TRequest, TResponse>(Host + $"/{api}", "Get", body, headers);
+            var result= await client.SendRequest<TRequest, GraphQLResponse<TResponse>>("", "Get", body, headers);
+            CheckResult(result);
+            return result;
+        }
+
+        protected async Task<GraphQLResponse<TResponse>> Get<TRequest, TResponse>(string api,TRequest body, Dictionary<string, string> headers)
+        {
+            var result= await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", "Get", body, headers);
+            CheckResult(result);
+            return result;
         }
 
 

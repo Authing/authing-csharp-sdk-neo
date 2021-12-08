@@ -42,7 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new SetUdfParam(type, key, dataType, label);
 
-            var res = await client.Post<GraphQLResponse<SetUdfResponse>>(param.CreateRequest());
+            var res = await client.Post<SetUdfResponse>(param.CreateRequest());
 
             return res.Data.Result;
         }
@@ -57,7 +57,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new RemoveUdfParam(type, key);
 
-            var res = await client.Post<GraphQLResponse<RemoveUdfResponse>>(param.CreateRequest());
+            var res = await client.Post<RemoveUdfResponse>(param.CreateRequest());
 
             return res.Data.Result;
         }
@@ -71,7 +71,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new UdfParam(type);
 
-            var res = await client.Post<GraphQLResponse<UdfResponse>>(param.CreateRequest());
+            var res = await client.Post<UdfResponse>(param.CreateRequest());
 
             return res.Data.Result;
         }
@@ -86,7 +86,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new UdvParam(targetType, targetId);
 
-            var res = await client.Post<GraphQLResponse<UdvResponse>>(param.CreateRequest());
+            var res = await client.Post<UdvResponse>(param.CreateRequest());
             return AuthingUtils.ConvertUdv(res.Data.Result);
         }
 
@@ -111,7 +111,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UdvList = _udvList
             };
 
-            var res = await client.Post<GraphQLResponse<SetUdvBatchResponse>>(param.CreateRequest());
+            var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest());
 
             return AuthingUtils.ConvertUdv(res.Data.Result);
         }
