@@ -64,6 +64,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
         }
 
+
+        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
+        {
+            var headers = new Dictionary<string, string>();
+            var token = await GetAccessToken();
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await Request<TResponse>(body, headers);
+        }
+
+
         public async Task<TResponse> Post<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();

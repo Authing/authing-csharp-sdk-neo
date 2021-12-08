@@ -106,16 +106,4 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
     }
-    public static class FlurlAuthingExt
-    {
-        public static IFlurlRequest WithAuthingHeader(
-            this Url url, ManagementClient client)
-        {
-            return (IFlurlRequest)new FlurlRequest(url)
-                .WithHeader("Authorization", client.AccessToken)
-                .WithHeader("x-authing-userpool-id", client.UserPoolId)
-                .WithHeader("x-authing-request-from", client.type)
-                .WithHeader("x-authing-sdk-version", client.version);
-        }
-    }
 }

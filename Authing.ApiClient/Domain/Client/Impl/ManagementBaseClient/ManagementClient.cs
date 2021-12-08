@@ -41,7 +41,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             manageClient.Groups = new GroupsManagementClient(manageClient);
 
-            await manageClient.GetAccessToken();
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
             return manageClient;
@@ -52,9 +51,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var manageClient = new ManagementClient(init);
             await manageClient.GetAccessToken();
-            manageClient.Users = new ManagementClient.UsersManagementClient(manageClient);
+            manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
+            manageClient.Whitelist = new WhitelistManagementClient(manageClient);
+            manageClient.Groups = new GroupsManagementClient(manageClient);
+
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
             return manageClient;

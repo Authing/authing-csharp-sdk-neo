@@ -83,7 +83,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             //headers["x-authing-request-from"] = type;
             //headers["x-authing-sdk-version"] = version;
 
-            var res = await client.Host.AppendPathSegment("api/v2/orgs/export").WithAuthingHeader(client).GetJsonAsync();
+           // var res = await client.Host.AppendPathSegment("api/v2/orgs/export").WithAuthingHeader(client).GetJsonAsync();
 
             await client.Get<GraphQLResponse<PaginatedOrgs>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest());
 
@@ -266,18 +266,4 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
     }
-
-    public static class FlurlAuthingExt
-    {
-        public static IFlurlRequest WithAuthingHeader(
-            this Url url, ManagementClient client)
-        {
-            return (IFlurlRequest)new FlurlRequest(url)
-                .WithHeader("Authorization", client.AccessToken)
-                .WithHeader("x-authing-userpool-id", client.UserPoolId)
-                .WithHeader("x-authing-request-from", "SDK")
-                .WithHeader("x-authing-sdk-version", "c-sharp:4.2.4.7");
-        }
-    }
-
 }
