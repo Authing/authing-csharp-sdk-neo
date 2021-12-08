@@ -26,7 +26,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         {
             var client = managementClient;
 
-            var result = await client.Orgs.ExportByOrgId("61af013d3b63bca568c5192a");
+            var result = await client.Orgs.ExportByOrgId("61af03a04c01888ddc24f5bb");
 
             Assert.NotNull(result);
         }

@@ -87,6 +87,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     key,
                     value
                 }).ReceiveJson<RestfulResponse<Env>>();
+
+              var result=  await client.Post<Env>("api/v2/env", new Dictionary<string, string> 
+                { 
+                    { "key", key },
+                  { "value",value.ToString()}
+                });
+
                 return res.Data;
             }
 
@@ -99,6 +106,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 string key)
             {
                 var res = await client.Host.AppendPathSegment($"api/v2/env/{key}").WithOAuthBearerToken(client.AccessToken).DeleteAsync().ReceiveJson<Dictionary<string, object>>();
+
+
+                var result = await client.Delete<Env>($"api/v2/env/{key}", null);
+
                 return res;
             }
 
