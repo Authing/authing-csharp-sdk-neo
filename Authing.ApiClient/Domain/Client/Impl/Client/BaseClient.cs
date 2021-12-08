@@ -43,8 +43,8 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4xKeUgQ+Aoz7TLfAfs9+paePb
 GKl64GDcIq3au+aqJQIDAQAB
 -----END PUBLIC KEY-----";
 
-        protected readonly string type = "SDK";
-        protected readonly string version = "c-sharp:4.2.4.7";
+        public readonly string type = "SDK";
+        public readonly string version = "c-sharp:4.2.4.7";
 
         protected BaseClient()
         {

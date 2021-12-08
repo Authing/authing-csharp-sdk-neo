@@ -224,6 +224,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return res.Data?.Result;
             }
 
+            /// <summary>
+            /// 获取分组被授权的所有资源列表
+            /// </summary>
+            /// <param name="code">分组 </param>
+            /// <param name="_namespace">权限分组的 Code</param>
+            /// <param name="resourceType">
+            /// 可选，资源类型，默认会返回所有有权限的资源，现有资源类型如下：
+            /// DATA：数据类型；
+            /// API：API 类型数据；
+            /// MENU：菜单类型数据；
+            /// BUTTON：按钮类型数据。
+            /// </param>
+            /// <returns></returns>
             public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string code, string _namespace, ResourceType resourceType = default)
             {
                 var param = new ListGroupAuthorizedResourcesParam(code)
