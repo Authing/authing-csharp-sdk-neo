@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Linq.Expressions;
 using Authing.ApiClient.Auth.Types;
 using Authing.ApiClient.Types;
 using Newtonsoft.Json;

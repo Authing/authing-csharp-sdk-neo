@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
-using Authing.ApiClient.Domain.Model.Management.Userpool;
+using Authing.ApiClient.Domain.Model.Management.Userpool;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
 using Authing.ApiClient.Infrastructure.GraphQL;
-using Authing.ApiClient.Types;
-using Flurl;
-using Flurl.Http;
+using Authing.ApiClient.Interfaces.ManagementClient;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -34,14 +28,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 this.client = client;
             }
 
-
             /// <summary>
             /// 用户池详情
             /// </summary>
             /// <returns></returns>
             public async Task<UserPool> Detail()
             {
-                var res = await client.Get<UserPool>("api/v2/userpools/detail",new GraphQLRequest());
+                var res = await client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
                 return res.Data;
             }
 
@@ -74,14 +67,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="key">环境变量键</param>
             /// <param name="value">环境变量值</param>
             /// <returns></returns>
-            public async Task<int> AddEnv(
-                string key,
-                object value
-                )
+            public async Task<int> AddEnv(string key, object value)
             {
 
-                var result=  await client.Post<Env>("api/v2/env", new Dictionary<string, string> 
-                { 
+                var result = await client.Post<Env>("api/v2/env", new Dictionary<string, string>
+                {
                     { "key", key },
                   { "value",value.ToString()}
                 });
@@ -94,15 +84,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// </summary>
             /// <param name="key">环境变量键</param>
             /// <returns></returns>
-            public async Task<int> RemoveEnv(
-                string key)
+            public async Task<int> RemoveEnv(string key)
             {
                 var result = await client.Delete<Env>($"api/v2/env/{key}", null);
 
                 return result.Code;
             }
-
-
         }
 
     }

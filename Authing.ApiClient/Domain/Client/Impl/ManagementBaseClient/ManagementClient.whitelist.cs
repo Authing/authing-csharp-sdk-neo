@@ -1,13 +1,8 @@
 ﻿using Authing.ApiClient.Types;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Client.Impl.Client;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
-using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient

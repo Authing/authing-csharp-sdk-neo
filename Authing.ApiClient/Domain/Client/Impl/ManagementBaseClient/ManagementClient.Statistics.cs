@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management.Statistics;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces.ManagementClient;
-using Authing.ApiClient.Types;
-using Newtonsoft.Json;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
