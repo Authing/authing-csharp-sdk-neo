@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management;
@@ -41,10 +38,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="name">分组名称</param>
             /// <param name="description">描述</param>
             /// <returns></returns>
-            public async Task<Group> Create(
-                string code,
-                string name,
-                string description = null)
+            public async Task<Group> Create(string code, string name, string description = null)
             {
                 var param = new CreateGroupParam(code, name, description);
 
@@ -73,11 +67,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="description"></param>
             /// <param name="newCode"></param>
             /// <returns></returns>
-            public async Task<Group> Update(
-                string code,
-                string name = null,
-                string description = null,
-                string newCode = null)
+            public async Task<Group> Update(string code, string name = null, string description = null, string newCode = null)
             {
                 var param = new UpdateGroupParam(code)
                 {
@@ -109,9 +99,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="page">分页页数，默认为 1</param>
             /// <param name="limit">分页大小，默认为 10</param>
             /// <returns></returns>
-            public async Task<PaginatedGroups> List(
-                int page = 1,
-                int limit = 10)
+            public async Task<PaginatedGroups> List(int page = 1, int limit = 10)
             {
                 var param = new GroupsParam()
                 {
@@ -122,7 +110,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var res = await client.Request<GroupsResponse>(param.CreateRequest());
                 return res.Data?.Result;
             }
-
 
             /// <summary>
             /// 批量删除分组
@@ -146,10 +133,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             /// TODO: 下一个大版本去除
             [Obsolete("旧版本")]
-            public async Task<PaginatedUsers> ListUsers(
-                string code,
-                int page = 1,
-                int limit = 10)
+            public async Task<PaginatedUsers> ListUsers(string code, int page = 1, int limit = 10)
             {
                 var param = new GroupWithUsersParam(code)
                 {
@@ -161,9 +145,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return res.Data?.Result.Users;
             }
 
-            public async Task<PaginatedUsers> ListUsers(
-                string code,
-                ListUsersOption listUsersOption = null)
+            public async Task<PaginatedUsers> ListUsers(string code, ListUsersOption listUsersOption = null)
             {
                 if (listUsersOption != null && !listUsersOption.WithCustomData)
                 {
@@ -195,9 +177,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="code">分组唯一标志</param>
             /// <param name="userIds">用户 ID 列表</param>
             /// <returns></returns>
-            public async Task<CommonMessage> AddUsers(
-                string code,
-                IEnumerable<string> userIds)
+            public async Task<CommonMessage> AddUsers(string code, IEnumerable<string> userIds)
             {
                 var param = new AddUserToGroupParam(userIds)
                 {
@@ -214,9 +194,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="code">分组唯一标志</param>
             /// <param name="userIds">用户 ID 列表</param>
             /// <returns></returns>
-            public async Task<CommonMessage> RemoveUsers(
-                string code,
-                IEnumerable<string> userIds)
+            public async Task<CommonMessage> RemoveUsers(string code, IEnumerable<string> userIds)
             {
                 var param = new RemoveUserFromGroupParam(userIds)
                 {

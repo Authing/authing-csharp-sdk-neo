@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
-
 using Newtonsoft.Json;
 using HttpMethod = System.Net.Http.HttpMethod;
 
@@ -152,8 +149,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
-
-
 
             HttpRequestMessage message = null;
 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
-using Authing.ApiClient.Domain.Model.Management.UserPool;
+using Authing.ApiClient.Domain.Model.Management.Userpool;
 
-namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
+namespace Authing.ApiClient.Interfaces.ManagementClient
 {
     public interface IUserpoolManagement
     {
