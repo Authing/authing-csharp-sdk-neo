@@ -40,7 +40,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
         //    UserDefinedField result = await client.Udf.Set(UdfTargetType.APPLICATION, "app", Core.Model.UdfDataType.STRING, "13123123");
 
-        //    var key = await client.Udf.List(UdfTargetType.APPLICATION);
+        //    var key = await client.Udf.UserLogsInfo(UdfTargetType.APPLICATION);
 
         //    Assert.NotNull(key.First().Key == "app");
         //}
@@ -52,7 +52,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
         //    UserDefinedField result = await client.Udf.Set(UdfTargetType.NODE, "node", Core.Model.UdfDataType.STRING, "nodestring");
 
-        //    var key = await client.Udf.List(UdfTargetType.NODE);
+        //    var key = await client.Udf.UserLogsInfo(UdfTargetType.NODE);
 
         //    Assert.NotNull(key.First().Key == "node");
         //}
@@ -64,7 +64,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
         //    UserDefinedField result = await client.Udf.Set(UdfTargetType.ORG, "org", Core.Model.UdfDataType.STRING, "orgString");
 
-        //    var key = await client.Udf.List(UdfTargetType.ORG);
+        //    var key = await client.Udf.UserLogsInfo(UdfTargetType.ORG);
 
         //    Assert.NotNull(key.First().Key == "org");
         //}
@@ -76,7 +76,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
         //    UserDefinedField result = await client.Udf.Set(UdfTargetType.PERMISSION, "org", Core.Model.UdfDataType.STRING, "orgString");
 
-        //    var key = await client.Udf.List(UdfTargetType.ORG);
+        //    var key = await client.Udf.UserLogsInfo(UdfTargetType.ORG);
 
         //    Assert.NotNull(key.First().Key == "org");
         //}
@@ -88,7 +88,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
         //    UserDefinedField result = await client.Udf.Set(UdfTargetType.USERPOOL, "userPool", Core.Model.UdfDataType.STRING, "userPoolString");
 
-        //    var key = await client.Udf.List(UdfTargetType.USERPOOL);
+        //    var key = await client.Udf.UserLogsInfo(UdfTargetType.USERPOOL);
 
         //    Assert.NotNull(key.First().Key == "userPool");
         //}
