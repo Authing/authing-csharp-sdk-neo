@@ -12,6 +12,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public IOrgsManagementClient Orgs { get; private set; }
 
+        public IUsersManagementClient Users { get; private set; }
         public IRolesManagementClient Roles { get; private set; }
 
         public Action<InitAuthenticationClientOptions> Init { get; }
@@ -23,7 +24,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
         {
-            Users = new ManagementClient.UsersManagementClient(this);
+            Users = new UsersManagementClient(this);
             Udf = new UdfManagementClient(this);
             Orgs = new OrgsManagementClient(this);
             Roles = new RolesManagementClient(this);

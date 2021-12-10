@@ -73,15 +73,15 @@ namespace Authing.ApiClient.Framework.Test.ManagementClient.Groups
             Assert.Equal(result.Code,200);
         }
 
-        [Fact]
-        public async Task Groups_ListUsers()
-        {
-            await managementClient.Groups.Create("testgroup_ListUsers", "testgroup_ListUsers", "testgroup_ListUsers");
-            await managementClient.Groups.AddUsers("testgroup_ListUsers", new List<string>() { TestUserId });
-            var users = await managementClient.Groups.ListUsers("testgroup_ListUsers", new ListUsersOption());
-            Assert.NotEmpty(users.List);;
-            Assert.Equal(users.List.Take(1).First().Id,TestUserId);
-        }
+        //[Fact]
+        //public async Task Groups_ListUsers()
+        //{
+        //    await managementClient.Groups.Create("testgroup_ListUsers", "testgroup_ListUsers", "testgroup_ListUsers");
+        //    await managementClient.Groups.AddUsers("testgroup_ListUsers", new List<string>() { TestUserId });
+        //    var users = await managementClient.Groups.ListUsers("testgroup_ListUsers", new ListUsersOption());
+        //    Assert.NotEmpty(users.List);;
+        //    Assert.Equal(users.List.Take(1).First().Id,TestUserId);
+        //}
 
         [Fact]
         public async Task Groups_AddUser()
@@ -99,12 +99,12 @@ namespace Authing.ApiClient.Framework.Test.ManagementClient.Groups
             await managementClient.Groups.Delete("testgroup_AddUser");
         }
 
-        [Fact]
-        public async Task Groups_ListAuthorizedResources()
-        {
-            var result = await managementClient.Groups.ListAuthorizedResources("ListAuthorizedResources", "6172807001258f603126a78a", ResourceType.DATA);
-            Assert.NotEmpty(result.List);
-            Assert.Equal(result.List.First().Code, "Books:test");
-        }
+        //[Fact]
+        //public async Task Groups_ListAuthorizedResources()
+        //{
+        //    var result = await managementClient.Groups.ListAuthorizedResources("ListAuthorizedResources", "6172807001258f603126a78a", ResourceType.DATA);
+        //    Assert.NotEmpty(result.List);
+        //    Assert.Equal(result.List.First().Code, "Books:test");
+        //}
     }
 }

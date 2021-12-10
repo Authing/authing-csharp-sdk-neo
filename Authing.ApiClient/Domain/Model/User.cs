@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Authing.ApiClient.Domain.Model.Management.Roles;
+using Authing.ApiClient.Domain.Model.Management.Groups;
+using Authing.ApiClient.Domain.Model.Management.Department;
+
 
 namespace Authing.ApiClient.Domain.Model
 {
@@ -226,23 +230,20 @@ namespace Authing.ApiClient.Domain.Model
         /// <summary>
         /// 用户所在的角色列表
         /// </summary>
-        // TODO: needfix
-        // [JsonProperty("roles")]
-        // public PaginatedRoles Roles { get; set; }
+        [JsonProperty("roles")]
+        public PaginatedRoles Roles { get; set; }
 
         /// <summary>
         /// 用户所在的分组列表
         /// </summary>
-        // TODO: needfix
-        // [JsonProperty("groups")]
-        // public PaginatedGroups Groups { get; set; }
+        [JsonProperty("groups")]
+        public PaginatedGroups Groups { get; set; }
 
         /// <summary>
         /// 用户所在的部门列表
         /// </summary>
-        // TODO: needfix
-        // [JsonProperty("departments")]
-        // public PaginatedDepartments Departments { get; set; }
+        [JsonProperty("departments")]
+        public PaginatedDepartments Departments { get; set; }
 
         /// <summary>
         /// 被授权访问的所有资源

@@ -38,7 +38,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
         }
 
-        protected async Task<string> GetAccessToken()
+        public async Task<string> GetAccessToken()
         {
             long now = DateTimeOffset.Now.Second;
 
