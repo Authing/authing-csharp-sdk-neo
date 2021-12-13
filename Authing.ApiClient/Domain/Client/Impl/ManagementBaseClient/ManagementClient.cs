@@ -32,6 +32,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Groups = new GroupsManagementClient(this);
             Userpool = new UserpoolManagement(this);
             Statistics = new StatisticsManagement(this);
+            acl = new AclManagementClient(this);
             Init = init ?? throw new ArgumentNullException(nameof(init));
         }
 
@@ -45,7 +46,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Roles = new RolesManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             manageClient.Groups = new GroupsManagementClient(manageClient);
-
+            manageClient.acl = new AclManagementClient(manageClient);
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
             return manageClient;
@@ -62,7 +63,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Roles = new RolesManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             manageClient.Groups = new GroupsManagementClient(manageClient);
-
+            manageClient.acl = new AclManagementClient(manageClient);
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
             return manageClient;

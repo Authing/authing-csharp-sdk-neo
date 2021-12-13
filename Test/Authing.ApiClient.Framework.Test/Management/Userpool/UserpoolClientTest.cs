@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Userpool
