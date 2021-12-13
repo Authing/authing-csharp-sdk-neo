@@ -98,8 +98,6 @@ GKl64GDcIq3au+aqJQIDAQAB
             return result;
         }
 
-
-
         protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string,string> body, Dictionary<string, string> headers)
 
         {
@@ -126,11 +124,25 @@ GKl64GDcIq3au+aqJQIDAQAB
             return result;
         }
 
-
-
         protected async Task<GraphQLResponse<TResponse>> Delete<TRequest, TResponse>(string api, TRequest body, Dictionary<string, string> headers)
         {
             var result = await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Delete, body, headers);
+            CheckResult(result);
+            return result;
+        }
+
+        protected async Task<GraphQLResponse<TResponse>> Patch<TResponse>(string api, Dictionary<string, string> body, Dictionary<string, string> headers)
+        {
+            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Patch, body,
+                headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
+        }
+
+        protected async Task<GraphQLResponse<TResponse>> Put<TResponse>(string api, Dictionary<string, string> body, Dictionary<string, string> headers)
+        {
+            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Put, body,
+                headers ?? new Dictionary<string, string>());
             CheckResult(result);
             return result;
         }

@@ -10,10 +10,9 @@ namespace Authing.ApiClient.Extensions
     {
         public static bool CheckParameter(this string parameter)
         {
-            Regex temp = new Regex(@"^[0-9a-z]+:[0-9a-z]+$", RegexOptions.IgnoreCase);
-            if (!(temp.IsMatch(parameter))) new ArgumentException($"parameter {parameter} not correct !");
-            else return true;
-            return false;
+            Regex temp = new Regex(@"^[0-9a-z]+:[0-9a-z*]+$", RegexOptions.IgnoreCase);
+            if (!(temp.IsMatch(parameter))) throw new ArgumentException($"parameter {parameter} not correct !");
+            return true;
         }
     }
 }

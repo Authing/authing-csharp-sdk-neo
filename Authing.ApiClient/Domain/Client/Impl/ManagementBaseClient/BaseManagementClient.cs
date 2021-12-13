@@ -149,6 +149,30 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Delete<GraphQLRequest, TResponse>(api, body, headers);
         }
 
+        public async Task<GraphQLResponse<TResponse>> Patch<TResponse>(string api, Dictionary<string, string> body)
+        {
+
+            var headers = new Dictionary<string, string>();
+            var token = await GetAccessToken();
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await Patch<TResponse>(api, body, headers);
+        }
+
+        public async Task<GraphQLResponse<TResponse>> Put<TResponse>(string api, Dictionary<string, string> body)
+        {
+
+            var headers = new Dictionary<string, string>();
+            var token = await GetAccessToken();
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await Put<TResponse>(api, body, headers);
+        }
+
         protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();

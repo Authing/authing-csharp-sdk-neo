@@ -9,6 +9,8 @@ namespace Authing.ApiClient.Types
     {
         Get,
         Post,
-        Delete
+        Delete,
+        Patch,
+        Put,
     }
 }
