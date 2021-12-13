@@ -12,6 +12,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public IOrgsManagementClient Orgs { get; private set; }
 
+        public IRolesManagementClient Roles { get; private set; }
+
         public Action<InitAuthenticationClientOptions> Init { get; }
 
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
@@ -24,6 +26,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Users = new ManagementClient.UsersManagementClient(this);
             Udf = new UdfManagementClient(this);
             Orgs = new OrgsManagementClient(this);
+            Roles = new RolesManagementClient(this);
             Whitelist = new ManagementClient.WhitelistManagementClient(this);
             Groups = new GroupsManagementClient(this);
             Userpool = new UserpoolManagement(this);
@@ -38,6 +41,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
+            manageClient.Roles = new RolesManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             manageClient.Groups = new GroupsManagementClient(manageClient);
 
@@ -54,6 +58,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
+            manageClient.Roles = new RolesManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             manageClient.Groups = new GroupsManagementClient(manageClient);
 

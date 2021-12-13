@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model.Management;
 using Authing.ApiClient.Domain.Model.Management.Groups;
+using Authing.ApiClient.Types;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.ManagementClient.Groups
