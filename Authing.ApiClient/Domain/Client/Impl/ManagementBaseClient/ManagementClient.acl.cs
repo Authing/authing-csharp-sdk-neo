@@ -9,6 +9,7 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Acl;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
+using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Flurl;
 using Flurl.Http;
@@ -26,7 +27,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 权限控制类
         /// </summary>
-        public class AclManagementClient
+        public class AclManagementClient : IAclManagementClient
         {
             private readonly ManagementClient client;
 
@@ -452,6 +453,4 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         }
     }
-
-
 }

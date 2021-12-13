@@ -17,17 +17,23 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         public class StatisticsManagement : IStatisticsManagement
         {
-            private readonly ManagementClient client;
+            private readonly ManagementClient _client;
 
             public StatisticsManagement(ManagementClient client)
             {
-                this.client = client;
+                this._client = client;
             }
 
             /// <summary>
             /// 用户日志
             /// </summary>
-            /// <param name="options">用户日志查询参数</param>
+            /// <param name="options">管理日志统计信息分页查询参数
+            /// param.clientIp <String> 客户端真实 IP，如果你在服务器端调用此接口，请务必将此参数设置为终端用户的真实 IP。
+            /// param.operationNames<List<String>> 操作名称的集合
+            /// param.userIds<List<String>> 用户唯一标识的集合
+            /// param.page<Integer> 分页，获取第几页，默认从 1 开始。
+            /// param.limit<Integer> 每页条目数量，默认为 10 个
+            /// </param>
             /// <returns></returns>
             public async Task<UserLogs> listUserActions(LogsPageParam options)
             {
@@ -41,19 +47,25 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
                 foreach (var userid in options.UserId)
                 {
-                    endPoint += $"&totalCounttotalCount=arn:cn:authing:{client.UserPoolId}:user:{userid}";
+                    endPoint += $"&totalCounttotalCount=arn:cn:authing:{_client.UserPoolId}:user:{userid}";
                 }
 
                 endPoint += $"&page={options.Page}";
                 endPoint += $"&limit={options.Limit}";
-                var result = await client.Get<UserLogs>(endPoint, new GraphQLRequest());
+                var result = await _client.Get<UserLogs>(endPoint, new GraphQLRequest());
                 return result.Data;
             }
 
             /// <summary>
             /// 审计日志
             /// </summary>
-            /// <param name="options">审计日志参数</param>
+            /// <param name="options">审计日志参数
+            ///param.clientIp <String> 客户端真实 IP，如果你在服务器端调用此接口，请务必将此参数设置为终端用户的真实 IP。
+            /// param.operationNames<List<String>> 操作名称的集合
+            /// param.operatorArns<List<String>> 操作人的 arn 集合
+            /// param.page<Integer> 分页，获取第几页，默认从 1 开始。
+            /// param.limit<Integer> 每页条目数量，默认为 10 个
+            /// </param>
             /// <returns></returns>
             public async Task<AdminLogs> listAuditLogs(AuditLogPageParam options)
             {
@@ -71,7 +83,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
                 endPoint += $"&page={options.Page}";
                 endPoint += $"&limit={options.Limit}";
-                var result = await client.Get<AdminLogs>(endPoint, new GraphQLRequest());
+                var result = await _client.Get<AdminLogs>(endPoint, new GraphQLRequest());
                 return result.Data;
             }
         }
