@@ -82,11 +82,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// updates.description<String> 可选，权限分组描述。
             /// </param>
             /// <returns></returns>
-            public async Task<NameSpace> UpdateNamespace(string code, UpdateNamespaceParam updateNamespaceParam)
+            public async Task<NameSpace> UpdateNamespace(string nameSpaceId, UpdateNamespaceParam updateNamespaceParam)
             {
                 if (updateNamespaceParam == null) throw new ArgumentNullException(nameof(updateNamespaceParam));
 
-                var res = await client.Post<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}/code/{code}",
+                var res = await client.Put<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}/{nameSpaceId}",
                     new Dictionary<string, string>()
                     {
                         { nameof(updateNamespaceParam.Code), updateNamespaceParam.Code },
@@ -249,7 +249,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<CommonMessage> Allow(string userid, string nameSpace, string resource, string action)
             {
-                Regex temp = new Regex(@"^[0-9a-z]+:[0-9a-z]+$", RegexOptions.IgnoreCase);
                 action.CheckParameter();
                 resource.CheckParameter();
                 var param = new AllowParam(resource, action)
@@ -296,7 +295,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <param name="resource">资源名称，必须为 <resourceType>:<resourceId> 格式或者为 _，如 _，books:123，books:*</param>
             /// <param name="namespacecode">资源组CODE</param>
             /// <returns></returns>
-            public async Task<bool> IsAllowed(string userId, string action, string resource, string namespacecode = "")
+            public async Task<bool> IsAllowed(string userId, string resource, string action, string namespacecode = "")
             {
                 action.CheckParameter();
                 resource.CheckParameter();
@@ -304,13 +303,153 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return result.Data.Result;
             }
 
-            public async Task<PaginatedAuthorizedResources> listAuthorizedResources(PolicyAssignmentTargetType targetType, string targetIdentifier, string namespacecode, ListAuthorizedResourcesOptions options)
+            /// <summary>
+            /// 获取用户被授权的所有资源列表
+            /// </summary>
+            /// <param name="targetType">被授权主体类型</param>
+            /// <param name="targetIdentifier">被授权主体唯一标识</param>
+            /// <param name="namespacecode">权限分组的 Code</param>
+            /// <param name="options">
+            /// options.resourceType <String> 可选，资源类型，默认会返回所有有权限的资源，现有资源类型如下：
+            /// DATA：数据类型；
+            /// API：API 类型数据；
+            /// MENU：菜单类型数据；
+            /// BUTTON：按钮类型数据
+            /// </param>
+            /// <returns></returns>
+            public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(PolicyAssignmentTargetType targetType,
+                string targetIdentifier,
+                string namespacecode,
+                ListAuthorizedResourcesOptions options)
             {
                 var param = new ListAuthorizedResourcesParam(targetType, targetIdentifier, namespacecode,
                     options.ResourceType);
                 var result = await client.Request<ListAuthorizedResourcesResponse>(param.CreateRequest());
                 return result.Data.AuthorizedResources;
             }
+
+            /// <summary>
+            /// 获取具备某些资源操作权限的主体
+            /// </summary>
+            /// <param name="getAuthorizedTargetsOptions">
+            /// options.namespace <String> 权限分组的 Code，详情请见使用权限分组管理权限资源。
+            /// options.resourceType<ResourceType> 资源类型，现有资源类型如下：
+            /// DATA：数据类型；
+            /// API：API 类型数据；
+            /// MENU：菜单类型数据；
+            /// BUTTON：按钮类型数据。
+            /// options.actions<AuthorizedTargetsActionsInput> 操作
+            /// actions.op<String> 可选值为 AND、OR，表示 list 中的操作关系是和还是或。
+            /// actions.list<List<String>> 操作，例如['read', 'write']。
+            /// options.targetType<PolicyAssignmentTargetType> 主体类型，可选值为 USER、ROLE、ORG、GROUP，含义为用户、角色、组织机构节点、用户分组
+            /// </param>
+            /// <returns></returns>
+            public async Task<PaginatedAuthorizedTargets> GetAuthorizedTargets(GetAuthorizedTargetsOptions getAuthorizedTargetsOptions)
+            {
+                if (getAuthorizedTargetsOptions.NameSpace == null)
+                {
+                    throw new ArgumentException("请传入 options.namespace，含义为权限分组标识");
+                }
+                if (getAuthorizedTargetsOptions.Resource == null)
+                {
+                    throw new ArgumentException("请传入 options.resource，含义为资源标识");
+                }
+                if (getAuthorizedTargetsOptions.ResourceType == null)
+                {
+                    throw new ArgumentException("请传入 options.resourceType，含义为资源类型");
+                }
+                var param = new AuthorizedTargetsParam(getAuthorizedTargetsOptions.NameSpace, getAuthorizedTargetsOptions.ResourceType.Value, getAuthorizedTargetsOptions.Resource)
+                {
+                    Actions = getAuthorizedTargetsOptions.Actions,
+                    TargetType = getAuthorizedTargetsOptions.TargetType
+                };
+                var res = await client.Request<AuthorizedTargetsResponse>(param.CreateRequest());
+                return res.Data.Result;
+            }
+
+            public async Task<CommonMessage> AuthorizeResource(
+                string namespacecode,
+                string resource,
+                IEnumerable<AuthorizeResourceOpt> authorizeResourceOptions
+            )
+            {
+                resource.CheckParameter();
+                var param = new AuthorizeResourceParam()
+                {
+                    Namespace = namespacecode,
+                    Resource = resource,
+                    Opts = authorizeResourceOptions
+                };
+                var res = await client.Request<AuthorizeResourceResponse>(param.CreateRequest());
+                return res.Data.Result;
+            }
+
+            public async Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}/programmatic-access-accounts?limit=${options.Limit}&page=${options.Page}";
+                var res = await client.Get<Pagination<ProgrammaticAccessAccount>>(endPoint, new GraphQLRequest());
+                return res.Data;
+            }
+
+
+            public async Task<ProgrammaticAccessAccount> CreateProgrammaticAccessAccount(string appId, CreateProgrammaticAccessAccountParam createProgrammaticAccessAccountParam)
+            {
+                string endPoint = $"api/v2/applications/{appId}/programmatic-access-accounts";
+                var res = await client.Post<ProgrammaticAccessAccount>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {
+                            nameof(createProgrammaticAccessAccountParam.AppId).ToLower(),
+                            createProgrammaticAccessAccountParam.AppId
+                        },
+                        {
+                            nameof(createProgrammaticAccessAccountParam.Remarks).ToLower(),
+                            createProgrammaticAccessAccountParam.Remarks
+                        },
+                        {
+                            //token_lifetime
+                            nameof(createProgrammaticAccessAccountParam.Token_lifetime).ToLower(),
+                            createProgrammaticAccessAccountParam.Token_lifetime.ToString()
+                        }
+                    });
+                return res.Data;
+            }
+
+            public async Task<RestfulResponse<bool>> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId)
+            {
+                string endPoint =
+                    $"=api/v2/applications/programmatic-access-accounts?id=${programmaticAccessAccountId}";
+
+                var result = await client.Delete<RestfulResponse<bool>>(endPoint, new GraphQLRequest());
+                return result.Data;
+            }
+
+            public async Task<ProgrammaticAccessAccount> EnableProgrammaticAccessAccount(
+                string programmaticAccessAccountId)
+            {
+                string endPoint = "v2/applications/programmatic-access-accounts";
+                var result = await client.Patch<ProgrammaticAccessAccount>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {"id",programmaticAccessAccountId},
+                        {"enable","true"}
+                    });
+                return result.Data;
+            }
+
+            public async Task<ProgrammaticAccessAccount> DisableProgrammaticAccessAccount(
+                string programmaticAccessAccountId)
+            {
+                string endPoint = "v2/applications/programmatic-access-accounts";
+                var result = await client.Post<ProgrammaticAccessAccount>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {"id",programmaticAccessAccountId},
+                        {"enable","false"}
+                    });
+                return result.Data;
+            }
+
         }
     }
 

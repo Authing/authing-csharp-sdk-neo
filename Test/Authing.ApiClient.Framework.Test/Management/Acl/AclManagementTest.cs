@@ -29,7 +29,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         public async Task Acl_UpdateNamespace()
         {
             //TODO:需要httpPut方法
-            var result = await managementClient.acl.UpdateNamespace("testNameSpace", new UpdateNamespaceParam() { Description = "测试描述" });
+            //64507
+            var data = await managementClient.acl.CreateNamespace("testNameSpace2", "testNameSpace2", "testNameSpace2");
+            var result = await managementClient.acl.UpdateNamespace(data.Id.ToString(), new UpdateNamespaceParam() { Code = "testNameSpace2", Name = "testNameSpace2", Description = "测试描述" });
             Assert.Equal(result.Description, "测试描述");
         }
 
@@ -91,68 +93,131 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         }
 
         [Fact]
-        async Task Acl_updateResource()
+        public async Task Acl_UpdateResource()
         {
             //var r = await managementClient.acl.FindResourceByCode("Book", "test");
-            var result = await managementClient.acl.UpdateResource("Book", new ResourceParam() { Code = "Book",NameSpace = "test", Description = "HelloWord",Type = ResourceType.API});
+            var result = await managementClient.acl.UpdateResource("Book", new ResourceParam() { Code = "Book", NameSpace = "test", Description = "HelloWord", Type = ResourceType.API });
             Assert.NotNull(result);
         }
 
         [Fact]
-        async Task Acl_deleteResource()
+        public async Task Acl_DeleteResource()
         {
             string code = "";
             var list = await managementClient.acl.ListNamespaces();
             var id = list.List.FirstOrDefault(i => i.Code == "test")?.Code;
             var result = await managementClient.acl.CreateResource(new
                 ResourceParam()
-                {
-                    Code = code = new Random().Next().ToString(),
-                    NameSpace = id,
-                    Type = ResourceType.DATA,
-                    //NameSpace = "6172807001258f603126a78a",
-                    Actions = new List<ResourceAction>() { new ResourceAction() { Name = "123", Description = "123" } },
-                });
+            {
+                Code = code = new Random().Next().ToString(),
+                NameSpace = id,
+                Type = ResourceType.DATA,
+                //NameSpace = "6172807001258f603126a78a",
+                Actions = new List<ResourceAction>() { new ResourceAction() { Name = "123", Description = "123" } },
+            });
             Assert.Equal(result.Code, code);
 
             Assert.True(await managementClient.acl.DeleteResource(code, id.ToString()));
         }
 
         [Fact]
-        async Task Acl_Allow()
+        public async Task Acl_Allow()
         {
-            var result = await managementClient.acl.Allow(TestUserId, "test", "Cat:touch", "Cat:read");
-            Assert.Equal(result.Code,200);
+            var result = await managementClient.acl.Allow(TestUserId, "test", "Cat:*", "Cat:Read");
+            Assert.Equal(result.Code, 200);
         }
 
         [Fact]
-        async Task Acl_RevokeResource()
+        public async Task Acl_RevokeResource()
         {
             //TODO:opts.map is not a function
             var result = await managementClient.acl.RevokeResource(
-                new RevokeResourceParams() {
+                new RevokeResourceParams()
+                {
                     NameSpace = "test",
                     Opts = new List<RevokeResourceOpt>()
                         {new RevokeResourceOpt(){TargetIdentifier = TestUserId,TargetType = PolicyAssignmentTargetType.USER}},
-                    Resource = "Cat:touch"
+                    Resource = "Cat:test"
                 });
         }
 
         [Fact]
-        async Task Acl_IsAllowed()
+        public async Task Acl_IsAllowed()
         {
-            var result = await managementClient.acl.IsAllowed(TestUserId, "Cat:read", "Cat:touch","test");
+            var result = await managementClient.acl.IsAllowed(TestUserId, "Cat:*", "Cat:Read", "test");
             Assert.True(result);
         }
 
         [Fact]
-        async Task Acl_listAuthorizedResources()
+        public async Task Acl_ListAuthorizedResources()
         {
-            var result = await managementClient.acl.listAuthorizedResources(
+            var result = await managementClient.acl.ListAuthorizedResources(
                 PolicyAssignmentTargetType.USER, TestUserId,
                 "test",
                 new ListAuthorizedResourcesOptions() { ResourceType = ResourceType.DATA });
             Assert.NotEmpty(result.List);
+        }
+
+        [Fact]
+        public async Task Acl_GetAuthorizedTargets()
+        {
+            var result = await managementClient.acl.GetAuthorizedTargets(new GetAuthorizedTargetsOptions()
+            {
+                NameSpace = "test",
+                Resource = "Cat",
+                ResourceType = ResourceType.DATA,
+                Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "read" }),
+                TargetType = PolicyAssignmentTargetType.USER,
+            });
+
+            Assert.NotEmpty(result.List);
+        }
+
+        [Fact]
+        public async Task Acl_AuthorizeResource()
+        {
+            var result = await managementClient.acl.AuthorizeResource("test", "Cat:read"
+                , new List<AuthorizeResourceOpt>()
+                {
+                    new AuthorizeResourceOpt(PolicyAssignmentTargetType.USER,"61a5c55fc89ff91083293e45")
+                });
+            Assert.Equal(result.Code,200);
+        }
+
+        [Fact]
+        public async Task Acl_ProgrammaticAccessAccountList()
+        {
+            var result = await managementClient.acl.ProgrammaticAccessAccountList(new ProgrammaticAccessAccountListProps(){AppId = AppId});
+            Assert.NotEmpty(result.List);
+        }
+
+        [Fact]
+        public async Task Acl_CreateProgrammaticAccessAccount()
+        {
+            //TODO:{"code":500,"message":"null value in column \"token_lifetime\" violates not-null constraint"}
+            var result = await managementClient.acl.CreateProgrammaticAccessAccount(AppId,
+                new CreateProgrammaticAccessAccountParam() { Remarks = "测试创建编程账户",AppId = AppId,Token_lifetime = 600});
+        }
+
+        [Fact]
+        public async Task Acl_DeleteProgrammaticAccessAccount()
+        {
+            var result = await managementClient.acl.DeleteProgrammaticAccessAccount("123");
+            Assert.Equal(result.Code,200);
+        }
+
+        [Fact]
+        public async Task Acl_EnableProgrammaticAccessAccount()
+        {
+            var result = await managementClient.acl.EnableProgrammaticAccessAccount("123");
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task Acl_DisableProgrammaticAccessAccount()
+        {
+            var result = await managementClient.acl.DisableProgrammaticAccessAccount("123");
+            Assert.NotNull(result);
         }
 
     }

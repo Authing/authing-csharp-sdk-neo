@@ -34,8 +34,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             }
         }
 
-
-
         public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, Dictionary<string, string> body,
 
     Dictionary<string, string> headers)
@@ -44,7 +42,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             return await SendRequest<TResponse>(url, body, headers, httpType);
 
         }
-
 
         private AuthingClient()
         {
@@ -136,10 +133,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
         }
 
-
-
-
-
         private async Task<TResponse> SendRequest<TResponse>(string url, Dictionary<string, string> body,
 
            Dictionary<string, string> headers, HttpType httpType = HttpType.Post)
@@ -165,6 +158,33 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             {
 
                 message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
+            }
+            else if (httpType == HttpType.Patch)
+
+            {
+                SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
+
+                message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
+
+                {
+
+                    Content = new FormUrlEncodedContent(sortedParam)
+
+                };
+            }
+
+            else if (httpType == HttpType.Put)
+
+            {
+                SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
+
+                message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
+
+                {
+
+                    Content = new FormUrlEncodedContent(sortedParam)
+
+                };
             }
             else
 
