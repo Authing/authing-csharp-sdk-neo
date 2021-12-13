@@ -64,29 +64,29 @@ namespace Authing.ApiClient.Framework.Test.Management.Groups
             await managementClient.Groups.Create("testgroup_DeleteMany2", "testgroup_DeleteMany2", "testgroup_DeleteMany2");
             await managementClient.Groups.Create("testgroup_DeleteMany3", "testgroup_DeleteMany3", "testgroup_DeleteMany3");
             var list = await managementClient.Groups.List();
-            Assert.Equal(list.TotalCount,4);
+            Assert.Equal(list.TotalCount, 4);
             var result = await managementClient.Groups.DeleteMany(new List<string>()
                 { "testgroup_DeleteMany1", "testgroup_DeleteMany2", "testgroup_DeleteMany3" });
-            Assert.Equal(result.Code,200);
+            Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async Task Groups_ListUsers()
         {
-            await managementClient.Groups.Create("testgroup_ListUsers", "testgroup_ListUsers", "testgroup_ListUsers");
+            var list = await managementClient.Groups.Create("testgroup_ListUsers", "testgroup_ListUsers", "testgroup_ListUsers");
             await managementClient.Groups.AddUsers("testgroup_ListUsers", new List<string>() { TestUserId });
             var users = await managementClient.Groups.ListUsers("testgroup_ListUsers", new ListUsersOption());
             Assert.NotNull(users.List); ;
-            Assert.NotEmpty(users.List);;
-            Assert.Equal(users.List.Take(1).First().Id,TestUserId);
+            Assert.NotEmpty(users.List); ;
+            Assert.Equal(users.List.Take(1).First().Id, TestUserId);
         }
 
         [Fact]
         public async Task Groups_AddUser()
         {
-           await managementClient.Groups.Create("testgroup_AddUser", "testgroup_AddUser", "testgroup_AddUser");
-           var result = await managementClient.Groups.AddUsers("testgroup_AddUser", new List<string>() { TestUserId });
-           Assert.Equal(result.Code,200);
+            await managementClient.Groups.Create("testgroup_AddUser", "testgroup_AddUser", "testgroup_AddUser");
+            var result = await managementClient.Groups.AddUsers("testgroup_AddUser", new List<string>() { TestUserId });
+            Assert.Equal(result.Code, 200);
         }
 
         [Fact]

@@ -138,13 +138,21 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {
+            //TODO errorcode = 0 的情况存在
             //if (result.Code == 200)
             //{
             //    return;
             //}
-            if (result.Errors != null && result.Errors.Any())
+
+
+
+            if (result.Errors != null && result.Errors.Any() || (result.Code != 200 && result.Code != 0))
             {
                 var error = result.Errors?[0].Message;
+                if (error is null)
+                {
+                    error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
+                }
                 throw new AuthingException(error.Message, error.Code);
             }
         }

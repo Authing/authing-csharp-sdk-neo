@@ -138,7 +138,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
-
         {
 
             var headers = new Dictionary<string, string>();
