@@ -21,11 +21,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public class UserpoolManagement : IUserpoolManagement
         {
-            private readonly ManagementClient client;
+            private readonly ManagementClient _client;
 
             public UserpoolManagement(ManagementClient client)
             {
-                this.client = client;
+                this._client = client;
             }
 
             /// <summary>
@@ -34,7 +34,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<UserPool> Detail()
             {
-                var res = await client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
+                var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
                 return res.Data;
             }
 
@@ -47,7 +47,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new UpdateUserpoolParam(updates);
 
-                var res = await client.Request<UpdateUserpoolResponse>(param.CreateRequest());
+                var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest());
                 return res.Data?.Result;
             }
 
@@ -57,7 +57,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<IEnumerable<Env>> ListEnv()
             {
-                var res = await client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
+                var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
                 return res.Data;
             }
 
@@ -70,7 +70,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<int> AddEnv(string key, object value)
             {
 
-                var result = await client.Post<Env>("api/v2/env", new Dictionary<string, string>
+                var result = await _client.Post<Env>("api/v2/env", new Dictionary<string, string>
                 {
                     { "key", key },
                   { "value",value.ToString()}
@@ -86,7 +86,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<int> RemoveEnv(string key)
             {
-                var result = await client.Delete<Env>($"api/v2/env/{key}", null);
+                var result = await _client.Delete<Env>($"api/v2/env/{key}", null);
 
                 return result.Code;
             }
