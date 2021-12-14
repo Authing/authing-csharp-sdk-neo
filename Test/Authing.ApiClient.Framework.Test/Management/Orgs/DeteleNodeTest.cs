@@ -18,7 +18,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 
             var org = await client.Orgs.Create("测试删除子节点", "详情", "9527");
 
-            Org newOrg = null;
+            Authing.ApiClient.Domain.Model.Management.Orgs.Org newOrg = null;
             for (int i = 0; i < 10; i++)
             {
                 AddNodeParam addNodeParam = new AddNodeParam(org.RootNode.OrgId, org.RootNode.Id, "测试删除子节点添加的节点"+i);

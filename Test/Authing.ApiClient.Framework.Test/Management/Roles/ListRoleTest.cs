@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Authing.ApiClient.Domain.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,7 +52,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
         public async void ListRoleWithNameSpaceAndPage_Test()
         {
             var client = managementClient;
-
+         
             string nameSpace = "613189b38b6c66cac1d211bd";
             for (int i = 0; i < 10; i++)
             {
