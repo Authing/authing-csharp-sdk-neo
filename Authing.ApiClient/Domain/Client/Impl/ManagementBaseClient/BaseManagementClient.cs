@@ -97,10 +97,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
             return await Request<TResponse>(body, headers);
-        }
-
-
-
+        }
+
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api,Dictionary<string,string> body)
         {
             var headers = new Dictionary<string, string>();
@@ -112,10 +110,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Post<TResponse>(api,body, headers);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api,GraphQLRequest body)
-
-        {
-
+        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api,GraphQLRequest body)
+        {
             var headers = new Dictionary<string, string>();
             var token = await GetAccessToken();
             headers["Authorization"] = token;
@@ -137,9 +133,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Get<GraphQLRequest, TResponse>(api, body, headers);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
-        {
-
+        public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
+        {
             var headers = new Dictionary<string, string>();
             var token = await GetAccessToken();
             headers["Authorization"] = token;
@@ -172,6 +167,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-sdk-version"] = version;
             return await Put<TResponse>(api, body, headers);
         }
+
 
         protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
         {
