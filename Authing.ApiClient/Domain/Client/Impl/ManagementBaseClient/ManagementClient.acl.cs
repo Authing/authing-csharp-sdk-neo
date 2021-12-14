@@ -363,6 +363,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return res.Data.Result;
             }
 
+
             public async Task<CommonMessage> AuthorizeResource(
                 string namespacecode,
                 string resource,
@@ -379,6 +380,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var res = await client.Request<AuthorizeResourceResponse>(param.CreateRequest());
                 return res.Data.Result;
             }
+
 
             public async Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options)
             {
@@ -411,13 +413,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return res.Data;
             }
 
-            public async Task<RestfulResponse<bool>> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId)
+            public async Task<bool> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId)
             {
                 string endPoint =
                     $"=api/v2/applications/programmatic-access-accounts?id=${programmaticAccessAccountId}";
 
                 var result = await client.Delete<RestfulResponse<bool>>(endPoint, new GraphQLRequest());
-                return result.Data;
+                return result.Data.Code == 200;
             }
 
             public async Task<ProgrammaticAccessAccount> EnableProgrammaticAccessAccount(
@@ -450,11 +452,105 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 string endPoint = $"api/v2/applications/programmatic-access-accounts";
                 options.Secret ??= AuthingUtils.GenerateRandomString(32);
-                var result = await client.Patch<ProgrammaticAccessAccount>(endPoint,new Dictionary<string, string>()
+                var result = await client.Patch<ProgrammaticAccessAccount>(endPoint, new Dictionary<string, string>()
                 {
                     {nameof(options.Id).ToLower(),options.Id},
                     {nameof(options.Secret).ToLower(),options.Secret}
                 });
+                return result.Data;
+            }
+
+            public async Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}/authorization/records?limit={options.Limit}&page={options.Page}";
+                var result = await client.Get<Pagination<ApplicationAccessPolicies>>(endPoint, new GraphQLRequest());
+                return result.Data;
+            }
+
+            public async Task<bool> EnableApplicationAccessPolicy(AppAccessPolicy options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}/authorization/enable-effect";
+                var result = await client.Post<RestfulResponse<bool>>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {nameof(options.AppId).ToLower(),options.AppId},
+                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
+                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
+                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
+                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
+                    });
+                return result.Data.Code == 200;
+            }
+
+            public async Task<bool> DisableApplicationAccessPolicy(AppAccessPolicy options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}/authorization/disable-effect";
+                var result = await client.Post<RestfulResponse<bool>>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {nameof(options.AppId).ToLower(),options.AppId},
+                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
+                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
+                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
+                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
+                    });
+                return result.Data.Code == 200;
+            }
+
+            public async Task<bool> DeleteApplicationAccessPolicy(AppAccessPolicy options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}/authorization/revoke";
+                var result = await client.Post<RestfulResponse<bool>>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {nameof(options.AppId).ToLower(),options.AppId},
+                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
+                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
+                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
+                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
+                    });
+                return result.Data.Code == 200;
+            }
+
+            public async Task<bool> AllowAccessApplication(AppAccessPolicy options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}/authorization/allow";
+                var result = await client.Post<RestfulResponse<bool>>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {nameof(options.AppId).ToLower(),options.AppId},
+                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
+                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
+                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
+                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
+                    });
+                return result.Data.Code == 200;
+            }
+
+            public async Task<bool> DenyAccessApplication(AppAccessPolicy options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}/authorization/deny";
+                var result = await client.Post<RestfulResponse<bool>>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {nameof(options.AppId).ToLower(),options.AppId},
+                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
+                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
+                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
+                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
+                    });
+                return result.Data.Code == 200;
+            }
+
+            public async Task<Application> UpdateDefaultApplicationAccessPolicy(DefaultAppAccessPolicy options)
+            {
+                string endPoint = $"api/v2/applications/{options.AppId}";
+                var result = await client.Post<Application>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {nameof(options.AppId).ToLower(),options.AppId},
+                        {nameof(options.DefaultStrategy).ToLower(),options.DefaultStrategy.ToString()}
+                    });
                 return result.Data;
             }
         }

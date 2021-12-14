@@ -174,7 +174,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
 
         Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options);
         Task<ProgrammaticAccessAccount> CreateProgrammaticAccessAccount(string appId, CreateProgrammaticAccessAccountParam createProgrammaticAccessAccountParam);
-        Task<RestfulResponse<bool>> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId);
+        Task<bool> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId);
 
         Task<ProgrammaticAccessAccount> EnableProgrammaticAccessAccount(
             string programmaticAccessAccountId);

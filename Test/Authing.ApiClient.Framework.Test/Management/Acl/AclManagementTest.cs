@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management.Acl;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Types;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Acl
@@ -181,13 +182,13 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 {
                     new AuthorizeResourceOpt(PolicyAssignmentTargetType.USER,"61a5c55fc89ff91083293e45")
                 });
-            Assert.Equal(result.Code,200);
+            Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async Task Acl_ProgrammaticAccessAccountList()
         {
-            var result = await managementClient.acl.ProgrammaticAccessAccountList(new ProgrammaticAccessAccountListProps(){AppId = AppId});
+            var result = await managementClient.acl.ProgrammaticAccessAccountList(new ProgrammaticAccessAccountListProps() { AppId = AppId });
             Assert.NotEmpty(result.List);
         }
 
@@ -196,14 +197,14 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         {
             //TODO:{"code":500,"message":"null value in column \"token_lifetime\" violates not-null constraint"}
             var result = await managementClient.acl.CreateProgrammaticAccessAccount(AppId,
-                new CreateProgrammaticAccessAccountParam() { Remarks = "测试创建编程账户",AppId = AppId,Token_lifetime = 600});
+                new CreateProgrammaticAccessAccountParam() { Remarks = "测试创建编程账户", AppId = AppId, Token_lifetime = 600 });
         }
 
         [Fact]
         public async Task Acl_DeleteProgrammaticAccessAccount()
         {
             var result = await managementClient.acl.DeleteProgrammaticAccessAccount("123");
-            Assert.Equal(result.Code,200);
+            Assert.True(result);
         }
 
         [Fact]
@@ -217,6 +218,92 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         public async Task Acl_DisableProgrammaticAccessAccount()
         {
             var result = await managementClient.acl.DisableProgrammaticAccessAccount("123");
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task Acl_GetApplicationAccessPolicies()
+        {
+            var result =
+                await managementClient.acl.GetApplicationAccessPolicies(new AppAccessPolicyQueryFilter()
+                { AppId = AppId });
+            Assert.NotEmpty(result.List);
+        }
+
+        [Fact]
+        public async Task Acl_EnableApplicationAccessPolicy()
+        {
+            var result = await managementClient.acl.EnableApplicationAccessPolicy(new AppAccessPolicy()
+            {
+                AppId = AppId,
+                InheritByChildren = null,
+                NameSpace = "default",
+                TargetType = PolicyAssignmentTargetType.USER,
+                TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
+            });
+        }
+
+        [Fact]
+        public async Task Acl_DisableApplicationAccessPolicy()
+        {
+            var result = await managementClient.acl.DisableApplicationAccessPolicy(new AppAccessPolicy()
+            {
+                AppId = AppId,
+                InheritByChildren = null,
+                NameSpace = "default",
+                TargetType = PolicyAssignmentTargetType.USER,
+                TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
+            });
+        }
+
+        [Fact]
+        public async Task Acl_DeleteApplicationAccessPolicy()
+        {
+            var result = await managementClient.acl.DeleteApplicationAccessPolicy(new AppAccessPolicy()
+            {
+                AppId = AppId,
+                InheritByChildren = null,
+                NameSpace = "default",
+                TargetType = PolicyAssignmentTargetType.USER,
+                TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
+            });
+        }
+
+        [Fact]
+        public async Task Acl_AllowApplicationAccessPolicy()
+        {
+            var result = await managementClient.acl.AllowAccessApplication(new AppAccessPolicy()
+            {
+                AppId = AppId,
+                InheritByChildren = null,
+                NameSpace = "default",
+                TargetType = PolicyAssignmentTargetType.USER,
+                TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
+            });
+        }
+
+        [Fact]
+        public async Task Acl_DenyApplicationAccessPolicy()
+        {
+            var result = await managementClient.acl.DenyAccessApplication(new AppAccessPolicy()
+            {
+                AppId = AppId,
+                InheritByChildren = null,
+                NameSpace = "default",
+                TargetType = PolicyAssignmentTargetType.USER,
+                TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
+            });
+        }
+
+        [Fact]
+        public async Task Acl_UpdateDefaultApplicationAccessPolicy()
+        {
+            var result =
+                await managementClient.acl.UpdateDefaultApplicationAccessPolicy(new DefaultAppAccessPolicy()
+                {
+                    AppId = AppId,
+                    DefaultStrategy = DefaultStrategy.ALLOW_ALL,
+                });
             Assert.NotNull(result);
         }
 
