@@ -33,7 +33,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<Org> AddNode(string orgId, AddNodeParam addNodeParam)
+        public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> AddNode(string orgId, AddNodeParam addNodeParam)
         {
             var param = new AddNodeParam(orgId, addNodeParam.ParentNodeId, addNodeParam.Name)
             {
@@ -48,7 +48,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<Org> Create(string name, string description = null, string code = null)
+        public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> Create(string name, string description = null, string code = null)
         {
             var param = new CreateOrgParam(name)
             {
@@ -74,9 +74,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<IEnumerable<Org>> ExportAll()
+        public async Task<IEnumerable<Authing.ApiClient.Domain.Model.Management.Orgs.Org>> ExportAll()
         {
-            var result = await client.Get<IEnumerable<Org>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest());
+            var result = await client.Get<IEnumerable<Authing.ApiClient.Domain.Model.Management.Orgs.Org>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest());
             return result.Data;
         }
 
@@ -88,7 +88,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res;
         }
 
-        public async Task<Org> FindById(string orgId)
+        public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> FindById(string orgId)
         {
             var param = new OrgParam(orgId);
             var res = await client.Post<OrgResponse>(param.CreateRequest());
@@ -102,7 +102,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<Org> ImportByJson(string json)
+        public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> ImportByJson(string json)
         {
             //var res = await client.Host.AppendPathSegment($"api/v2/orgs/import").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(json).ReceiveString();
             Dictionary<string,string> keyValuePairs = new System.Collections.Generic.Dictionary<string, string>
@@ -110,7 +110,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {  "filetype","json" },
                 { "file",json}
             };
-            var result = await client.Post<Org>("api/v2/orgs/import", keyValuePairs);
+            var result = await client.Post<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import", keyValuePairs);
 
             return null;
         }
@@ -188,7 +188,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<Org> MoveNode(string orgId, string nodeId, string targetParentId)
+        public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> MoveNode(string orgId, string nodeId, string targetParentId)
         {
             var param = new MoveNodeParam(orgId, nodeId, targetParentId);
             var res = await client.Post<MoveNodeResponse>(param.CreateRequest());

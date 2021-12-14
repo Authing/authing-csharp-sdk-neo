@@ -38,7 +38,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
         }
 
-        protected async Task<string> GetAccessToken()
+        public async Task<string> GetAccessToken()
         {
             long now = DateTimeOffset.Now.Second;
 
@@ -172,6 +172,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-sdk-version"] = version;
             return await Put<TResponse>(api, body, headers);
         }
+
 
         protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
         {

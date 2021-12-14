@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Authing.ApiClient.Domain.Model.Management.Userpool
+﻿namespace Authing.ApiClient.Domain.Model.Management.UserPool
 {
     public class Env
     {

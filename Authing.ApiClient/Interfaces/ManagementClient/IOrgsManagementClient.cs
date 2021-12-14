@@ -18,7 +18,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="description">根节点描述 </param>
         /// <param name="code">根节点唯一标志，必须为合法的英文字符。</param>
         /// <returns></returns>
-        Task<Org> Create(string name,string description=null,string code=null);
+        Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> Create(string name,string description=null,string code=null);
 
         /// <summary>
         /// 删除组织机构
@@ -49,7 +49,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="orgId">组织机构 ID</param>
         /// <param name="addNodeParam">节点信息</param>
         /// <returns></returns>
-        Task<Org> AddNode(string orgId,AddNodeParam addNodeParam);
+        Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> AddNode(string orgId,AddNodeParam addNodeParam);
 
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="id">组织机构 ID</param>
         /// <returns></returns>
-        Task<Org> FindById(string orgId);
+        Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> FindById(string orgId);
 
         /// <summary>
         ///  删除组织机构树中的某一个节点
@@ -83,7 +83,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="nodeId">需要移动的节点 ID</param>
         /// /// <param name="targetParentId">目标父节点 ID</param>
         /// <returns></returns>
-        Task<Org> MoveNode(string orgId, string nodeId,string targetParentId);
+        Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> MoveNode(string orgId, string nodeId,string targetParentId);
 
         /// <summary>
         /// 判断一个节点是不是组织树的根节点
@@ -120,7 +120,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="json">JSON 格式的树结构</param>
         /// <returns></returns>
-        Task<Org> ImportByJson(string json);
+        Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> ImportByJson(string json);
 
         /// <summary>
         /// 添加成员
@@ -175,7 +175,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// 导出所有组织机构数据
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Org>> ExportAll();
+        Task<IEnumerable<Authing.ApiClient.Domain.Model.Management.Orgs.Org>> ExportAll();
 
         /// <summary>
         /// 导出某个组织机构数据

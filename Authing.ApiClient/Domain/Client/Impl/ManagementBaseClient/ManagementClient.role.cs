@@ -11,6 +11,7 @@ using Authing.ApiClient.Domain.Model.Management.Roles;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Domain.Utils;
 using Authing.ApiClient.Extensions;
+using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
@@ -18,7 +19,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
     /// <summary>
     /// 角色管理类
     /// </summary>
-    public class RolesManagementClient
+    public class RolesManagementClient:IRolesManagementClient
     {
         private readonly ManagementClient client;
 
@@ -31,35 +32,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             this.client = client;
         }
 
-        /// <summary>
-        /// 创建角色
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="description">角色描述</param>
-        /// <param name="parentCode">父角色唯一标志</param>
-        /// <returns></returns>
-        public async Task<Role> Create(
-            string code,
-            string description = null,
-            string parentCode = null)
+        public async Task<Role> Create(string code,string description = null,string parentCode = null,string nameSpace=null)
         {
             var param = new CreateRoleParam(code)
             {
                 Description = description,
                 Parent = parentCode,
+                Namespace=nameSpace
             };
             var res = await client.Post<CreateRoleResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 删除角色
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <returns></returns>
-        /// TODO: 在下一个大版本中去除
-        public async Task<CommonMessage> Delete(
-            string code)
+        public async Task<CommonMessage> Delete(string code)
         {
             var param = new DeleteRoleParam(code);
             var res = await client.Post<DeleteRoleResponse>(param.CreateRequest());
@@ -78,23 +63,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 批量删除角色
-        /// </summary>
-        /// <param name="codeList">角色 code 列表</param>
-        /// <returns></returns>
-        /// TODO： 在下一个大版本中去除
-        public async Task<CommonMessage> DeleteMany(
-            IEnumerable<string> codeList)
+        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList)
         {
             var param = new DeleteRolesParam(codeList);
             var res = await client.Post<DeleteRolesResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> DeleteMany(
-            IEnumerable<string> codeList,
-            string nameSpace = null)
+        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,string nameSpace = null)
         {
             var param = new DeleteRolesParam(codeList)
             {
@@ -104,18 +80,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 修改角色资料
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="description">角色描述</param>
-        /// <param name="newCode">新的 code</param>
-        /// <returns></returns>
-        /// TODO: 下一个大版本中去除
-        public async Task<Role> Update(
-            string code,
-            string description = null,
-            string newCode = null)
+        public async Task<Role> Update(string code,string description = null,string newCode = null)
         {
             var param = new UpdateRoleParam(code)
             {
@@ -126,11 +91,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<Role> Update(
-            string code,
-            UpdateRoleOptions updateRoleOptions)
+        public async Task<Role> Update(UpdateRoleOptions updateRoleOptions)
         {
-            var param = new UpdateRoleParam(code)
+            var param = new UpdateRoleParam(updateRoleOptions.Code)
             {
                 Namespace = updateRoleOptions.NameSpace,
                 Description = updateRoleOptions.Description,
@@ -140,24 +103,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-
-        /// <summary>
-        /// 获取角色详情
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <returns></returns>
-        /// TODO：下一个大版本去除
-        public async Task<Role> Detail(
-            string code)
+        public async Task<Role> Detail(string code)
         {
             var param = new RoleParam(code);
             var res = await client.Post<RoleResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
-        public async Task<Role> Detail(
-            string code,
-            string nameSpace = null)
+        public async Task<Role> Detail(string code,string nameSpace = null)
         {
             var param = new RoleParam(code)
             {
@@ -167,35 +120,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<Role> FindByCode(
-            string code,
-            string nameSpace = null)
+        public async Task<Role> FindByCode(string code,string nameSpace = null)
         {
             var res = await Detail(code, nameSpace);
             return res;
         }
 
-        /// <summary>
-        /// 获取用户池角色列表
-        /// </summary>
-        /// <param name="page">分页页数，默认为 1</param>
-        /// <param name="limit">分页大小，默认为 10</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// TODO：下一个大版本去除
-        public async Task<PaginatedRoles> List(
-            int page = 1,
-            int limit = 10)
+        public async Task<PaginatedRoles> List(int page = 1,int limit = 10)
         {
             var param = new RolesParam() { Page = page, Limit = limit };
             var res = await client.Post<RolesResponse>(param.CreateRequest());
             return res.Data.Result;
         }
 
-        public async Task<PaginatedRoles> List(
-            string nameSpace,
-            int page = 1,
-            int limit = 10)
+        public async Task<PaginatedRoles> List(string nameSpace,int page = 1,int limit = 10)
         {
             var param = new RolesParam()
             {
@@ -207,25 +145,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 获取用户列表
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// TODO：下一个大版本去除            
-        public async Task<PaginatedUsers> ListUsers(
-            string code,
-            CancellationToken cancellationToken = default)
+                 
+        public async Task<PaginatedUsers> ListUsers(string code)
         {
             var param = new RoleWithUsersParam(code);
             var res = await client.Post<RoleWithUsersResponse>(param.CreateRequest());
             return res.Data.Result.Users;
         }
 
-        public async Task<PaginatedUsers> ListUsers(
-            string code,
-            ListUsersOption listUsersOption)
+        public async Task<PaginatedUsers> ListUsers(string code,ListUsersOption listUsersOption)
         {
             if (!listUsersOption.WithCustomData)
             {
@@ -253,17 +181,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
         }
 
-        /// <summary>
-        /// 批量添加用户到角色
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="userIds">用户 ID 列表</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// TODO：下一个大版本去除
-        public async Task<CommonMessage> AddUsers(
-            string code,
-            IEnumerable<string> userIds)
+        public async Task<CommonMessage> AddUsers(string code,IEnumerable<string> userIds)
         {
             var param = new AssignRoleParam()
             {
@@ -274,10 +192,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> AddUsers(
-            string code,
-            IEnumerable<string> userIds,
-            string nameSpace = null)
+        public async Task<CommonMessage> AddUsers(string code,IEnumerable<string> userIds,string nameSpace = null)
         {
             var param = new AssignRoleParam()
             {
@@ -289,16 +204,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 批量移除角色上的用户
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="userIds">用户 ID 列表</param>
-        /// <returns></returns>
-        /// TODO：下一个大版本去除
-        public async Task<CommonMessage> RemoveUsers(
-            string code,
-            IEnumerable<string> userIds)
+      
+        public async Task<CommonMessage> RemoveUsers(string code,IEnumerable<string> userIds)
         {
             var param = new RevokeRoleParam()
             {
@@ -309,10 +216,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> RemoveUsers(
-            string code,
-            IEnumerable<string> userIds,
-            string nameSpace = null
+        public async Task<CommonMessage> RemoveUsers(string code,IEnumerable<string> userIds,string nameSpace = null
         )
         {
             var param = new RevokeRoleParam()
@@ -325,19 +229,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 获取策略列表
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="page">分页页数，默认为 1</param>
-        /// <param name="limit">分页大小，默认为 10</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<PaginatedPolicyAssignments> ListPolicies(
-            string code,
-            int page = 1,
-            int limit = 10
-        )
+        public async Task<PaginatedPolicyAssignments> ListPolicies(string code,int page = 1,int limit = 10)
         {
             var param = new PolicyAssignmentsParam()
             {
@@ -350,16 +242,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 批量添加策略
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="policies">策略 ID 列表</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<CommonMessage> AddPolicies(
-            string code,
-            IEnumerable<string> policies)
+        public async Task<CommonMessage> AddPolicies(string code,IEnumerable<string> policies)
         {
             var param = new AddPolicyAssignmentsParam(policies, PolicyAssignmentTargetType.ROLE)
             {
@@ -370,16 +253,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        /// <summary>
-        /// 批量移除策略
-        /// </summary>
-        /// <param name="code">角色唯一标志</param>
-        /// <param name="policies">策略 ID 列表</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<CommonMessage> RemovePolicies(
-            string code,
-            IEnumerable<string> policies)
+        public async Task<CommonMessage> RemovePolicies(string code,IEnumerable<string> policies)
         {
             var param = new RemovePolicyAssignmentsParam(policies, PolicyAssignmentTargetType.ROLE)
             {
@@ -404,9 +278,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleId)
+        public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleCode)
         {
-            var param = new UdvParam(UdfTargetType.ROLE, roleId);
+            var param = new UdvParam(UdfTargetType.ROLE, roleCode);
             var res = await client.Post<UdvResponse>(param.CreateRequest());
             return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
         }
@@ -432,7 +306,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return dic;
         }
 
-        public async void SetUdfValue(SetUdfValueParam setUdfValueParam)
+        public async Task<IEnumerable<UserDefinedData>> SetUdfValue(SetUdfValueParam setUdfValueParam)
         {
             if (setUdfValueParam.UdvList?.Count < 1)
             {
@@ -450,10 +324,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest());
 
-            //TODO: 缺少返回值
+            return res.Data.Result;
         }
 
-        public async void SetUdfValueBatch(IEnumerable<SetUdfValueParam> setUdfValueBatchParam)
+        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(IEnumerable<SetUdfValueParam> setUdfValueBatchParam)
         {
             if (setUdfValueBatchParam.ToList().Count < 1)
             {
@@ -467,14 +341,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.ROLE, param);
             var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest());
-            //TODO: 缺少返回值
+
+            return res.Data.Result;
         }
 
-        public async void RemoveUdfValue(string roleId, string key)
+        public async Task<IEnumerable<UserDefinedData>> RemoveUdfValue(string roleId, string key)
         {
             var param = new RemoveUdvParam(UdfTargetType.ROLE, roleId, key);
             var res = await client.Post<RemoveUdvResponse>(param.CreateRequest());
-            // TODO: 缺少返回值
+
+            return res.Data.Result;
         }
 
     }

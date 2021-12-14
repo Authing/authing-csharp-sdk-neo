@@ -95,10 +95,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             if (headers != null)
             {
+
                 foreach (var keyValuePair in headers)
                 {
                     message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
                 }
+
+                if (!headers.ContainsKey("Authorization"))
+                {
+                    message.Headers.Authorization = null;
+                }
+
             }
 
             using (var httpResponseMessage =

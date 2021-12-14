@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
+using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
 
@@ -13,13 +15,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
     /// </summary>
     public class AuthenticationClient : BaseAuthenticationClient
     {
-        
+
 
         /// <summary>
         /// 通过应用 ID 初始化
         /// </summary>
         /// <param name="appId">应用 ID</param>
-        public AuthenticationClient(string appId): base(appId)
+        public AuthenticationClient(string appId) : base(appId)
         {
         }
 
@@ -101,8 +103,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var param = new UserParam();
             var res = await Post<GraphQLResponse<UserResponse>>(param.CreateRequest());
-            user = res.Data.Result;
-            return res.Data.Result;
+            return null;
         }
 
         /// <summary>
@@ -119,7 +120,116 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 Token = accessToken
             };
             var res = await Post<GraphQLResponse<CheckLoginStatusResponse>>(param.CreateRequest());
+            return null;
+        }
+
+        /// <summary>
+        /// 通过邮箱注册
+        /// </summary>
+        /// <param name="email">邮箱</param>
+        /// <param name="password">密码</param>
+        /// <param name="profile">用户资料</param>
+        /// <param name="forceLogin">强制登录</param>
+        /// <param name="generateToken">自动生成 token</param>
+        /// <param name="cancellationToken">请求令牌</param>
+        /// <returns>注册的用户</returns>
+        /// TODO: 下个大版本弃用
+        public async Task<User> RegisterByEmail(
+            string email,
+            string password,
+            RegisterProfile profile = null,
+            bool forceLogin = false,
+            bool generateToken = false,
+            CancellationToken cancellationToken = default)
+        {
+            var param = new RegisterByEmailParam(
+                new RegisterByEmailInput(email, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    Profile = profile,
+                    ForceLogin = forceLogin,
+                    GenerateToken = generateToken,
+                }
+            );
+
+            var res = await Post<RegisterByEmailResponse>(param.CreateRequest());
+            User = res.Data.Result;
             return res.Data.Result;
         }
+
+        /// <summary>
+        /// 通过邮箱注册用户
+        /// </summary>
+        /// <param name="email">邮箱</param>
+        /// <param name="password">密码</param>
+        /// <param name="profile">用户信息</param>
+        /// <param name="registerAndLoginOptions">注册配置信息</param>
+        /// <param name="cancellationToken">请求令牌</param>
+        /// <returns>注册的用户</returns>
+        public async Task<User> RegisterByEmail(
+            string email,
+            string password,
+            RegisterProfile profile = null,
+            RegisterAndLoginOptions registerAndLoginOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            // 序列化 registerAndLoginOptions.CustomData Params
+            string ParamsString = null;
+            string ContextString = null;
+            if (registerAndLoginOptions?.CustomData != null)
+            {
+                ParamsString = registerAndLoginOptions.CustomData.ConvertJson();
+            }
+            if (registerAndLoginOptions?.Context != null)
+            {
+                ContextString = registerAndLoginOptions.Context.ConvertJson();
+            }
+            var param = new RegisterByEmailParam(
+                new RegisterByEmailInput(email, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    Profile = profile,
+                    ForceLogin = registerAndLoginOptions?.ForceLogin,
+                    GenerateToken = registerAndLoginOptions?.GenerateToken,
+                    ClientIp = registerAndLoginOptions?.ClientIp,
+                    Params = ParamsString,
+                    Context = ContextString,
+                }
+            );
+
+            var res = await Post<RegisterByEmailResponse>(param.CreateRequest());
+
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过手机号密码登录
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="password">密码</param>
+        /// <param name="autoRegister">自动注册</param>
+        /// <param name="captchaCode">人机验证码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        /// TODO：下个大版本去除
+        public async Task<User> LoginByPhonePassword(
+            string phone,
+            string password,
+            bool autoRegister = false,
+            string captchaCode = null,
+            CancellationToken cancellationToken = default)
+        {
+
+             var param = new LoginByPhonePasswordParam(
+                new LoginByPhonePasswordInput(phone, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    AutoRegister = autoRegister,
+                    CaptchaCode = captchaCode,
+                }
+            );
+
+            var res = await Post<LoginByPhonePasswordResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
     }
 }
