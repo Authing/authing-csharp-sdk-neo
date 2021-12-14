@@ -14,6 +14,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 {
     public class AuthingClient : IAuthingClient
     {
+
+        private AuthingClient()
+        {
+        }
+
+        public static AuthingClient CreateAhtingClient()
+        {
+            return new AuthingClient();
+        }
+
         public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, TRequest body,
             Dictionary<string, string> headers)
         {
@@ -35,67 +45,37 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         }
 
         public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, Dictionary<string, string> body,
-
-    Dictionary<string, string> headers)
+            Dictionary<string, string> headers)
         {
 
             return await SendRequest<TResponse>(url, body, headers, httpType);
 
         }
 
-        private AuthingClient()
-        {
-        }
-
-        public static AuthingClient CreateAhtingClient()
-        {
-            return new AuthingClient();
-        }
-
         private async Task<TResponse> SendRequest<TResponse>(string url, string strContent,
             Dictionary<string, string> headers, HttpType httpType = HttpType.Post)
         {
-
-
-
             ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
-
-
-
             HttpRequestMessage message = null;
 
             if (httpType == HttpType.Get)
-
             {
-
                 message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
-
             }
             else if (httpType == HttpType.Delete)
-
             {
-
                 message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
             }
             else
-
             {
-
                 message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-
                 {
-
                     Content = new StringContent(strContent, Encoding.UTF8, "application/json")
-
                 };
             }
-
-
-
             if (headers != null)
             {
-
                 foreach (var keyValuePair in headers)
                 {
                     message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
@@ -105,9 +85,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 {
                     message.Headers.Authorization = null;
                 }
-
             }
-
             using (var httpResponseMessage =
                 await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
             {
@@ -121,14 +99,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }
-
                 // error handling
                 string content = null;
                 if (contentStream != null)
                     using (var sr = new StreamReader(contentStream))
                         content = await sr.ReadToEndAsync();
-
-                throw new Exception("Error");
+                throw new Exception(content);
             }
 
         }
@@ -137,33 +113,23 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
            Dictionary<string, string> headers, HttpType httpType = HttpType.Post)
         {
-
-
-
             ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
 
             HttpRequestMessage message = null;
 
-
             if (httpType == HttpType.Get)
-
             {
-
                 message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
-
             }
             else if (httpType == HttpType.Delete)
-
             {
 
                 message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
             }
             else if (httpType == HttpType.Patch)
-
             {
                 SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
-
                 message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
 
                 {
@@ -172,12 +138,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
                 };
             }
-
             else if (httpType == HttpType.Put)
-
             {
                 SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
-
                 message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
 
                 {
@@ -187,11 +150,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 };
             }
             else
-
             {
-
                 SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
-
                 message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
 
                 {
@@ -200,9 +160,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
                 };
             }
-
-
-
             if (headers != null)
             {
                 foreach (var keyValuePair in headers)
@@ -210,7 +167,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
                 }
             }
-
             using (var httpResponseMessage =
                 await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
             {
@@ -224,17 +180,58 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }
-
                 // error handling
                 string content = null;
                 if (contentStream != null)
                     using (var sr = new StreamReader(contentStream))
                         content = await sr.ReadToEndAsync();
-
-                throw new Exception("Error");
+                throw new Exception(content);
             }
         }
 
+        public async Task<TResponse> PostRaw<TResponse>(string url, string rawjson, Dictionary<string, string> headers)
+        {
+            ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
+
+            HttpRequestMessage message = null;
+
+            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+            {
+
+                Content = new StringContent(rawjson,Encoding.UTF8, "application/json")
+
+            };
+
+            if (headers != null)
+            {
+                foreach (var keyValuePair in headers)
+                {
+                    message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+            using (var httpResponseMessage =
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    using (var reader = new StreamReader(contentStream))
+                    {
+                        var resString = await reader.ReadToEndAsync();
+                        return JsonConvert.DeserializeObject<TResponse>(resString);
+                    }
+                }
+                // error handling
+                string content = null;
+                if (contentStream != null)
+                    using (var sr = new StreamReader(contentStream))
+                        content = await sr.ReadToEndAsync();
+                throw new Exception(content);
+            }
+
+        }
     }
 
 }

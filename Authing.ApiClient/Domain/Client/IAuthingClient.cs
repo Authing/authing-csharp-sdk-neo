@@ -10,5 +10,7 @@ namespace Authing.ApiClient.Domain.Client
         Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, TRequest body, Dictionary<string, string> headers);
         //Task<GraphQLResponse<TResponse>> Request<TRequest, TResponse>(string url, string method, TRequest body, Dictionary<string, string> headers);
         Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, Dictionary<string,string> body, Dictionary<string, string> headers);
+
+        Task<TResponse> PostRaw<TResponse>(string url, string rawjson, Dictionary<string, string> headers);
     }
 }

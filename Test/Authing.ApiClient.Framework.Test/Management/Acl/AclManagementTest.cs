@@ -29,8 +29,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         [Fact]
         public async Task Acl_UpdateNamespace()
         {
-            //TODO:需要httpPut方法
-            //64507
+            //TODO:描述没有更新
             var data = await managementClient.acl.CreateNamespace("testNameSpace2", "testNameSpace2", "testNameSpace2");
             var result = await managementClient.acl.UpdateNamespace(data.Id.ToString(), new UpdateNamespaceParam() { Code = "testNameSpace2", Name = "testNameSpace2", Description = "测试描述" });
             Assert.Equal(result.Description, "测试描述");
@@ -54,16 +53,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         [Fact]
         public async Task Acl_CreateResource()
         {
-            //TODO:Json转换报错，Actions属性从后端返回了String
-            //var test1 = new ResourceParam()
-            //{
-            //    Code = new Random().Next().ToString(),
-            //    NameSpace = "12345",
-            //    Type = ResourceType.DATA,
-            //    //NameSpace = "6172807001258f603126a78a",
-            //    Actions = new List<ResourceAction>() { new ResourceAction() { Name = "123", Description = "123" } },
-            //};
-            //var s = test1.ConvertJson();
             string code = "";
             var list = await managementClient.acl.ListNamespaces();
             var id = list.List.FirstOrDefault(i => i.Code == "test")?.Code;
@@ -131,14 +120,14 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         [Fact]
         public async Task Acl_RevokeResource()
         {
-            //TODO:opts.map is not a function
+            //TODO:权限组不存在
             var result = await managementClient.acl.RevokeResource(
                 new RevokeResourceParams()
                 {
                     NameSpace = "test",
                     Opts = new List<RevokeResourceOpt>()
                         {new RevokeResourceOpt(){TargetIdentifier = TestUserId,TargetType = PolicyAssignmentTargetType.USER}},
-                    Resource = "Cat:test"
+                    Resource = "Cat:*"
                 });
         }
 
@@ -177,10 +166,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         [Fact]
         public async Task Acl_AuthorizeResource()
         {
-            var result = await managementClient.acl.AuthorizeResource("test", "Cat:read"
+            var result = await managementClient.acl.AuthorizeResource("test", "Cat:*"
                 , new List<AuthorizeResourceOpt>()
                 {
-                    new AuthorizeResourceOpt(PolicyAssignmentTargetType.USER,"61a5c55fc89ff91083293e45")
+                    new AuthorizeResourceOpt(PolicyAssignmentTargetType.USER,"61a5c55fc89ff91083293e45",new List<string>(){"Cat:Read"})
                 });
             Assert.Equal(result.Code, 200);
         }
@@ -188,6 +177,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         [Fact]
         public async Task Acl_ProgrammaticAccessAccountList()
         {
+            //TODO:网页后台存在数据但本地无法获取
             var result = await managementClient.acl.ProgrammaticAccessAccountList(new ProgrammaticAccessAccountListProps() { AppId = AppId });
             Assert.NotEmpty(result.List);
         }
@@ -241,6 +231,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 TargetType = PolicyAssignmentTargetType.USER,
                 TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
             });
+            Assert.True(result);
         }
 
         [Fact]
@@ -254,6 +245,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 TargetType = PolicyAssignmentTargetType.USER,
                 TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
             });
+            Assert.True(result);
         }
 
         [Fact]
@@ -267,6 +259,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 TargetType = PolicyAssignmentTargetType.USER,
                 TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
             });
+            Assert.True(result);
         }
 
         [Fact]
@@ -280,6 +273,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 TargetType = PolicyAssignmentTargetType.USER,
                 TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
             });
+            Assert.True(result);
         }
 
         [Fact]
@@ -293,6 +287,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 TargetType = PolicyAssignmentTargetType.USER,
                 TartgetIdentifiers = new List<string>() { "61a5c55fc89ff91083293e45" }
             });
+            Assert.True(result);
         }
 
         [Fact]

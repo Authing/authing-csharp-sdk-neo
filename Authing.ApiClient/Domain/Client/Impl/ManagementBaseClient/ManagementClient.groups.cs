@@ -43,7 +43,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new CreateGroupParam(code, name, description);
 
                 var res = await client.Request<CreateGroupResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -56,7 +56,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new DeleteGroupsParam(new string[] { code });
 
                 var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -77,7 +77,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
 
                 var res = await client.Request<UpdateGroupResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -90,7 +90,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new GroupParam(code);
 
                 var res = await client.Request<GroupResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -108,7 +108,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
 
                 var res = await client.Request<GroupsResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -121,7 +121,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new DeleteGroupsParam(codeList);
 
                 var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -142,7 +142,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
 
                 var res = await client.Request<GroupWithUsersResponse>(param.CreateRequest());
-                return res.Data?.Result.Users;
+                return res.Data?.Result.Users ?? null;
             }
 
             public async Task<PaginatedUsers> ListUsers(string code, ListUsersOption listUsersOption = null)
@@ -156,7 +156,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         Limit = listUsersOption?.Limit,
                     };
                     var _res = await client.Request<GroupWithUsersResponse>(_param.CreateRequest());
-                    return _res.Data?.Result?.Users;
+                    return _res.Data?.Result?.Users ?? null;
                 }
                 else
                 {
@@ -167,7 +167,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         Limit = listUsersOption?.Limit
                     };
                     var _res = await client.Request<GroupWithUsersWithCustomDataResponse>(_param.CreateRequest());
-                    return _res.Data?.Result?.Users;
+                    return _res.Data?.Result?.Users ?? null;
                 }
             }
 
@@ -185,7 +185,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
 
                 var res = await client.Request<AddUserToGroupResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -202,7 +202,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
 
                 var res = await client.Request<RemoveUserFromGroupResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -232,7 +232,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     throw new Exception("分组不存在");
                 }
                 var authorizedResources = group.AuthorizedResources;
-                return authorizedResources;
+                return authorizedResources ?? null;
             }
         }
     }

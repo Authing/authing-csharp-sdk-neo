@@ -35,7 +35,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<UserPool> Detail()
             {
                 var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
-                return res.Data;
+                return res.Data ?? null;
             }
 
             /// <summary>
@@ -48,7 +48,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new UpdateUserpoolParam(updates);
 
                 var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest());
-                return res.Data?.Result;
+                return res.Data?.Result ?? null;
             }
 
             /// <summary>
@@ -58,7 +58,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<IEnumerable<Env>> ListEnv()
             {
                 var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
-                return res.Data;
+                return res.Data ?? null;
             }
 
             /// <summary>

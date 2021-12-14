@@ -53,7 +53,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return AccessToken;
         }
 
-
         private async Task<Tuple<string, int?>> GetAccessTokenFromServer()
         {
             var param = new Model.AccessTokenParam(UserPoolId, Secret);
@@ -64,8 +63,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
         }
 
-
-        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
+        public async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             var token = await GetAccessToken();
@@ -76,7 +74,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Request<TResponse>(body, headers);
         }
 
-        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api, GraphQLRequest body)
+        public async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             var token = await GetAccessToken();
@@ -86,7 +84,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-sdk-version"] = version;
             return await Request<TResponse>(api, body, headers);
         }
-
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
         {
@@ -99,9 +96,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Request<TResponse>(body, headers);
         }
 
-
-
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api,Dictionary<string,string> body)
+        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
         {
             var headers = new Dictionary<string, string>();
             var token = await GetAccessToken();
@@ -109,10 +104,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-userpool-id"] = UserPoolId;
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
-            return await Post<TResponse>(api,body, headers);
+            return await Post<TResponse>(api, body, headers);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api,GraphQLRequest body)
+        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body)
 
         {
 
@@ -122,9 +117,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-userpool-id"] = UserPoolId;
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
-            return await Post<TResponse>(api,body, headers);
+            return await Post<TResponse>(api, body, headers);
         }
-
 
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
@@ -173,8 +167,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Put<TResponse>(api, body, headers);
         }
 
+        public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson)
+        {
+            var headers = new Dictionary<string, string>();
+            var token = await GetAccessToken();
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await PostRaw<TResponse>(api, rawjson, headers);
 
-        protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
+        }
+
+        public async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers["x-authing-userpool-id"] = UserPoolId;
@@ -182,10 +187,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-sdk-version"] = version;
             return await Post<TResponse>(body, headers);
         }
-
-
-
-
 
         public object GetAuthHeaders()
         {

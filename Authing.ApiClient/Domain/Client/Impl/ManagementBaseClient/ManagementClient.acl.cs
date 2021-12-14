@@ -51,7 +51,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         { nameof(name), name },
                         { nameof(description), description },
                     });
-                return res.Data;
+                return res.Data ?? null;
             }
 
             /// <summary>
@@ -65,7 +65,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var res = await client.Get<Namespaces>(
                     $"api/v2/resource-namespace/{client.UserPoolId}?limit={limit}&page={page}"
                     , new GraphQLRequest());
-                return res.Data;
+                return res.Data ?? null;
             }
 
             /// <summary>
@@ -90,7 +90,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         { nameof(updateNamespaceParam.Description), updateNamespaceParam.Description }
                     });
 
-                return res.Data;
+                return res.Data ?? null;
             }
 
             /// <summary>
@@ -122,7 +122,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 endPoint += $"&page={resourceQueryFilter.Page}";
 
                 var res = await client.Get<ListResourcesRes>(endPoint, new GraphQLRequest());
-                return res.Data;
+                return res.Data ?? null;
             }
 
             /// <summary>
@@ -161,7 +161,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
                     });
 
-                return res.Data;
+                return res.Data ?? null;
             }
 
             /// <summary>
@@ -175,7 +175,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 string endPoint = $"api/v2/resources/by-code/{code}";
                 endPoint += string.IsNullOrWhiteSpace(nameSpace) ? "" : $"?namespace={nameSpace}";
                 var resut = await client.Get<Resources>(endPoint, new GraphQLRequest());
-                return resut.Data;
+                return resut.Data ?? null;
             }
 
             /// <summary>
@@ -187,7 +187,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 string endPoint = $"api/v2/resources/detail?id={id}";
                 var resut = await client.Get<Resources>(endPoint, new GraphQLRequest());
-                return resut.Data;
+                return resut.Data ?? null;
 
             }
 
@@ -219,7 +219,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(options.Type).ToLower(),options.Type.ToString()},
                         {nameof(options.Description).ToLower(),options.Description},
                     });
-                return result.Data;
+                return result.Data ?? null;
             }
 
             /// <summary>
@@ -254,7 +254,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Namespace = nameSpace
                 };
                 var res = await client.Request<AllowResponse>(param.CreateRequest());
-                return res.Data.Result;
+                return res.Data.Result ?? null;
             }
 
             /// <summary>
@@ -272,15 +272,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 options.Resource.CheckParameter();
                 string endPoint = "api/v2/acl/revoke-resource";
-                var result = await client.Post<CommonMessage>(endPoint,
-                    new Dictionary<string, string>()
-                    {
-                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
-                        {nameof(options.Opts).ToLower(),options.Opts.ConvertJson()},
-                        {nameof(options.Resource).ToLower(),options.Resource ?? ""},
-                    });
-
-                return result.Data;
+                var result = await client.PostRaw<CommonMessage>(endPoint,options.ConvertJson());
+                return result.Data ?? null;
             }
 
             /// <summary>
@@ -321,7 +314,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var param = new ListAuthorizedResourcesParam(targetType, targetIdentifier, namespacecode,
                     options.ResourceType);
                 var result = await client.Request<ListAuthorizedResourcesResponse>(param.CreateRequest());
-                return result.Data.AuthorizedResources;
+                return result.Data.AuthorizedResources ?? null;
             }
 
             /// <summary>
@@ -360,7 +353,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     TargetType = getAuthorizedTargetsOptions.TargetType
                 };
                 var res = await client.Request<AuthorizedTargetsResponse>(param.CreateRequest());
-                return res.Data.Result;
+                return res.Data.Result ?? null;
             }
 
 
@@ -378,7 +371,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Opts = authorizeResourceOptions
                 };
                 var res = await client.Request<AuthorizeResourceResponse>(param.CreateRequest());
-                return res.Data.Result;
+                return res.Data.Result ?? null;
             }
 
 
@@ -386,7 +379,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/programmatic-access-accounts?limit=${options.Limit}&page=${options.Page}";
                 var res = await client.Get<Pagination<ProgrammaticAccessAccount>>(endPoint, new GraphQLRequest());
-                return res.Data;
+                return res.Data ?? null;
             }
 
 
@@ -410,7 +403,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                             createProgrammaticAccessAccountParam.Token_lifetime.ToString()
                         }
                     });
-                return res.Data;
+                return res.Data ?? null;
             }
 
             public async Task<bool> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId)
@@ -432,7 +425,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {"id",programmaticAccessAccountId},
                         {"enable","true"}
                     });
-                return result.Data;
+                return result.Data ?? null;
             }
 
             public async Task<ProgrammaticAccessAccount> DisableProgrammaticAccessAccount(
@@ -445,7 +438,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {"id",programmaticAccessAccountId},
                         {"enable","false"}
                     });
-                return result.Data;
+                return result.Data ?? null;
             }
 
             public async Task<ProgrammaticAccessAccount> RefreshProgrammaticAccessAccountSecret(ProgrammaticAccessAccountProps options)
@@ -457,89 +450,49 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     {nameof(options.Id).ToLower(),options.Id},
                     {nameof(options.Secret).ToLower(),options.Secret}
                 });
-                return result.Data;
+                return result.Data ?? null;
             }
 
             public async Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/records?limit={options.Limit}&page={options.Page}";
                 var result = await client.Get<Pagination<ApplicationAccessPolicies>>(endPoint, new GraphQLRequest());
-                return result.Data;
+                return result.Data ?? null;
             }
 
             public async Task<bool> EnableApplicationAccessPolicy(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/enable-effect";
-                var result = await client.Post<RestfulResponse<bool>>(endPoint,
-                    new Dictionary<string, string>()
-                    {
-                        {nameof(options.AppId).ToLower(),options.AppId},
-                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
-                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
-                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
-                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
-                    });
-                return result.Data.Code == 200;
+                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                return result.Code == 200;
             }
 
             public async Task<bool> DisableApplicationAccessPolicy(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/disable-effect";
-                var result = await client.Post<RestfulResponse<bool>>(endPoint,
-                    new Dictionary<string, string>()
-                    {
-                        {nameof(options.AppId).ToLower(),options.AppId},
-                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
-                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
-                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
-                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
-                    });
-                return result.Data.Code == 200;
+                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                return result.Code == 200;
             }
 
             public async Task<bool> DeleteApplicationAccessPolicy(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/revoke";
-                var result = await client.Post<RestfulResponse<bool>>(endPoint,
-                    new Dictionary<string, string>()
-                    {
-                        {nameof(options.AppId).ToLower(),options.AppId},
-                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
-                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
-                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
-                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
-                    });
-                return result.Data.Code == 200;
+                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                return result.Code == 200;
             }
 
             public async Task<bool> AllowAccessApplication(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/allow";
-                var result = await client.Post<RestfulResponse<bool>>(endPoint,
-                    new Dictionary<string, string>()
-                    {
-                        {nameof(options.AppId).ToLower(),options.AppId},
-                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
-                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
-                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
-                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
-                    });
-                return result.Data.Code == 200;
+                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                return result.Code == 200;
             }
 
             public async Task<bool> DenyAccessApplication(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/deny";
-                var result = await client.Post<RestfulResponse<bool>>(endPoint,
-                    new Dictionary<string, string>()
-                    {
-                        {nameof(options.AppId).ToLower(),options.AppId},
-                        {nameof(options.NameSpace).ToLower(),options.NameSpace},
-                        {nameof(options.InheritByChildren).ToLower(),options.InheritByChildren.ToString()},
-                        {nameof(options.TartgetIdentifiers).ToLower(),options.TartgetIdentifiers.ConvertJson()},
-                        {nameof(options.TargetType).ToLower(),options.TargetType.ToString()}
-                    });
-                return result.Data.Code == 200;
+                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                return result.Code == 200;
             }
 
             public async Task<Application> UpdateDefaultApplicationAccessPolicy(DefaultAppAccessPolicy options)
@@ -551,7 +504,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(options.AppId).ToLower(),options.AppId},
                         {nameof(options.DefaultStrategy).ToLower(),options.DefaultStrategy.ToString()}
                     });
-                return result.Data;
+                return result.Data ?? null;
             }
         }
     }
