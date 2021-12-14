@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model;
+﻿using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Acl;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
-using Flurl;
-using Flurl.Http;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Utils;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -451,6 +446,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return result.Data;
             }
 
+            public async Task<ProgrammaticAccessAccount> RefreshProgrammaticAccessAccountSecret(ProgrammaticAccessAccountProps options)
+            {
+                string endPoint = $"api/v2/applications/programmatic-access-accounts";
+                options.Secret ??= AuthingUtils.GenerateRandomString(32);
+                var result = await client.Patch<ProgrammaticAccessAccount>(endPoint,new Dictionary<string, string>()
+                {
+                    {nameof(options.Id).ToLower(),options.Id},
+                    {nameof(options.Secret).ToLower(),options.Secret}
+                });
+                return result.Data;
+            }
         }
     }
 }

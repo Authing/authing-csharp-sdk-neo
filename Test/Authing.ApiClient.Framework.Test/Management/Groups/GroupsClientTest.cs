@@ -102,7 +102,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Groups
         {
             var result = await managementClient.Groups.ListAuthorizedResources("ListAuthorizedResources", "6172807001258f603126a78a", ResourceType.DATA);
             Assert.NotEmpty(result.List);
-            Assert.Equal(result.List.First().Code, "Books:test");
+            Assert.Equal(result.List.First().Code, "Books:*");
         }
     }
 }

@@ -166,7 +166,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 NameSpace = "test",
                 Resource = "Cat",
                 ResourceType = ResourceType.DATA,
-                Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "read" }),
+                Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "Read" }),
                 TargetType = PolicyAssignmentTargetType.USER,
             });
 
