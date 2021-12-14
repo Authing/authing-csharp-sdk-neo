@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Authing.ApiClient.Core.Model;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Types;
@@ -75,6 +76,20 @@ namespace Authing.ApiClient.Domain.Utils
             }
 
             return resUdvList;
+        }
+
+        public static string GenerateRandomString(int length = 30)
+        {
+            var rd = new Random();
+            var strAtt = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var resAtt = new Char[length];
+            rd.Next(0, 35);
+            // resAtt.ToList().ForEach(item =>
+            // {
+            //     item = strAtt[rd.Next(0, 35)];
+            // });
+            var resStr = String.Join(",", resAtt.Select(p => strAtt[rd.Next(0, 35)]).ToArray());
+            return resStr;
         }
     }
 }
