@@ -249,8 +249,8 @@ namespace Authing.ApiClient.Domain.Model
         /// 被授权访问的所有资源
         /// </summary>
         // TODO: needfix
-        // [JsonProperty("authorizedResources")]
-        // public PaginatedAuthorizedResources AuthorizedResources { get; set; }
+        [JsonProperty("authorizedResources")]
+        public PaginatedAuthorizedResources AuthorizedResources { get; set; }
 
         /// <summary>
         /// 用户外部 ID
