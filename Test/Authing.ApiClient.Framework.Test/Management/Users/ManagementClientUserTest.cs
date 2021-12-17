@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Users;
 using Xunit;
 

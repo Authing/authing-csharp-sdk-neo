@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Authing.ApiClient.Infrastructure.GraphQL;
 
-namespace Authing.ApiClient.Domain.Model.Management.Users
+namespace Authing.ApiClient.Domain.Model
 {
     #region UpdateUserInput
     public class UpdateUserInput

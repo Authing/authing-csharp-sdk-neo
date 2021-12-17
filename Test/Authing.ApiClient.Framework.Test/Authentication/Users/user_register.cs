@@ -20,7 +20,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.Users
         {
             var client = authenticationClient;
 
-            var result= await client.LoginByPhonePassword("13348926753", "3866364");
+            var result= await client.LoginByPhonePassword("13348926753", "3866364",null);
         }
     }
 }

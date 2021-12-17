@@ -73,13 +73,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             }
             else if (httpType == HttpType.Delete)
-
             {
 
                 message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
             }
             else
-
             {
 
                 message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))

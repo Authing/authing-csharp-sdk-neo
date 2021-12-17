@@ -7,6 +7,16 @@ using Authing.ApiClient.Domain.Utils;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
+using Newtonsoft.Json;
+using Authing.ApiClient.Extensions;
+using System.Collections.Generic;
+using Authing.ApiClient.Domain.Model.Management.Udf;
+using Authing.ApiClient.Domain.Model.Management.Roles;
+using Authing.ApiClient.Domain.Exceptions;
+using Authing.ApiClient.Domain.Model.Management.Department;
+using System.Text.RegularExpressions;
+using Authing.ApiClient.Domain.Model.Management.Users;
+using System.Linq;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -35,14 +45,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private User User
         {
-            get => user;
+            get
+            {
+                return user;
+            }
             set
             {
                 user = value;
                 AccessToken = value?.Token ?? AccessToken;
             }
         }
-
         private User user;
 
         /// <summary>
@@ -55,32 +67,34 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 return user.Id;
             }
-
             if (string.IsNullOrEmpty(AccessToken))
             {
                 throw new Exception("请先登录!");
             }
 
             var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken);
-            if (string.IsNullOrEmpty("userId"))
-            {
-                throw new Exception("不合法的 accessToken");
-            }
-
-            return "userId";
+            //var userDataString = tokenInfo.Payload.Claims.FirstOrDefault(item => item.Type == "data")?.Value;
+            //var userData = JsonConvert.DeserializeObject<UserData>(userDataString ?? "");
+            //var userId = tokenInfo.Payload.Sub ?? userData.Id;
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    throw new Exception("不合法的 accessToken");
+            //}
+            //return userId;
+            return null;
         }
 
         /// <summary>
         /// 设置当前用户信息
         /// </summary>
-        /// <param name="currentUser">用户数据</param>
-        public void SetCurrentUser(User currentUser)
+        /// <param name="user">用户数据</param>
+        public void SetCurrentUser(User user)
         {
-            User = currentUser;
+            User = user;
         }
 
         /// <summary>
-        /// 设置当前 Token
+        /// 设置当前 AccessToken
         /// </summary>
         /// <param name="token">token 值</param>
         public void SetToken(string token)
@@ -97,32 +111,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="accessToken">用户 access token</param>
         /// <param name="cancellationToken">请求令牌</param>
         /// <returns>当前用户</returns>
-        public async Task<User> CurrentUser(
-            string accessToken = null,
-            CancellationToken cancellationToken = default)
+        public async Task<User> CurrentUser(string accessToken = null)
         {
             var param = new UserParam();
-            var res = await Post<GraphQLResponse<UserResponse>>(param.CreateRequest());
-            return null;
+            var res = await Request<UserResponse>(param.CreateRequest(), accessToken);
+            user = res.Data.Result;
+            return res.Data.Result;
         }
 
-        /// <summary>
-        /// 检查登录状态
-        /// </summary>
-        /// <param name="accessToken">用户的 access token</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>JWTTokenStatus</returns>
-        public async Task<JWTTokenStatus> CheckLoginStatus(
-            string accessToken = null)
-        {
-            var param = new CheckLoginStatusParam()
-            {
-                Token = accessToken
-            };
-            var res = await Post<GraphQLResponse<CheckLoginStatusResponse>>(param.CreateRequest());
-            return null;
-        }
-
+        [Obsolete("该方法已弃用")]
         /// <summary>
         /// 通过邮箱注册
         /// </summary>
@@ -134,13 +131,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="cancellationToken">请求令牌</param>
         /// <returns>注册的用户</returns>
         /// TODO: 下个大版本弃用
-        public async Task<User> RegisterByEmail(
-            string email,
-            string password,
-            RegisterProfile profile = null,
-            bool forceLogin = false,
-            bool generateToken = false,
-            CancellationToken cancellationToken = default)
+        public async Task<User> RegisterByEmail(string email, string password, RegisterProfile profile = null,
+                                                bool forceLogin = false, bool generateToken = false)
         {
             var param = new RegisterByEmailParam(
                 new RegisterByEmailInput(email, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
@@ -151,7 +143,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
-            var res = await Post<RegisterByEmailResponse>(param.CreateRequest());
+            var res = await Request<RegisterByEmailResponse>(param.CreateRequest());
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -165,12 +157,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="registerAndLoginOptions">注册配置信息</param>
         /// <param name="cancellationToken">请求令牌</param>
         /// <returns>注册的用户</returns>
-        public async Task<User> RegisterByEmail(
-            string email,
-            string password,
-            RegisterProfile profile = null,
-            RegisterAndLoginOptions registerAndLoginOptions = null,
-            CancellationToken cancellationToken = default)
+        public async Task<User> RegisterByEmail(string email,
+                                                string password,
+                                                RegisterProfile profile = null,
+                                                RegisterAndLoginOptions registerAndLoginOptions = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -195,8 +185,405 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
-            var res = await Post<RegisterByEmailResponse>(param.CreateRequest());
+            var res = await Request<RegisterByEmailResponse>(param.CreateRequest());
 
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        [Obsolete("此方法已弃用")]
+        /// <summary>
+        /// 通过用户名注册
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="password">密码</param>
+        /// <param name="profile">用户资料</param>
+        /// <param name="forceLogin">强制登录</param>
+        /// <param name="generateToken">自动生成 token</param>
+        /// <param name="cancellationToken">请求令牌</param>
+        /// <returns>注册的用户</returns>
+        /// TODO: 下个大版本弃用
+        public async Task<User> RegisterByUsername(string username,
+                                                   string password,
+                                                   RegisterProfile profile = null,
+                                                   bool forceLogin = false,
+                                                   bool generateToken = false)
+        {
+            var param = new RegisterByUsernameParam(
+                new RegisterByUsernameInput(username, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    Profile = profile,
+                    ForceLogin = forceLogin,
+                    GenerateToken = generateToken,
+                }
+            );
+
+            var res = await Request<RegisterByUsernameResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过用户名注册用户
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="password">密码</param>
+        /// <param name="profile">用户信息</param>
+        /// <param name="registerAndLoginOptions">注册配置信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>注册的用户</returns>
+        public async Task<User> RegisterByUsername(string username,
+                                                   string password,
+                                                   RegisterProfile profile = null,
+                                                   RegisterAndLoginOptions registerAndLoginOptions = null)
+        {
+            // 序列化 registerAndLoginOptions.CustomData Params
+            string ParamsString = null;
+            string ContextString = null;
+            if (registerAndLoginOptions?.CustomData != null)
+            {
+                ParamsString = registerAndLoginOptions.CustomData.ConvertJson();
+            }
+            if (registerAndLoginOptions?.Context != null)
+            {
+                ContextString = registerAndLoginOptions.Context.ConvertJson();
+            }
+
+            var param = new RegisterByUsernameParam(
+                new RegisterByUsernameInput(username, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    Profile = profile,
+                    ForceLogin = registerAndLoginOptions?.ForceLogin,
+                    GenerateToken = registerAndLoginOptions?.GenerateToken,
+                    ClientIp = registerAndLoginOptions?.ClientIp,
+                    Params = ParamsString,
+                    Context = ContextString,
+                }
+            );
+
+            var res = await Request<RegisterByUsernameResponse>(param.CreateRequest());
+
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过手机号注册
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="code">手机号验证码</param>
+        /// <param name="password">密码</param>
+        /// <param name="profile">用户资料</param>
+        /// <param name="forceLogin">强制登录</param>
+        /// <param name="generateToken">自动生成 token</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        /// TODO: 下个大版本弃用
+        public async Task<User> RegisterByPhoneCode(string phone,
+                                                    string code,
+                                                    string password = null,
+                                                    RegisterProfile profile = null,
+                                                    bool forceLogin = false,
+                                                    bool generateToken = false)
+        {
+            var param = new RegisterByPhoneCodeParam(
+                new RegisterByPhoneCodeInput(phone, code)
+                {
+                    Password = EncryptHelper.RsaEncryptWithPublic(password, PublicKey),
+                    Profile = profile,
+                    ForceLogin = forceLogin,
+                    GenerateToken = generateToken,
+                }
+            );
+
+            var res = await Request<RegisterByPhoneCodeResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过手机验证码注册用户
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="code">验证码</param>
+        /// <param name="password">密码</param>
+        /// <param name="profile">用户信息</param>
+        /// <param name="registerAndLoginOptions">注册配置信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>注册的用户</returns>
+        public async Task<User> RegisterByPhoneCode(string phone,
+                                                    string code,
+                                                    string password = null,
+                                                    RegisterProfile profile = null,
+                                                    RegisterAndLoginOptions registerAndLoginOptions = null)
+        {
+            // 序列化 registerAndLoginOptions.CustomData Params
+            string ParamsString = null;
+            string ContextString = null;
+            if (registerAndLoginOptions?.CustomData != null)
+            {
+                ParamsString = registerAndLoginOptions.CustomData.ConvertJson();
+            }
+            if (registerAndLoginOptions?.Context != null)
+            {
+                ContextString = registerAndLoginOptions.Context.ConvertJson();
+            }
+
+            var param = new RegisterByPhoneCodeParam(
+                new RegisterByPhoneCodeInput(phone, code)
+                {
+                    Password = EncryptHelper.RsaEncryptWithPublic(password, PublicKey),
+                    Profile = profile,
+                    ForceLogin = registerAndLoginOptions?.ForceLogin,
+                    GenerateToken = registerAndLoginOptions?.GenerateToken,
+                    ClientIp = registerAndLoginOptions?.ClientIp,
+                    Params = ParamsString,
+                    Context = ContextString,
+                }
+            );
+
+            var res = await Request<RegisterByPhoneCodeResponse>(param.CreateRequest());
+
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 检查密码强度
+        /// </summary>
+        /// <param name="password">密码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>CheckPasswordStrengthResult</returns>
+        public async Task<CheckPasswordStrengthResult> CheckPasswordStrength(string password)
+        {
+            var param = new CheckPasswordStrengthParam(password);
+            var res = await Request<CheckPasswordStrengthResult>(param.CreateRequest());
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 发送短信验证码
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// TODO: 破坏性更新
+        public async Task<CommonMessage> SendSmsCode(string phone)
+        {
+            var res = await Post<CommonMessage>("api/v2/sms/send", new Dictionary<string, string>
+            {
+                {nameof(phone),phone }
+            });
+
+            //var res = await Host.AppendPathSegment("api/v2/sms/send").WithHeaders(GetHeaders()).PostJsonAsync(new
+            //{
+            //    phone
+            //}, cancellationToken).ReceiveJson<CommonMessage>();
+            CommonMessage ms = new CommonMessage() 
+            {
+                Code=res.Code,
+                Message=res.Message,
+            };
+            return ms;
+        }
+
+
+        /// <summary>
+        /// 通过邮箱登录
+        /// </summary>
+        /// <param name="email">邮箱</param>
+        /// <param name="password">密码</param>
+        /// <param name="autoRegister">自动注册</param>
+        /// <param name="captchaCode">人机验证码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        /// TODO: 下个大版本去除
+        public async Task<User> LoginByEmail(string email,
+                                             string password,
+                                             bool autoRegister = false,
+                                             string captchaCode = null)
+        {
+            var param = new LoginByEmailParam(
+                new LoginByEmailInput(email, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    AutoRegister = autoRegister,
+                    CaptchaCode = captchaCode,
+                }
+            );
+
+            var res = await Request<LoginByEmailResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过邮箱登录
+        /// </summary>
+        /// <param name="email">邮箱</param>
+        /// <param name="password">密码</param>
+        /// <param name="registerAndLoginOptions">登录配置信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> LoginByEmail(string email,
+                                             string password,
+                                             RegisterAndLoginOptions registerAndLoginOptions = null)
+        {
+            // 序列化 registerAndLoginOptions.CustomData Params
+            string ParamsString = null;
+            string ContextString = null;
+            if (registerAndLoginOptions?.CustomData != null)
+            {
+                ParamsString = registerAndLoginOptions.CustomData.ConvertJson();
+            }
+            if (registerAndLoginOptions?.Context != null)
+            {
+                ContextString = registerAndLoginOptions.Context.ConvertJson();
+            }
+
+            var param = new LoginByEmailParam(
+                new LoginByEmailInput(email, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    AutoRegister = registerAndLoginOptions?.AutoRegister ?? false,
+                    CaptchaCode = registerAndLoginOptions?.CaptchaCode,
+                    ClientIp = registerAndLoginOptions?.ClientIp,
+                    Params = ParamsString,
+                    Context = ContextString,
+                }
+            );
+
+            var res = await Request<LoginByEmailResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过用户名登录
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="password">密码</param>
+        /// <param name="autoRegister">自动注册</param>
+        /// <param name="captchaCode">人机验证码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        /// TODO: 下个大版本去除
+        public async Task<User> LoginByUsername(string username,
+                                                string password,
+                                                bool autoRegister = false,
+                                                string captchaCode = null)
+        {
+            var param = new LoginByUsernameParam(
+                new LoginByUsernameInput(username, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    AutoRegister = autoRegister,
+                    CaptchaCode = captchaCode,
+                }
+            );
+
+            var res = await Request<LoginByUsernameResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过用户名登录
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="password">密码</param>
+        /// <param name="registerAndLoginOptions">注册配置信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> LoginByUsername(string username,
+                                                string password,
+                                                RegisterAndLoginOptions registerAndLoginOptions = null)
+        {
+            // 序列化 registerAndLoginOptions.CustomData Params
+            string ParamsString = null;
+            string ContextString = null;
+            if (registerAndLoginOptions?.CustomData != null)
+            {
+                ParamsString = registerAndLoginOptions.CustomData.ConvertJson();
+            }
+            if (registerAndLoginOptions?.Context != null)
+            {
+                ContextString = registerAndLoginOptions.Context.ConvertJson();
+            }
+
+            var param = new LoginByUsernameParam(
+                new LoginByUsernameInput(username, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    AutoRegister = registerAndLoginOptions?.AutoRegister ?? false,
+                    CaptchaCode = registerAndLoginOptions?.CaptchaCode,
+                    ClientIp = registerAndLoginOptions?.ClientIp,
+                    Params = ParamsString,
+                    Context = ContextString,
+                }
+            );
+
+            var res = await Request<LoginByUsernameResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过手机号验证码登录
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="code">验证码</param>
+        /// <param name="autoRegister">自动注册</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        /// TODO: 下一个大版本去除
+        public async Task<User> LoginByPhoneCode(string phone,
+                                                 string code,
+                                                 bool autoRegister = false)
+        {
+            var param = new LoginByPhoneCodeParam(
+                new LoginByPhoneCodeInput(phone, code)
+                {
+                    AutoRegister = autoRegister,
+                }
+            );
+
+            var res = await Request<LoginByPhoneCodeResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过手机验证码登录
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="code">验证码</param>
+        /// <param name="registerAndLoginOptions">登录配置信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> LoginByPhoneCode(string phone,
+                                                 string code,
+                                                 RegisterAndLoginOptions registerAndLoginOptions = null)
+        {
+            // 序列化 registerAndLoginOptions.CustomData Params
+            string ParamsString = null;
+            string ContextString = null;
+            if (registerAndLoginOptions?.CustomData != null)
+            {
+                ParamsString = registerAndLoginOptions.CustomData.ConvertJson();
+            }
+            if (registerAndLoginOptions?.Context != null)
+            {
+                ContextString = registerAndLoginOptions.Context.ConvertJson();
+            }
+
+            var param = new LoginByPhoneCodeParam(
+                new LoginByPhoneCodeInput(phone, code)
+                {
+                    AutoRegister = registerAndLoginOptions?.AutoRegister ?? false,
+                    ClientIp = registerAndLoginOptions?.ClientIp,
+                    Params = ParamsString,
+                    Context = ContextString,
+                }
+            );
+
+            var res = await Request<LoginByPhoneCodeResponse>(param.CreateRequest());
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -211,15 +598,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
         /// TODO：下个大版本去除
-        public async Task<User> LoginByPhonePassword(
-            string phone,
-            string password,
-            bool autoRegister = false,
-            string captchaCode = null,
-            CancellationToken cancellationToken = default)
+        public async Task<User> LoginByPhonePassword(string phone,
+                                                     string password,
+                                                     bool autoRegister = false,
+                                                     string captchaCode = null)
         {
-
-             var param = new LoginByPhonePasswordParam(
+            var param = new LoginByPhonePasswordParam(
                 new LoginByPhonePasswordInput(phone, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
                 {
                     AutoRegister = autoRegister,
@@ -227,8 +611,824 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
-            var res = await Post<LoginByPhonePasswordResponse>(param.CreateRequest());
+            var res = await Request<LoginByPhonePasswordResponse>(param.CreateRequest());
+            User = res.Data.Result;
             return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过手机号密码登录
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="password">密码</param>
+        /// <param name="registerAndLoginOptions">登录信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> LoginByPhonePassword(string phone,
+                                                     string password,
+                                                     RegisterAndLoginOptions registerAndLoginOptions = null)
+        {
+            // 序列化 registerAndLoginOptions.CustomData Params
+            string ParamsString = null;
+            string ContextString = null;
+            if (registerAndLoginOptions?.CustomData != null)
+            {
+                ParamsString = registerAndLoginOptions.CustomData.ConvertJson();
+            }
+            if (registerAndLoginOptions?.Context != null)
+            {
+                ContextString = registerAndLoginOptions.Context.ConvertJson();
+            }
+
+            var param = new LoginByPhonePasswordParam(
+                new LoginByPhonePasswordInput(phone, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+                {
+                    AutoRegister = registerAndLoginOptions?.AutoRegister ?? false,
+                    CaptchaCode = registerAndLoginOptions?.CaptchaCode,
+                    ClientIp = registerAndLoginOptions?.ClientIp,
+                    Params = ParamsString,
+                    Context = ContextString,
+                }
+            );
+
+            var res = await Request<LoginByPhonePasswordResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过子账户登录
+        /// </summary>
+        /// <param name="account">子账户</param>
+        /// <param name="password">密码</param>
+        /// <param name="registerAndLoginOptions">登录配置信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> LoginBySubAccount(string account,
+                                                  string password,
+                                                  RegisterAndLoginOptions registerAndLoginOptions = null)
+        {
+            var param = new LoginBySubAccountParam(account, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
+            {
+                CaptchaCode = registerAndLoginOptions?.CaptchaCode,
+                ClientIp = registerAndLoginOptions?.ClientIp,
+            };
+
+            var res = await Request<LoginByPhonePasswordResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 检查登录状态
+        /// </summary>
+        /// <param name="accessToken">用户的 access token</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>JWTTokenStatus</returns>
+        public async Task<JWTTokenStatus> CheckLoginStatus(string accessToken = null)
+        {
+            var param = new CheckLoginStatusParam()
+            {
+                Token = accessToken ?? AccessToken
+            };
+            var res = await Request<CheckLoginStatusResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 发送邮件
+        /// </summary>
+        /// <param name="email">邮件</param>
+        /// <param name="scene">场景</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>CommonMessage</returns>
+        public async Task<CommonMessage> SendEmail(string email,
+                                                   EmailScene scene)
+        {
+            var param = new SendEmailParam(email, scene);
+            var res = await Request<SendEmailResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过手机号验证码重置密码
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="code">验证码</param>
+        /// <param name="newPassword">新密码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>CommonMessage</returns>
+        public async Task<CommonMessage> ResetPasswordByPhoneCode(string phone,
+                                                                  string code,
+                                                                  string newPassword)
+        {
+            var param = new ResetPasswordParam(code, EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey))
+            {
+                Phone = phone,
+            };
+            var res = await Request<ResetPasswordResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过邮箱验证码重置密码
+        /// </summary>
+        /// <param name="email">邮箱</param>
+        /// <param name="code">验证码</param>
+        /// <param name="newPassword">新密码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>CommonMessage</returns>
+        public async Task<CommonMessage> ResetPasswordByEmailCode(string email,
+                                                                  string code,
+                                                                  string newPassword)
+        {
+            var param = new ResetPasswordParam(code, EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey))
+            {
+                Email = email,
+            };
+            var res = await Request<ResetPasswordResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        // TODO: 缺少 resetPasswordByFirstLoginToken 方法
+
+        /// <summary>
+        /// 更新用户信息
+        /// </summary>
+        /// <param name="updates">更新项</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> UpdateProfile(UpdateUserInput updates)
+        {
+            var param = new UpdateUserParam(updates);
+            var res = await Request<UpdateUserResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 更新密码
+        /// </summary>
+        /// <param name="newPassword">新密码</param>
+        /// <param name="oldPassword">旧密码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> UpdatePassword(string newPassword, string oldPassword)
+        {
+            CheckLoggedIn();
+            var param = new UpdatePasswordParam(EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey))
+            {
+                OldPassword = EncryptHelper.RsaEncryptWithPublic(oldPassword, PublicKey),
+            };
+            var res = await Request<UpdatePasswordResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 更新手机号
+        /// </summary>
+        /// <param name="phone">新手机号</param>
+        /// <param name="phoneCode">新手机号的验证码</param>
+        /// <param name="oldPhone">旧手机号</param>
+        /// <param name="oldPhoneCode">旧手机号的验证码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> UpdatePhone(string phone, string phoneCode, string oldPhone = null,
+                                            string oldPhoneCode = null)
+        {
+            CheckLoggedIn();
+            var param = new UpdatePhoneParam(phone, phoneCode)
+            {
+                OldPhone = oldPhone,
+                OldPhoneCode = oldPhoneCode,
+            };
+            var res = await Request<UpdatePhoneResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 更新邮箱
+        /// </summary>
+        /// <param name="email">新邮箱</param>
+        /// <param name="emailCode">新邮箱的验证码</param>
+        /// <param name="oldEmail">旧邮箱</param>
+        /// <param name="oldEmailCode">旧邮箱的验证码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> UpdateEmail(string email, string emailCode, string oldEmail = null,
+                                            string oldEmailCode = null)
+        {
+            CheckLoggedIn();
+            var param = new UpdateEmailParam(email, emailCode)
+            {
+                OldEmail = oldEmail,
+                OldEmailCode = oldEmailCode,
+            };
+            var res = await Request<UpdateEmailResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 刷新 AccessToken
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>RefreshToken</returns>
+        public async Task<RefreshToken> RefreshToken()
+        {
+            var param = new RefreshTokenParam();
+            var res = await Request<RefreshTokenResponse>(param.CreateRequest());
+            SetToken(res.Data.Result.Token);
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 关联账户
+        /// </summary>
+        /// <param name="primaryUserToken">主账号</param>
+        /// <param name="secondaryUserToken">子账号</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>SimpleResponse</returns>
+        public async Task<CommonMessage> LinkAccount(string primaryUserToken, string secondaryUserToken)
+        {
+            var res = await Post<CommonMessage>("api/v2/users/link", new Dictionary<string, string>
+            {
+                {nameof(primaryUserToken),primaryUserToken },
+                { nameof(secondaryUserToken),secondaryUserToken}
+            });
+
+            return res.Data;
+
+            // TODO： 返回值是否合适
+            //await Host.AppendPathSegment("api/v2/users/link").WithHeaders(GetHeaders()).PostJsonAsync(new
+            //{
+            //    primaryUserToken,
+            //    secondaryUserToken,
+            //},
+            //cancellationToken);
+            //return new CommonMessage
+            //{
+            //    Code = 200,
+            //    Message = "绑定成功"
+            //};
+        }
+
+        /// <summary>
+        /// 取消关联账户
+        /// </summary>
+        /// <param name="primaryUserToken">主账户</param>
+        /// <param name="provider">提供者</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>SimpleResponse</returns>
+        public async Task<CommonMessage> UnLinkAccount(string primaryUserToken, ProviderType provider)
+        {
+            var res = await Post<CommonMessage>("api/v2/users/unlink", new Dictionary<string, string>
+            {
+                {nameof(primaryUserToken),primaryUserToken },
+                { nameof(provider),JsonConvert.SerializeObject( provider)}
+            });
+
+            return res.Data;
+
+
+            // TODO： 返回值是否合适
+            //await Host.AppendPathSegment("api/v2/users/unlink").WithHeaders(GetHeaders()).PostJsonAsync(new
+            //{
+            //    primaryUserToken,
+            //    provider,
+            //},
+            //cancellationToken);
+            //return new CommonMessage
+            //{
+            //    Code = 200,
+            //    Message = "解绑成功"
+            //};
+        }
+
+        /// <summary>
+        /// 绑定手机号，如果已绑定则会报错
+        /// </summary>
+        /// <param name="phone">手机号</param>
+        /// <param name="phoneCode">手机号验证码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> BindPhone(string phone, string phoneCode)
+        {
+            var param = new BindPhoneParam(phone, phoneCode);
+            var res = await Request<BindPhoneResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 解绑定手机号，如果未绑定则会报错
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> UnbindPhone()
+        {
+            var param = new UnbindPhoneParam();
+            var res = await Request<UnbindPhoneResponse>(param.CreateRequest());
+            User = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 绑定邮箱
+        /// </summary>
+        /// <param name="email">邮箱</param>
+        /// <param name="emailCode">邮箱验证码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> BindEamil(string email, string emailCode)
+        {
+            var param = new BindEmailParam(email, emailCode);
+            var res = await Request<BindEmailResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 取消绑定的邮箱
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> UnbindEmail()
+        {
+            var param = new UnbindEmailParam();
+            var res = await Request<UnbindEmailResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 获取当前用户
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> GetCurrentUser()
+        {
+            var param = new UserParam();
+            var res = await Request<UserResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 当前用户登出
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<CommonMessage> Logout()
+        {
+            var res = await Post<CommonMessage>("api/v2/logout", new Dictionary<string, string>
+            {
+                {"app_id",Options.AppId }
+            });
+
+            if (res.Code == 200)
+            {
+                ClearUser();
+            }
+            return res.Data;
+
+            // TODO: 是否需要返回值
+            //var res = await Host.AppendPathSegment($"/api/v2/logout").SetQueryParam("app_id", Options.AppId).WithHeaders(GetHeaders()).GetJsonAsync<CommonMessage>(cancellationToken);
+
+            //ClearUser();
+            //return res;
+        }
+
+        private void ClearUser()
+        {
+            User = null;
+            AccessToken = null;
+        }
+
+        private object GetHeaders()
+        {
+            const string SDK_VERSION = "4.2.4.7";
+            // 如果用户需要则取得 headers 之后进行合并
+            var res = new
+            {
+                x_authing_sdk_version = $"csharp:{SDK_VERSION}",
+                x_authing_userpool_id = Options.UserPoolId ?? "",
+                x_authing_request_from = Options.RequestFrom ?? "sdk",
+                x_authing_app_id = Options.AppId ?? "",
+                x_authing_lang = Options.Lang.ToString().ToUpper(),
+                // Authorization = $"Bearer {AccessToken}",
+            };
+            if (String.IsNullOrEmpty(AccessToken))
+            {
+                return new
+                {
+                    x_authing_sdk_version = $"csharp:{SDK_VERSION}",
+                    x_authing_userpool_id = Options.UserPoolId ?? "",
+                    x_authing_request_from = Options.RequestFrom ?? "sdk",
+                    x_authing_app_id = Options.AppId ?? "",
+                    x_authing_lang = Options.Lang.ToString().ToUpper(),
+                    Authorization = $"Bearer {AccessToken}",
+                };
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 获取用户自定义字段的值列表
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>自定义字段列表</returns>
+        public async Task<IEnumerable<ResUdv>> ListUdv()
+        {
+            CheckLoggedIn();
+            var param = new UdvParam(UdfTargetType.USER, User.Id);
+            var res = await Request<UdvResponse>(param.CreateRequest());
+            var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
+            return resUdv;
+        }
+
+        /// <summary>
+        /// 设置自定义字段值
+        /// </summary>
+        /// <param name="key">自定义字段的 key</param>
+        /// <param name="value">自定义字段的 value</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>用户自定义字段</returns>
+        public async Task<IEnumerable<ResUdv>> SetUdv(string key, object value)
+        {
+            CheckLoggedIn();
+            var param = new SetUdvParam(UdfTargetType.USER, User.Id, key, value.ConvertJson());
+            var res = await Request<SetUdvResponse>(param.CreateRequest());
+            var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
+            return resUdv;
+        }
+
+
+        /// <summary>
+        /// 移除用户自定义字段的值
+        /// </summary>
+        /// <param name="key">自定义字段的 key </param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<ResUdv>> RemoveUdv(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException($"“{nameof(key)}”不能为 null 或空。", nameof(key));
+            }
+
+            CheckLoggedIn();
+            var param = new RemoveUdvParam(UdfTargetType.USER, User.Id, key);
+            var res = await Request<RemoveUdvResponse>(param.CreateRequest());
+            var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
+            return resUdv;
+        }
+
+        // [Obsolete("该方法已经弃用")]
+        /// <summary>
+        /// 注销
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        // public async Task Logout()
+        // {
+        //     await CheckLoggedIn();
+        //     var param = new UpdateUserParam(
+        //         new UpdateUserInput()
+        //         {
+        //             TokenExpiredAt = "0",
+        //         }
+        //      )
+        //     {
+        //         Id = User.Id,
+        //     };
+        //     await Request<UpdateUserResponse>(param.CreateRequest(), cancellationToken);
+        //     User = null;
+        // }
+
+        /// <summary>
+        /// 用户是否进行登录，登录返回用户信息，没有登录则抛出错误
+        /// </summary>
+        /// <returns>用户 ID</returns>
+        private async Task<string> CheckLoggedIn(CancellationToken cancellationToken)
+        {
+            var user = await GetCurrentUser();
+            if (user == null)
+            {
+                throw new AuthingException("请先登录");
+            }
+
+            return user.Id;
+        }
+
+        /// <summary>
+        /// 组织列表
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>HttpResponseMessage</returns>
+        public async Task<ListOrgsRes> ListOrgs()
+        {
+            var res = await Get<ListOrgsRes>("api/v2/users/me/orgs", null);
+            return res.Data;
+            // TODO: 确定返回类型
+            //var res = await Host.AppendPathSegment("api/v2/users/me/orgs").WithHeaders(GetHeaders()).GetJsonAsync<ListOrgsRes>(cancellationToken);
+            //return res;
+        }
+
+        // TODO: 缺少方法 ListDepartment
+        // notd: 缺少方法 ListDepartment
+        public async Task<PaginatedDepartments> ListDepartment()
+        {
+            var userId = CheckLoggedIn();
+            var param = new GetUserDepartmentsParam(userId);
+            var res = await Request<GetUserDepartmentsResponse>(param.CreateRequest());
+            var user = res.Data.Result;
+            if (user == null)
+            {
+                throw new Exception("用户不存在！");
+            }
+            return user.Departments;
+        }
+
+        /// <summary>
+        /// 通过 LDAP 进行登录
+        /// </summary>
+        /// <param name="username">LDAP 用户名</param>
+        /// <param name="password">LDAP 用户密码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        /// TODO: 下个大版本去除
+        public async Task<User> LoginByLdap(string username, string password)
+        {
+            var res = await Post<User>("api/v2/ldap/verify-user", new Dictionary<string, string>
+            {
+                {nameof(username),username },
+                { nameof(password),password}
+            });
+
+            SetCurrentUser(res.Data);
+
+            return res.Data;
+
+
+
+            //var res = await Host.AppendPathSegment("api/v2/ldap/verify-user").WithHeaders(GetHeaders()).PostJsonAsync(
+            //    new
+            //    {
+            //        username,
+            //        password
+            //    },
+            //    cancellationToken
+            //);
+            //var user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(res.ResponseMessage));
+            //SetCurrentUser(user);
+            //return user;
+        }
+
+        // TODO: 缺少 loginByLdap 重载方法
+
+        /// <summary>
+        /// 通过 AD 登录
+        /// </summary>
+        /// <param name="username">AD 用户账号</param>
+        /// <param name="password">AD 用户密码</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>User</returns>
+        public async Task<User> LoginByAd(string username, string password)
+        {
+            //var firstLevelDomain = Url.Parse(Host).Host;
+
+            var firstLevelDomain = new Uri(Host).Host;
+
+            //var websocketHost = Options.WebsocketHost ?? $"https://ws.{firstLevelDomain}";
+            //var user = await websocketHost.AppendPathSegment("api/v2/ldap/verify-user").WithHeaders(GetHeaders()).PostJsonAsync(new
+            //{
+            //    username,
+            //    password
+            //},
+            //    cancellationToken).ReceiveJson<User>();
+
+            var result = await Post<User>("api/v2/ldap/verify-user", new Dictionary<string, string>
+            {
+                {"username",username },
+                { "password",password}
+            });
+
+
+
+
+            SetCurrentUser(result.Data);
+            return result.Data;
+        }
+
+        // TODO: 缺少 uploadPhoto 方法
+        // TODO: 缺少 updateAvatar 方法
+        // TODO: 缺少 uploadAvatar 方法
+
+        /// <summary>
+        /// 获取自定义字段列表
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>自定义字段列表</returns>
+        public async Task<List<KeyValuePair<string, object>>> GetUdfValue()
+        {
+            var userId = CheckLoggedIn();
+            var param = new UdvParam(UdfTargetType.USER, userId);
+            var res = await Request<UdvResponse>(param.CreateRequest());
+            var list = res.Data.Result;
+            var resUdvList = AuthingUtils.ConverUdvToKeyValuePair(list);
+            return resUdvList;
+        }
+
+        /// <summary>
+        /// 设置自定义字段
+        /// </summary>
+        /// <param name="data">自定义字段相关数据</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>自定义字段列表</returns>
+        public async Task<List<KeyValuePair<string, object>>> SetUdfValue(KeyValueDictionary data)
+        {
+            if (data.Count == 0)
+            {
+                throw new Exception("empty udf value list");
+            }
+
+            var input = new List<UserDefinedDataInput>();
+            foreach (var item in data)
+            {
+                input.Add(new UserDefinedDataInput(item.Key)
+                {
+                    Key = item.Key,
+                    Value = item.Value.ConvertJson(),
+                });
+            }
+            var userId = CheckLoggedIn();
+            var param = new SetUdvBatchParam(UdfTargetType.USER, userId)
+            {
+                UdvList = input,
+            };
+            var res = await Request<SetUdvBatchResponse>(param.CreateRequest());
+            var list = res.Data.Result;
+            var resUdvList = AuthingUtils.ConverUdvToKeyValuePair(list);
+            return resUdvList;
+        }
+
+        /// <summary>
+        /// 删除自定义字段
+        /// </summary>
+        /// <param name="key">自定义字段的 key</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>是否成功</returns>
+        public async Task<bool> RemoveUdfValue(string key)
+        {
+            var userId = CheckLoggedIn();
+            var param = new RemoveUdvParam(UdfTargetType.USER, userId, key);
+            var res = await Request<RemoveUdvResponse>(param.CreateRequest());
+            return true;
+        }
+
+        /// <summary>
+        /// 获取密码等级
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>SecurityLevel</returns>
+        public async Task<SecurityLevel> GetSecurityLevel()
+        {
+            var result = await Post<SecurityLevel>("api/v2/users/me/security-level", new Dictionary<string, string> { });
+            return result.Data;
+
+
+            // TODO: 注意返回类型转换
+            //var res = await Host.AppendPathSegment("api/v2/users/me/security-level").WithHeaders(GetHeaders()).GetJsonAsync<SecurityLevel>(cancellationToken);
+            //return res;
+        }
+
+        /// <summary>
+        /// 允许访问的资源列表
+        /// </summary>
+        /// <param name="_namespace">命名空间</param>
+        /// <param name="_resourceType">资源类型</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>PaginatedAuthorizedResources</returns>
+        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string _namespace, ResourceType? _resourceType)
+        {
+            var userId = CheckLoggedIn();
+            var param = new ListUserAuthorizedResourcesParam(userId)
+            {
+                Namespace = _namespace,
+                ResourceType = _resourceType?.ToString()?.ToUpper(),
+            };
+            var res = await Request<ListUserAuthorizedResourcesResponse>(param.CreateRequest());
+            var user = res.Data.Result;
+            if (user == null)
+            {
+                throw new Exception("用户不存在");
+            }
+
+            var authorizedResources = user.AuthorizedResources;
+            var list = authorizedResources.List;
+            // AuthingUtils.FormatAuthorizedResources(ref list);
+            return authorizedResources;
+        }
+
+        /// <summary>
+        /// 计算密码强度
+        /// </summary>
+        /// <param name="password">密码</param>
+        /// <returns>PasswordSecurityLevel</returns>
+        public PasswordSecurityLevel ComputedPasswordSecurityLevel(string password)
+        {
+            // TODO: 正则需要额外注意一下
+            var highLevel = @"/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{12,}$/g";
+            var middleLevel = @"/^(?=.*[a-zA-Z])(?=.*\d)[^]{8,}$/g";
+            if (Regex.Matches(password, highLevel).Count != 0)
+            {
+                return PasswordSecurityLevel.HIGH;
+            }
+            if (Regex.Matches(password, middleLevel).Count != 0)
+            {
+                return PasswordSecurityLevel.MIDDLE;
+            }
+
+            return PasswordSecurityLevel.LOW;
+        }
+
+        /// <summary>
+        /// 刷新 access token
+        /// </summary>
+        /// <param name="accessToken">用户 access token</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>RefreshToken</returns>
+        // INFO: 这个 RefreshToken 与上面的 RefreshToken 是有区别的
+        public async Task<RefreshToken> RefreshToken(string accessToken)
+        {
+            CheckLoggedIn();
+            var param = new RefreshTokenParam();
+            var res = await Request<RefreshTokenResponse>(param.CreateRequest(), accessToken);
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 当前用户是否具有某种角色
+        /// </summary>
+        /// <param name="roleCode">角色 code</param>
+        /// <param name="_namespace">命名空间</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>bool</returns>
+        public async Task<bool> HasRole(string roleCode, string _namespace = "")
+        {
+            var userId = CheckLoggedIn();
+            var param = new GetUserRolesParam(userId)
+            {
+                Namespace = _namespace,
+            };
+            var res = await Request<GetUserRolesResponse>(param.CreateRequest());
+            if (res.Data.Result == null)
+            {
+                return false;
+            }
+            var user = res.Data.Result;
+
+            var roleList = user.Roles?.List;
+            if (roleList == null || !roleList.Any())
+            {
+                return false;
+            }
+
+            var hasRole = roleList.Any(item => string.Equals(item.Code, roleCode));
+            return hasRole;
+        }
+
+        /// <summary>
+        /// 应用程序列表
+        /// </summary>
+        /// <param name="_params">列表参数</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>HttpResponseMessage</returns>
+        public async Task<ListApplicationsRes> ListApplications(ListParams _params = null)
+        {
+            _params ??= new ListParams();
+            var result = await Post<ListApplicationsRes>("api/v2/users/me/applications/allowed", new Dictionary<string, string>
+            {
+                { "page",_params.Page.ToString()},
+                { "limit",_params.Limit.ToString()}
+            });
+
+            return result.Data;
+
+            // TODO: 注意返回类型转换
+            //_params ??= new ListParams();
+            //var res = await Host.AppendPathSegment(
+            //    $"api/v2/users/me/applications/allowed").SetQueryParams(new
+            //    {
+            //        page = _params.Page,
+            //        limit = _params.Limit
+            //    }).WithHeaders(GetHeaders()).GetJsonAsync<ListApplicationsRes>(cancellationToken);
+            //return res;
+        }
+
+        public void SetLang(LangEnum lang)
+        {
+            Options.Lang = lang;
         }
 
     }

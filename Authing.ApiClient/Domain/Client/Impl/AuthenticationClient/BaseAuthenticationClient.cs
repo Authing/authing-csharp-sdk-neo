@@ -44,8 +44,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         
 
-        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
+        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body,string accessToken=null)
         {
+
+
             var headers = new Dictionary<string, string>();
             headers = await GetAuthHeaders(true);
             return await Request<TResponse>(body, headers);
