@@ -148,17 +148,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return true;
         }
 
-        /// <summary>
-        /// 获取应用访问控制策略
-        /// </summary>
-        /// <param name="appId">应用 ID</param>
-        /// <param name="appAccessPolicyQueryFilter"></param>
-        /// <returns></returns>
-        public async Task<ApplicationAccessPolicies> GetAccessPolicies(string appId, AppAccessPolicyQueryFilter appAccessPolicyQueryFilter)
-        {
-            appAccessPolicyQueryFilter.AppId = appId;
-            var res = await aclManagementClient.GetAccessPolicies(appAccessPolicyQueryFilter, cancellationToken);
-            return res;
-        }
+        ///// <summary>
+        ///// 获取应用访问控制策略
+        ///// </summary>
+        ///// <param name="appId">应用 ID</param>
+        ///// <param name="appAccessPolicyQueryFilter"></param>
+        ///// <returns></returns>
+        //public async Task<ApplicationAccessPolicies> GetAccessPolicies(string appId, AppAccessPolicyQueryFilter appAccessPolicyQueryFilter)
+        //{
+        //    appAccessPolicyQueryFilter.AppId = appId;
+        //    var res = await aclManagementClient.GetAccessPolicies(appAccessPolicyQueryFilter, cancellationToken);
+        //    return res;
+        //}
     }
 }
