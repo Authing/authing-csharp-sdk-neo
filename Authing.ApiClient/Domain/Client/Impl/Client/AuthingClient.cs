@@ -85,6 +85,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 {
                     message.Headers.Authorization = null;
                 }
+                if (headers.ContainsKey("Bearer"))
+                {
+                    message.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headers["Bearer"]);
+                }
+
+                
+
             }
             using (var httpResponseMessage =
                 await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
@@ -96,7 +103,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     using (var reader = new StreamReader(contentStream))
                     {
                         var resString = await reader.ReadToEndAsync();
-                        return JsonConvert.DeserializeObject<TResponse>(resString);
+                        var res= JsonConvert.DeserializeObject<TResponse>(resString);
+                        return res;
                     }
                 }
                 // error handling
