@@ -42,12 +42,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        
-
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body,string accessToken=null)
         {
-
-
             var headers = new Dictionary<string, string>();
             headers = await GetAuthHeaders(true);
             return await Request<TResponse>(body, headers);
@@ -127,6 +123,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             //    var token = await GetAccessToken();
             //    dic.Add("Authorization", token);
             //}
+
+            if (!string.IsNullOrEmpty(AccessToken))
+            {
+                dic.Add("Bearer", AccessToken);
+            }
 
             if (!string.IsNullOrEmpty(UserPoolId))
             {

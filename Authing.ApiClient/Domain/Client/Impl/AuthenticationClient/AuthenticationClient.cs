@@ -357,8 +357,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<CheckPasswordStrengthResult> CheckPasswordStrength(string password)
         {
             var param = new CheckPasswordStrengthParam(password);
-            var res = await Request<CheckPasswordStrengthResult>(param.CreateRequest());
-            return res.Data;
+            var res = await Request<CheckPasswordStrengthResponse>(param.CreateRequest());
+            return res.Data.Result;
         }
 
         /// <summary>
@@ -838,7 +838,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>RefreshToken</returns>
         public async Task<RefreshToken> RefreshToken()
         {
-            var param = new RefreshTokenParam();
+            var param = new RefreshTokenParam() { };
             var res = await Request<RefreshTokenResponse>(param.CreateRequest());
             SetToken(res.Data.Result.Token);
             return res.Data.Result;

@@ -54,6 +54,39 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public async void SetCurrentUser_Test()
+        {
+            var client = authenticationClient;
+
+            var result = await client.LoginByPhonePassword("13348926753", "12345678", null);
+
+            client.SetCurrentUser(result);
+
+            Assert.NotNull(client.GetCurrentUser());
+        }
+
+        [Fact]
+        public async void SetToken_Test()
+        {
+            var client = authenticationClient;
+
+            var result = await client.LoginByPhonePassword("13348926753", "3866364", null);
+
+            client.SetToken(result.Token);
+
+            Assert.True(client.AccessToken == result.Token);
+        }
+
+        [Fact]
+        public async void CheckPasswordStrength_Test()
+        {
+            var client = authenticationClient;
+
+            var result = await client.CheckPasswordStrength("3866364");
+
+            Assert.True(result.Valid);
+        }
 
     }
 }
