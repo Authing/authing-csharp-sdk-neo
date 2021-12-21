@@ -42,8 +42,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        
-
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
@@ -57,7 +55,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             headers = await GetAuthHeaders(true);
             return await Request<TResponse>(api, body, headers);
         }
-
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
         {
@@ -79,7 +76,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             headers = await GetAuthHeaders(true);
             return await Post<TResponse>(api, body, headers);
         }
-
 
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
@@ -106,10 +102,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             headers = await GetAuthHeaders(false);
             return await Post<TResponse>(body, headers);
         }
-
-
-
-
 
         public async Task< Dictionary<string, string>> GetAuthHeaders(bool withToken=false)
         {

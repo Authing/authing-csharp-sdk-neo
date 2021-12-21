@@ -200,7 +200,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             {
 
                 Content = new StringContent(rawjson,Encoding.UTF8, "application/json")
-
+                //TODO:JAVA SDK中存在 application/x-www-form-urlencoded
+                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
             };
 
             if (headers != null)

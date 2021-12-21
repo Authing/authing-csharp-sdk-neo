@@ -13,7 +13,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
     /// <summary>
     /// Authing 认证客户端类
     /// </summary>
-    public class AuthenticationClient : BaseAuthenticationClient
+    public partial class AuthenticationClient : BaseAuthenticationClient
     {
 
 
