@@ -8,7 +8,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
     public class GetUserGroupsResponse
     {
 
-        [JsonProperty("getUserGroups")]
+        [JsonProperty("user")]
         public User Result { get; set; }
     }
 
