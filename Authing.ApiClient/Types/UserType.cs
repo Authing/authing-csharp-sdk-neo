@@ -3,11 +3,11 @@ namespace Authing.ApiClient.Types
 {
     public enum BatchFetchUserTypes
     {
-        ID,
-        USERNAME,
-        PHONE,
-        EMAIL,
-        EXTERNALID,
+        id,
+        username,
+        phone,
+        email,
+        externalId,
     }
 
     public class ExistsOption

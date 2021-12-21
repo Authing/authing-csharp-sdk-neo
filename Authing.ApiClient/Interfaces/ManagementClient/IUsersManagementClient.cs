@@ -6,8 +6,11 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Users;
 using Authing.ApiClient.Domain.Model.Management.Groups;
 using Authing.ApiClient.Domain.Model.Management.Orgs;
+using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Domain.Model.Management.Roles;
 using Authing.ApiClient.Domain.Model.Management.Department;
+using Authing.ApiClient.Domain.Model.Management.AuthorizedResources;
+using Authing.ApiClient.Domain.Model.Management.UserAction;
 using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
@@ -57,7 +60,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="userIds">用户 ID 列表</param>
         /// <returns></returns>
-        Task<IEnumerable<User>> Batch(IEnumerable<string> userIds, BatchFetchUserTypes batchFetchUserType = BatchFetchUserTypes.ID);
+        Task<IEnumerable<User>> Batch(IEnumerable<string> userIds, BatchFetchUserTypes batchFetchUserType = BatchFetchUserTypes.id);
 
         /// <summary>
         /// 获取用户列表
@@ -155,7 +158,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<PaginatedOrgs> ListOrgs(string userId);
+        Task<PaginatedOrgsAndNodes> ListOrgs(string userId);
 
         /// <summary>
         /// 获取用户所在部门
@@ -163,5 +166,99 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
         Task<PaginatedDepartments> ListDepartment(string userId);
+
+        /// <summary>
+        /// 获取用户被授权的所有资源
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="_namespace">资源分组</param>
+        /// <param name="option">选项</param>
+        /// <returns></returns>
+        Task<PaginatedAuthorizedResources> ListAuthorizedResources(string userId, string _namespace, ListAuthorizedResourcesOption option = null);
+
+        /// <summary>
+        /// 获取某个用户的所有自定义数据
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <returns></returns>
+        Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId);
+
+        /// <summary>
+        /// 批量获取多个用户的自定义数据
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <returns></returns>
+        Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds);
+
+        /// <summary>
+        /// 设置某个用户的自定义数据
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="data">数据</param>
+        /// <returns></returns>
+        Task<IEnumerable<UserDefinedData>> SetUdfValue(string userId, KeyValueDictionary data);
+
+        /// <summary>
+        /// 批量设置自定义数据
+        /// </summary>
+        /// <param name="setUdfValueBatchInput"></param>
+        /// <returns></returns>
+        Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput);
+
+        /// <summary>
+        /// 清除用户的自定义数据
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Task<CommonMessage> RemoveUdfValue(string userId, string key);
+
+        /// <summary>
+        /// 判断用户是否有某个角色
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="roleCode">角色 Code</param>
+        /// <param name="_namespace">权限分组 ID</param>
+        /// <returns></returns>
+        Task<bool> hasRole(string userId, string roleCode, string _namespace = null);
+
+        /// <summary>
+        /// 强制一批用户下线
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="roleCode">角色 Code</param>
+        /// <param name="_namespace">权限分组 ID</param>
+        /// <returns></returns>
+        Task<CommonMessage> Kick(IEnumerable<string> userIds);
+
+        /// <summary>
+        /// 用户退出登录
+        /// </summary>
+        /// <param name="logoutParam">选项</param>
+        /// <returns></returns>
+        Task<CommonMessage> Logout(LogoutParam logoutParam);
+
+        /// <summary>
+        /// 查询用户的登录状态
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="devicdId">选项</param>
+        /// <returns></returns>
+        Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null);
+
+        /// <summary>
+        /// 审计日志列表
+        /// </summary>
+        /// <param name="listUserActionsParam">选项</param>
+        /// <returns></returns>
+        Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null);
+
+        /// <summary>
+        /// 发送首次登录验证邮件
+        /// </summary>
+        /// <param name="sendFirstLoginVerifyEmailParam">选项</param>
+        /// <returns></returns>
+        Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam);
     }
 }

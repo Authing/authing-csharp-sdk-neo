@@ -13,7 +13,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public IOrgsManagementClient Orgs { get; private set; }
 
         public IUsersManagementClient Users { get; private set; }
-        public IRolesManagementClient Roles { get; private set; }
+
+        public IApplicationsManagementClient Applications { get; private set; }
 
         public Action<InitAuthenticationClientOptions> Init { get; }
 
@@ -25,6 +26,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
         {
             Users = new UsersManagementClient(this);
+            Applications = new ApplicationsManagementClient(this);
             Udf = new UdfManagementClient(this);
             Orgs = new OrgsManagementClient(this);
             Roles = new RolesManagementClient(this);
@@ -41,6 +43,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var manageClient = new ManagementClient(userPoolId, secret);
             await manageClient.GetAccessToken();
             manageClient.Users = new UsersManagementClient(manageClient);
+            manageClient.Applications = new ApplicationsManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
             manageClient.Roles = new RolesManagementClient(manageClient);
@@ -58,6 +61,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var manageClient = new ManagementClient(init);
             await manageClient.GetAccessToken();
             manageClient.Users = new UsersManagementClient(manageClient);
+            manageClient.Applications = new ApplicationsManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
             manageClient.Roles = new RolesManagementClient(manageClient);

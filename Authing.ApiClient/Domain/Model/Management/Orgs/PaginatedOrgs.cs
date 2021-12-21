@@ -16,4 +16,15 @@ namespace Authing.ApiClient.Domain.Model.Management.Orgs
         public IEnumerable<Org> List { get; set; }
         #endregion
     }
+
+    public class PaginatedOrgsAndNodes
+    {
+        #region members
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
+
+        [JsonProperty("list")]
+        public IEnumerable<Object> List { get; set; }
+        #endregion
+    }
 }
