@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Client.Impl.Client;
 using Authing.ApiClient.Infrastructure.GraphQL;
@@ -68,6 +69,31 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var headers = new Dictionary<string, string>();
             headers = await GetAuthHeaders(true);
             return await Post<TResponse>(api, body, headers);
+        }
+
+        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, object> body)
+        {
+            var headers = new Dictionary<string, string>();
+            headers = await GetAuthHeaders(true);
+
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+
+            foreach (var item in body)
+            {
+                if (item.Value is string)
+                {
+                    dic.Add(item.Key, item.Value.ToString());
+                    continue;
+                }
+                if (item.Value is int)
+                {
+                    dic.Add(item.Key, item.Value.ToString());
+                    continue;
+                }
+                dic.Add(item.Key, Newtonsoft.Json.JsonConvert.SerializeObject(item.Value));
+
+            }
+            return await Post<TResponse>(api, dic, headers);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body)

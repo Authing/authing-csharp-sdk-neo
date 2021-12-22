@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Authing.ApiClient.Domain.Model.Authentication
+{
+    public class ListOrgsResult
+    {
+        public List<List<Model.Management.Orgs.Node>> Orgs { get; set; }
+    }
+}

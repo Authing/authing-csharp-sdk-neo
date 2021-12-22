@@ -94,14 +94,27 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         public async void BindEmail_Test()
         {
             var client = authenticationClient;
-            var user = await client.RegisterByEmail("635877990@qq.com", "12345678", null,null);
+            //var user = await client.RegisterByUsername("qidong5566", "12345678",null,null);
 
+            await client.LoginByUsername("qidong5566", "12345678", null);
             //await client.SendSmsCode("13348926753");
-            await client.SendEmail("635877990@qq.com", Types.EmailScene.VERIFY_EMAIL);
+            await client.SendEmail("2481452007@qq.com", Types.EmailScene.RESET_PASSWORD);
 
-            var result = await client.BindEamil("2481452007@qq.com","");
+            var result = await client.BindEamil("2481452007@qq.com", "6743");
 
-            Assert.True(string.IsNullOrEmpty(result.Phone));
+            Assert.True(string.IsNullOrEmpty(result.Email)==false);
+        }
+
+        [Fact]
+        public async void UnbindEmail_Text()
+        {
+            var client = authenticationClient;
+
+            await client.LoginByUsername("qidong5566", "12345678", null);
+
+            var result = await client.UnbindEmail();
+
+            Assert.True(string.IsNullOrEmpty(result.Email));
         }
     }
 }

@@ -8,13 +8,10 @@ using System.Text;
 namespace Authing.ApiClient.Domain.Model.Authentication
 {
     [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
-    public class ListApplicationsRes
+    public class ListApplicationsResponse
     {
-        public string Code { get; set; }
-
-        public string Message { get; set; }
-
-        public ApplicationList Data { get; set; }
+        public int TotalCount { get; set; }
+        public Application[] List { get; set; }
 
     }
 }

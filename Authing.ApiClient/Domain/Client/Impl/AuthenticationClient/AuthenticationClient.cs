@@ -370,19 +370,26 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// TODO: 破坏性更新
         public async Task<CommonMessage> SendSmsCode(string phone)
         {
-            var res = await Post<CommonMessage>("api/v2/sms/send", new Dictionary<string, string>
+            var res = await Post<CommonMessage>("api/v2/sms/send", new Dictionary<string, object>
             {
-                {nameof(phone),phone }
+                {nameof(phone), phone }
             });
+
+            await Post<CommonMessage>("api/v2/sms/send", new Dictionary<string, string>
+            {
+                {nameof(phone), phone }
+            });
+
+
 
             //var res = await Host.AppendPathSegment("api/v2/sms/send").WithHeaders(GetHeaders()).PostJsonAsync(new
             //{
             //    phone
             //}, cancellationToken).ReceiveJson<CommonMessage>();
-            CommonMessage ms = new CommonMessage() 
+            CommonMessage ms = new CommonMessage()
             {
-                Code=res.Code,
-                Message=res.Message,
+                Code = res.Code,
+                Message = res.Message,
             };
             return ms;
         }
@@ -674,7 +681,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 ClientIp = registerAndLoginOptions?.ClientIp,
             };
 
-            var res = await Request<LoginByPhonePasswordResponse>(param.CreateRequest());
+            var res = await Request<LoginBySubAccountResponse>(param.CreateRequest());
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -750,7 +757,36 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return res.Data.Result;
         }
 
-        // TODO: 缺少 resetPasswordByFirstLoginToken 方法
+        /// <summary>
+        /// 通过首次登录的 Token 重置密码
+        /// </summary>
+        /// <param name="token">首次登录的Token</param>
+        /// <param name="password">修改后的密码</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> ResetPasswordByFirstLoginToken(string token, string password)
+        {
+            var param = new ResetPasswordByFirstLoginTokenParam(token, password);
+
+            var result = await Request<ResetPasswordByFirstLoginTokenResponse>(param.CreateRequest());
+
+            return result.Data.Result;
+        }
+
+        /// <summary>
+        /// 通过密码强制跟临时 Token 修改密码
+        /// </summary>
+        /// <param name="token">登录的Token</param>
+        /// <param name="oldPassword">旧密码</param>
+        /// <param name="newPassword">新密码</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> ResetPasswordByForceResetToken(string token, string oldPassword, string newPassword)
+        {
+            var param = new ResetPasswordByForceResetTokenParam(token, oldPassword, newPassword);
+
+            var result = await Request<ResetPasswordByForceResetTokenResponse>(param.CreateRequest());
+
+            return result.Data.Result;
+        }
 
         /// <summary>
         /// 更新用户信息
@@ -980,16 +1016,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<CommonMessage> Logout()
         {
-            var res = await Post<CommonMessage>("api/v2/logout", new Dictionary<string, string>
-            {
-                {"app_id",Options.AppId }
-            });
+            var res = await Get<CommonMessage>($"api/v2/logout/?app_id={Options.AppId}", null);
 
             if (res.Code == 200)
             {
                 ClearUser();
             }
-            return res.Data;
+            return new CommonMessage { Code = res.Code, Message = res.Message };
 
             // TODO: 是否需要返回值
             //var res = await Host.AppendPathSegment($"/api/v2/logout").SetQueryParam("app_id", Options.AppId).WithHeaders(GetHeaders()).GetJsonAsync<CommonMessage>(cancellationToken);
@@ -1125,17 +1158,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>HttpResponseMessage</returns>
-        public async Task<ListOrgsRes> ListOrgs()
+        public async Task<ListOrgsResult> ListOrgs()
         {
-            var res = await Get<ListOrgsRes>("api/v2/users/me/orgs", null);
-            return res.Data;
-            // TODO: 确定返回类型
-            //var res = await Host.AppendPathSegment("api/v2/users/me/orgs").WithHeaders(GetHeaders()).GetJsonAsync<ListOrgsRes>(cancellationToken);
-            //return res;
+            var res = await Get<object>("api/v2/users/me/orgs", null);
+            string resultString = res.Data.ToString();
+
+            var orgs = JsonConvert.DeserializeObject<List<List<Model.Management.Orgs.Node>>>(resultString);
+
+            ListOrgsResult listOrgsResult = new ListOrgsResult { Orgs = orgs };
+
+            return listOrgsResult;
+
         }
 
-        // TODO: 缺少方法 ListDepartment
-        // notd: 缺少方法 ListDepartment
         public async Task<PaginatedDepartments> ListDepartment()
         {
             var userId = CheckLoggedIn();
@@ -1293,7 +1328,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>SecurityLevel</returns>
         public async Task<SecurityLevel> GetSecurityLevel()
         {
-            var result = await Post<SecurityLevel>("api/v2/users/me/security-level", new Dictionary<string, string> { });
+            var result = await Get<SecurityLevel>("api/v2/users/me/security-level", null);
             return result.Data;
 
 
@@ -1305,16 +1340,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 允许访问的资源列表
         /// </summary>
-        /// <param name="_namespace">命名空间</param>
+        /// <param name="_namespace">权限分组的ID</param>
         /// <param name="_resourceType">资源类型</param>
         /// <param name="cancellationToken"></param>
         /// <returns>PaginatedAuthorizedResources</returns>
-        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string _namespace, ResourceType? _resourceType)
+        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string nameSpace, ResourceType? _resourceType)
         {
             var userId = CheckLoggedIn();
             var param = new ListUserAuthorizedResourcesParam(userId)
             {
-                Namespace = _namespace,
+                Namespace = nameSpace,
                 ResourceType = _resourceType?.ToString()?.ToUpper(),
             };
             var res = await Request<ListUserAuthorizedResourcesResponse>(param.CreateRequest());
@@ -1325,8 +1360,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
 
             var authorizedResources = user.AuthorizedResources;
-            var list = authorizedResources.List;
-            // AuthingUtils.FormatAuthorizedResources(ref list);
             return authorizedResources;
         }
 
@@ -1338,17 +1371,26 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public PasswordSecurityLevel ComputedPasswordSecurityLevel(string password)
         {
             // TODO: 正则需要额外注意一下
-            var highLevel = @"/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{12,}$/g";
-            var middleLevel = @"/^(?=.*[a-zA-Z])(?=.*\d)[^]{8,}$/g";
-            if (Regex.Matches(password, highLevel).Count != 0)
+
+            var higLevel = new Regex(@"(?=.*[0-9])                     #必须包含数字
+                                       (?=.*[a-z])                  #必须包含小写或大写字母
+                                       (?=([\x21-\x7e]+)[^a-zA-Z0-9])  #必须包含特殊符号
+                                        .{6,}                         #至少8个字符，最多30个字符
+                                        ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
+
+            var middleLevel = new Regex(@"((?=.*\d)(?=.*\D)|(?=.*[a-zA-Z])(?=.*[^a-zA-Z]))(?!^.*[\u4E00-\u9FA5].*$).{6,}",
+                                            RegexOptions.Multiline
+| RegexOptions.IgnorePatternWhitespace);
+
+
+            if (higLevel.IsMatch(password))
             {
                 return PasswordSecurityLevel.HIGH;
             }
-            if (Regex.Matches(password, middleLevel).Count != 0)
+            if (middleLevel.IsMatch(password))
             {
                 return PasswordSecurityLevel.MIDDLE;
             }
-
             return PasswordSecurityLevel.LOW;
         }
 
@@ -1404,14 +1446,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="_params">列表参数</param>
         /// <param name="cancellationToken"></param>
         /// <returns>HttpResponseMessage</returns>
-        public async Task<ListApplicationsRes> ListApplications(ListParams _params = null)
+        public async Task<ListApplicationsResponse> ListApplications(ListParams _params = null)
         {
             _params ??= new ListParams();
-            var result = await Post<ListApplicationsRes>("api/v2/users/me/applications/allowed", new Dictionary<string, string>
-            {
-                { "page",_params.Page.ToString()},
-                { "limit",_params.Limit.ToString()}
-            });
+            var result = await Get<ListApplicationsResponse>($"api/v2/users/me/applications/allowed/?page={_params.Page}&limit={_params.Limit}", null);
 
             return result.Data;
 
@@ -1429,6 +1467,40 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public void SetLang(LangEnum lang)
         {
             Options.Lang = lang;
+        }
+
+        /// <summary>
+        /// 判断用户是否存在
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="email">电子邮箱</param>
+        /// <param name="phone">电话号码</param>
+        /// <param name="externalId">ExternalID</param>
+        /// <returns></returns>
+        public async Task<bool?> IsUserExists(string userName = null, string email = null, string phone = null, string externalId = null)
+        {
+            IsUserExistsParam isUserExistsParam = new IsUserExistsParam()
+            {
+                Username = userName,
+                Email = email,
+                Phone = phone,
+                ExternalId = externalId
+            };
+
+            var result = await Request<IsUserExistsResponse>(isUserExistsParam.CreateRequest());
+
+            return result.Data.Result;
+        }
+
+        /// <summary>
+        /// 检测密码是否合法
+        /// </summary>
+        /// <param name="password">需要检测的密码</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> isPasswordValid(string password)
+        {
+            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
+            return result.Data;
         }
 
     }

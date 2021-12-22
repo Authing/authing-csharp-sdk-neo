@@ -45,7 +45,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByPhonePassword("13348926753", "3866364", null);
+            var result = await client.LoginByUsername("qidong5566", "12345678", null);
 
             var loginStatus = await client.CheckLoginStatus(client.AccessToken);
 

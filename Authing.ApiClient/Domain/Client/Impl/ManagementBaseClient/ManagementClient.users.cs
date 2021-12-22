@@ -578,15 +578,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> Kick(IEnumerable<string> userIds)
         {
-            await client.Host.AppendPathSegment("api/v2/users/kick").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
+           var result=  await client.Post<CommonMessage>("api/v2/users/kick", new Dictionary<string, object>
             {
-                userIds
-            }).ReceiveJson<CommonMessage>();
-            return new CommonMessage
-            {
-                Code = 200,
-                Message = "强制下线成功"
-            };
+                { nameof(userIds),userIds}
+            });
+            return result.Data;
+            //await client.Host.AppendPathSegment("api/v2/users/kick").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
+            //{
+            //    userIds
+            //}).ReceiveJson<CommonMessage>();
+            //return new CommonMessage
+            //{
+            //    Code = 200,
+            //    Message = "强制下线成功"
+            //};
         }
 
         /// <summary>
