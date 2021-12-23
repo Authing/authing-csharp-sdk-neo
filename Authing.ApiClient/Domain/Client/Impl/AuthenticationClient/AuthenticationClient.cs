@@ -17,13 +17,14 @@ using Authing.ApiClient.Domain.Model.Management.Department;
 using System.Text.RegularExpressions;
 using Authing.ApiClient.Domain.Model.Management.Users;
 using System.Linq;
+using Authing.ApiClient.Interfaces.AuthenticationClient;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
     /// <summary>
     /// Authing 认证客户端类
     /// </summary>
-    public partial class AuthenticationClient : BaseAuthenticationClient
+    public partial class AuthenticationClient : BaseAuthenticationClient,IAuthenticationClient
     {
 
 

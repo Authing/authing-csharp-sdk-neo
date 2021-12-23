@@ -393,7 +393,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
                 return result;
             }
-            else {
+            else
+            {
                 var result = new PaginatedOrgsAndNodes()
                 {
                     TotalCount = 0,
@@ -578,10 +579,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> Kick(IEnumerable<string> userIds)
         {
-           var result=  await client.Post<CommonMessage>("api/v2/users/kick", new Dictionary<string, object>
-            {
-                { nameof(userIds),userIds}
-            });
+            var result = await client.PostRaw<CommonMessage>("api/v2/users/kick", new Dictionary<string, object> { { nameof(userIds), userIds } });
             return result.Data;
             //await client.Host.AppendPathSegment("api/v2/users/kick").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
             //{
