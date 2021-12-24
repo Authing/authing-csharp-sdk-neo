@@ -11,7 +11,7 @@ namespace Authing.ApiClient.Domain.Model.Authentication
     public class AssosicateMfaAuthenticatorParam
     {
         [JsonProperty("authenticatorType")]
-        public string AuthenticatorType { get; set; }
+        public string AuthenticatorType { get; set; } = "totp";
 
         [JsonProperty("mfaToken")]
         public string MafToken { get; set; }

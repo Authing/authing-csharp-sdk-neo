@@ -10,7 +10,7 @@ namespace Authing.ApiClient.Domain.Model.Authentication
     public class GetMfaAuthenticatorsParam
     {
         [JsonProperty("type")]
-        public string Type { get; set; }
+        public string Type { get; set; } = "totp";
 
         [JsonProperty("mfaToken")]
         public string MfaToken { get; set; }
