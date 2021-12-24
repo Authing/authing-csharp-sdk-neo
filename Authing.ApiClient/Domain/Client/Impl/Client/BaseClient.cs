@@ -80,10 +80,7 @@ GKl64GDcIq3au+aqJQIDAQAB
         }
 
         protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body, Dictionary<string, string> headers)
-
         {
-
-
             var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Post, body,
                 headers ?? new Dictionary<string, string>());
             CheckResult(result);

@@ -17,6 +17,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public IApplicationsManagementClient Applications { get; private set; }
 
+        public IPoliciesManagementClient Policies { get; private set; }
+
+        public IMFAManagementClient MFA { get; private set; }
+
         public Action<InitAuthenticationClientOptions> Init { get; }
 
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
@@ -36,6 +40,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Userpool = new UserpoolManagement(this);
             Statistics = new StatisticsManagement(this);
             acl = new AclManagementClient(this);
+            Policies = new PoliciesManagementClient(this);
+            MFA = new MFAManagementClient(this);
             Init = init ?? throw new ArgumentNullException(nameof(init));
         }
 
@@ -53,6 +59,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.acl = new AclManagementClient(manageClient);
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
+            manageClient.Policies = new PoliciesManagementClient(manageClient);
+            manageClient.MFA = new MFAManagementClient(manageClient);
             return manageClient;
         }
 
@@ -71,6 +79,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.acl = new AclManagementClient(manageClient);
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
+            manageClient.Policies = new PoliciesManagementClient(manageClient);
+            manageClient.MFA = new MFAManagementClient(manageClient);
             return manageClient;
         }
     }

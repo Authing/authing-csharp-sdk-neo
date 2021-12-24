@@ -3,6 +3,7 @@ using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
@@ -45,42 +46,67 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, string accessToken = null)
         {
             var headers = new Dictionary<string, string>();
-            headers = await GetAuthHeaders(true);
+            headers =  GetAuthHeaders(true);
             return await Request<TResponse>(body, headers);
         }
 
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
-            headers = await GetAuthHeaders(true);
+            headers =  GetAuthHeaders(true);
             return await Request<TResponse>(api, body, headers);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
-            headers = await GetAuthHeaders(true);
+            headers =  GetAuthHeaders(true);
             return await Request<TResponse>(body, headers);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
         {
             var headers = new Dictionary<string, string>();
-            headers = await GetAuthHeaders(true);
+            headers =  GetAuthHeaders(true);
             return await Post<TResponse>(api, body, headers);
+        }
+
+        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, object> body)
+        {
+            var headers = new Dictionary<string, string>();
+            headers =  GetAuthHeaders(true);
+
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+
+            foreach (var item in body)
+            {
+                if (item.Value is string)
+                {
+                    dic.Add(item.Key, item.Value.ToString());
+                    continue;
+                }
+                if (item.Value is int)
+                {
+                    dic.Add(item.Key, item.Value.ToString());
+                    continue;
+                }
+                dic.Add(item.Key, Newtonsoft.Json.JsonConvert.SerializeObject(item.Value));
+
+            }
+            return await Post<TResponse>(api, dic, headers);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
-            headers = await GetAuthHeaders(true);
+            headers =  GetAuthHeaders(true);
             return await Post<TResponse>(api, body, headers);
         }
 
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
-            headers = await GetAuthHeaders(true);
+            headers =  GetAuthHeaders(true);
             return await Get<GraphQLRequest, TResponse>(api, body, headers);
         }
 
@@ -92,26 +118,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             //headers["x-authing-userpool-id"] = UserPoolId;
             //headers["x-authing-request-from"] = type;
             //headers["x-authing-sdk-version"] = version;
-            headers = await GetAuthHeaders(true);
+            headers =  GetAuthHeaders(true);
             return await Delete<GraphQLRequest, TResponse>(api, body, headers);
         }
 
         protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
-            headers = await GetAuthHeaders(false);
+            headers =  GetAuthHeaders(false);
             return await Post<TResponse>(body, headers);
         }
 
-        //protected async Task<GraphQLResponse<TResponse>> PostCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null,
-        //    ContentType contenttype = ContentType.JSON)
-        //{
-        //    return await PostCustomData<TResponse>(url, serializedata, headers ?? new Dictionary<string, string>(),
-        //        contenttype);
-        //}
-
-
-        public async Task<Dictionary<string, string>> GetAuthHeaders(bool withToken = false)
+        public Dictionary<string, string> GetAuthHeaders(bool withToken = false)
         {
             var dic = new Dictionary<string, string>
             {
@@ -120,15 +138,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "x-authing-sdk-version",version}
             };
 
-            //if (withToken)
-            //{
-            //    var token = await GetAccessToken();
-            //    dic.Add("Authorization", token);
-            //}
-
-            if (!string.IsNullOrEmpty(AccessToken))
+            if (!string.IsNullOrEmpty(AccessToken) || withToken)
             {
-                dic.Add("Bearer", AccessToken);
+                dic.Add("Authorization", "Bearer " + AccessToken);
             }
 
             if (!string.IsNullOrEmpty(UserPoolId))
