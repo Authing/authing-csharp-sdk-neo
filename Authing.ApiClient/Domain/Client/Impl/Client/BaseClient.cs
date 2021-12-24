@@ -152,7 +152,7 @@ GKl64GDcIq3au+aqJQIDAQAB
             return result;
         }
 
-        protected async Task<GraphQLResponse<TResponse>> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null, HttpMethod method = null,
+        protected async Task<GraphQLResponse<TResponse>> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
             var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata,headers,method ?? HttpMethod.Post,contenttype);

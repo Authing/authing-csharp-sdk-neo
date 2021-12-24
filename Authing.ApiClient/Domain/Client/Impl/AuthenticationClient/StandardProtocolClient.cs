@@ -8,11 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Interfaces.AuthenticationClient;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
-    public partial class AuthenticationClient : BaseAuthenticationClient
+    public partial class AuthenticationClient : BaseAuthenticationClient, IStandardProtocol
     {
+        /// <summary>
+        /// 拼接 OIDC、OAuth 2.0、SAML、CAS 协议授权链接
+        /// </summary>
+        /// <param name="option">IProtocolInterface 接口实现类</param>
+        /// <returns></returns>
         public string BuildAuthorizeUrl(IProtocolInterface option)
         {
             if (Host == null)
@@ -44,19 +50,29 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        private string BuildSamlAuthorizeUrl()
+        public string BuildSamlAuthorizeUrl()
         {
             return $"{Host}/api/v2/saml-idp/{AppId}";
         }
 
-        private string BuildCasAuthorizeUrl(CasOption option)
+        /// <summary>
+        /// 拼接 CAS 协议授权链接
+        /// </summary>
+        /// <param name="option">CAS 授权类</param>
+        /// <returns></returns>
+        public string BuildCasAuthorizeUrl(CasOption option)
         {
             return option.Service is null
                 ? $"{Host}/cas-idp/{AppId}"
                 : $"{Host}/cas-idp/{AppId}?service={option.Service}";
         }
 
-        private string BuildOauthAuthorizeUrl(OauthOption option)
+        /// <summary>
+        /// 拼接 OAuth 2.0 协议授权链接
+        /// </summary>
+        /// <param name="option">OAuth 授权类</param>
+        /// <returns></returns>
+        public string BuildOauthAuthorizeUrl(OauthOption option)
         {
             var rd = new Random();
             var param = new
@@ -70,7 +86,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return $"{Host}/oauth/auth{param}";
         }
 
-        private string BuildOidcAuthorizeUrl(OidcOption option)
+        /// <summary>
+        /// 拼接 OIDC 协议授权链接
+        /// </summary>
+        /// <param name="option">OIDC 授权类</param>
+        /// <returns></returns>
+        public string BuildOidcAuthorizeUrl(OidcOption option)
         {
             var prompt = "";
             if (option?.Scope?.IndexOf("offline_access") != -1)
@@ -94,6 +115,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return $"{Options.Host ?? Host}/login{res}";
         }
 
+        /// <summary>
+        /// CODE 换取 Token
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public async Task<CodeToTokenRes> GetAccessTokenByCode(string code)
         {
             if (string.IsNullOrWhiteSpace(Options.Secret) &&
@@ -153,6 +179,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
+        /// <summary>
+        /// AccessToken 换取用户信息
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task<UserInfo> GetUserInfoByAccessToken(string token)
         {
             var endPoint = Options.Protocol == Protocol.OAUTH
@@ -177,6 +208,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return res.Data;
         }
 
+        /// <summary>
+        /// 使用 Refresh token 获取新的 Access token
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
         public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshToken(string refreshToken)
         {
             // TODO: 注意返回类型的转换
@@ -210,7 +246,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
+        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -231,7 +267,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
+        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -250,7 +286,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
+        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -271,7 +307,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> IntrospectToken(string token)
+        /// <summary>
+        /// 检查 Access token 或 Refresh token 的状态
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<HttpResponseMessage> IntrospectToken(string token)
         {
             var api = Options?.Protocol switch
             {
@@ -304,7 +345,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        private async Task<HttpResponseMessage> IntrospectTokenWithClientSecretPost(string url, string token)
+        public async Task<HttpResponseMessage> IntrospectTokenWithClientSecretPost(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
             {
@@ -316,7 +357,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> IntrospectTokenWithClientSecretBasic(string url, string token)
+        public async Task<HttpResponseMessage> IntrospectTokenWithClientSecretBasic(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
                 {
@@ -332,7 +373,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> IntrospectTokenWithNone(string url, string token)
+        public async Task<HttpResponseMessage> IntrospectTokenWithNone(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
             {
@@ -342,7 +383,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> ValidateToken(ValidateTokenParams param)
+        /// <summary>
+        /// 效验Token合法性
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public async Task<HttpResponseMessage> ValidateToken(ValidateTokenParams param)
         {
             if (string.IsNullOrWhiteSpace(param.AccessToken) && string.IsNullOrWhiteSpace(param.IdToken))
                 throw new AggregateException("请在传入的参数对象中包含 accessToken 或 idToken 属性");
@@ -356,7 +402,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private string BuildLogoutUrl(LogoutParams options)
+        /// <summary>
+        /// 拼接登出 URL
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public string BuildLogoutUrl(LogoutParams options)
         {
             switch (Options.Protocol)
             {
@@ -374,14 +425,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        private string BuildOidcLogoutUrl(LogoutParams options)
+        public string BuildOidcLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
                 ? $"{Host}/login/profile/logout?redirect_uri={options.RedirectUri}"
                 : $"{Host}/login/profile/logout";
         }
 
-        private string BuildEasyLogoutUrl(LogoutParams options)
+        public string BuildEasyLogoutUrl(LogoutParams options)
         {
             if (string.IsNullOrWhiteSpace(options.RedirectUri) && string.IsNullOrWhiteSpace(options.IdToken) ||
                 !string.IsNullOrWhiteSpace(options.RedirectUri) || !string.IsNullOrWhiteSpace(options.IdToken))
@@ -391,14 +442,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 : $"{Host}/oidc/session/end";
         }
 
-        private string BuildCasLogoutUrl(LogoutParams options)
+        public string BuildCasLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
                 ? $"{Host}/cas-idp/logout"
                 : $"{Host}/cas-idp/logout?url={options.RedirectUri}";
         }
 
-        private async Task<HttpResponseMessage> GetAccessTokenByClientCredentials(string scope, GetAccessTokenByClientCredentialsOption options = null)
+        /// <summary>
+        /// Client Credentials 模式获取 Access Token
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<HttpResponseMessage> GetAccessTokenByClientCredentials(string scope, GetAccessTokenByClientCredentialsOption options = null)
         {
             if (string.IsNullOrWhiteSpace(scope))
                 throw new ArgumentException(
@@ -418,7 +475,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> RevokeToken(string token)
+        /// <summary>
+        /// 撤回 Access token 或 Refresh token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<HttpResponseMessage> RevokeToken(string token)
         {
             if (Options.Protocol != Protocol.OAUTH && Options.Protocol != Protocol.OIDC)
                 throw new ArgumentException(
@@ -442,7 +504,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        private async Task<HttpResponseMessage> RevokeTokenWithClientSecretPost(string url, string token)
+        public async Task<HttpResponseMessage> RevokeTokenWithClientSecretPost(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(
                 url,
@@ -455,7 +517,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> RevokeTokenWithClientSecretBasic(string url, string token)
+        public async Task<HttpResponseMessage> RevokeTokenWithClientSecretBasic(string url, string token)
         {
             if (Options.Protocol == Protocol.OAUTH)
                 throw new ArgumentException("OAuth 2.0 暂不支持用 client_secret_basic 模式身份验证撤回 Token");
@@ -474,7 +536,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        private async Task<HttpResponseMessage> RevokeTokenWithNone(string url, string token)
+        public async Task<HttpResponseMessage> RevokeTokenWithNone(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(
                 url,
