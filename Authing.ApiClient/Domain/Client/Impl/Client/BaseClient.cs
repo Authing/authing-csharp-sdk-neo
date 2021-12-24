@@ -14,6 +14,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
     {
         private int? accessTokenExpiredAt = 0;
         public IAuthingClient client { get; private set; }
+
+        public string MFAToken { get; set; }
         public string AccessToken { get; set; }
 
         /// <summary>
