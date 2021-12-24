@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Authing.ApiClient.Domain.Client.Impl.Client;
+using Authing.ApiClient.Infrastructure.GraphQL;
+using Authing.ApiClient.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Client.Impl.Client;
-using Authing.ApiClient.Infrastructure.GraphQL;
-using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -154,5 +154,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             return dic;
         }
+
+
     }
 }

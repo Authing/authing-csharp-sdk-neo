@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,20 +12,17 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
     public class ProtocolTest : BaseTest
     {
         [Fact]
-        public async Task buildAuthorizeUrlTest()
+        public async Task BuildAuthorizeUrlTest()
         {
             authenticationClient.Options.Protocol = Protocol.SAML;
             string saml = authenticationClient.BuildAuthorizeUrl(new SamlOption());
-            var url = new Uri(saml);
-            Assert.Equal(url.AbsolutePath,$@"/api/v2/saml-idp/{AppId}");
             //TODO:需要核实
             authenticationClient.Options.Protocol = Protocol.OIDC;
-            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption(){ RedirectUri = "www.baidu.com",Nonce = "nonce test"});
-            url = new Uri(oidc);
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption(){ RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a"});
+            var url2 = new Uri(oidc);
             //TODO:需要核实
             authenticationClient.Options.Protocol = Protocol.OAUTH;
-            string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "www.baidu.com" });
-            url = new Uri(oauth);
+            string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
         }
         [Fact]
         public async Task GetAccessTokenByCodeTest()
@@ -36,14 +34,36 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
                "error_description": "Cannot read property 'split' of undefined"
                }
              */
-            authenticationClient.Options.RedirectUri = "www.baidu.com";
+            authenticationClient.Options.AppId = AppId;
+            authenticationClient.Options.Secret = Secret;
+            authenticationClient.Options.UserPoolId = UserPoolId;
+            authenticationClient.Options.Protocol = Protocol.OIDC;
             authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.NONE;
-            var res = await authenticationClient.GetAccessTokenByCode("aNhjg8hc__G8vd7LbO5ZV_hWIzP1BN6KVYpcei1XiOn");
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
+            authenticationClient.Options.RedirectUri =
+                "https://console.authing.cn/console/get-started/6172807001258f603126a78a";
+            //authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.CLIENT_SECRET_POST;
+            var res = await authenticationClient.GetAccessTokenByCode("rZFNoGlF5VYaHgimRHVgvxQP-N8aw0ybx1uMCejPPwf");
+            Assert.NotNull(res);
         }
 
         [Fact]
         public async Task GetUserInfoByAccessTokenTest()
         {
+            //TODO:返回错误 {"error":"invalid_request","error_description":"access token must only be provided using one mechanism"}
+            var res = await authenticationClient.LoginByUsername("tm574378328", "123456",false);
+            var result  = await authenticationClient.GetUserInfoByAccessToken(res.Token);
+        }
+
+        [Fact]
+        public async Task GetNewAccessTokenByRefreshToken()
+        {
+            authenticationClient.Options.Protocol = Protocol.OIDC;
+            var res = await authenticationClient.LoginByUsername("tm574378328", "123456", false);
+            var data = await authenticationClient.GetAccessTokenByCode("0c273f1b8393487e4fb72474d43e1464636b8d97&state=6gA3t-HWO");
+
+            var result =
+                await authenticationClient.GetNewAccessTokenByRefreshToken(data.RefreshToken);
         }
     }
 }

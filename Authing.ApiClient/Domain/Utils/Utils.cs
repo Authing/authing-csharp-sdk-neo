@@ -80,7 +80,7 @@ namespace Authing.ApiClient.Domain.Utils
 
         public static string GenerateRandomString(int length = 30)
         {
-            var rd = new Random();
+            var rd = new Random((int)DateTime.Now.Ticks);
             var strAtt = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var resAtt = new Char[length];
             rd.Next(0, 35);
@@ -88,7 +88,7 @@ namespace Authing.ApiClient.Domain.Utils
             // {
             //     item = strAtt[rd.Next(0, 35)];
             // });
-            var resStr = String.Join(",", resAtt.Select(p => strAtt[rd.Next(0, 35)]).ToArray());
+            var resStr = String.Join("", resAtt.Select(p => strAtt[rd.Next(0, 35)]).ToArray());
             return resStr;
         }
     }

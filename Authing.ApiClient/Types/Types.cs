@@ -273,8 +273,8 @@ namespace Authing.ApiClient.Types
         public string AppId { get; set; }
         public string RedirectUri { get; set; }
 #nullable enable
-        public ResponseType? ResponseType { get; set; }
-        public ResponseMode? ResponseMode { get; set; }
+        public ResponseType? ResponseType { get; set; } = null;
+        public ResponseMode? ResponseMode { get; set; } = null;
 #nullable disable
         public string State { get; set; }
         public string Nonce { get; set; }
@@ -370,7 +370,7 @@ namespace Authing.ApiClient.Types
 
     public class LogoutParams
     {
-        public bool Expert { get; set; }
+        public bool? Expert { get; set; } = null;
 #nullable enable
         public string? RedirectUri { get; set; }
         public string? IdToken { get; set; }

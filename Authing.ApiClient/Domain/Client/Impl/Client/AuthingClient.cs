@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Types;
 using Newtonsoft.Json;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -90,7 +91,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     message.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headers["Bearer"]);
                 }
 
-                
+
 
             }
             using (var httpResponseMessage =
@@ -103,7 +104,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     using (var reader = new StreamReader(contentStream))
                     {
                         var resString = await reader.ReadToEndAsync();
-                        var res= JsonConvert.DeserializeObject<TResponse>(resString);
+                        var res = JsonConvert.DeserializeObject<TResponse>(resString);
                         return res;
                     }
                 }
@@ -197,7 +198,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             }
         }
 
-        public async Task<TResponse> PostRaw<TResponse>(string url, string rawjson, Dictionary<string, string> headers)
+        public async Task<TResponse> PostRaw<TResponse>(string url, string serializedata, Dictionary<string, string> headers)
         {
             ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
@@ -207,7 +208,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
             {
 
-                Content = new StringContent(rawjson,Encoding.UTF8, "application/json")
+                Content = new StringContent(serializedata, Encoding.UTF8, "application/json")
                 //TODO:JAVA SDK中存在 application/x-www-form-urlencoded
                 //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
             };
@@ -240,6 +241,81 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 throw new Exception(content);
             }
 
+        }
+
+        public async Task<TResponse> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null, HttpMethod method = null,
+            ContentType contenttype = ContentType.DEFAULT)
+        {
+            ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
+
+            HttpRequestMessage message = null;
+
+            switch (method.Method)
+            {
+                case "GET":
+                    message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
+                    //message.Headers.Add("Content-Type", contenttype.ToDescription());
+                    break;
+
+                case "POST":
+                    switch (contenttype)
+                    {
+                        case ContentType.DEFAULT:
+                            var data = JsonConvert.DeserializeObject<Dictionary<string, String>>(serializedata);
+                            SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key, x => x.Value is null ? "" : x.Value.ToString()));
+                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+                            {
+                                Content = new FormUrlEncodedContent(sortedParam)
+                                //Content = new StringContent(serializedata, Encoding.UTF8, "application/x-www-form-urlencoded")
+                            };
+                            // message.Content.Headers.Clear();
+                            // message.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+                            break;
+                        case ContentType.JSON:
+                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+                            {
+
+                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
+                                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
+                            };
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+                    }
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+            }
+
+            if (headers != null)
+            {
+                foreach (var keyValuePair in headers)
+                {
+                    message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+            using (var httpResponseMessage =
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    using (var reader = new StreamReader(contentStream))
+                    {
+                        var resString = await reader.ReadToEndAsync();
+                        return JsonConvert.DeserializeObject<TResponse>(resString);
+                    }
+                }
+                // error handling
+                string content = null;
+                if (contentStream != null)
+                    using (var sr = new StreamReader(contentStream))
+                        content = await sr.ReadToEndAsync();
+                throw new Exception(content);
+            }
         }
     }
 
