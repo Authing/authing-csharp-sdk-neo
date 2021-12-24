@@ -18,13 +18,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             this.client = client;
         }
-        /// <summary>
-        /// 获取策略列表
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="limit"></param>
-        /// <param name="nameSpace"></param>
-        /// <returns></returns>
+       
         public async Task<PaginatedPolicies> List(int page = 1, int limit = 10, string nameSpace = null)
         {
             PoliciesParam param = new PoliciesParam()
@@ -41,18 +35,23 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<PaginatedPolicies> List(PoliciesParam param)
         {
-            return null;
-            //var result=await client.Request<Policy>
+            if (param == null)
+            {
+                throw new ArgumentNullException("参数不能为空");
+            }
+            if (param.Page <= 0)
+            {
+                param.Page = 1;
+            }
+            if (param.Limit <= 0)
+            {
+                param.Limit = 10;
+            }
+
+            var result = await client.Request<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            return result.Data.Result;
         }
 
-        /// <summary>
-        /// 创建策略
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="statements"></param>
-        /// <param name="description"></param>
-        /// <param name="nameSpace"></param>
-        /// <returns></returns>
         public async Task<Policy> Create(string code, List<PolicyStatementInput> statements, string description = null, string nameSpace = null)
         {
             CreatePolicyParam param = new CreatePolicyParam(code, statements)
@@ -65,12 +64,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 获取策略详情
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="nameSpace"></param>
-        /// <returns></returns>
         public async Task<Policy> Detail(string code, string nameSpace = null)
         {
             PolicyParam param = new PolicyParam(code) 
@@ -83,15 +76,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 修改策略
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="statements"></param>
-        /// <param name="description"></param>
-        /// <param name="newCode"></param>
-        /// <param name="nameSpace"></param>
-        /// <returns></returns>
         public async Task<Policy> Update(string code, List<PolicyStatementInput> statements, string description = null, string newCode = null, string nameSpace = null)
         {
             UpdatePolicyParam param = new UpdatePolicyParam(code) 
@@ -107,11 +91,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 删除策略
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
+        public async Task<Policy> Update(UpdatePolicyParam param)
+        {
+            var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest());
+            return result.Data.Result;
+        }
+
         public async Task<CommonMessage> Delete(string code)
         {
             DeletePolicyParam param = new DeletePolicyParam(code);
@@ -120,11 +105,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 批量删除策略
-        /// </summary>
-        /// <param name="codeList"></param>
-        /// <returns></returns>
         public async Task<CommonMessage> DeleteMany(List<string> codeList)
         {
             DeletePoliciesParam param = new DeletePoliciesParam(codeList);
@@ -133,13 +113,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 获取策略授权记录
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="page"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
+
+        public async Task<PaginatedPolicyAssignments> ListAssignments(PolicyAssignmentsParam param)
+        {
+            var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest());
+            return result.Data.Result;
+        }
+
         public async Task<PaginatedPolicyAssignments> ListAssignments(string code, int page = 1, int limit = 10)
         {
             PolicyAssignmentsParam param = new PolicyAssignmentsParam() 
@@ -153,36 +133,24 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 添加策略授权
-        /// </summary>
-        /// <param name="policies"></param>
-        /// <param name="targetType"></param>
-        /// <param name="targetIdentifiers"></param>
-        /// <returns></returns>
-        public async Task<CommonMessage> AddAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers)
+        public async Task<CommonMessage> AddAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null)
         {
             AddPolicyAssignmentsParam param = new AddPolicyAssignmentsParam(policies, targetType) 
             {
-                TargetIdentifiers=targetIdentifiers
+                TargetIdentifiers=targetIdentifiers,
+                Namespace=nameSpace
             };
 
             var result = await client.Request<AddPolicyAssignmentsResponse>(param.CreateRequest());
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 撤销策略授权
-        /// </summary>
-        /// <param name="policies"></param>
-        /// <param name="targetType"></param>
-        /// <param name="targetIdentifiers"></param>
-        /// <returns></returns>
-        public async Task<CommonMessage> RemoveAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers)
+        public async Task<CommonMessage> RemoveAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null)
         {
             RemovePolicyAssignmentsParam param = new RemovePolicyAssignmentsParam(policies, targetType)
             { 
-                TargetIdentifiers=targetIdentifiers
+                TargetIdentifiers=targetIdentifiers,
+                Namespace=nameSpace
             };
 
             var result = await client.Request<RemovePolicyAssignmentsResponse>(param.CreateRequest());
@@ -190,14 +158,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 设置策略授权状态为关闭
-        /// </summary>
-        /// <param name="policy"></param>
-        /// <param name="targetType"></param>
-        /// <param name="targetIdentifier"></param>
-        /// <param name="nameSpace"></param>
-        /// <returns></returns>
         public async Task<CommonMessage> DisableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null)
         {
             DisableAssignmentParam param = new DisableAssignmentParam(policy, targetType)
@@ -210,14 +170,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-        /// <summary>
-        /// 设置策略授权状态为开启
-        /// </summary>
-        /// <param name="policy"></param>
-        /// <param name="targetType"></param>
-        /// <param name="targetIdentifier"></param>
-        /// <param name="nameSpace"></param>
-        /// <returns></returns>
         public async Task<CommonMessage> EnableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null)
         {
             EnableAssignmentParam param = new EnableAssignmentParam(policy, targetType, targetIdentifier);
@@ -226,8 +178,5 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             return result.Data.Result;
         }
-
-
-
     }
 }
