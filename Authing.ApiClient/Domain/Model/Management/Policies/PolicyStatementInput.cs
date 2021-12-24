@@ -20,7 +20,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Policies
         public IEnumerable<string> Actions { get; set; }
 
         [JsonProperty("effect")]
-        public PolicyEffect? Effect { get; set; }
+        public string? Effect { get; set; }
 
         [JsonProperty("condition")]
         public IEnumerable<PolicyStatementConditionInput> Condition { get; set; }
