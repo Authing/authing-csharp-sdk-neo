@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Authing.ApiClient.Test.Base\Authing.ApiClient.Test.Base.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Management\MFA\" />
+  </ItemGroup>
+
 </Project>

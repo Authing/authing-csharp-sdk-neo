@@ -518,14 +518,6 @@ namespace Authing.ApiClient.Types
         [JsonProperty("token")] public string Token { get; set; }
     }
 
-    public class GetMfaAuthenticatorsParam
-    {
-        public string Type { get; set; } = "totp";
-
-        public string MfaToken { get; set; }
-
-        public TotpSourceEnum Source { get; set; } = TotpSourceEnum.SELF;
-    }
 
     public enum TotpSourceEnum
     {
@@ -558,14 +550,6 @@ namespace Authing.ApiClient.Types
         public string Id { get; set; }
     }
 
-    public class AssosicateMfaAuthenticatorParam
-    {
-        public string AuthenticatorType { get; set; } = "totp";
-
-        public string MFAToken { get; set; }
-
-        public TotpSourceEnum Source { get; set; } = TotpSourceEnum.SELF;
-    }
 
     public class AssosicateMfaAuthenticatorRes
     {
@@ -587,57 +571,6 @@ namespace Authing.ApiClient.Types
         public string Message { get; set; }
     }
 
-    public class ConfirmAssosicateMfaAuthenticatorParam
-    {
-        public string AuthenticatorType { get; set; }
-
-        public string Totp { get; set; }
-
-        public TotpSourceEnum Source { get; set; }
-
-        public string MFAToken { get; set; }
-    }
-
-    public class VerifyTotpMfaParam
-    {
-        public string Totp { get; set; }
-
-        public string MFAToken { get; set; }
-    }
-
-    public class VerifyAppSmsMfaParam
-    {
-        public string Phone { get; set; }
-
-        public string Code { get; set; }
-
-        public string MFAToken { get; set; }
-    }
-
-    public class VerifyAppEmailMfaParam
-    {
-        public string Email { get; set; }
-
-        public string MFAToken { get; set; }
-
-        public string Code { get; set; }
-    }
-
-    public class PhoneOrEmailBindableParam
-    {
-        public string Email { get; set; }
-
-        public string MFAToken { get; set; }
-
-        public string Phone { get; set; }
-    }
-
-    public class VerifyTotpRecoveryCodeParam
-    {
-        public string RecoveryCode { get; set; }
-
-        public string MFAToken { get; set; }
-    }
 
     public class AssociateFaceByUrlParam
     {
