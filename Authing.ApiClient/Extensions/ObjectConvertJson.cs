@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Authing.ApiClient.Extensions
 {
@@ -10,7 +11,12 @@ namespace Authing.ApiClient.Extensions
     {
         public static string ConvertJson(this object _object)
         {
-            var resObj = JsonConvert.SerializeObject(_object);
+            var serializerSettings = new JsonSerializerSettings
+            {
+                // 设置为驼峰命名
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var resObj = JsonConvert.SerializeObject(_object,settings:serializerSettings);
             return resObj;
         }
     }

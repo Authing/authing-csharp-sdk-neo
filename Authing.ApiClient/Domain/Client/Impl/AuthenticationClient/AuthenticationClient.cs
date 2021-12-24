@@ -24,7 +24,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
     /// <summary>
     /// Authing 认证客户端类
     /// </summary>
-    public partial class AuthenticationClient : BaseAuthenticationClient,IAuthenticationClient
+    public partial class AuthenticationClient : BaseAuthenticationClient, IStandardProtocol
     {
 
 
