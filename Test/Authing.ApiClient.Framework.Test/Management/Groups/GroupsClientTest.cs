@@ -2,12 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management;
-using Authing.ApiClient.Domain.Model.Management;
-
 using Authing.ApiClient.Types;
-using Authing.ApiClient.Domain.Model.Management.Groups;
-using Authing.ApiClient.Types;
-
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Groups

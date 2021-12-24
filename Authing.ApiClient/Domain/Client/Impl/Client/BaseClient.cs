@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Exceptions;
 using Authing.ApiClient.Infrastructure.GraphQL;
@@ -153,6 +154,15 @@ GKl64GDcIq3au+aqJQIDAQAB
             CheckResult(result);
             return result;
         }
+
+        protected async Task<GraphQLResponse<TResponse>> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null, HttpMethod method = null,
+            ContentType contenttype = ContentType.DEFAULT)
+        {
+            var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata,headers,method ?? HttpMethod.Post,contenttype);
+            CheckResult(result);
+            return result;
+        }
+
 
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {

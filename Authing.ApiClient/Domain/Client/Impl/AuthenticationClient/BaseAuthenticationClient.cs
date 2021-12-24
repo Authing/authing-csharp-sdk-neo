@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Client.Impl.Client;
+﻿using Authing.ApiClient.Domain.Client.Impl.Client;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -42,7 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body,string accessToken=null)
+        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, string accessToken = null)
         {
             var headers = new Dictionary<string, string>();
             headers = await GetAuthHeaders(true);
@@ -103,11 +103,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return await Post<TResponse>(body, headers);
         }
 
-        public async Task< Dictionary<string, string>> GetAuthHeaders(bool withToken=false)
+        //protected async Task<GraphQLResponse<TResponse>> PostCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null,
+        //    ContentType contenttype = ContentType.JSON)
+        //{
+        //    return await PostCustomData<TResponse>(url, serializedata, headers ?? new Dictionary<string, string>(),
+        //        contenttype);
+        //}
+
+
+        public async Task<Dictionary<string, string>> GetAuthHeaders(bool withToken = false)
         {
-            var dic= new Dictionary<string, string>
+            var dic = new Dictionary<string, string>
             {
-              
+
                 { "x-authing-request-from",type},
                 { "x-authing-sdk-version",version}
             };
@@ -134,5 +142,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             return dic;
         }
+
+
     }
 }
