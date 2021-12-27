@@ -10,7 +10,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 日志模块
         /// </summary>
-        public StatisticsManagement Statistics { get; set; }
+        //public StatisticsManagement Statistics { get; set; }
 
         /// <summary>
         /// 日志模块

@@ -13,7 +13,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 分组管理模块
         /// </summary>
-        public GroupsManagementClient Groups { get; private set; }
+        //public GroupsManagementClient Groups { get; private set; }
 
         /// <summary>
         /// 分组管理类

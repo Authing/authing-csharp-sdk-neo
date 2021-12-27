@@ -181,5 +181,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
 
         Task<ProgrammaticAccessAccount> DisableProgrammaticAccessAccount(
             string programmaticAccessAccountId);
+
+        Task<ProgrammaticAccessAccount> RefreshProgrammaticAccessAccountSecret(ProgrammaticAccessAccountProps options);
+        Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options);
+        Task<bool> EnableApplicationAccessPolicy(AppAccessPolicy options);
+        Task<bool> DisableApplicationAccessPolicy(AppAccessPolicy options);
+        Task<bool> DeleteApplicationAccessPolicy(AppAccessPolicy options);
+        Task<bool> AllowAccessApplication(AppAccessPolicy options);
+        Task<bool> DenyAccessApplication(AppAccessPolicy options);
+        Task<Application> UpdateDefaultApplicationAccessPolicy(DefaultAppAccessPolicy options);
     }
 }

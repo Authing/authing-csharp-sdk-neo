@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Client.Impl.Client;
 using Authing.ApiClient.Domain.Model;
@@ -226,6 +227,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
             return await Post<TResponse>(body, headers);
+        }
+
+        protected new async Task<GraphQLResponse<TResponse>> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null!, HttpMethod method = null!,
+            ContentType contenttype = ContentType.DEFAULT)
+        { 
+            headers ??= new Dictionary<string, string>();
+            var token = await GetAccessToken();
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype);
+            return result;
         }
 
         public object GetAuthHeaders()

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 
@@ -19,7 +20,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public IPoliciesManagementClient Policies { get; private set; }
 
-        public IMFAManagementClient MFA { get; private set; }
+        public IMFAManagementClient Mfa { get; private set; }
+
+        public IWhitelistManagementClient Whitelist { get; private set; }
+
+        public IGroupsManagementClient Groups { get; private set; }
+
+        public IUserpoolManagement Userpool { get; private set; }
+
+        public IStatisticsManagement Statistics { get; private set; }
+
+        public IAclManagementClient Acl { get; private set; }
+
+        public IPrincipalManagementClient Principal { get; private set; }
 
         public Action<InitAuthenticationClientOptions> Init { get; }
 
@@ -39,9 +52,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Groups = new GroupsManagementClient(this);
             Userpool = new UserpoolManagement(this);
             Statistics = new StatisticsManagement(this);
-            acl = new AclManagementClient(this);
+            Acl = new AclManagementClient(this);
             Policies = new PoliciesManagementClient(this);
-            MFA = new MFAManagementClient(this);
+            Mfa = new MFAManagementClient(this);
             Init = init ?? throw new ArgumentNullException(nameof(init));
         }
 
@@ -56,11 +69,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Roles = new RolesManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             manageClient.Groups = new GroupsManagementClient(manageClient);
-            manageClient.acl = new AclManagementClient(manageClient);
+            manageClient.Acl = new AclManagementClient(manageClient);
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
             manageClient.Policies = new PoliciesManagementClient(manageClient);
-            manageClient.MFA = new MFAManagementClient(manageClient);
+            manageClient.Mfa = new MFAManagementClient(manageClient);
             return manageClient;
         }
 
@@ -76,11 +89,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Roles = new RolesManagementClient(manageClient);
             manageClient.Whitelist = new WhitelistManagementClient(manageClient);
             manageClient.Groups = new GroupsManagementClient(manageClient);
-            manageClient.acl = new AclManagementClient(manageClient);
+            manageClient.Acl = new AclManagementClient(manageClient);
             manageClient.Userpool = new UserpoolManagement(manageClient);
             manageClient.Statistics = new StatisticsManagement(manageClient);
             manageClient.Policies = new PoliciesManagementClient(manageClient);
-            manageClient.MFA = new MFAManagementClient(manageClient);
+            manageClient.Mfa = new MFAManagementClient(manageClient);
             return manageClient;
         }
     }

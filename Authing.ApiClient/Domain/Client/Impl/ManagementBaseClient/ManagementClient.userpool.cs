@@ -13,7 +13,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 用户池管理模块
         /// </summary>
-        public UserpoolManagement Userpool { get; set; }
+        //public UserpoolManagement Userpool { get; set; }
 
         /// <summary>
         /// 用户池管理类

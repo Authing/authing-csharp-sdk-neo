@@ -17,7 +17,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 权限控制模块
         /// </summary>
-        public AclManagementClient acl { get; set; }
+        //public AclManagementClient acl { get; set; }
 
         /// <summary>
         /// 权限控制类

@@ -258,6 +258,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     //message.Headers.Add("Content-Type", contenttype.ToDescription());
                     break;
 
+                case "DELETE":
+                    message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
+                    //message.Headers.Add("Content-Type", contenttype.ToDescription());
+                    break;
+
                 case "POST":
                     switch (contenttype)
                     {

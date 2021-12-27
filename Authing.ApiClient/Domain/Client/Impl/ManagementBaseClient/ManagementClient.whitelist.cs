@@ -12,7 +12,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <summary>
         /// 注册白名单管理模块
         /// </summary>
-        public WhitelistManagementClient Whitelist { get; private set; }
+        //public WhitelistManagementClient Whitelist { get; private set; }
 
         /// <summary>
         /// 注册白名单管理类
