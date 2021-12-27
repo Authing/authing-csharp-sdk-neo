@@ -377,12 +377,7 @@ namespace Authing.ApiClient.Types
 #nullable disable
     }
 
-    public class ValidateTicketV1Res
-    {
-        public bool Valid { get; set; }
-        public string Username { get; set; }
-        public string Message { get; set; }
-    }
+
 
     public class ValidateTokenOption
     {

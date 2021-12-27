@@ -26,7 +26,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var client = authenticationClient;
 
             await client.LoginByUsername("qidong5566", "12345678", null);
-
+            client.CheckLoggedIn();
             var msg = await client.Logout();
 
             Assert.True(msg.Code == 200);
