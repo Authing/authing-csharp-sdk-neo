@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Authing.ApiClient.Domain.Model.Management.Roles;
 using Authing.ApiClient.Domain.Model.Management.Groups;
 using Authing.ApiClient.Domain.Model.Management.Department;
-
+using Authing.ApiClient.Domain.Model.Management.Applications;
 
 namespace Authing.ApiClient.Domain.Model
 {
@@ -263,5 +263,11 @@ namespace Authing.ApiClient.Domain.Model
         // TODO: needfix
         // [JsonProperty("customData")]
         // public IEnumerable<UserCustomData> CustomData { get; set; }
+
+        /// <summary>
+        /// 用户租户信息
+        /// </summary>
+        [JsonProperty("tenants")]
+        public TenantInfo[] Tenants { get; set; }
     }
 }

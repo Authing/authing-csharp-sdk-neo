@@ -25,6 +25,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
     public class ApplicationsManagementClient : IApplicationsManagementClient
     {
         private ManagementClient client;
+
         public ApplicationsManagementClient(ManagementClient client)
         {
             this.client = client;
@@ -38,12 +39,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<ApplicationList> List(int page = 1, int limit = 10)
         {
-            var res = await client.Host.AppendPathSegment("api/v2/applications").WithOAuthBearerToken(client.AccessToken).SetQueryParams(new
-            {
-                page,
-                limit
-            }).GetJsonAsync<ApplicationList>();
-            return res;
+            var res = await client.Get<ApplicationList>($"api/v2/applications?page={page}&limit={limit}", new GraphQLRequest());
+            return res.Data;
         }
 
         /// <summary>
@@ -54,17 +51,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="redirectUris">应用回调链接</param>
         /// <param name="logo">应用 logo</param>
         /// <returns></returns>
-        public async Task<Application> Create(string name, string identifier, string redirectUris, string logo = null)
+        public async Task<Application> Create(string name, string identifier, string[] redirectUris, string logo = null)
         {
-            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
-            keyValuePairs.Add("name", name);
-            keyValuePairs.Add("identifier", identifier);
-            keyValuePairs.Add("redirectUris", redirectUris);
-            if (logo != null) {
-                keyValuePairs.Add("logo", logo);
-            }
-            var result = await client.Post<Application>("api/v2/applications", keyValuePairs);
-            return result.Data;
+            var res = await client.PostRaw<Application>($"api/v2/applications", new Dictionary<string, object>() {
+                { nameof(name), name },
+                { nameof(identifier), identifier },
+                { nameof(redirectUris), redirectUris },
+                { nameof(logo), logo }
+            });
+            return res.Data;
         }
 
         /// <summary>
@@ -74,7 +69,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> Delete(string appId)
         {
-            await client.Host.AppendPathSegment($"api/v2/applications/{appId}").WithOAuthBearerToken(client.AccessToken).DeleteAsync();
+            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}", new GraphQLRequest());
+            Console.WriteLine(res);
             return true;
         }
 
@@ -85,7 +81,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> FindById(string id)
         {
-            var res = await client.Get<Application>($"api/v2/applications/{id}", new ExpnadAllRequest().CreateRequest());
+            var res = await client.Get<Application>($"api/v2/applications/{id}", new GraphQLRequest());
             return res.Data;
         }
 
@@ -95,18 +91,25 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="appId">应用 ID</param>
         /// <param name="listResourceOption">选项</param>
         /// <returns></returns>
-        public async Task<ListResourceRes> ListResource(
+        public async Task<PaginatedResources> ListResource(
             string appId,
             ListResourceOption listResourceOption = null)
         {
-            var param = new ListResourceParam() {
-                Namespace = appId,
-                Page = listResourceOption.Page,
-                Limit = listResourceOption.Limit,
-                Type = listResourceOption?.Type
-            };
-            var res = await client.Host.AppendPathSegment("api/v2/analysis/user-action").SetQueryParams(param).WithHeaders(client.GetAuthHeaders()).GetJsonAsync<ListResourceRes>();
-            return res;
+            var query = $"?namespace={appId}";
+            if (listResourceOption != null && listResourceOption.Page != null)
+            {
+                query += $"&page={listResourceOption.Page}";
+            }
+            if (listResourceOption != null && listResourceOption.Limit != null)
+            {
+                query += $"&limit={listResourceOption.Limit}";
+            }
+            if (listResourceOption != null && listResourceOption.Type != null)
+            {
+                query += $"&type={listResourceOption.Type}";
+            }
+            var res = await client.Get<PaginatedResources>($"api/v2/resources{query}", new GraphQLRequest());
+            return res.Data;
         }
 
         /// <summary>
@@ -117,9 +120,29 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Resources> CreateResource(string appId, CreateResourceParam createResourceParam)
         {
+            if (createResourceParam == null) throw new ArgumentNullException(nameof(createResourceParam));
+
+            if (createResourceParam.Code == null)
+            {
+                throw new ArgumentException("请为资源设定一个资源标识符");
+            }
+
+            if (createResourceParam.Actions == null || createResourceParam.Actions?.Count() < 1)
+            {
+                throw new ArgumentException("请至少定义一个资源操作");
+            }
+
             createResourceParam.NameSpace = appId;
-            var res = await client.Host.AppendPathSegment("api/v2/resources").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(createResourceParam).ReceiveJson<Resources>();
-            return res;
+            var res = await client.PostRaw<Resources>("api/v2/resources",
+                new Dictionary<string, object>()
+                {
+                        {nameof(createResourceParam.Code).ToLower(),createResourceParam.Code},
+                        {nameof(createResourceParam.Actions).ToLower(),createResourceParam.Actions},
+                        {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
+                        {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
+                        {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
+                });
+            return res.Data;
         }
 
         /// <summary>
@@ -132,8 +155,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Resources> UpdateResource(string appId, string code, UpdateResourceParam updateResourceParam)
         {
             updateResourceParam.NameSpace = appId;
-            var res = await client.Host.AppendPathSegment($"api/v2/resources/${code}").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(updateResourceParam).ReceiveJson<Resources>();
-            return res;
+            var res = await client.Post<Resources>($"api/v2/resources/${code}", new Dictionary<string, object>() {
+                { nameof(updateResourceParam.NameSpace), updateResourceParam.NameSpace },
+                { nameof(updateResourceParam.Actions), updateResourceParam.Actions },
+                { nameof(updateResourceParam.Description), updateResourceParam.Description },
+                { nameof(updateResourceParam.Type), updateResourceParam.Type }
+            });
+            return res.Data;
         }
 
         /// <summary>
@@ -144,21 +172,515 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> DeleteResource(string appId, string code)
         {
-            var res = await client.Host.AppendPathSegment($"api/v2/resources/${code}").SetQueryParam("namespace", appId).WithOAuthBearerToken(client.AccessToken).DeleteAsync().ReceiveJson<CommonMessage>();
+            var res = await client.Delete<CommonMessage>($"api/v2/resources/${code}?namespace={appId}", new GraphQLRequest());
             return true;
         }
 
-        ///// <summary>
-        ///// 获取应用访问控制策略
-        ///// </summary>
-        ///// <param name="appId">应用 ID</param>
-        ///// <param name="appAccessPolicyQueryFilter"></param>
-        ///// <returns></returns>
-        //public async Task<ApplicationAccessPolicies> GetAccessPolicies(string appId, AppAccessPolicyQueryFilter appAccessPolicyQueryFilter)
-        //{
-        //    appAccessPolicyQueryFilter.AppId = appId;
-        //    var res = await aclManagementClient.GetAccessPolicies(appAccessPolicyQueryFilter, cancellationToken);
-        //    return res;
-        //}
+        /// <summary>
+        /// 获取应用访问控制策略
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="appAccessPolicyQueryFilter">选项</param>
+        /// <returns></returns>
+        public async Task<ApplicationAccessPolicies> GetAccessPolicies(string appId, AppAccessPolicyQueryFilter appAccessPolicyQueryFilter)
+        {
+            var query = $"?page={appAccessPolicyQueryFilter.Page}&limit={appAccessPolicyQueryFilter.Limit}";
+            var res = await client.Get<ApplicationAccessPolicies>($"api/v2/applications/{appId}/authorization/records{query}", new GraphQLRequest());
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 启用针对某个用户、角色、分组、组织机构的应用访问控制策略
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="appAccessPolicy">选项</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> EnableAccessPolicy(string appId, AppAccessPolicy appAccessPolicy)
+        {
+            if (appAccessPolicy.TartgetIdentifiers == null)
+            {
+                return new CommonMessage()
+                {
+                    Code = 500,
+                    Message = "请传入主体 id"
+                };
+            }
+            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/enable-effect", new Dictionary<string, object>() {
+                { "nameSpace", appId },
+                { "targetType", appAccessPolicy.TargetType },
+                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "inheritByChildren", appAccessPolicy.InheritByChildren }
+            });
+            Console.WriteLine(res);
+            return new CommonMessage() {
+                Code = 200,
+                Message = "启用应用访问控制策略成功"
+            };
+        }
+
+        /// <summary>
+        /// 停用针对某个用户、角色、分组、组织机构的应用访问控制策略
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="appAccessPolicy">选项</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> DisableAccessPolicy(string appId, AppAccessPolicy appAccessPolicy)
+        {
+            if (appAccessPolicy.TartgetIdentifiers == null)
+            {
+                return new CommonMessage()
+                {
+                    Code = 500,
+                    Message = "请传入主体 id"
+                };
+            }
+            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/disable-effect", new Dictionary<string, object>() {
+                { "nameSpace", appId },
+                { "targetType", appAccessPolicy.TargetType },
+                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "inheritByChildren", appAccessPolicy.InheritByChildren }
+            });
+            Console.WriteLine(res);
+            return new CommonMessage()
+            {
+                Code = 200,
+                Message = "停用应用访问控制策略成功"
+            };
+        }
+
+        /// <summary>
+        /// 删除针对某个用户、角色、分组、组织机构的应用访问控制策略
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="appAccessPolicy">选项</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> DeleteAccessPolicy(string appId, AppAccessPolicy appAccessPolicy)
+        {
+            if (appAccessPolicy.TartgetIdentifiers == null)
+            {
+                return new CommonMessage()
+                {
+                    Code = 500,
+                    Message = "请传入主体 id"
+                };
+            }
+            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/revoke", new Dictionary<string, object>() {
+                { "nameSpace", appId },
+                { "targetType", appAccessPolicy.TargetType },
+                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "inheritByChildren", appAccessPolicy.InheritByChildren }
+            });
+            Console.WriteLine(res);
+            return new CommonMessage()
+            {
+                Code = 200,
+                Message = "删除应用访问控制策略成功"
+            };
+        }
+
+        /// <summary>
+        /// 配置「允许主体（用户、角色、分组、组织机构节点）访问应用」的控制策略
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="appAccessPolicy">选项</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> AllowAccess(string appId, AppAccessPolicy appAccessPolicy)
+        {
+            if (appAccessPolicy.TartgetIdentifiers == null)
+            {
+                return new CommonMessage()
+                {
+                    Code = 500,
+                    Message = "请传入主体 id"
+                };
+            }
+            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/allow", new Dictionary<string, object>() {
+                { "nameSpace", appId },
+                { "targetType", appAccessPolicy.TargetType },
+                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "inheritByChildren", appAccessPolicy.InheritByChildren }
+            });
+            Console.WriteLine(res);
+            return new CommonMessage()
+            {
+                Code = 200,
+                Message = "允许主体访问应用的策略配置已生效"
+            };
+        }
+
+        /// <summary>
+        /// 配置「拒绝主体（用户、角色、分组、组织机构节点）访问应用」的控制策略
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="appAccessPolicy">选项</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> DenyAccess(string appId, AppAccessPolicy appAccessPolicy)
+        {
+            if (appAccessPolicy.TartgetIdentifiers == null)
+            {
+                return new CommonMessage()
+                {
+                    Code = 500,
+                    Message = "请传入主体 id"
+                };
+            }
+            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/deny", new Dictionary<string, object>() {
+                { "nameSpace", appId },
+                { "targetType", appAccessPolicy.TargetType },
+                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "inheritByChildren", appAccessPolicy.InheritByChildren }
+            });
+            Console.WriteLine(res);
+            return new CommonMessage()
+            {
+                Code = 200,
+                Message = "拒绝主体访问应用的策略配置已生效"
+            };
+        }
+
+        /// <summary>
+        /// 更改默认应用访问策略
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="updateDefaultApplicationAccessPolicyParam">选项</param>
+        /// <returns></returns>
+        public async Task<PublicApplication> UpdateDefaultAccessPolicy(string appId, UpdateDefaultApplicationAccessPolicyParam updateDefaultApplicationAccessPolicyParam)
+        {
+            var permissionStrategy = new {
+                defaultStrategy = updateDefaultApplicationAccessPolicyParam.DefaultStrategy
+            };
+            var res = await client.PostRaw<PublicApplication>($"api/v2/applications/{appId}", new Dictionary<string, object>() {
+                { "permissionStrategy", permissionStrategy }
+            });
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 创建角色
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="code">角色唯一标志符</param>
+        /// <param name="description">描述</param>
+        /// <returns></returns>
+        public async Task<Role> CreateRole(
+                string appId,
+                string code,
+                string description = null)
+        {
+            var param = new CreateRoleParam(code)
+            {
+                Description = description,
+                Namespace = appId
+            };
+            var res = await client.Post<CreateRoleResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="code">角色唯一标志符</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> DeleteRole(
+                string appId,
+                string code)
+        {
+            var param = new DeleteRoleParam(code)
+            {
+                Namespace = appId
+            };
+            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 批量删除角色
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="codeList">角色唯一标志符列表</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> DeleteRoles(
+            string appId,
+            IEnumerable<string> codeList)
+        {
+            var param = new DeleteRolesParam(codeList)
+            {
+                Namespace = appId
+            };
+            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 修改角色
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="updateRoleOptions">选项</param>
+        /// <returns></returns>
+        public async Task<Role> UpdateRole(
+                string appId,
+                UpdateRoleOptions updateRoleOptions)
+        {
+            var param = new UpdateRoleParam(updateRoleOptions.Code)
+            {
+                Namespace = appId,
+                Description = updateRoleOptions.Description,
+                NewCode = updateRoleOptions.NewCode,
+            };
+            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        [Obsolete("已过时, 不建议使用")]
+        /// <summary>
+        /// 获取角色详情
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="code">角色唯一标志符</param>
+        /// <returns></returns>
+        public async Task<Role> FindRole(
+            string appId,
+            string code)
+        {
+            var param = new RoleParam(code)
+            {
+                Namespace = appId
+            };
+            var res = await client.Post<RoleResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 获取角色列表
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="codeList">角色唯一标志符列表</param>
+        /// <returns></returns>
+        public async Task<PaginatedRoles> GetRoles(
+            string appId,
+            int page = 1,
+            int limit = 10)
+        {
+            var param = new RolesParam()
+            {
+                Page = page,
+                Limit = limit,
+                Namespace = appId
+            };
+            var res = await client.Post<RolesResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 获取角色用户列表
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="code">角色唯一标志符</param>
+        /// <returns></returns>
+        public async Task<PaginatedUsers> GetUsersByRoleCode(
+                string appId,
+                string code)
+        {
+            var _param = new RoleWithUsersParam(code)
+            {
+                Code = code,
+                Namespace = appId
+            };
+            var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest());
+            return _res.Data.Result.Users;
+        }
+
+        /// <summary>
+        /// 添加用户
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="code">角色唯一标志符</param>
+        /// <param name="userIds">用户 ID 列表</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> AddUsersToRole(
+                string appId,
+                string code,
+                IEnumerable<string> userIds)
+        {
+            var param = new AssignRoleParam()
+            {
+                UserIds = userIds,
+                RoleCode = code,
+                Namespace = appId
+            };
+            var res = await client.Post<AssignRoleResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 移除用户
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="code">角色唯一标志符</param>
+        /// <param name="userIds">用户 ID 列表</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> RemoveUsersFromRole(
+                string appId,
+                string code,
+                IEnumerable<string> userIds)
+        {
+            var param = new RevokeRoleParam()
+            {
+                UserIds = userIds,
+                RoleCode = code,
+                Namespace = appId,
+            };
+            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 获取角色被授权的所有资源
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="code">角色唯一标志符</param>
+        /// <param name="resourceType">资源类型</param>
+        /// <returns></returns>
+        public async Task<Role> ListAuthorizedResourcesByRole(
+                string appId,
+                string code,
+                ResourceType resourceType = default)
+        {
+            var param = new ListRoleAuthorizedResourcesParam(code)
+            {
+                ResourceType = resourceType.ToString().ToUpper(),
+                Namespace = appId,
+            };
+            var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest());
+            if (res.Data.Result == null)
+            {
+                throw new Exception("角色不存在");
+            }
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 创建注册协议
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="agreement">角色唯一标志符</param>
+        /// <returns></returns>
+        public async Task<Agreement> createAgreement(string appId, AgreementInput agreement)
+        {
+            var res = await client.PostRaw<Agreement>($"api/v2/applications/{appId}/agreements", new Dictionary<string, object>() {
+                { "title", agreement.Title},
+                { "required", agreement.Required},
+                { "lang ", agreement.Lang},
+            });
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 删除注册协议
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="agreementId">协议 ID</param>
+        /// <returns></returns>
+        public async Task<GraphQLResponse<CommonMessage>> deleteAgreement(string appId, int agreementId)
+        {
+            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}/agreements/{agreementId}", new GraphQLRequest());
+            return res;
+        }
+
+        /// <summary>
+        /// 修改注册协议
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="agreementId">协议 ID</param>
+        /// <param name="agreement">角色唯一标志符</param>
+        /// <returns></returns>
+        public async Task<Agreement> modifyAgreement(string appId, int agreementId, AgreementInput agreement)
+        {
+            var res = await client.Put<Agreement>($"api/v2/applications/{appId}/agreements/{agreementId}", new Dictionary<string, string>() {
+                { "title", agreement.Title},
+                { "required", agreement.Required.ConvertJson()},
+                { "lang ", agreement.Lang.ConvertJson()},
+            });
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 获取应用注册协议列表
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <returns></returns>
+        public async Task<PaginationAgreement> listAgreement(string appId)
+        {
+            var res = await client.Get<PaginationAgreement>($"api/v2/applications/{appId}/agreements", new GraphQLRequest());
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 对应用的注册协议排序
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="order">应用下所有协议的 ID 列表，按需要的顺序排列</param>
+        /// <returns></returns>
+        public async Task<GraphQLResponse<CommonMessage>> sortAgreement(string appId, IEnumerable<int> order)
+        {
+            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/agreements/sort", new Dictionary<string, object>() {
+                { "ids", order }
+            });
+            return res;
+        }
+
+        /// <summary>
+        /// 查看应用下已登录用户
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="page">页码</param>
+        /// <param name="limit">每页数量</param>
+        /// <returns></returns>
+        public async Task<ActiveUsers> ActiveUsers(
+                string appId,
+                int page = 1,
+                int limit = 10)
+        {
+            var res = await client.Get<ActiveUsers>($"api/v2/applications/{appId}/active-users", new GraphQLRequest());
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 刷新应用密钥
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <returns></returns>
+        public async Task<Application> RefreshApplicationSecret(string appId)
+        {
+            var res = await client.Patch<Application>($"api/v2/application/{appId}/refresh-secret", new Dictionary<string, string>());
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 更改应用类型
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="type">应用类型</param>
+        /// <returns></returns>
+        public async Task<Application> ChangeApplicationType(string appId, ApplicationType type)
+        {
+            var res = await client.Post<Application>($"api/v2/applications/{appId}", new Dictionary<string, string>() {
+                { "appType", type.ToString() }
+            });
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 获取应用关联租户
+        /// </summary>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="type">应用类型</param>
+        /// <returns></returns>
+        public async Task<ApplicationTenantDetails> ApplicationTenants(string appId)
+        {
+            var res = await client.Get<ApplicationTenantDetails>($"api/v2/application/{appId}/tenants", new GraphQLRequest());
+            return res.Data;
+        }
     }
 }
