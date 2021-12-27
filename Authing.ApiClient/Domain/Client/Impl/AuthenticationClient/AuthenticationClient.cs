@@ -381,12 +381,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 {nameof(phone), phone }
             });
 
-
-
-            //var res = await Host.AppendPathSegment("api/v2/sms/send").WithHeaders(GetHeaders()).PostJsonAsync(new
-            //{
-            //    phone
-            //}, cancellationToken).ReceiveJson<CommonMessage>();
             CommonMessage ms = new CommonMessage()
             {
                 Code = res.Code,
@@ -1024,15 +1018,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 ClearUser();
             }
             return new CommonMessage { Code = res.Code, Message = res.Message };
-
-            // TODO: 是否需要返回值
-            //var res = await Host.AppendPathSegment($"/api/v2/logout").SetQueryParam("app_id", Options.AppId).WithHeaders(GetHeaders()).GetJsonAsync<CommonMessage>(cancellationToken);
-
-            //ClearUser();
-            //return res;
         }
 
-        private void ClearUser()
+        public void ClearUser()
         {
             User = null;
             AccessToken = null;
@@ -1502,6 +1490,51 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
             return result.Data;
+        }
+
+        /// <summary>
+        /// 通过微信登录
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="country"></param>
+        /// <param name="lang"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public async Task<User> LoginByWechat(string code, string country = null, string lang = null, string state = null)
+        {
+            string url = $"code={code}";
+            if (!string.IsNullOrEmpty(country))
+            {
+                url += $"&country={country}";
+            }
+            if (!string.IsNullOrEmpty(lang))
+            {
+                url += $"lang={lang}";
+            }
+            if (!string.IsNullOrEmpty(state))
+            {
+                url += $"state={state}";
+            }
+            if (!string.IsNullOrEmpty(AppId))
+            {
+                url += $"app_id={AppId}";
+            }
+
+            var result = await Get<User>($"connection/social/wechat:mobile/{UserPoolId}/callback?{url}", null);
+            return result.Data;
+        }
+
+        /// <summary>
+        /// 获取Token
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetToken()
+        {
+            if (string.IsNullOrEmpty(AccessToken))
+            {
+                return await GetAccessToken();
+            }
+            return AccessToken;
         }
 
     }

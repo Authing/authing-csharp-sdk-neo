@@ -10,7 +10,7 @@
 
         protected static string UserPoolId { get; set; } = "617280674680a6ca2b1f6317";
         protected static string Secret { get; set; } = "879fdbe5408cfe09d6f69755b77df2fd";
-        protected static string AppId { get; set; } = "61c2d04b36324259776af784";
+        protected static string AppId { get; set; } = "613189b38b6c66cac1d211bd";
 
         protected static string TestUserId = "61a82941979c96c04ed9e920";
 
