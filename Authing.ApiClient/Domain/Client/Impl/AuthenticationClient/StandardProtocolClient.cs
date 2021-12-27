@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Domain.Utils;
 using Authing.ApiClient.Interfaces.AuthenticationClient;
+using Authing.ApiClient.Domain.Model;
+using System.Linq;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -545,6 +547,79 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     {"token",token},
                     {"client_id",Options.AppId}
                 }.ConvertJson());
+            return result.Data;
+        }
+
+        /// <summary>
+        /// 检验 CAS 1.0 Ticket 合法性
+        /// </summary>
+        /// <param name="ticker"></param>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public async Task<ValidateTicketV1Res> ValidateTicketV1(string ticket, string service)
+        {
+            var result = await Get<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", null);
+
+            if (result.Data.Result.Split('\n').Contains("yes"))
+            {
+                return new ValidateTicketV1Res() { Valid = true };
+            }
+            else
+            {
+                return new ValidateTicketV1Res() { Valid = false, Message = "ticket 不合格" };
+            }
+
+        }
+
+        /// <summary>
+        /// 获取 codechallengedigest
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<string> GetCodeChallengeDigest(CodeChallengeDigestOption options)
+        {
+            if (options.CodeChallenge == null)
+            {
+                throw new Exception("请提供 options.codeChallenge，值为一个长度大于等于 43 的字符串");
+            }
+            if (options.Method == CodeChallengeDigestMethod.S256)
+            {
+                string result = EncryptHelper.SHA256Hash(options.CodeChallenge);
+                return result.Replace('+', '-').Replace('/', '_').Replace("=",string.Empty);
+            }
+            if (options.Method == CodeChallengeDigestMethod.PLAIN)
+            {
+                return options.CodeChallenge;
+            }
+            throw new Exception("不支持的 options.method，可选值为 S256、plain");
+        }
+
+        /// <summary>
+        /// 生成 codechallenge
+        /// </summary>
+        /// <returns>codechallenge</returns>
+        public string GenerateCodeChallenge()
+        {
+            return AuthingUtils.GenerateRandomString(43);
+        }
+
+        /// <summary>
+        /// 通过远端服务验证票据合法性
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <param name="service"></param>
+        /// <param name="validateTicketFormat"></param>
+        /// <returns></returns>
+        public async Task<string> ValidateTicketV2(string ticket, string service,ValidateTicketFormat validateTicketFormat)
+        {
+            var result = await Get<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", null);
+
+            return result.Data.Result;
+        }
+
+        public async Task<User> TrackSession()
+        {
+            var result = await Get<User>("cas/session", null);
             return result.Data;
         }
     }

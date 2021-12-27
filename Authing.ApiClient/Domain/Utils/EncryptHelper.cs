@@ -33,5 +33,13 @@ namespace Authing.ApiClient.Domain.Utils
             var encrypted = Convert.ToBase64String(encryptEngine.ProcessBlock(bytesToEncrypt, 0, bytesToEncrypt.Length));
             return encrypted;
         }
+
+        public static string SHA256Hash(string str)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(str);
+            SHA256 shaM = new SHA256Managed();
+            var hashBytes = shaM.ComputeHash(data);
+            return Convert.ToBase64String(hashBytes);
+        }
     }
 }

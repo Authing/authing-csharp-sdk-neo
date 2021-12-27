@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 
@@ -82,6 +83,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             manageClient.Policies = new PoliciesManagementClient(manageClient);
             manageClient.MFA = new MFAManagementClient(manageClient);
             return manageClient;
+        }
+
+        public async Task<string> ReuqestToken()
+        {
+            var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null);
+            return result.Data.AccessToken;
         }
     }
 }

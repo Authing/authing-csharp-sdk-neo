@@ -20,6 +20,8 @@ namespace Authing.ApiClient.Domain.Utils
 
         public static IDictionary<string, object> GetPayloadByToken(string token)
         {
+           var ss= JwtBuilder.Create().Decode<IDictionary<string, object>>(token);
+
             var json = JwtBuilder.Create()
                 .WithAlgorithm(new HMACSHA256Algorithm()) // symmetric
                 .MustVerifySignature()

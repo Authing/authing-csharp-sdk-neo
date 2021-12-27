@@ -46,6 +46,31 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
+        public async Task<string> GetAccessToken()
+        {
+            long now = DateTimeOffset.Now.Second;
+
+            if (accessTokenExpiredAt.HasValue && accessTokenExpiredAt > now + 3600)
+            {
+                return AccessToken;
+            }
+
+            var tuple = await GetAccessTokenFromServer();
+            AccessToken = tuple.Item1;
+            accessTokenExpiredAt = tuple.Item2;
+            return AccessToken;
+        }
+
+        private async Task<Tuple<string, int?>> GetAccessTokenFromServer()
+        {
+            var param = new Model.AccessTokenParam(UserPoolId, Secret);
+            //  如果不加 WithAccessToken 會死循環
+            var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest());
+
+
+            return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
+        }
+
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, string accessToken = null)
         {
             var headers = new Dictionary<string, string>();
