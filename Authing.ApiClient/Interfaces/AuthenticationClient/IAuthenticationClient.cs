@@ -10,8 +10,6 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
 {
     public interface IAuthenticationClient
     {
-        User User { get; set; }
-
         /// <summary>
         /// 检查登录状态
         /// </summary>

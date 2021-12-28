@@ -4,6 +4,7 @@ using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.ApiClient.Domain.Utils;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -98,10 +99,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return manageClient;
         }
 
-        public async Task<string> ReuqestToken()
+        public async Task<string> RequestToken()
         {
             var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null);
             return result.Data.AccessToken;
+        }
+
+        /// <summary>
+        /// 检测密码是否合法
+        /// </summary>
+        /// <param name="password">需要检测的密码</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> isPasswordValid(string password)
+        {
+            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
+            return result.Data;
         }
     }
 }
