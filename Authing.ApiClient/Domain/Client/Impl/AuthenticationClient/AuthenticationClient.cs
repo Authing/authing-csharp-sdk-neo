@@ -24,7 +24,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
     /// <summary>
     /// Authing 认证客户端类
     /// </summary>
-    public partial class AuthenticationClient : BaseAuthenticationClient, IStandardProtocol
+    public partial class AuthenticationClient : BaseAuthenticationClient, IStandardProtocol,IAuthenticationClient
     {
 
 
@@ -44,7 +44,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
         }
 
-        private User User
+        public User User
         {
             get
             {
@@ -1131,7 +1131,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// 用户是否进行登录，登录返回用户信息，没有登录则抛出错误
         /// </summary>
         /// <returns>用户 ID</returns>
-        private async Task<string> CheckLoggedIn(CancellationToken cancellationToken)
+        public async Task<string> CheckLoggedIn(CancellationToken cancellationToken)
         {
             var user = await GetCurrentUser();
             if (user == null)
