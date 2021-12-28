@@ -23,7 +23,13 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByUsername("qidong5566", "12345678", null);
+            var result = await client.LoginByUsername("tm574378328", "123456", null);
+            
+            //client.SetCurrentUser(result);
+
+            //client.SetCurrentUser(null);
+
+            //client.CheckLoggedIn();
 
             Assert.NotNull(result);
         }
