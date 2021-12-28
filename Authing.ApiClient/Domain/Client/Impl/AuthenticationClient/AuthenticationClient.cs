@@ -8,7 +8,6 @@ using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
 using Newtonsoft.Json;
-using Authing.ApiClient.Extensions;
 using System.Collections.Generic;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Domain.Model.Management.Roles;
