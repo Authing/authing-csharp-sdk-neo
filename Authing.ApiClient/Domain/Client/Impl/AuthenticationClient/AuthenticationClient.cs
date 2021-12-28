@@ -74,15 +74,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
 
             var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken);
-            //var userDataString = tokenInfo.Payload.Claims.FirstOrDefault(item => item.Type == "data")?.Value;
-            //var userData = JsonConvert.DeserializeObject<UserData>(userDataString ?? "");
-            //var userId = tokenInfo.Payload.Sub ?? userData.Id;
-            //if (string.IsNullOrEmpty(userId))
-            //{
-            //    throw new Exception("不合法的 accessToken");
-            //}
-            //return userId;
-            return null;
+            var userDataString = tokenInfo.ContainsKey("data") ? tokenInfo["data"]: "";
+            var userData = JsonConvert.DeserializeObject<UserData>(userDataString.ToString() ?? "");
+            var userId = tokenInfo.ContainsKey("sub") ? tokenInfo["sub"].ToString() : userData.Id;
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new Exception("不合法的 accessToken");
+            } 
+            return userId;
+            //return null;
         }
 
         /// <summary>
