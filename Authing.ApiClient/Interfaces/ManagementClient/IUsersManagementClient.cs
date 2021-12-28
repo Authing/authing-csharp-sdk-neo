@@ -260,5 +260,19 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="sendFirstLoginVerifyEmailParam">选项</param>
         /// <returns></returns>
         Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam);
+
+        /// <summary>
+        /// 批量导入用户
+        /// </summary>
+        /// <param name="userInfos">用户信息列表</param>
+        /// <returns></returns>
+        Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos);
+
+        /// <summary>
+        /// 获取用户所在租户
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <returns></returns>
+        Task<User> GetUserTenants(string userId);
     }
 }
