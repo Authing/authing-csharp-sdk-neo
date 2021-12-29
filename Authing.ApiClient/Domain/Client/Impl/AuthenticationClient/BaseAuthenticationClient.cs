@@ -40,6 +40,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             init(Options);
             Host = Options.Host ?? Host;
             AppId = Options.AppId ?? AppId;
+            UserPoolId = Options.UserPoolId ?? UserPoolId;
+            Secret = Options.Secret ?? Secret;
             if (AppId == string.Empty)
             {
                 throw new Exception("参数错误");
@@ -156,6 +158,27 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             headers = GetAuthHeaders(false);
             return await Post<TResponse>(body, headers);
         }
+
+        public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson, string accessToken = null)
+        {
+            var headers = new Dictionary<string, string>();
+
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                headers["Authorization"] = "bearer " + accessToken;
+            }
+            else
+            {
+                var token = await GetAccessToken();
+                headers["Authorization"] = "bearer " + token;
+            }
+
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await PostRaw<TResponse>(api, rawjson, headers);
+        }
+
 
         protected async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url,
             string serializedata, Dictionary<string, string>? headers = null, HttpMethod method = null!,

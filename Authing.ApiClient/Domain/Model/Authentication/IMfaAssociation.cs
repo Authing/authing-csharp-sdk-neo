@@ -20,7 +20,7 @@ namespace Authing.ApiClient.Domain.Model.Authentication
         [JsonProperty("qrcode_uri")]
         public string QRCodeUri { get; set; }
         //var qrcode_data_url: String,
-        [JsonProperty("QRCodeUri")]
+        [JsonProperty("qrcode_data_url")]
         public string QRcodeDataUrl { get; set; }
         //var recovery_code: String
 

@@ -14,7 +14,7 @@ namespace Authing.ApiClient.Domain.Model.Authentication
         //@SerializedName("authenticator_type")
         // var authenticatorType: String,
         [JsonProperty("authenticator_type")]
-        public string AuthenticatorType { get; set; }
+        public string AuthenticatorType { get; set; } = "totp";
         // @Expose
         // var totp: String? = null,
         [JsonProperty("totp")]

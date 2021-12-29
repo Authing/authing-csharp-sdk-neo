@@ -9,6 +9,8 @@ namespace Authing.ApiClient.Framework.Test
         protected AuthenticationClient authenticationClient { get; set; }
         protected Domain.Client.Impl.ManagementBaseClient.ManagementClient managementClient { get; set; }
 
+        protected MfaAuthenticationClient mfaAuthenticationClient { get; set; }
+
         public BaseTest()
         {
             authenticationClient = new AuthenticationClient(
@@ -17,6 +19,7 @@ namespace Authing.ApiClient.Framework.Test
                     opt.AppId = AppId;
                     opt.Host = Host;
                     opt.Secret = Secret;
+                    opt.UserPoolId = UserPoolId;
                 }
             );
             managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(init: opt =>
@@ -24,6 +27,14 @@ namespace Authing.ApiClient.Framework.Test
                 opt.UserPoolId = UserPoolId;
                 opt.Secret = Secret;
                 opt.Host = Host;
+            });
+
+            mfaAuthenticationClient = new MfaAuthenticationClient(opt => 
+            {
+                opt.AppId = AppId;
+                opt.Host = Host;
+                opt.Secret = Secret;
+                opt.UserPoolId = UserPoolId;
             });
         }
     }

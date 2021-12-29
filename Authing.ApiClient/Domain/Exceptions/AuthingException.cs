@@ -8,6 +8,7 @@ namespace Authing.ApiClient.Domain.Exceptions
         /// The returned status code
         /// </summary>
         public int StatusCode { get; }
+        public object ResultData { get; set; }
 
         public AuthingException()
         {
@@ -24,6 +25,12 @@ namespace Authing.ApiClient.Domain.Exceptions
         public AuthingException(string message, int statusCode) : base($"The API request failed with code {statusCode}: {message}")
         {
             StatusCode = statusCode;
+        }
+
+        public AuthingException(string message, int statusCode,object data) : base($"The API request failed with code {statusCode}: {message}")
+        {
+            StatusCode = statusCode;
+            ResultData = data;
         }
 
     }

@@ -18,5 +18,8 @@ namespace Authing.ApiClient.Infrastructure.GraphQL
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; set; }
+
+        [DataMember(Name ="data")]
+        public object Data { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace Authing.ApiClient.Domain.Model.Authentication
         public string AuthenticatorType { get; set; } = "totp";
 
         [JsonProperty("mfaToken")]
-        public string MafToken { get; set; }
+        public string MfaToken { get; set; }
 
         [JsonProperty("TotpSource")]
         [JsonConverter(typeof(StringEnumConverter))]

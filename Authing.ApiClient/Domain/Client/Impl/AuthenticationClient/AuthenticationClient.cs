@@ -374,11 +374,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 {nameof(phone), phone }
             });
 
-            await Post<CommonMessage>("api/v2/sms/send", new Dictionary<string, string>
-            {
-                {nameof(phone), phone }
-            });
-
             CommonMessage ms = new CommonMessage()
             {
                 Code = res.Code,

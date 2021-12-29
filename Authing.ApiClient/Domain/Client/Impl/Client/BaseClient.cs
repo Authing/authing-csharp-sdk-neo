@@ -157,7 +157,7 @@ GKl64GDcIq3au+aqJQIDAQAB
         protected async Task<GraphQLResponse<TResponse>> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
-            var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata,headers,method ?? HttpMethod.Post,contenttype);
+            var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype);
             CheckResult(result);
             return result;
         }
@@ -179,6 +179,16 @@ GKl64GDcIq3au+aqJQIDAQAB
                 if (error is null)
                 {
                     error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
+                }
+                if (result.Errors != null && result.Errors.Count()>0)
+                {
+                    if (result.Errors[0].Message != null)
+                    {
+                        if (result.Errors[0].Message.Data != null)
+                        {
+                            throw new AuthingException(error.Message, error.Code, error.Data);
+                        }
+                    }
                 }
                 throw new AuthingException(error.Message, error.Code);
             }
