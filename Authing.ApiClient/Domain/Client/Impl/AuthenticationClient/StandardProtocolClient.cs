@@ -248,7 +248,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
+        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -269,7 +269,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
+        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -288,7 +288,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
+        private  async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -347,7 +347,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        public async Task<HttpResponseMessage> IntrospectTokenWithClientSecretPost(string url, string token)
+        private async Task<HttpResponseMessage> IntrospectTokenWithClientSecretPost(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
             {
@@ -359,7 +359,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        public async Task<HttpResponseMessage> IntrospectTokenWithClientSecretBasic(string url, string token)
+        private async Task<HttpResponseMessage> IntrospectTokenWithClientSecretBasic(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
                 {
@@ -375,7 +375,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data;
         }
 
-        public async Task<HttpResponseMessage> IntrospectTokenWithNone(string url, string token)
+        private async Task<HttpResponseMessage> IntrospectTokenWithNone(string url, string token)
         {
             var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
             {
