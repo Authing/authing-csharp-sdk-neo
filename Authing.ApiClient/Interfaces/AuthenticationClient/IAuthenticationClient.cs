@@ -568,6 +568,10 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns>HttpResponseMessage</returns>
         Task<ListApplicationsResponse> ListApplications(ListParams _params = null);
 
+        /// <summary>
+        /// 设置语言
+        /// </summary>
+        /// <param name="lang"></param>
         void SetLang(LangEnum lang);
 
         /// <summary>

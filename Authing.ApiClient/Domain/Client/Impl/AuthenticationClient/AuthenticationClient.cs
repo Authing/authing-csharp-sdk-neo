@@ -939,7 +939,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="emailCode">邮箱验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> BindEamil(string email, string emailCode)
+        public async Task<User> BindEmail(string email, string emailCode)
         {
             var param = new BindEmailParam(email, emailCode);
             var res = await Request<BindEmailResponse>(param.CreateRequest());
