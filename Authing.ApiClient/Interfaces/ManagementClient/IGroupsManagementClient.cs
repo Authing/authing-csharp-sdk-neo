@@ -102,7 +102,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         Task<CommonMessage> RemoveUsers(
             string code,
             IEnumerable<string> userIds);
-
+        /**
+         * 获取用户被授权的所有资源
+         */
         Task<PaginatedAuthorizedResources> ListAuthorizedResources(string code, string _namespace, ResourceType resourceType = default);
     }
 }
