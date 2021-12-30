@@ -409,7 +409,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<bool> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId)
             {
                 string endPoint =
-                    $"=api/v2/applications/programmatic-access-accounts?id=${programmaticAccessAccountId}";
+                    $"v2/applications/programmatic-access-accounts?id={programmaticAccessAccountId}";
 
                 var result = await client.Delete<RestfulResponse<bool>>(endPoint, new GraphQLRequest());
                 return result.Data.Code == 200;

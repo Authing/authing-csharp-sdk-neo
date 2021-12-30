@@ -171,24 +171,78 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
             string resource,
             IEnumerable<AuthorizeResourceOpt> authorizeResourceOptions
         );
-
+        /**
+         * 编程访问账号列表
+         * @param options.appId 应用 ID
+         * @param options.page 当前页数
+         * @param options.limit 每页显示条数
+         * @returns Pagination<ProgrammaticAccessAccount>
+         */
         Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options);
+        /**
+         * 添加编程访问账号
+         *
+         * @param options.appId 应用 ID
+         * @param options.tokenLifetime AccessToken 过期时间（秒）
+         * @param options.remarks 备注
+         * @returns ProgrammaticAccessAccount
+         */
         Task<ProgrammaticAccessAccount> CreateProgrammaticAccessAccount(string appId, CreateProgrammaticAccessAccountParam createProgrammaticAccessAccountParam);
+         /**
+         * 删除编程访问账号
+         * @param programmaticAccessAccountId 编程访问账号 ID
+         * @returns Boolean
+         */
         Task<bool> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId);
 
+         /**
+         * 启用编程访问账号
+         * @param programmaticAccessAccountId 编程访问账号 ID
+         * @returns ProgrammaticAccessAccount
+         */
         Task<ProgrammaticAccessAccount> EnableProgrammaticAccessAccount(
             string programmaticAccessAccountId);
-
-        Task<ProgrammaticAccessAccount> DisableProgrammaticAccessAccount(
+         /**
+         * 禁用编程访问账号
+         * @param programmaticAccessAccountId 编程访问账号 ID
+         * @returns ProgrammaticAccessAccount
+         */
+         Task<ProgrammaticAccessAccount> DisableProgrammaticAccessAccount(
             string programmaticAccessAccountId);
-
+         /**
+         * 刷新编程访问账号密钥
+         * @param options.id 编程访问账号 ID
+         * @param options.secret 编程访问账号 Secret
+         * @returns ProgrammaticAccessAccount
+         */
         Task<ProgrammaticAccessAccount> RefreshProgrammaticAccessAccountSecret(ProgrammaticAccessAccountProps options);
+         /**
+         * 获取应用访问控制策略列表
+         */
         Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options);
+         /**
+         * 启用应用访问控制策略
+         */
         Task<bool> EnableApplicationAccessPolicy(AppAccessPolicy options);
+         /**
+         * 停用应用访问控制策略
+         */
         Task<bool> DisableApplicationAccessPolicy(AppAccessPolicy options);
+         /**
+         * 删除应用访问控制策略
+         */
         Task<bool> DeleteApplicationAccessPolicy(AppAccessPolicy options);
+         /**
+         * 配置「允许主体（用户、角色、分组、组织机构节点）访问应用」的控制策略
+         */
         Task<bool> AllowAccessApplication(AppAccessPolicy options);
+         /**
+         * 配置「拒绝主体（用户、角色、分组、组织机构节点）访问应用」的控制策略
+         */
         Task<bool> DenyAccessApplication(AppAccessPolicy options);
+         /**
+         * 更改默认应用访问策略（默认拒绝所有用户访问应用、默认允许所有用户访问应用）
+         */
         Task<Application> UpdateDefaultApplicationAccessPolicy(DefaultAppAccessPolicy options);
     }
 }
