@@ -100,7 +100,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             //await client.SendSmsCode("13348926753");
             await client.SendEmail("2481452007@qq.com", Types.EmailScene.RESET_PASSWORD);
 
-            var result = await client.BindEamil("2481452007@qq.com", "6743");
+            var result = await client.BindEmail("2481452007@qq.com", "6743");
 
             Assert.True(string.IsNullOrEmpty(result.Email)==false);
         }

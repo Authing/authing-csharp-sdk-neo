@@ -428,7 +428,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="emailCode">邮箱验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> BindEamil(string email, string emailCode);
+        Task<User> BindEmail(string email, string emailCode);
 
         /// <summary>
         /// 取消绑定的邮箱
