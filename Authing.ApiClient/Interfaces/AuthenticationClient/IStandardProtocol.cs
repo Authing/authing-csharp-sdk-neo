@@ -97,9 +97,5 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="token"></param>
         /// <returns></returns>
         Task<HttpResponseMessage> RevokeToken(string token);
-
-        Task<HttpResponseMessage> RevokeTokenWithClientSecretPost(string url, string token);
-        Task<HttpResponseMessage> RevokeTokenWithClientSecretBasic(string url, string token);
-        Task<HttpResponseMessage> RevokeTokenWithNone(string url, string token);
     }
 }
