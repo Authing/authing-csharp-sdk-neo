@@ -58,20 +58,12 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns></returns>
         Task<HttpResponseMessage> GetNewAccessTokenByRefreshToken(string refreshToken);
 
-        Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken);
-        Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken);
-        Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken);
-
         /// <summary>
         /// 检查 Access token 或 Refresh token 的状态
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
         Task<HttpResponseMessage> IntrospectToken(string token);
-
-        Task<HttpResponseMessage> IntrospectTokenWithClientSecretPost(string url, string token);
-        Task<HttpResponseMessage> IntrospectTokenWithClientSecretBasic(string url, string token);
-        Task<HttpResponseMessage> IntrospectTokenWithNone(string url, string token);
 
         /// <summary>
         /// 效验Token合法性
@@ -105,9 +97,5 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="token"></param>
         /// <returns></returns>
         Task<HttpResponseMessage> RevokeToken(string token);
-
-        Task<HttpResponseMessage> RevokeTokenWithClientSecretPost(string url, string token);
-        Task<HttpResponseMessage> RevokeTokenWithClientSecretBasic(string url, string token);
-        Task<HttpResponseMessage> RevokeTokenWithNone(string url, string token);
     }
 }
