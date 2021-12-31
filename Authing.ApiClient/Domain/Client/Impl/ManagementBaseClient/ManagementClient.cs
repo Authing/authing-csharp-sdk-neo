@@ -5,6 +5,7 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Domain.Model.Authentication;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -118,6 +119,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
             return result.Data;
+        }
+
+        /// <summary>
+        /// 发送邮件
+        /// </summary>
+        /// <param name="email">邮件</param>
+        /// <param name="scene">场景</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>CommonMessage</returns>
+        public async Task<CommonMessage> SendEmail(string email,
+                                                   EmailScene scene)
+        {
+            var param = new SendEmailParam(email, scene);
+            var res = await Request<SendEmailResponse>(param.CreateRequest());
+            return res.Data.Result;
         }
     }
 }
