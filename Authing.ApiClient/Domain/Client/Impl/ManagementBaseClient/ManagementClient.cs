@@ -5,7 +5,7 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
-using Authing.ApiClient.Domain.Model.Authentication;
+using Authing.ApiClient.Domain.Model.Management.Users;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -120,8 +120,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
             return result.Data;
         }
-
-        /// <summary>
+		
+		/// <summary>
         /// 发送邮件
         /// </summary>
         /// <param name="email">邮件</param>
@@ -134,6 +134,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new SendEmailParam(email, scene);
             var res = await Request<SendEmailResponse>(param.CreateRequest());
             return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 查询用户的登录状态
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="devicdId">选项</param>
+        /// <returns></returns>
+        public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
+        {
+            return await this.Users.CheckLoginStatus(userId, appId, devicdId);
         }
     }
 }
