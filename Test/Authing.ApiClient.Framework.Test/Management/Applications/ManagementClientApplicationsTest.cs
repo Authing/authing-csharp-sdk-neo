@@ -91,7 +91,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         {
             var result = await managementClient.Applications.EnableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TartgetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
             });
             Assert.Equal(result.Code, 200);
@@ -102,7 +102,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         {
             var result = await managementClient.Applications.DisableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TartgetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
             });
             Assert.Equal(result.Code, 200);
@@ -113,7 +113,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         {
             var result = await managementClient.Applications.DeleteAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TartgetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
             });
             Assert.Equal(result.Code, 200);
@@ -124,7 +124,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         {
             var result = await managementClient.Applications.AllowAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TartgetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
             });
             Assert.Equal(result.Code, 200);
@@ -135,7 +135,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         {
             var result = await managementClient.Applications.DenyAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TartgetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
             });
             Assert.Equal(result.Code, 200);

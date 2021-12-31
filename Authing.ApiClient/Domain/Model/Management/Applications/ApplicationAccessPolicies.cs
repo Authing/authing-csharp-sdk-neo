@@ -25,7 +25,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Applications
         public PolicyAssignmentTargetType TargetType { get; set; }
 
         [JsonProperty("targetIdentifiers")]
-        public string[] TartgetIdentifiers { get; set; }
+        public string[] TargetIdentifiers { get; set; }
 
         [JsonProperty("namespace")]
         public string NameSpace { get; set; }

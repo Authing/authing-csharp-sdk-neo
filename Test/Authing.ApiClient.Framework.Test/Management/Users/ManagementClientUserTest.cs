@@ -428,5 +428,31 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var result = await client.Users.GetUserTenants("61c560fc3e85f6d56bc6aa77");
             Assert.NotEmpty(result.Tenants);
         }
+
+        [Fact]
+        public async void Users_LinkIdentity()
+        {
+            var client = managementClient;
+            var result = await client.Users.LinkIdentity(new LinkIdentityOption() {
+                UserId = "61c560fc3e85f6d56bc6aa77",
+                UserIdInIdp = "12345",
+                Identifier = "github",
+                IsSocial = true,
+            });
+            Assert.Equal(result.Code, 200);
+        }
+
+        [Fact]
+        public async void Users_UnlinkIdentity()
+        {
+            var client = managementClient;
+            var result = await client.Users.UnlinkIdentity(new UnlinkIdentityOption()
+            {
+                UserId = "61c560fc3e85f6d56bc6aa77",
+                Identifier = "github",
+                IsSocial = true,
+            });
+            Assert.Equal(result.Code, 200);
+        }
     }
 }

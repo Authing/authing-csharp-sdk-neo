@@ -146,6 +146,14 @@ GKl64GDcIq3au+aqJQIDAQAB
             return result;
         }
 
+        protected async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, string rawjson,
+            Dictionary<string, string> headers = null)
+        {
+            var result = await client.PutRaw<GraphQLResponse<TResponse>>(Host + $"/{api}", rawjson, headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
+        }
+
         protected async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson,
             Dictionary<string, string> headers = null)
         {

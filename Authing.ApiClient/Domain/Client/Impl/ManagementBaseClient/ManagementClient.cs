@@ -19,6 +19,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public IRolesManagementClient Roles { get; private set; }
 
         public IApplicationsManagementClient Applications { get; private set; }
+        public ITenantManagementClient Tennat { get; private set; }
 
         public IPoliciesManagementClient Policies { get; private set; }
 
@@ -47,6 +48,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             Users = new UsersManagementClient(this);
             Applications = new ApplicationsManagementClient(this);
+            Tennat = new TenantManagementClient(this);
             Udf = new UdfManagementClient(this);
             Orgs = new OrgsManagementClient(this);
             Roles = new RolesManagementClient(this);
@@ -66,6 +68,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             await manageClient.GetAccessToken();
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
+            manageClient.Tennat = new TenantManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
             manageClient.Roles = new RolesManagementClient(manageClient);
@@ -86,6 +89,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             await manageClient.GetAccessToken();
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
+            manageClient.Tennat = new TenantManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
             manageClient.Roles = new RolesManagementClient(manageClient);

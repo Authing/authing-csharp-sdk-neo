@@ -775,5 +775,45 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest());
             return res.Data;
         }
+
+        /// <summary>
+        /// 给用户绑定一个身份
+        /// </summary>
+        /// <param name="option">选项</param>
+        /// <returns></returns>
+        public async Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option)
+        {
+            var body = new Dictionary<string, object>() {
+                { "userId", option.UserId },
+                { "userIdInIdp", option.UserIdInIdp },
+                { "isSocial", option.IsSocial },
+                { "identifier", option.Identifier },
+            };
+            if (option.Type != null) {
+                body.Add("type", option.Type);
+            }
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body);
+            return res;
+        }
+
+        /// <summary>
+        /// 解除用户某个身份源下的所有身份
+        /// </summary>
+        /// <param name="option">选项</param>
+        /// <returns></returns>
+        public async Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option)
+        {
+            var body = new Dictionary<string, object>() {
+                { "userId", option.UserId },
+                { "isSocial", option.IsSocial },
+                { "identifier", option.Identifier },
+            };
+            if (option.Type != null)
+            {
+                body.Add("type", option.Type);
+            }
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body);
+            return res;
+        }
     }
 }
