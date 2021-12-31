@@ -5,6 +5,7 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Domain.Model.Management.Authentication;
 using Authing.ApiClient.Domain.Model.Management.Users;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
