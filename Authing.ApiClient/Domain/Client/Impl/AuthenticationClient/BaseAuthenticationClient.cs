@@ -140,12 +140,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return await Get<GraphQLRequest, TResponse>(api, body, headers);
         }
 
-        public async Task<GraphQLResponse<TResponse>> GetWithHost<TResponse>(string url)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await GetWithHost<GraphQLRequest, TResponse>(url, headers);
-        }
+      
 
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
         {
