@@ -4,6 +4,7 @@ using Authing.ApiClient.Domain.Model.Management.Roles;
 using Authing.ApiClient.Domain.Model.Management.Groups;
 using Authing.ApiClient.Domain.Model.Management.Department;
 using Authing.ApiClient.Domain.Model.Management.Applications;
+using Authing.ApiClient.Domain.Model.Management.Tenant;
 
 namespace Authing.ApiClient.Domain.Model
 {

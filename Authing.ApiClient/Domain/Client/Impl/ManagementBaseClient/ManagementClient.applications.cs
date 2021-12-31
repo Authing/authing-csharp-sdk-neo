@@ -197,7 +197,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> EnableAccessPolicy(string appId, AppAccessPolicy appAccessPolicy)
         {
-            if (appAccessPolicy.TartgetIdentifiers == null)
+            if (appAccessPolicy.TargetIdentifiers == null)
             {
                 return new CommonMessage()
                 {
@@ -208,7 +208,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/enable-effect", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
-                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
             });
             Console.WriteLine(res);
@@ -226,7 +226,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> DisableAccessPolicy(string appId, AppAccessPolicy appAccessPolicy)
         {
-            if (appAccessPolicy.TartgetIdentifiers == null)
+            if (appAccessPolicy.TargetIdentifiers == null)
             {
                 return new CommonMessage()
                 {
@@ -237,7 +237,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/disable-effect", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
-                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
             });
             Console.WriteLine(res);
@@ -256,7 +256,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> DeleteAccessPolicy(string appId, AppAccessPolicy appAccessPolicy)
         {
-            if (appAccessPolicy.TartgetIdentifiers == null)
+            if (appAccessPolicy.TargetIdentifiers == null)
             {
                 return new CommonMessage()
                 {
@@ -267,7 +267,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/revoke", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
-                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
             });
             Console.WriteLine(res);
@@ -286,7 +286,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> AllowAccess(string appId, AppAccessPolicy appAccessPolicy)
         {
-            if (appAccessPolicy.TartgetIdentifiers == null)
+            if (appAccessPolicy.TargetIdentifiers == null)
             {
                 return new CommonMessage()
                 {
@@ -297,7 +297,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/allow", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
-                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
             });
             Console.WriteLine(res);
@@ -316,7 +316,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> DenyAccess(string appId, AppAccessPolicy appAccessPolicy)
         {
-            if (appAccessPolicy.TartgetIdentifiers == null)
+            if (appAccessPolicy.TargetIdentifiers == null)
             {
                 return new CommonMessage()
                 {
@@ -327,7 +327,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/deny", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
-                { "targetIdentifiers", appAccessPolicy.TartgetIdentifiers },
+                { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
             });
             Console.WriteLine(res);

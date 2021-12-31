@@ -198,6 +198,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Put<TResponse>(api, body, headers);
         }
 
+        public async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, Dictionary<string, object> dic)
+        {
+            var headers = new Dictionary<string, string>();
+            var token = await GetAccessToken();
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await PutRaw<TResponse>(api, dic.ConvertJson(), headers);
+        }
+
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson)
         {
             var headers = new Dictionary<string, string>();

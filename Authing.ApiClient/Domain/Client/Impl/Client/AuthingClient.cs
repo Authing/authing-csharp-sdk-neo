@@ -198,6 +198,51 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             }
         }
 
+        public async Task<TResponse> PutRaw<TResponse>(string url, string serializedata, Dictionary<string, string> headers)
+        {
+            ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
+
+            HttpRequestMessage message = null;
+
+            message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
+            {
+
+                Content = new StringContent(serializedata, Encoding.UTF8, "application/json")
+                //TODO:JAVA SDK中存在 application/x-www-form-urlencoded
+                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
+            };
+
+            if (headers != null)
+            {
+                foreach (var keyValuePair in headers)
+                {
+                    message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+            using (var httpResponseMessage =
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    using (var reader = new StreamReader(contentStream))
+                    {
+                        var resString = await reader.ReadToEndAsync();
+                        return JsonConvert.DeserializeObject<TResponse>(resString);
+                    }
+                }
+                // error handling
+                string content = null;
+                if (contentStream != null)
+                    using (var sr = new StreamReader(contentStream))
+                        content = await sr.ReadToEndAsync();
+                throw new Exception(content);
+            }
+
+        }
+
         public async Task<TResponse> PostRaw<TResponse>(string url, string serializedata, Dictionary<string, string> headers)
         {
             ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
