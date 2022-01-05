@@ -34,14 +34,14 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
                "error_description": "Cannot read property 'split' of undefined"
                }
              */
-            authenticationClient.Options.AppId = AppId;
-            authenticationClient.Options.Secret = Secret;
-            authenticationClient.Options.UserPoolId = UserPoolId;
+            //authenticationClient.Options.AppId = AppId;
+            //authenticationClient.Options.Secret = Secret;
+            //authenticationClient.Options.UserPoolId = UserPoolId;
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
             authenticationClient.Options.RedirectUri =
                 "https://console.authing.cn/console/get-started/6172807001258f603126a78a";
             //authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.CLIENT_SECRET_POST;
-            var res = await authenticationClient.GetAccessTokenByCode("szNqV433L1TLv91Vc0LVyKtm6T3TPIyC9a8gFRDop_h");
+            var res = await authenticationClient.GetAccessTokenByCode("DbehGzC_C17T0xzEC0u6iAU_3QVaX_iKTryJnQAANLn");
             Assert.NotNull(res);
         }
 
