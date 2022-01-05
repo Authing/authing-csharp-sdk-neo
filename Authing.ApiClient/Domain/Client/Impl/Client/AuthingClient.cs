@@ -267,7 +267,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     message = HttpRequestMessage<TResponse>(url, serializedata,method, contenttype);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+                    throw new ArgumentOutOfRangeException(nameof(method.Method), method, "不支持此方法");
             }
 
             if (headers != null)
@@ -401,16 +401,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     message = new HttpRequestMessage(method, new Uri(url))
                     {
                         Content = new FormUrlEncodedContent(sortedParam)
-                        //Content = new StringContent(serializedata, Encoding.UTF8, "application/x-www-form-urlencoded")
                     };
-                    // message.Content.Headers.Clear();
-                    // message.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
                     break;
                 case ContentType.JSON:
                     message = new HttpRequestMessage(method, new Uri(url))
                     {
                         Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
-                        //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
                     };
                     break;
                 default:
