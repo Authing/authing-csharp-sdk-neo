@@ -40,6 +40,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             init(Options);
             Host = Options.Host ?? Host;
             AppId = Options.AppId ?? AppId;
+            UserPoolId = Options.UserPoolId ?? UserPoolId;
             if (AppId == string.Empty)
             {
                 throw new Exception("参数错误");

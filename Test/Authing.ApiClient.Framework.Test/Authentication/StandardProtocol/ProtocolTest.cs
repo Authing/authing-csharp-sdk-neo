@@ -37,13 +37,11 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             authenticationClient.Options.AppId = AppId;
             authenticationClient.Options.Secret = Secret;
             authenticationClient.Options.UserPoolId = UserPoolId;
-            authenticationClient.Options.Protocol = Protocol.OIDC;
-            authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.NONE;
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
             authenticationClient.Options.RedirectUri =
                 "https://console.authing.cn/console/get-started/6172807001258f603126a78a";
             //authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.CLIENT_SECRET_POST;
-            var res = await authenticationClient.GetAccessTokenByCode("rZFNoGlF5VYaHgimRHVgvxQP-N8aw0ybx1uMCejPPwf");
+            var res = await authenticationClient.GetAccessTokenByCode("szNqV433L1TLv91Vc0LVyKtm6T3TPIyC9a8gFRDop_h");
             Assert.NotNull(res);
         }
 
