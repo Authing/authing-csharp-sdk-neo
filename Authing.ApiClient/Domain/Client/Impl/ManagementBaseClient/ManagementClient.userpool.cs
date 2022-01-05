@@ -34,7 +34,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<UserPool> Detail()
             {
-                var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
+                var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest()).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -47,7 +47,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new UpdateUserpoolParam(updates);
 
-                var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest());
+                var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -57,7 +57,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<IEnumerable<Env>> ListEnv()
             {
-                var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
+                var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest()).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -74,7 +74,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {
                     { "key", key },
                   { "value",value.ToString()}
-                });
+                }).ConfigureAwait(false);
 
                 return result.Code;
             }
@@ -86,7 +86,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<int> RemoveEnv(string key)
             {
-                var result = await _client.Delete<Env>($"api/v2/env/{key}", null);
+                var result = await _client.Delete<Env>($"api/v2/env/{key}", null).ConfigureAwait(false);
 
                 return result.Code;
             }

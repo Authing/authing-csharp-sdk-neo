@@ -47,7 +47,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UserInfo = userInfo,
             };
 
-            var res = await client.Post<CreateUserResponse>(param.CreateRequest());
+            var res = await client.Post<CreateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -68,7 +68,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Input = updates
             };
 
-            var res = await client.Post<UpdateUserResponse>(param.CreateRequest());
+            var res = await client.Post<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -88,12 +88,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {
                     Id = userId
                 };
-                var _res = await client.Post<UserWithCustomDataResponse>(_param.CreateRequest());
+                var _res = await client.Post<UserWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 return _res.Data.Result;
             }
             var param = new UserParam() { Id = userId };
-            await client.GetAccessToken();
-            var res = await client.Post<UserResponse>(param.CreateRequest());
+            await client.GetAccessToken().ConfigureAwait(false);
+            var res = await client.Post<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -106,7 +106,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             string userId)
         {
             var param = new DeleteUserParam(userId);
-            var res = await client.Post<DeleteUserResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -120,7 +120,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new DeleteUsersParam(userIds);
 
-            var res = await client.Post<DeleteUsersResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -137,7 +137,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Type = batchFetchUserType.ToString()
             };
-            var res = await client.Post<UserBatchResponse>(param.CreateRequest());
+            var res = await client.Post<UserBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -157,7 +157,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
             };
 
-            var res = await client.Post<UsersResponse>(param.CreateRequest());
+            var res = await client.Post<UsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -176,7 +176,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Page = page,
                 Limit = limit,
             };
-            var res = await client.Post<ArchivedUsersResponse>(param.CreateRequest());
+            var res = await client.Post<ArchivedUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -194,7 +194,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Phone = options.Phone,
                 ExternalId = options.ExternalId
             };
-            var res = await client.Post<IsUserExistsResponse>(param.CreateRequest());
+            var res = await client.Post<IsUserExistsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -213,7 +213,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ExternalId = options.ExternalId,
             };
 
-            var res = await client.Post<FindUserResponse>(param.CreateRequest());
+            var res = await client.Post<FindUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -240,8 +240,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 GroupOpts = option.GroupOpts,
                 RoleOpts = option.RoleOpts,
             };
-            await client.GetAccessToken();
-            var res = await client.Post<SearchUserResponse>(param.CreateRequest());
+            await client.GetAccessToken().ConfigureAwait(false);
+            var res = await client.Post<SearchUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -254,7 +254,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new RefreshTokenParam() { Id = userId };
 
-            var res = await client.Post<RefreshTokenResponse>(param.CreateRequest());
+            var res = await client.Post<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -267,7 +267,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new GetUserGroupsParam(userId);
 
-            var res = await client.Post<GetUserGroupsResponse>(param.CreateRequest());
+            var res = await client.Post<GetUserGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result.Groups;
         }
 
@@ -286,7 +286,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = group
             };
 
-            var res = await client.Post<AddUserToGroupResponse>(param.CreateRequest());
+            var res = await client.Post<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -305,7 +305,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = group
             };
 
-            var res = await client.Post<RemoveUserFromGroupResponse>(param.CreateRequest());
+            var res = await client.Post<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -322,8 +322,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = _namespace
             };
-            await client.GetAccessToken();
-            var res = await client.Post<GetUserRolesResponse>(param.CreateRequest());
+            await client.GetAccessToken().ConfigureAwait(false);
+            var res = await client.Post<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             var user = res.Data.Result;
             if (user == null)
             {
@@ -350,7 +350,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = _namespace,
             };
 
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest());
+            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -371,8 +371,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCodes = roles,
                 Namespace = _namespace,
             };
-            await client.GetAccessToken();
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest());
+            await client.GetAccessToken().ConfigureAwait(false);
+            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -383,8 +383,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<PaginatedOrgsAndNodes> ListOrgs(string userId)
         {
-            //var res = await client.Host.AppendPathSegment($"api/v2/users/{userId}/orgs").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).GetJsonAsync<ListOrgsResponse>();
-            var res = await client.Get<ListOrgsResponse>($"api/v2/users/{userId}/orgs", new GraphQLRequest());
+            var res = await client.Get<ListOrgsResponse>($"api/v2/users/{userId}/orgs", new GraphQLRequest()).ConfigureAwait(false);
             if (res.Code == 200)
             {
                 var result = new PaginatedOrgsAndNodes()
@@ -412,7 +411,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<PaginatedDepartments> ListDepartment(string userId)
         {
             var param = new GetUserDepartmentsParam(userId);
-            var res = await client.Post<GetUserDepartmentsResponse>(param.CreateRequest());
+            var res = await client.Post<GetUserDepartmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             var user = res.Data.Result;
             if (user == null)
             {
@@ -441,7 +440,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 param.ResourceType = option.ResourceType.ToString().ToUpper();
             }
-            var res = await client.Post<ListUserAuthorizedResourcesResponse>(param.CreateRequest());
+            var res = await client.Post<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             var user = res.Data.Result;
             if (user == null)
             {
@@ -459,7 +458,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId)
         {
             var param = new UdvParam(UdfTargetType.USER, userId);
-            var res = await client.Post<UdvResponse>(param.CreateRequest());
+            var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
         }
 
@@ -475,7 +474,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 throw new Exception("empty user id list");
             }
             var param = new UdfValueBatchParam(UdfTargetType.USER, userIds);
-            var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest());
+            var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
             foreach (var item in res.Data.Result)
             {
@@ -503,7 +502,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Value = item.Value.ConvertJson()
                 }),
             };
-            var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest());
+            var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -532,7 +531,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     )
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.USER, param);
-            var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest());
+            var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -545,7 +544,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<CommonMessage> RemoveUdfValue(string userId, string key)
         {
             var param = new RemoveUdvParam(UdfTargetType.USER, userId, key);
-            var res = await client.Post<SetUdfValueBatchResponse>(param.CreateRequest());
+            var res = await client.Post<SetUdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -558,7 +557,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> hasRole(string userId, string roleCode, string _namespace = null)
         {
-            var roleList = await ListRoles(userId, _namespace);
+            var roleList = await ListRoles(userId, _namespace).ConfigureAwait(false);
 
             if (roleList.TotalCount < 1)
             {
@@ -579,11 +578,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> Kick(IEnumerable<string> userIds)
         {
-            //await client.Host.AppendPathSegment("api/v2/users/kick").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
-            //{
-            //    userIds
-            //}).ReceiveJson<CommonMessage>();
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/kick", new Dictionary<string, object>() { { "userIds", userIds } });
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/kick", new Dictionary<string, object>() { { "userIds", userIds } }).ConfigureAwait(false);
             Console.WriteLine(res);
             return new CommonMessage
             {
@@ -604,7 +599,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 throw new Exception("请传入 options.userId，内容为要下线的用户 ID");
             }
 
-            await client.Get<CommonMessage>("logout", new ExpnadAllRequest().CreateRequest());
+            await client.Get<CommonMessage>("logout", new ExpnadAllRequest().CreateRequest()).ConfigureAwait(false);
             return new CommonMessage
             {
                 Code = 200,
@@ -621,13 +616,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
         {
-            //var res = await client.Host.AppendPathSegment("api/v2/users/login-status").
-            //WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).SetQueryParams(new
-            //{
-            //    userId,
-            //    appId,
-            //    devicdId
-            //}).GetJsonAsync<CheckLoginStatusRes>();
             var query = $"?userId={userId}";
             if (appId != null) {
                 query += $"&appId={appId}";
@@ -636,7 +624,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&devicdId={devicdId}";
             }
-            var res = await client.Get<CheckLoginStatusRes>($"api/v2/users/login-status{query}", new GraphQLRequest());
+            var res = await client.Get<CheckLoginStatusRes>($"api/v2/users/login-status{query}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -688,7 +676,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&end={listUserActionsParam.End}";
             }
-            var res = await client.Get<ListUserActionsResObject>("api/v2/analysis/user-action", new GraphQLRequest());
+            var res = await client.Get<ListUserActionsResObject>("api/v2/analysis/user-action", new GraphQLRequest()).ConfigureAwait(false);
             if (res.Data.Data.TotalCount == 0)
             {
                 var resEmpty = new ListUserActionsRealRes()
@@ -729,7 +717,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam)
         {
             var param = sendFirstLoginVerifyEmailParam;
-            var res = await client.Post<SendFirstLoginVerifyEmailResponse>(param.CreateRequest());
+            var res = await client.Post<SendFirstLoginVerifyEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -755,13 +743,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     item.Gender = "U";
                 }
             }
-            //var res = await client.Host.AppendPathSegment("api/v2/users/create/batch").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
-            //{
-            //    users = userInfos,
-            //}).ReceiveJson<CreateUsersRes>();
             var res = await client.PostRaw<CreateUsersRes>("api/v2/users/create/batch", new Dictionary<string,object>() {
                 { "users", userInfos }
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -772,7 +756,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<User> GetUserTenants(string userId)
         {
-            var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest());
+            var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -792,7 +776,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             if (option.Type != null) {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body);
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body).ConfigureAwait(false);
             return res;
         }
 
@@ -812,7 +796,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body);
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body).ConfigureAwait(false);
             return res;
         }
     }

@@ -30,7 +30,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         {
             if (body is string s)
             {
-                return await SendRequest<TResponse>(url, s, headers, httpType);
+                return await SendRequest<TResponse>(url, s, headers, httpType).ConfigureAwait(false);
             }
             else
             {
@@ -41,7 +41,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     {
                         NullValueHandling = NullValueHandling.Ignore
                     });
-                return await SendRequest<TResponse>(url, bodyStr, headers, httpType);
+                return await SendRequest<TResponse>(url, bodyStr, headers, httpType).ConfigureAwait(false);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             Dictionary<string, string> headers)
         {
 
-            return await SendRequest<TResponse>(url, body, headers, httpType);
+            return await SendRequest<TResponse>(url, body, headers, httpType).ConfigureAwait(false);
 
         }
 
@@ -95,15 +95,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     using (var reader = new StreamReader(contentStream))
                     {
-                        var resString = await reader.ReadToEndAsync();
+                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
                         var res = JsonConvert.DeserializeObject<TResponse>(resString);
                         return res;
                     }
@@ -112,7 +112,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 string content = null;
                 if (contentStream != null)
                     using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync();
+                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
 
@@ -177,15 +177,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     using (var reader = new StreamReader(contentStream))
                     {
-                        var resString = await reader.ReadToEndAsync();
+                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }
@@ -193,7 +193,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 string content = null;
                 if (contentStream != null)
                     using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync();
+                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
         }
@@ -221,15 +221,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     using (var reader = new StreamReader(contentStream))
                     {
-                        var resString = await reader.ReadToEndAsync();
+                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }
@@ -237,7 +237,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 string content = null;
                 if (contentStream != null)
                     using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync();
+                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
 
@@ -266,15 +266,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     using (var reader = new StreamReader(contentStream))
                     {
-                        var resString = await reader.ReadToEndAsync();
+                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }
@@ -282,7 +282,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 string content = null;
                 if (contentStream != null)
                     using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync();
+                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
 
@@ -347,15 +347,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     using (var reader = new StreamReader(contentStream))
                     {
-                        var resString = await reader.ReadToEndAsync();
+                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }
@@ -363,7 +363,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 string content = null;
                 if (contentStream != null)
                     using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync();
+                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
         }

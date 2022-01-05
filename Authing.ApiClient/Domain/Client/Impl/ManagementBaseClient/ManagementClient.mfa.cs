@@ -31,7 +31,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var result =
                    await client.RequestCustomData<RestfulResponse<UserMfaStatus>>($"api/v2/users/{userid}/mfa-bound", "",
-                        method: HttpMethod.Get, contenttype: ContentType.JSON);
+                        method: HttpMethod.Get, contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Data.Data;
 
             }
@@ -46,7 +46,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var result = await client.RequestCustomData<RestfulResponse<bool>>(
                     $"api/v2/users/{userid}/mfa-bound?type={type.ToString()}","", method: HttpMethod.Delete,
-                    contenttype: ContentType.JSON);
+                    contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Data.Code == 200;
             }
 
@@ -70,7 +70,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         { "recoverycode", options.RecoveryCode }
                     }.ConvertJson(),
                     contenttype: ContentType.DEFAULT
-                );
+                ).ConfigureAwait(false);
                 return result.Data.Data;
             }
 

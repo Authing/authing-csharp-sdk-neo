@@ -42,7 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new CreateGroupParam(code, name, description);
 
-                var res = await client.Request<CreateGroupResponse>(param.CreateRequest());
+                var res = await client.Request<CreateGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -55,7 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new DeleteGroupsParam(new string[] { code });
 
-                var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest());
+                var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -76,7 +76,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     NewCode = newCode,
                 };
 
-                var res = await client.Request<UpdateGroupResponse>(param.CreateRequest());
+                var res = await client.Request<UpdateGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -89,7 +89,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new GroupParam(code);
 
-                var res = await client.Request<GroupResponse>(param.CreateRequest());
+                var res = await client.Request<GroupResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -107,7 +107,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Limit = limit,
                 };
 
-                var res = await client.Request<GroupsResponse>(param.CreateRequest());
+                var res = await client.Request<GroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -120,7 +120,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new DeleteGroupsParam(codeList);
 
-                var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest());
+                var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -141,7 +141,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Limit = limit,
                 };
 
-                var res = await client.Request<GroupWithUsersResponse>(param.CreateRequest());
+                var res = await client.Request<GroupWithUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result.Users ?? null;
             }
 
@@ -155,7 +155,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         Page = listUsersOption?.Page,
                         Limit = listUsersOption?.Limit,
                     };
-                    var _res = await client.Request<GroupWithUsersResponse>(_param.CreateRequest());
+                    var _res = await client.Request<GroupWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
                     return _res.Data?.Result?.Users ?? null;
                 }
                 else
@@ -166,7 +166,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         Page = listUsersOption?.Page,
                         Limit = listUsersOption?.Limit
                     };
-                    var _res = await client.Request<GroupWithUsersWithCustomDataResponse>(_param.CreateRequest());
+                    var _res = await client.Request<GroupWithUsersWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                     return _res.Data?.Result?.Users ?? null;
                 }
             }
@@ -184,7 +184,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Code = code,
                 };
 
-                var res = await client.Request<AddUserToGroupResponse>(param.CreateRequest());
+                var res = await client.Request<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -201,7 +201,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Code = code,
                 };
 
-                var res = await client.Request<RemoveUserFromGroupResponse>(param.CreateRequest());
+                var res = await client.Request<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -225,7 +225,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Namespace = _namespace,
                     ResourceType = resourceType.ToString().ToUpper(),
                 };
-                var res = await client.Request<ListGroupAuthorizedResourcesResponse>(param.CreateRequest());
+                var res = await client.Request<ListGroupAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
                 var group = res.Data?.Result;
                 if (group == null)
                 {

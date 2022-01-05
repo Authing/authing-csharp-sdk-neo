@@ -57,7 +57,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 return AccessToken;
             }
 
-            var tuple = await GetAccessTokenFromServer();
+            var tuple = await GetAccessTokenFromServer().ConfigureAwait(false);
             AccessToken = tuple.Item1;
             accessTokenExpiredAt = tuple.Item2;
             return AccessToken;
@@ -67,7 +67,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var param = new Model.AccessTokenParam(UserPoolId, Secret);
             //  如果不加 WithAccessToken 會死循環
-            var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest());
+            var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest()).ConfigureAwait(false);
 
 
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
@@ -77,28 +77,28 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Request<TResponse>(body, headers);
+            return await Request<TResponse>(body, headers).ConfigureAwait(false);
         }
 
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Request<TResponse>(api, body, headers);
+            return await Request<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Request<TResponse>(body, headers);
+            return await Request<TResponse>(body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Post<TResponse>(api, body, headers);
+            return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, object> body)
@@ -123,21 +123,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 dic.Add(item.Key, Newtonsoft.Json.JsonConvert.SerializeObject(item.Value));
 
             }
-            return await Post<TResponse>(api, dic, headers);
+            return await Post<TResponse>(api, dic, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Post<TResponse>(api, body, headers);
+            return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Get<GraphQLRequest, TResponse>(api, body, headers);
+            return await Get<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
       
@@ -145,20 +145,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
-            //var token = await GetAccessToken();
-            //headers["Authorization"] = token;
-            //headers["x-authing-userpool-id"] = UserPoolId;
-            //headers["x-authing-request-from"] = type;
-            //headers["x-authing-sdk-version"] = version;
             headers = GetAuthHeaders(true);
-            return await Delete<GraphQLRequest, TResponse>(api, body, headers);
+            return await Delete<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(false);
-            return await Post<TResponse>(body, headers);
+            return await Post<TResponse>(body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson, string accessToken = null)
@@ -171,14 +166,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
             else
             {
-                var token = await GetAccessToken();
+                var token = await GetAccessToken().ConfigureAwait(false);
                 headers["Authorization"] = "bearer " + token;
             }
 
             headers["x-authing-userpool-id"] = UserPoolId;
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
-            return await PostRaw<TResponse>(api, rawjson, headers);
+            return await PostRaw<TResponse>(api, rawjson, headers).ConfigureAwait(false);
         }
 
 
@@ -193,7 +188,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     if (amphitheaters.ContainsKey(pair.Key))
                         amphitheaters[pair.Key] = pair.Value;
                 }
-            return await RequestCustomData<TResponse>(url, serializedata, amphitheaters, method, contenttype);
+            return await RequestCustomData<TResponse>(url, serializedata, amphitheaters, method, contenttype).ConfigureAwait(false);
         }
 
 

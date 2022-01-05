@@ -142,7 +142,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         { "grant_type", "authorization_code" },
                         { "code", code },
                         { "redirect_uri", Options.RedirectUri }
-                    }.ConvertJson());
+                    }.ConvertJson()).ConfigureAwait(false);
                     return result.Data;
                 case TokenEndPointAuthMethod.CLIENT_SECRET_BASIC:
                     result = await RequestCustomData<CodeToTokenRes>(url, new Dictionary<string, string>()
@@ -157,7 +157,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                                 "Authorization",
                                 $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}"
                             }
-                        });
+                        }).ConfigureAwait(false);
                     return result.Data;
                 case TokenEndPointAuthMethod.NONE:
                     result = await RequestCustomData<CodeToTokenRes>(url, new Dictionary<string, string>()
@@ -167,14 +167,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         { "grant_type", "authorization_code" },
                         { "code", code },
                         { "redirect_uri", Options.RedirectUri },
-                    }.ConvertJson());
-                    //result = await Post<CodeToTokenRes>(url, new Dictionary<string, string>()
-                    //{
-                    //    { "client_id", Options.AppId },
-                    //    { "grant_type", "authorization_code" },
-                    //    { "code", code },
-                    //    { "redirect_uri", Options.RedirectUri },
-                    //}, null);
+                    }.ConvertJson()).ConfigureAwait(false);
                     return result.Data;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -191,17 +184,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var endPoint = Options.Protocol == Protocol.OAUTH
                 ? "oauth/me?access_token={token}"
                 : $"oidc/me?access_token={token}";
-            //var res = await Post<UserInfo>(endPoint, new Dictionary<string, string>() { { "Authorization", $"Bearer {token}" } });
             GraphQLResponse<UserInfo> res;
             switch (Options.Protocol)
             {
                 case Protocol.OAUTH:
-                    res = await Post<UserInfo>(endPoint, new GraphQLRequest());
+                    res = await Post<UserInfo>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
                     break;
                 case Protocol.OIDC:
                 case Protocol.SAML:
                 case Protocol.CAS:
-                    res = await Get<UserInfo>(endPoint, new GraphQLRequest());
+                    res = await Get<UserInfo>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -231,17 +223,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (Options.TokenEndPointAuthMethod == TokenEndPointAuthMethod.CLIENT_SECRET_POST)
             {
-                return await GetNewAccessTokenByRefreshTokenWithClientSecretPost(refreshToken);
+                return await GetNewAccessTokenByRefreshTokenWithClientSecretPost(refreshToken).ConfigureAwait(false);
             }
 
             if (Options.TokenEndPointAuthMethod == TokenEndPointAuthMethod.CLIENT_SECRET_BASIC)
             {
-                return await GetNewAccessTokenByRefreshTokenWithClientSecretBasic(refreshToken);
+                return await GetNewAccessTokenByRefreshTokenWithClientSecretBasic(refreshToken).ConfigureAwait(false);
             }
 
             if (Options.TokenEndPointAuthMethod == TokenEndPointAuthMethod.NONE)
             {
-                return await GetNewAccessTokenByRefreshTokenWithNone(refreshToken);
+                return await GetNewAccessTokenByRefreshTokenWithNone(refreshToken).ConfigureAwait(false);
             }
 
             throw new ArgumentException("请检查参数 TokenEndPointAuthMethod");
@@ -264,7 +256,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken }
             };
 
-            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>());
+            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>()).ConfigureAwait(false);
 
             return result.Data;
         }
@@ -283,7 +275,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "grant_type", "refresh_token" },
                 { "refresh_token", refreshToken }
             };
-            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>());
+            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>()).ConfigureAwait(false);
 
             return result.Data;
         }
@@ -305,7 +297,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken },
 
             };
-            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>());
+            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>()).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -329,17 +321,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (Options.TokenEndPointAuthMethod == TokenEndPointAuthMethod.CLIENT_SECRET_POST)
             {
-                return await IntrospectTokenWithClientSecretPost(api, token);
+                return await IntrospectTokenWithClientSecretPost(api, token).ConfigureAwait(false);
             }
 
             if (Options.TokenEndPointAuthMethod == TokenEndPointAuthMethod.CLIENT_SECRET_BASIC)
             {
-                return await IntrospectTokenWithClientSecretBasic(api, token);
+                return await IntrospectTokenWithClientSecretBasic(api, token).ConfigureAwait(false);
             }
 
             if (Options.TokenEndPointAuthMethod == TokenEndPointAuthMethod.NONE)
             {
-                return await IntrospectTokenWithNone(api, token);
+                return await IntrospectTokenWithNone(api, token).ConfigureAwait(false);
             }
 
             throw new Exception(
@@ -355,7 +347,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "client_secret", Options.Secret },
                 { "grant_type", "authorization_code" },
                 { "token", token },
-            }.ConvertJson());
+            }.ConvertJson()).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -371,7 +363,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         "Authorization",
                         $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}"
                     }
-                });
+                }).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -381,7 +373,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 { "client_id", Options.AppId },
                 { "token", token },
-            }.ConvertJson());
+            }.ConvertJson()).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -400,7 +392,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var url = $"api/v2/oidc/validate_token";
             url += !string.IsNullOrWhiteSpace(param.AccessToken) ? $"?access_token={param.AccessToken}" : $"?id_token={param.IdToken}";
 
-            var result = await RequestCustomData<HttpResponseMessage>(url, "", null, HttpMethod.Get, ContentType.JSON);
+            var result = await RequestCustomData<HttpResponseMessage>(url, "", null, HttpMethod.Get, ContentType.JSON).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -473,7 +465,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     {"client_secret",$"{options.AccessSecret}"},
                     {"grant_type","client_credentials"},
                     {"scope",scope}
-                }.ConvertJson());
+                }.ConvertJson()).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -496,11 +488,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             switch (Options.TokenEndPointAuthMethod)
             {
                 case TokenEndPointAuthMethod.NONE:
-                    return await RevokeTokenWithNone(url, token);
+                    return await RevokeTokenWithNone(url, token).ConfigureAwait(false);
                 case TokenEndPointAuthMethod.CLIENT_SECRET_POST:
-                    return await RevokeTokenWithClientSecretPost(url, token);
+                    return await RevokeTokenWithClientSecretPost(url, token).ConfigureAwait(false);
                 case TokenEndPointAuthMethod.CLIENT_SECRET_BASIC:
-                    return await RevokeTokenWithClientSecretBasic(url, token);
+                    return await RevokeTokenWithClientSecretBasic(url, token).ConfigureAwait(false);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -515,7 +507,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     {"token",token},
                     {"client_id",Options.AppId},
                     {"client_secret",Options.Secret}
-                }.ConvertJson());
+                }.ConvertJson()).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -534,7 +526,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         "Authorization",
                         $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}"
                     }
-                });
+                }).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -546,7 +538,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 {
                     {"token",token},
                     {"client_id",Options.AppId}
-                }.ConvertJson());
+                }.ConvertJson()).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -558,7 +550,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<ValidateTicketV1Res> ValidateTicketV1(string ticket, string service)
         {
-            var result = await Get<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", null);
+            var result = await Get<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", null).ConfigureAwait(false);
 
             if (result.Data.Result.Split('\n').Contains("yes"))
             {
@@ -612,14 +604,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<string> ValidateTicketV2(string ticket, string service,ValidateTicketFormat validateTicketFormat)
         {
-            var result = await Get<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", null);
+            var result = await Get<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", null).ConfigureAwait(false);
 
             return result.Data.Result;
         }
 
         public async Task<User> TrackSession()
         {
-            var result = await Get<User>("cas/session", null);
+            var result = await Get<User>("cas/session", null).ConfigureAwait(false);
             return result.Data;
         }
     }

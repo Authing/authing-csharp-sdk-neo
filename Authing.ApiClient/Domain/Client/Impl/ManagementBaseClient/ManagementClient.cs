@@ -5,7 +5,7 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
-using Authing.ApiClient.Domain.Model.Management.Authentication;
+using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Domain.Model.Management.Users;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
@@ -67,7 +67,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)
         {
             var manageClient = new ManagementClient(userPoolId, secret);
-            await manageClient.GetAccessToken();
+            await manageClient.GetAccessToken().ConfigureAwait(false);
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
             manageClient.Tennat = new TenantManagementClient(manageClient);
@@ -88,7 +88,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public static async Task<ManagementClient> InitManagementClient(Action<InitAuthenticationClientOptions> init)
         {
             var manageClient = new ManagementClient(init);
-            await manageClient.GetAccessToken();
+            await manageClient.GetAccessToken().ConfigureAwait(false);
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
             manageClient.Tennat = new TenantManagementClient(manageClient);
@@ -107,7 +107,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<string> RequestToken()
         {
-            var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null);
+            var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null).ConfigureAwait(false);
             return result.Data.AccessToken;
         }
 
@@ -118,7 +118,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> isPasswordValid(string password)
         {
-            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
+            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null).ConfigureAwait(false);
             return result.Data;
         }
 		
@@ -133,7 +133,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                                                    EmailScene scene)
         {
             var param = new SendEmailParam(email, scene);
-            var res = await Request<SendEmailResponse>(param.CreateRequest());
+            var res = await Request<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -146,7 +146,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
         {
-            return await this.Users.CheckLoginStatus(userId, appId, devicdId);
+            return await this.Users.CheckLoginStatus(userId, appId, devicdId).ConfigureAwait(false);
         }
     }
 }

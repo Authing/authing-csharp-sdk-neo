@@ -52,7 +52,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
                 endPoint += $"&page={options.Page}";
                 endPoint += $"&limit={options.Limit}";
-                var result = await _client.Get<UserLogs>(endPoint, new GraphQLRequest());
+                var result = await _client.Get<UserLogs>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
@@ -83,7 +83,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
                 endPoint += $"&page={options.Page}";
                 endPoint += $"&limit={options.Limit}";
-                var result = await _client.Get<AdminLogs>(endPoint, new GraphQLRequest());
+                var result = await _client.Get<AdminLogs>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
                 return result.Data ?? null;
             }
         }
