@@ -138,13 +138,14 @@ GKl64GDcIq3au+aqJQIDAQAB
             return result;
         }
 
-        //protected async Task<GraphQLResponse<TResponse>> Put<TResponse>(string api, Dictionary<string, string> body, Dictionary<string, string> headers)
-        //{
-        //    var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Put, body,
-        //        headers ?? new Dictionary<string, string>());
-        //    CheckResult(result);
-        //    return result;
-        //}
+        [Obsolete("已过时, 不建议使用")]
+        protected async Task<GraphQLResponse<TResponse>> Put<TResponse>(string api, Dictionary<string, string> body, Dictionary<string, string> headers)
+        {
+            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Put, body,
+                headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
+        }
 
         protected async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, string rawjson,
             Dictionary<string, string> headers = null)
