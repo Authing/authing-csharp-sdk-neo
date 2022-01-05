@@ -11,15 +11,16 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
 {
     public class ManagementClientUserTest : BaseTest
     {
-        //[Fact]
-        //public async void Users_Create()
-        //{
-        //    var result = await managementClient.Users.Create(new CreateUserInput() {
-        //        Email = "qitaotest@authing.cn",
-        //        Password = "123456",
-        //    });
-        //    Assert.Equal(result.Email, "qitaotest@authing.cn");
-        //}
+        [Fact]
+        public async void Users_Create()
+        {
+            var result = await managementClient.Users.Create(new CreateUserInput()
+            {
+                Email = "qitaotest@authing.cn",
+                Password = "123456",
+            });
+            Assert.Equal(result.Email, "qitaotest@authing.cn");
+        }
 
         [Fact]
         public async void Users_Update()
@@ -406,6 +407,52 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             });
             var result = await client.Users.SendFirstLoginVerifyEmail(new SendFirstLoginVerifyEmailParam(user.Id, "6195ebcf5255f3d735ba9063"));
             Assert.Equal(result.Result.Code, 200);
+        }
+
+        [Fact]
+        public async void Users_CreateUsers()
+        {
+            var client = managementClient;
+            var userList = new List<CreateUserInput>() {
+                new CreateUserInput(){ Email = "qitaoVT4@authing.cn",Password = "123456" },
+                new CreateUserInput(){ Email = "qitaoVT5@authing.cn",Password = "123456" }
+            };
+            var result = await client.Users.CreateUsers(userList);
+            Assert.Equal(result.Code, 200);
+        }
+
+        [Fact]
+        public async void Users_GetUserTenants()
+        {
+            var client = managementClient;
+            var result = await client.Users.GetUserTenants("61c560fc3e85f6d56bc6aa77");
+            Assert.NotEmpty(result.Tenants);
+        }
+
+        [Fact]
+        public async void Users_LinkIdentity()
+        {
+            var client = managementClient;
+            var result = await client.Users.LinkIdentity(new LinkIdentityOption() {
+                UserId = "61c560fc3e85f6d56bc6aa77",
+                UserIdInIdp = "12345",
+                Identifier = "github",
+                IsSocial = true,
+            });
+            Assert.Equal(result.Code, 200);
+        }
+
+        [Fact]
+        public async void Users_UnlinkIdentity()
+        {
+            var client = managementClient;
+            var result = await client.Users.UnlinkIdentity(new UnlinkIdentityOption()
+            {
+                UserId = "61c560fc3e85f6d56bc6aa77",
+                Identifier = "github",
+                IsSocial = true,
+            });
+            Assert.Equal(result.Code, 200);
         }
     }
 }

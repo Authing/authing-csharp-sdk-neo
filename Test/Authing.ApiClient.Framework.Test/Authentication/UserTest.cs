@@ -296,6 +296,32 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.True(message.Code == 200);
         }
 
+        [Fact]
+        public async void GetToken_Test()
+        {
+            var client = authenticationClient;
+
+             await client.LoginByUsername("qidong5566", "12345678", null);
+
+
+            var result = await client.GetToken();
+
+            Assert.True(!string.IsNullOrEmpty(result));
+        }
+
+        [Fact]
+        public async void ClearUser_Test()
+        {
+            var client = authenticationClient;
+
+            await client.LoginByUsername("qidong5566", "12345678", null);
+
+            client.ClearUser();
+
+            Assert.Null(client.User);
+
+        }
+
 
 
     }

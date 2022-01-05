@@ -8,7 +8,7 @@ namespace Authing.ApiClient.Domain.Model.Authentication
 {
    public  class VerifyTotpMfaResponse
     {
-        [JsonProperty("Result")]
+        [JsonProperty("data")]
         public User Result { get; set; }
     }
 }

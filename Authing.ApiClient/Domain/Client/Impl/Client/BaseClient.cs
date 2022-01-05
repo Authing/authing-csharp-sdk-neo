@@ -146,6 +146,14 @@ GKl64GDcIq3au+aqJQIDAQAB
         //    return result;
         //}
 
+        protected async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, string rawjson,
+            Dictionary<string, string> headers = null)
+        {
+            var result = await client.PutRaw<GraphQLResponse<TResponse>>(Host + $"/{api}", rawjson, headers ?? new Dictionary<string, string>());
+            CheckResult(result);
+            return result;
+        }
+
         protected async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson,
             Dictionary<string, string> headers = null)
         {
@@ -179,6 +187,16 @@ GKl64GDcIq3au+aqJQIDAQAB
                 if (error is null)
                 {
                     error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
+                }
+                if (result.Errors != null && result.Errors.Count()>0)
+                {
+                    if (result.Errors[0].Message != null)
+                    {
+                        if (result.Errors[0].Message.Data != null)
+                        {
+                            throw new AuthingException(error.Message, error.Code, error.Data);
+                        }
+                    }
                 }
                 throw new AuthingException(error.Message, error.Code);
             }

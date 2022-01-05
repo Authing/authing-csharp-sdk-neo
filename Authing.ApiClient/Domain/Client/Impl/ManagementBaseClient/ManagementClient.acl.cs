@@ -144,6 +144,26 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
 
             /// <summary>
+            /// 获取资源列表
+            /// </summary>
+            /// <param name="resourceQueryFilter">过滤参数类</param>
+            /// <returns></returns>
+            public async Task<ListResourcesRes> GetResources(ResourceQueryFilter resourceQueryFilter)
+            {
+                if (resourceQueryFilter == null) throw new ArgumentNullException(nameof(resourceQueryFilter));
+                string endPoint = $"api/v2/resources?";
+                endPoint += string.IsNullOrWhiteSpace(resourceQueryFilter.NameSpaceCode)
+                    ? ""
+                    : $"&namespace={resourceQueryFilter.NameSpaceCode}";
+                endPoint += $"&type={resourceQueryFilter.Type}";
+                endPoint += $"&limit={(resourceQueryFilter.FetchAll ? "-1" : $"{resourceQueryFilter.Limit}")}";
+                endPoint += $"&page={resourceQueryFilter.Page}";
+
+                var res = await client.Get<ListResourcesRes>(endPoint, new GraphQLRequest());
+                return res.Data ?? null;
+            }
+
+            /// <summary>
             /// 创建资源
             /// </summary>
             /// <param name="createResourceParam">创建资源参数类</param>

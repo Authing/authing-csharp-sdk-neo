@@ -8,7 +8,23 @@ namespace Authing.ApiClient.Domain.Model.Authentication
 {
     public class AssosicateMfaAuthenticatorResponse
     {
-        [JsonProperty("Result")]
-        public IMfaAssociation Result { get; set; }
+        // var authenticator_type: String,
+        [JsonProperty("authenticator_type")]
+        public string AuthenticatorType { get; set; }
+
+
+        //var secret: String,
+        [JsonProperty("secret")]
+        public string Secret { get; }
+        //var qrcode_uri: String,
+        [JsonProperty("qrcode_uri")]
+        public string QRCodeUri { get; set; }
+        //var qrcode_data_url: String,
+        [JsonProperty("QRCodeUri")]
+        public string QRcodeDataUrl { get; set; }
+        //var recovery_code: String
+
+        [JsonProperty("recovery_code")]
+        public string RecoveryCode { get; set; }
     }
 }

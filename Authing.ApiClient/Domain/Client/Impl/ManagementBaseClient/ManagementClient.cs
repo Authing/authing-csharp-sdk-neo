@@ -4,6 +4,9 @@ using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Domain.Model.Management.Authentication;
+using Authing.ApiClient.Domain.Model.Management.Users;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -18,6 +21,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public IRolesManagementClient Roles { get; private set; }
 
         public IApplicationsManagementClient Applications { get; private set; }
+        public ITenantManagementClient Tennat { get; private set; }
 
         public IPoliciesManagementClient Policies { get; private set; }
 
@@ -46,6 +50,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             Users = new UsersManagementClient(this);
             Applications = new ApplicationsManagementClient(this);
+            Tennat = new TenantManagementClient(this);
             Udf = new UdfManagementClient(this);
             Orgs = new OrgsManagementClient(this);
             Roles = new RolesManagementClient(this);
@@ -65,6 +70,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             await manageClient.GetAccessToken();
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
+            manageClient.Tennat = new TenantManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
             manageClient.Roles = new RolesManagementClient(manageClient);
@@ -85,6 +91,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             await manageClient.GetAccessToken();
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
+            manageClient.Tennat = new TenantManagementClient(manageClient);
             manageClient.Udf = new UdfManagementClient(manageClient);
             manageClient.Orgs = new OrgsManagementClient(manageClient);
             manageClient.Roles = new RolesManagementClient(manageClient);
@@ -98,10 +105,48 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return manageClient;
         }
 
-        public async Task<string> ReuqestToken()
+        public async Task<string> RequestToken()
         {
             var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null);
             return result.Data.AccessToken;
+        }
+
+        /// <summary>
+        /// 检测密码是否合法
+        /// </summary>
+        /// <param name="password">需要检测的密码</param>
+        /// <returns></returns>
+        public async Task<CommonMessage> isPasswordValid(string password)
+        {
+            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
+            return result.Data;
+        }
+		
+		/// <summary>
+        /// 发送邮件
+        /// </summary>
+        /// <param name="email">邮件</param>
+        /// <param name="scene">场景</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>CommonMessage</returns>
+        public async Task<CommonMessage> SendEmail(string email,
+                                                   EmailScene scene)
+        {
+            var param = new SendEmailParam(email, scene);
+            var res = await Request<SendEmailResponse>(param.CreateRequest());
+            return res.Data.Result;
+        }
+
+        /// <summary>
+        /// 查询用户的登录状态
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="devicdId">选项</param>
+        /// <returns></returns>
+        public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
+        {
+            return await this.Users.CheckLoginStatus(userId, appId, devicdId);
         }
     }
 }

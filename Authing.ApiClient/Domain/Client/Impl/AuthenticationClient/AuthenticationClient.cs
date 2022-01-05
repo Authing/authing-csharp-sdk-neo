@@ -8,7 +8,6 @@ using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
 using Newtonsoft.Json;
-using Authing.ApiClient.Extensions;
 using System.Collections.Generic;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Domain.Model.Management.Roles;
@@ -82,7 +81,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 throw new Exception("不合法的 accessToken");
             } 
             return userId;
-            //return null;
         }
 
         /// <summary>
@@ -376,11 +374,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 {nameof(phone), phone }
             });
 
-            await Post<CommonMessage>("api/v2/sms/send", new Dictionary<string, string>
-            {
-                {nameof(phone), phone }
-            });
-
             CommonMessage ms = new CommonMessage()
             {
                 Code = res.Code,
@@ -389,7 +382,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return ms;
         }
 
-
+        [Obsolete("此方法已弃用")]
         /// <summary>
         /// 通过邮箱登录
         /// </summary>
@@ -399,7 +392,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="captchaCode">人机验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        /// TODO: 下个大版本去除
         public async Task<User> LoginByEmail(string email,
                                              string password,
                                              bool autoRegister = false,
@@ -467,7 +459,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="captchaCode">人机验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        /// TODO: 下个大版本去除
+        [Obsolete("此方法已弃用")]
         public async Task<User> LoginByUsername(string username,
                                                 string password,
                                                 bool autoRegister = false,
@@ -526,6 +518,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return res.Data.Result;
         }
 
+
         /// <summary>
         /// 通过手机号验证码登录
         /// </summary>
@@ -534,7 +527,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="autoRegister">自动注册</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        /// TODO: 下一个大版本去除
+        [Obsolete("此方法已弃用")]
         public async Task<User> LoginByPhoneCode(string phone,
                                                  string code,
                                                  bool autoRegister = false)
@@ -599,7 +592,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="captchaCode">人机验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        /// TODO：下个大版本去除
+        [Obsolete("此方法已弃用")]
         public async Task<User> LoginByPhonePassword(string phone,
                                                      string password,
                                                      bool autoRegister = false,
@@ -891,19 +884,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             });
 
             return res.Data;
-
-            // TODO： 返回值是否合适
-            //await Host.AppendPathSegment("api/v2/users/link").WithHeaders(GetHeaders()).PostJsonAsync(new
-            //{
-            //    primaryUserToken,
-            //    secondaryUserToken,
-            //},
-            //cancellationToken);
-            //return new CommonMessage
-            //{
-            //    Code = 200,
-            //    Message = "绑定成功"
-            //};
         }
 
         /// <summary>
@@ -922,20 +902,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             });
 
             return res.Data;
-
-
-            // TODO： 返回值是否合适
-            //await Host.AppendPathSegment("api/v2/users/unlink").WithHeaders(GetHeaders()).PostJsonAsync(new
-            //{
-            //    primaryUserToken,
-            //    provider,
-            //},
-            //cancellationToken);
-            //return new CommonMessage
-            //{
-            //    Code = 200,
-            //    Message = "解绑成功"
-            //};
         }
 
         /// <summary>
@@ -973,7 +939,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="emailCode">邮箱验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> BindEamil(string email, string emailCode)
+        public async Task<User> BindEmail(string email, string emailCode)
         {
             var param = new BindEmailParam(email, emailCode);
             var res = await Request<BindEmailResponse>(param.CreateRequest());
@@ -1105,28 +1071,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return resUdv;
         }
 
-        // [Obsolete("该方法已经弃用")]
-        /// <summary>
-        /// 注销
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        // public async Task Logout()
-        // {
-        //     await CheckLoggedIn();
-        //     var param = new UpdateUserParam(
-        //         new UpdateUserInput()
-        //         {
-        //             TokenExpiredAt = "0",
-        //         }
-        //      )
-        //     {
-        //         Id = User.Id,
-        //     };
-        //     await Request<UpdateUserResponse>(param.CreateRequest(), cancellationToken);
-        //     User = null;
-        // }
-
         /// <summary>
         /// 用户是否进行登录，登录返回用户信息，没有登录则抛出错误
         /// </summary>
@@ -1180,7 +1124,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="password">LDAP 用户密码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        /// TODO: 下个大版本去除
+        [Obsolete("此方法已弃用")]
         public async Task<User> LoginByLdap(string username, string password)
         {
             var res = await Post<User>("api/v2/ldap/verify-user", new Dictionary<string, string>
@@ -1192,20 +1136,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             SetCurrentUser(res.Data);
 
             return res.Data;
-
-
-
-            //var res = await Host.AppendPathSegment("api/v2/ldap/verify-user").WithHeaders(GetHeaders()).PostJsonAsync(
-            //    new
-            //    {
-            //        username,
-            //        password
-            //    },
-            //    cancellationToken
-            //);
-            //var user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(res.ResponseMessage));
-            //SetCurrentUser(user);
-            //return user;
         }
 
         // TODO: 缺少 loginByLdap 重载方法
@@ -1219,17 +1149,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>User</returns>
         public async Task<User> LoginByAd(string username, string password)
         {
-            //var firstLevelDomain = Url.Parse(Host).Host;
-
             var firstLevelDomain = new Uri(Host).Host;
-
-            //var websocketHost = Options.WebsocketHost ?? $"https://ws.{firstLevelDomain}";
-            //var user = await websocketHost.AppendPathSegment("api/v2/ldap/verify-user").WithHeaders(GetHeaders()).PostJsonAsync(new
-            //{
-            //    username,
-            //    password
-            //},
-            //    cancellationToken).ReceiveJson<User>();
 
             var result = await Post<User>("api/v2/ldap/verify-user", new Dictionary<string, string>
             {
@@ -1319,11 +1239,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var result = await Get<SecurityLevel>("api/v2/users/me/security-level", null);
             return result.Data;
-
-
-            // TODO: 注意返回类型转换
-            //var res = await Host.AppendPathSegment("api/v2/users/me/security-level").WithHeaders(GetHeaders()).GetJsonAsync<SecurityLevel>(cancellationToken);
-            //return res;
         }
 
         /// <summary>
@@ -1359,8 +1274,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>PasswordSecurityLevel</returns>
         public PasswordSecurityLevel ComputedPasswordSecurityLevel(string password)
         {
-            // TODO: 正则需要额外注意一下
-
             var higLevel = new Regex(@"(?=.*[0-9])                     #必须包含数字
                                        (?=.*[a-z])                  #必须包含小写或大写字母
                                        (?=([\x21-\x7e]+)[^a-zA-Z0-9])  #必须包含特殊符号
@@ -1441,16 +1354,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var result = await Get<ListApplicationsResponse>($"api/v2/users/me/applications/allowed/?page={_params.Page}&limit={_params.Limit}", null);
 
             return result.Data;
-
-            // TODO: 注意返回类型转换
-            //_params ??= new ListParams();
-            //var res = await Host.AppendPathSegment(
-            //    $"api/v2/users/me/applications/allowed").SetQueryParams(new
-            //    {
-            //        page = _params.Page,
-            //        limit = _params.Limit
-            //    }).WithHeaders(GetHeaders()).GetJsonAsync<ListApplicationsRes>(cancellationToken);
-            //return res;
         }
 
         public void SetLang(LangEnum lang)

@@ -27,8 +27,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         public async Task<IMfaAssociation> AssosicateMfaAuthenticator(AssosicateMfaAuthenticatorParam parameter)
         {
-            var result = await PostRaw<AssosicateMfaAuthenticatorResponse>("api/v2/mfa/totp/associate", parameter.ConvertJson());
-            return result.Data.Result;
+            var result = await PostRaw<IMfaAssociation>("api/v2/mfa/totp/associate", parameter.ConvertJson(),parameter.MfaToken);
+            return result.Data;
         }
 
         public async Task<CommonMessage> DeleteMfaAuthenticator()
@@ -40,40 +40,39 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<CommonMessage> ConfirmAssosicateMfaAuthenticator(ConfirmAssosicateMfaAuthenticatorParam parameter)
         {
 
-            var result = await PostRaw<ConfirmAssosicateMfaAuthenticatorResponse>("api/v2/mfa/totp/associate/confirm", parameter.ConvertJson());
+            var result = await PostRaw<ConfirmAssosicateMfaAuthenticatorResponse>("api/v2/mfa/totp/associate/confirm", parameter.ConvertJson(),parameter.MfaToken);
 
             return result.Data.Result;
         }
 
         public async Task<User> VerifyTotpMfa(VerifyTotpMfaParam verifyTotpMfaParam)
         {
-            var result = await PostRaw<VerifyTotpMfaResponse>("api/v2/mfa/totp/verify", verifyTotpMfaParam.ConvertJson());
-
-            return result.Data.Result;
+            var result = await PostRaw<User>("api/v2/mfa/totp/verify", verifyTotpMfaParam.ConvertJson(), verifyTotpMfaParam.MfaToken);
+            return result.Data;
         }
 
         public async Task<User> VerifyAppSmsMfa(VerifyAppSmsMfaParam verifyAppSmsMfaParam)
         {
-            var result = await PostRaw<VerifyAppSmsMfaResponse>("api/v2/applications/mfa/sms/verify", verifyAppSmsMfaParam.ConvertJson());
-            return result.Data.Result;
+            var result = await PostRaw<User>("api/v2/applications/mfa/sms/verify", verifyAppSmsMfaParam.ConvertJson(), verifyAppSmsMfaParam.MfaToken);
+            return result.Data;
         }
 
         public async Task<User> VerifyAppEmailMfa(VerifyAppEmailMfaParam verifyAppEmailMfaParam)
         {
-            var result = await PostRaw<VerifyAppEmailMfaResponse>("api/v2/applications/mfa/email/verify", verifyAppEmailMfaParam.ConvertJson());
-            return result.Data.Result;
+            var result = await PostRaw<User>("api/v2/applications/mfa/email/verify", verifyAppEmailMfaParam.ConvertJson(),verifyAppEmailMfaParam.MfaToken);
+            return result.Data;
         }
 
         public async Task<bool> PhoneOrEmailBindable(PhoneOrEmailBindableParam phoneOrEmailBindableParam)
         {
-            var result = await PostRaw<PhoneOrEmailBindableResponse>("api/v2/applications/mfa/check", phoneOrEmailBindableParam.ConvertJson());
+            var result = await PostRaw<PhoneOrEmailBindableResponse>("api/v2/applications/mfa/check", phoneOrEmailBindableParam.ConvertJson(), phoneOrEmailBindableParam.MfaToken);
             return result.Data.Result;
         }
 
         public async Task<User> VerifyTotpRecoveryCode(VerifyTotpRecoveryCodeParam verifyTotpRecoveryCodeParam)
         {
-            var result = await PostRaw<VerifyTotpRecoveryCodeResponse>("api/v2/mfa/totp/recovery", verifyTotpRecoveryCodeParam.ConvertJson());
-            return result.Data.Result;
+            var result = await PostRaw<User>("api/v2/mfa/totp/recovery", verifyTotpRecoveryCodeParam.ConvertJson(), verifyTotpRecoveryCodeParam.MfaToken);
+            return result.Data;
         }
 
         public async Task<User> AssociateFaceByUrl(AssociateFaceByUrlParams options)

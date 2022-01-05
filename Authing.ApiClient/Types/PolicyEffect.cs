@@ -13,4 +13,10 @@ namespace Authing.ApiClient.Types
         [JsonProperty("DENY")]
         DENY
     }
+
+    public enum DefaultStrategyEnum
+    {
+        ALLOW_ALL,
+        DENY_ALL
+    }
 }

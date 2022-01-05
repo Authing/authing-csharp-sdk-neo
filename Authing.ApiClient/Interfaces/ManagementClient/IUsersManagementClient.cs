@@ -12,6 +12,7 @@ using Authing.ApiClient.Domain.Model.Management.Department;
 using Authing.ApiClient.Domain.Model.Management.AuthorizedResources;
 using Authing.ApiClient.Domain.Model.Management.UserAction;
 using Authing.ApiClient.Types;
+using Authing.ApiClient.Infrastructure.GraphQL;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
 {
@@ -260,5 +261,33 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="sendFirstLoginVerifyEmailParam">选项</param>
         /// <returns></returns>
         Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam);
+
+        /// <summary>
+        /// 批量导入用户
+        /// </summary>
+        /// <param name="userInfos">用户信息列表</param>
+        /// <returns></returns>
+        Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos);
+
+        /// <summary>
+        /// 获取用户所在租户
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <returns></returns>
+        Task<User> GetUserTenants(string userId);
+
+        /// <summary>
+        /// 给用户绑定一个身份
+        /// </summary>
+        /// <param name="option">选项</param>
+        /// <returns></returns>
+        Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option);
+
+        /// <summary>
+        /// 解除用户某个身份源下的所有身份
+        /// </summary>
+        /// <param name="option">选项</param>
+        /// <returns></returns>
+        Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option);
     }
 }

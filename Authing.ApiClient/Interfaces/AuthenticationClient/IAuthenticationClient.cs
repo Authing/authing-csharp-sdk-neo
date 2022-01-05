@@ -10,8 +10,6 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
 {
     public interface IAuthenticationClient
     {
-        User User { get; set; }
-
         /// <summary>
         /// 检查登录状态
         /// </summary>
@@ -430,7 +428,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="emailCode">邮箱验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> BindEamil(string email, string emailCode);
+        Task<User> BindEmail(string email, string emailCode);
 
         /// <summary>
         /// 取消绑定的邮箱
@@ -570,6 +568,10 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns>HttpResponseMessage</returns>
         Task<ListApplicationsResponse> ListApplications(ListParams _params = null);
 
+        /// <summary>
+        /// 设置语言
+        /// </summary>
+        /// <param name="lang"></param>
         void SetLang(LangEnum lang);
 
         /// <summary>

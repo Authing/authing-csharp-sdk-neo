@@ -39,7 +39,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             CreateUserInput userInfo,
             CreateUserOption createUserOption = null)
         {
-            //userInfo.Password = client.Encrypt(userInfo.Password);
+            userInfo.Password = EncryptHelper.RsaEncryptWithPublic(userInfo.Password, client.PublicKey);
             var param = new CreateUserParam(userInfo)
             {
                 KeepPassword = createUserOption?.KeepPassword,
@@ -383,13 +383,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<PaginatedOrgsAndNodes> ListOrgs(string userId)
         {
-            var res = await client.Host.AppendPathSegment($"api/v2/users/{userId}/orgs").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).GetJsonAsync<ListOrgsResponse>();
+            //var res = await client.Host.AppendPathSegment($"api/v2/users/{userId}/orgs").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).GetJsonAsync<ListOrgsResponse>();
+            var res = await client.Get<ListOrgsResponse>($"api/v2/users/{userId}/orgs", new GraphQLRequest());
             if (res.Code == 200)
             {
                 var result = new PaginatedOrgsAndNodes()
                 {
-                    TotalCount = res.Data.Count(),
-                    List = res.Data
+                    TotalCount = res.Data.Data.Count(),
+                    List = res.Data.Data
                 };
                 return result;
             }
@@ -586,11 +587,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             //{
             //    userIds
             //}).ReceiveJson<CommonMessage>();
-            //return new CommonMessage
-            //{
-            //    Code = 200,
-            //    Message = "强制下线成功"
-            //};
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/kick", new Dictionary<string, object>() { { "userIds", userIds } });
+            Console.WriteLine(res);
+            return new CommonMessage
+            {
+                Code = 200,
+                Message = "强制下线成功"
+            };
         }
 
         /// <summary>
@@ -622,14 +625,23 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
         {
-            var res = await client.Host.AppendPathSegment("api/v2/users/login-status").
-            WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).SetQueryParams(new
+            //var res = await client.Host.AppendPathSegment("api/v2/users/login-status").
+            //WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).SetQueryParams(new
+            //{
+            //    userId,
+            //    appId,
+            //    devicdId
+            //}).GetJsonAsync<CheckLoginStatusRes>();
+            var query = $"?userId={userId}";
+            if (appId != null) {
+                query += $"&appId={appId}";
+            }
+            if (devicdId != null)
             {
-                userId,
-                appId,
-                devicdId
-            }).GetJsonAsync<CheckLoginStatusRes>();
-            return res;
+                query += $"&devicdId={devicdId}";
+            }
+            var res = await client.Get<CheckLoginStatusRes>($"api/v2/users/login-status{query}", new GraphQLRequest());
+            return res.Data;
         }
 
         /// <summary>
@@ -639,49 +651,49 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null)
         {
-            var dic = new Dictionary<string, object>() { };
-            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("ClientIp") != null)
-            {
-                dic["clientip"] = listUserActionsParam.ClientIp;
-            }
-            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("OperationNames") != null)
-            {
-                dic["operation_name"] = listUserActionsParam.OperationNames;
-            }
-            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("UserIds") != null)
-            {
-                dic["operator_arn"] = listUserActionsParam.UserIds.Select(userId => $"arn:cn:authing:{client.Options.UserPoolId}:user:${userId}").ToArray();
-            }
-            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("Page") != null)
-            {
-                dic["page"] = listUserActionsParam.Page;
-            }
-            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("Limit") != null)
-            {
-                dic["limit"] = listUserActionsParam.Limit;
-            }
+            var query = "";
             if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("ExcludeNonAppRecords") != null)
             {
-                dic["exclude_non_app_records"] = listUserActionsParam.ExcludeNonAppRecords;
+                query += $"?exclude_non_app_records={listUserActionsParam.ExcludeNonAppRecords}";
             }
             else
             {
-                dic["exclude_non_app_records"] = "1";
+                query += $"?exclude_non_app_records=1";
+            }
+            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("ClientIp") != null)
+            {
+                query += $"&clientip={listUserActionsParam.ClientIp}";
+            }
+            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("OperationNames") != null)
+            {
+                query += $"&operation_name={listUserActionsParam.OperationNames}";
+            }
+            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("UserIds") != null)
+            {
+                query += $"&operator_arn={listUserActionsParam.UserIds.Select(userId => $"arn:cn:authing:{client.Options.UserPoolId}:user:${userId}").ToArray()}";
+            }
+            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("Page") != null)
+            {
+                query += $"&page={listUserActionsParam.Page}";
+            }
+            if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("Limit") != null)
+            {
+                query += $"&limit={listUserActionsParam.Limit}";
             }
             if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("AppIds") != null)
             {
-                dic["app_id"] = listUserActionsParam.AppIds;
+                query += $"&app_id={listUserActionsParam.AppIds}";
             }
             if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("Start") != null)
             {
-                dic["start"] = listUserActionsParam.Start;
+                query += $"&start={listUserActionsParam.Start}";
             }
             if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("End") != null)
             {
-                dic["end"] = listUserActionsParam.End;
+                query += $"&end={listUserActionsParam.End}";
             }
-            var res = await client.Host.AppendPathSegment("api/v2/analysis/user-action").SetQueryParams(dic).WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).GetJsonAsync<ListUserActionsResObject>();
-            if (res.Data.TotalCount == 0)
+            var res = await client.Get<ListUserActionsResObject>("api/v2/analysis/user-action", new GraphQLRequest());
+            if (res.Data.Data.TotalCount == 0)
             {
                 var resEmpty = new ListUserActionsRealRes()
                 {
@@ -690,7 +702,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
                 return resEmpty;
             }
-            var list = res.Data.List;
+            var list = res.Data.Data.List;
             var resList = list.Select(log => new UserActionRes
             {
                 UserPoolId = log.UserPoolId,
@@ -707,7 +719,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }).ToArray();
             var resReal = new ListUserActionsRealRes()
             {
-                TotalCount = res.Data.TotalCount,
+                TotalCount = res.Data.Data.TotalCount,
                 List = resList
             };
             return resReal;
@@ -723,6 +735,89 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = sendFirstLoginVerifyEmailParam;
             var res = await client.Post<SendFirstLoginVerifyEmailResponse>(param.CreateRequest());
             return res.Data;
+        }
+
+        /// <summary>
+        /// 批量导入用户
+        /// </summary>
+        /// <param name="userInfos">用户信息列表</param>
+        /// <returns></returns>
+        public async Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos)
+        {
+            if (userInfos.Count() > 100)
+            {
+                return new CreateUsersRes()
+                {
+                    Code = 500,
+                    Message = "每次创建用户不能多于 100 个"
+                };
+            }
+            foreach (var item in userInfos)
+            {
+                if (item.Gender == null)
+                {
+                    item.Gender = "U";
+                }
+            }
+            //var res = await client.Host.AppendPathSegment("api/v2/users/create/batch").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
+            //{
+            //    users = userInfos,
+            //}).ReceiveJson<CreateUsersRes>();
+            var res = await client.PostRaw<CreateUsersRes>("api/v2/users/create/batch", new Dictionary<string,object>() {
+                { "users", userInfos }
+            });
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 获取用户所在租户
+        /// </summary>
+        /// <param name="userId">用户 ID</param>
+        /// <returns></returns>
+        public async Task<User> GetUserTenants(string userId)
+        {
+            var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest());
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 给用户绑定一个身份
+        /// </summary>
+        /// <param name="option">选项</param>
+        /// <returns></returns>
+        public async Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option)
+        {
+            var body = new Dictionary<string, object>() {
+                { "userId", option.UserId },
+                { "userIdInIdp", option.UserIdInIdp },
+                { "isSocial", option.IsSocial },
+                { "identifier", option.Identifier },
+            };
+            if (option.Type != null) {
+                body.Add("type", option.Type);
+            }
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body);
+            return res;
+        }
+
+        /// <summary>
+        /// 解除用户某个身份源下的所有身份
+        /// </summary>
+        /// <param name="option">选项</param>
+        /// <returns></returns>
+        public async Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option)
+        {
+            var body = new Dictionary<string, object>() {
+                { "userId", option.UserId },
+                { "isSocial", option.IsSocial },
+                { "identifier", option.Identifier },
+            };
+            if (option.Type != null)
+            {
+                body.Add("type", option.Type);
+            }
+            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body);
+            return res;
         }
     }
 }
