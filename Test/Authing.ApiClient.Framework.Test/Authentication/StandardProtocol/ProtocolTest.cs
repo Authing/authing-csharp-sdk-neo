@@ -41,7 +41,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             authenticationClient.Options.RedirectUri =
                 "https://console.authing.cn/console/get-started/6172807001258f603126a78a";
             //authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.CLIENT_SECRET_POST;
-            var res = await authenticationClient.GetAccessTokenByCode("DbehGzC_C17T0xzEC0u6iAU_3QVaX_iKTryJnQAANLn");
+            var res = await authenticationClient.GetAccessTokenByCode("kqEay2ooIPEPeVF7nzUCLI3D437LIBmZhQZNa7o_jTx");
             Assert.NotNull(res);
         }
 

@@ -143,7 +143,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         { "code", code },
                         { "redirect_uri", Options.RedirectUri },
                         { "code_verifier", ""}
-                    }.ConvertJson(), GetAuthHeaders());
+                    }.ConvertJson(), GetTestHeader());
                     return result.Data;
                 case TokenEndPointAuthMethod.CLIENT_SECRET_BASIC:
                     var headers = GetAuthHeaders();
