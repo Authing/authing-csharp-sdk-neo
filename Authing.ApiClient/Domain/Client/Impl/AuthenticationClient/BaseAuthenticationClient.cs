@@ -159,7 +159,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         protected async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url,
-            string serializedata, Dictionary<string, string>? headers = null, HttpMethod method = null!,
+            string serializedata = "", Dictionary<string, string>? headers = null, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
             var amphitheaters = GetAuthHeaders(true);

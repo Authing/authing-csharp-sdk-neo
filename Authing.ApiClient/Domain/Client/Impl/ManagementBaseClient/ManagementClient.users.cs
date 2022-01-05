@@ -579,8 +579,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> Kick(IEnumerable<string> userIds)
         {
-            var result = await client.PostRaw<CommonMessage>("api/v2/users/kick", new Dictionary<string, object> { { nameof(userIds), userIds } });
-            return result.Data;
+            var result = await client.RequestCustomData<CommonMessage>("api/v2/users/kick", new Dictionary<string, object> { { nameof(userIds), userIds } }.ConvertJson(),contenttype: ContentType.JSON);
+            
+            return new CommonMessage(){Code =result.Code,Message = result.Message};
             //await client.Host.AppendPathSegment("api/v2/users/kick").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
             //{
             //    userIds

@@ -7,6 +7,7 @@ using Authing.ApiClient.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Utils;
 
@@ -44,13 +45,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<NameSpace> CreateNamespace(string code, string name, string description)
             {
-                var res = await client.Post<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}",
+                //var res = await client.Post<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}",
+                //    new Dictionary<string, string>()
+                //    {
+                //        { nameof(code), code },
+                //        { nameof(name), name },
+                //        { nameof(description), description },
+                //    });
+                var res = await client.RequestCustomData<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}",
                     new Dictionary<string, string>()
                     {
                         { nameof(code), code },
                         { nameof(name), name },
                         { nameof(description), description },
-                    });
+                    }.ConvertJson());
                 return res.Data ?? null;
             }
 
@@ -82,13 +90,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 if (updateNamespaceParam == null) throw new ArgumentNullException(nameof(updateNamespaceParam));
 
-                var res = await client.Put<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}/{nameSpaceId}",
+                //var res = await client.Put<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}/{nameSpaceId}",
+                //    new Dictionary<string, string>()
+                //    {
+                //        { nameof(updateNamespaceParam.Code), updateNamespaceParam.Code },
+                //        { nameof(updateNamespaceParam.Name), updateNamespaceParam.Name },
+                //        { nameof(updateNamespaceParam.Description), updateNamespaceParam.Description }
+                //    });
+
+                var res = await client.RequestCustomData<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}/{nameSpaceId}",
                     new Dictionary<string, string>()
                     {
                         { nameof(updateNamespaceParam.Code), updateNamespaceParam.Code },
                         { nameof(updateNamespaceParam.Name), updateNamespaceParam.Name },
                         { nameof(updateNamespaceParam.Description), updateNamespaceParam.Description }
-                    });
+                    }.ConvertJson(), method: HttpMethod.Put, contenttype: ContentType.JSON);
 
                 return res.Data ?? null;
             }
@@ -100,8 +116,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<int> DeleteNamespace(int code)
             {
-                var res = await client.Delete<object>($"api/v2/resource-namespace/{client.UserPoolId}/{code}",
-                    new GraphQLRequest());
+                //var res = await client.Delete<object>($"api/v2/resource-namespace/{client.UserPoolId}/{code}",
+                //    new GraphQLRequest());
+                var res = await client.RequestCustomData<object>(
+                    $"api/v2/resource-namespace/{client.UserPoolId}/{code}", method: HttpMethod.Delete);
                 return res.Code;
             }
 
@@ -150,7 +168,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 }
 
 
-                var res = await client.Post<Resources>("api/v2/resources",
+                //var res = await client.Post<Resources>("api/v2/resources",
+                //    new Dictionary<string, string>()
+                //    {
+                //        {nameof(createResourceParam.Code).ToLower(),createResourceParam.Code},
+                //        {nameof(createResourceParam.Actions).ToLower(),createResourceParam.Actions.ConvertJson()},
+                //        {nameof(createResourceParam.ApiIdentifier).ToLower(),createResourceParam.ApiIdentifier ?? ""},
+                //        {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
+                //        {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
+                //        {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
+                //    });
+                var res = await client.RequestCustomData<Resources>("api/v2/resources",
                     new Dictionary<string, string>()
                     {
                         {nameof(createResourceParam.Code).ToLower(),createResourceParam.Code},
@@ -159,7 +187,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
                         {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
                         {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
-                    });
+                    }.ConvertJson());
 
                 return res.Data ?? null;
             }
@@ -209,7 +237,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 if (options == null) throw new ArgumentNullException(nameof(options));
                 if (string.IsNullOrWhiteSpace(options.NameSpace)) throw new ArgumentException($"Parameter {nameof(options.NameSpace)} is request!");
                 string endPoint = $"api/v2/resources/{code}";
-                var result = await client.Post<Resources>(endPoint,
+                //var result = await client.Post<Resources>(endPoint,
+                //    new Dictionary<string, string>()
+                //    {
+                //        {nameof(options.Code).ToLower(),code},
+                //        {nameof(options.Actions).ToLower(),options.Actions.ConvertJson()},
+                //        {nameof(options.ApiIdentifier).ToLower(),options.ApiIdentifier ?? ""},
+                //        {nameof(options.NameSpace).ToLower(),options.NameSpace},
+                //        {nameof(options.Type).ToLower(),options.Type.ToString()},
+                //        {nameof(options.Description).ToLower(),options.Description},
+                //    });
+                var result = await client.RequestCustomData<Resources>(endPoint,
                     new Dictionary<string, string>()
                     {
                         {nameof(options.Code).ToLower(),code},
@@ -218,7 +256,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(options.NameSpace).ToLower(),options.NameSpace},
                         {nameof(options.Type).ToLower(),options.Type.ToString()},
                         {nameof(options.Description).ToLower(),options.Description},
-                    });
+                    }.ConvertJson());
                 return result.Data ?? null;
             }
 
@@ -231,7 +269,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<bool> DeleteResource(string code, string namespacecode)
             {
                 string endPoint = $"api/v2/resources/{code}?namespace={namespacecode}";
-                var result = await client.Delete<bool>(endPoint, new GraphQLRequest());
+                //var result = await client.Delete<bool>(endPoint, new GraphQLRequest());
+                var result = await client.RequestCustomData<bool>(endPoint, method: HttpMethod.Delete);
                 return result.Code == 200;
             }
 
@@ -272,8 +311,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 options.Resource.CheckParameter();
                 string endPoint = "api/v2/acl/revoke-resource";
-                var result = await client.PostRaw<CommonMessage>(endPoint,options.ConvertJson());
-                return result.Data ?? null;
+                //var result = await client.PostRaw<CommonMessage>(endPoint,options.ConvertJson());
+                var result = await client.RequestCustomData<CommonMessage>(endPoint, options.ConvertJson(),
+                    contenttype: ContentType.JSON);
+                return new CommonMessage() { Code = result.Code, Message = result.Message };
             }
 
             /// <summary>
@@ -386,23 +427,40 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<ProgrammaticAccessAccount> CreateProgrammaticAccessAccount(string appId, CreateProgrammaticAccessAccountParam createProgrammaticAccessAccountParam)
             {
                 string endPoint = $"api/v2/applications/{appId}/programmatic-access-accounts";
-                var res = await client.Post<ProgrammaticAccessAccount>(endPoint,
+                //var res = await client.Post<ProgrammaticAccessAccount>(endPoint,
+                //    new Dictionary<string, string>()
+                //    {
+                //        {
+                //            nameof(createProgrammaticAccessAccountParam.AppId).ToLower(),
+                //            createProgrammaticAccessAccountParam.AppId
+                //        },
+                //        {
+                //            nameof(createProgrammaticAccessAccountParam.Remarks).ToLower(),
+                //            createProgrammaticAccessAccountParam.Remarks
+                //        },
+                //        {
+                //            //token_lifetime
+                //            nameof(createProgrammaticAccessAccountParam.Token_lifetime).ToLower(),
+                //            createProgrammaticAccessAccountParam.Token_lifetime.ToString()
+                //        }
+                //    });
+                var res = await client.RequestCustomData<ProgrammaticAccessAccount>(endPoint,
                     new Dictionary<string, string>()
-                    {
                         {
-                            nameof(createProgrammaticAccessAccountParam.AppId).ToLower(),
-                            createProgrammaticAccessAccountParam.AppId
-                        },
-                        {
-                            nameof(createProgrammaticAccessAccountParam.Remarks).ToLower(),
-                            createProgrammaticAccessAccountParam.Remarks
-                        },
-                        {
-                            //token_lifetime
-                            nameof(createProgrammaticAccessAccountParam.Token_lifetime).ToLower(),
-                            createProgrammaticAccessAccountParam.Token_lifetime.ToString()
-                        }
-                    });
+                            {
+                                nameof(createProgrammaticAccessAccountParam.AppId).ToLower(),
+                                createProgrammaticAccessAccountParam.AppId
+                            },
+                            {
+                                nameof(createProgrammaticAccessAccountParam.Remarks).ToLower(),
+                                createProgrammaticAccessAccountParam.Remarks
+                            },
+                            {
+                                //token_lifetime
+                                nameof(createProgrammaticAccessAccountParam.Token_lifetime).ToLower(),
+                                createProgrammaticAccessAccountParam.Token_lifetime.ToString()
+                            }
+                        }.ConvertJson());
                 return res.Data ?? null;
             }
 
@@ -411,20 +469,27 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 string endPoint =
                     $"v2/applications/programmatic-access-accounts?id={programmaticAccessAccountId}";
 
-                var result = await client.Delete<RestfulResponse<bool>>(endPoint, new GraphQLRequest());
-                return result.Data.Code == 200;
+                //var result = await client.Delete<RestfulResponse<bool>>(endPoint, new GraphQLRequest());
+                var result = await client.RequestCustomData<bool>(endPoint, method: HttpMethod.Delete);
+                return result.Code == 200;
             }
 
             public async Task<ProgrammaticAccessAccount> EnableProgrammaticAccessAccount(
                 string programmaticAccessAccountId)
             {
                 string endPoint = "v2/applications/programmatic-access-accounts";
-                var result = await client.Patch<ProgrammaticAccessAccount>(endPoint,
+                //var result = await client.Patch<ProgrammaticAccessAccount>(endPoint,
+                //    new Dictionary<string, string>()
+                //    {
+                //        {"id",programmaticAccessAccountId},
+                //        {"enable","true"}
+                //    });
+                var result = await client.RequestCustomData<ProgrammaticAccessAccount>(endPoint,
                     new Dictionary<string, string>()
                     {
                         {"id",programmaticAccessAccountId},
                         {"enable","true"}
-                    });
+                    }.ConvertJson(), method: new HttpMethod("PATCH"));
                 return result.Data ?? null;
             }
 
@@ -432,12 +497,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 string programmaticAccessAccountId)
             {
                 string endPoint = "v2/applications/programmatic-access-accounts";
-                var result = await client.Post<ProgrammaticAccessAccount>(endPoint,
+                //var result = await client.Post<ProgrammaticAccessAccount>(endPoint,
+                //    new Dictionary<string, string>()
+                //    {
+                //        {"id",programmaticAccessAccountId},
+                //        {"enable","false"}
+                //    });
+                var result = await client.RequestCustomData<ProgrammaticAccessAccount>(endPoint,
                     new Dictionary<string, string>()
                     {
-                        {"id",programmaticAccessAccountId},
-                        {"enable","false"}
-                    });
+                        { "id", programmaticAccessAccountId },
+                        { "enable", "false" }
+                    }.ConvertJson());
                 return result.Data ?? null;
             }
 
@@ -445,11 +516,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 string endPoint = $"api/v2/applications/programmatic-access-accounts";
                 options.Secret ??= AuthingUtils.GenerateRandomString(32);
-                var result = await client.Patch<ProgrammaticAccessAccount>(endPoint, new Dictionary<string, string>()
-                {
-                    {nameof(options.Id).ToLower(),options.Id},
-                    {nameof(options.Secret).ToLower(),options.Secret}
-                });
+                //var result = await client.Patch<ProgrammaticAccessAccount>(endPoint, new Dictionary<string, string>()
+                //{
+                //    {nameof(options.Id).ToLower(),options.Id},
+                //    {nameof(options.Secret).ToLower(),options.Secret}
+                //});
+                var result = await client.RequestCustomData<ProgrammaticAccessAccount>(endPoint,
+                    new Dictionary<string, string>()
+                    {
+                        {nameof(options.Id).ToLower(),options.Id},
+                        {nameof(options.Secret).ToLower(),options.Secret}
+                    }.ConvertJson(), method: new HttpMethod("PATCH"));
                 return result.Data ?? null;
             }
 
@@ -463,47 +540,68 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<bool> EnableApplicationAccessPolicy(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/enable-effect";
-                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                var result =
+                    await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
+                        contenttype: ContentType.JSON);
                 return result.Code == 200;
             }
 
             public async Task<bool> DisableApplicationAccessPolicy(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/disable-effect";
-                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                var result =
+                    await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
+                        contenttype: ContentType.JSON);
                 return result.Code == 200;
             }
 
             public async Task<bool> DeleteApplicationAccessPolicy(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/revoke";
-                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                var result =
+                    await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
+                        contenttype: ContentType.JSON);
                 return result.Code == 200;
             }
 
             public async Task<bool> AllowAccessApplication(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/allow";
-                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                var result =
+                    await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
+                        contenttype: ContentType.JSON);
                 return result.Code == 200;
             }
 
             public async Task<bool> DenyAccessApplication(AppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/deny";
-                var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
+                var result =
+                    await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
+                        contenttype: ContentType.JSON);
                 return result.Code == 200;
             }
 
             public async Task<Application> UpdateDefaultApplicationAccessPolicy(DefaultAppAccessPolicy options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}";
-                var result = await client.Post<Application>(endPoint,
+                //var result = await client.Post<Application>(endPoint,
+                //    new Dictionary<string, string>()
+                //    {
+                //        {nameof(options.AppId).ToLower(),options.AppId},
+                //        {nameof(options.DefaultStrategy).ToLower(),options.DefaultStrategy.ToString()}
+                //    });
+                var result = await client.RequestCustomData<Application>(endPoint,
                     new Dictionary<string, string>()
                     {
                         {nameof(options.AppId).ToLower(),options.AppId},
                         {nameof(options.DefaultStrategy).ToLower(),options.DefaultStrategy.ToString()}
-                    });
+                    }.ConvertJson());
                 return result.Data ?? null;
             }
         }

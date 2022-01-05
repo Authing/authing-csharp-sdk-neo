@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Authing.ApiClient.Extensions;
 using Flurl;
 using Flurl.Http;
 
@@ -110,7 +111,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {  "filetype","json" },
                 { "file",json}
             };
-            var result = await client.Post<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import", keyValuePairs);
+            //var result = await client.Post<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import", keyValuePairs);
+
+            var result =
+                await client.RequestCustomData<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import",
+                    keyValuePairs.ConvertJson());
 
             return null;
         }

@@ -15,7 +15,7 @@ namespace Authing.ApiClient.Domain.Client
 
         Task<TResponse> PostRaw<TResponse>(string url, string serializedata, Dictionary<string, string> headers);
 
-        Task<TResponse> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null!, HttpMethod method = null!, ContentType contenttype = ContentType.DEFAULT);
+        Task<TResponse> RequestCustomData<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!, ContentType contenttype = ContentType.DEFAULT);
 
     }
 }

@@ -63,7 +63,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             if (logo != null) {
                 keyValuePairs.Add("logo", logo);
             }
-            var result = await client.Post<Application>("api/v2/applications", keyValuePairs);
+            //TODO:方法已更新
+            //var result = await client.Post<Application>("api/v2/applications", keyValuePairs);
+            var result = await client.RequestCustomData<Application>("api/v2/applications", keyValuePairs.ConvertJson());
             return result.Data;
         }
 

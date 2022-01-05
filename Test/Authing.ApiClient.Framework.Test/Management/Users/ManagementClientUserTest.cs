@@ -350,7 +350,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Phone = "17620671314"
             });
             var result = await client.Users.Kick(new string[] { user.Id });
             Assert.Equal(result.Code, 200);

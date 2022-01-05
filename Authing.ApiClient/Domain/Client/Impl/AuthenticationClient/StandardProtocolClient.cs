@@ -289,7 +289,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "grant_type", "refresh_token" },
                 { "refresh_token", refreshToken }
             };
-            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>());
+            var result = await Post<HttpResponseMessage>(api, param,new Dictionary<string, string>());
 
             return result.Data;
         }

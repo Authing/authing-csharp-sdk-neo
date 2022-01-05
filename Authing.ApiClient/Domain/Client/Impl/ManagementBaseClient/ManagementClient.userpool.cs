@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.UserPool;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
+using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces.ManagementClient;
+using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -34,7 +37,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<UserPool> Detail()
             {
-                var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
+                //var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
+                var res = await _client.RequestCustomData<UserPool>("api/v2/userpools/detail", method: HttpMethod.Get);
                 return res.Data ?? null;
             }
 
@@ -57,7 +61,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<IEnumerable<Env>> ListEnv()
             {
-                var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
+                //var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
+                var res = await _client.RequestCustomData<IEnumerable<Env>>("api/v2/env", method: HttpMethod.Get);
                 return res.Data ?? null;
             }
 
@@ -70,11 +75,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<int> AddEnv(string key, object value)
             {
 
-                var result = await _client.Post<Env>("api/v2/env", new Dictionary<string, string>
+                //var result = await _client.Post<Env>("api/v2/env", new Dictionary<string, string>
+                //{
+                //    { "key", key },
+                //  { "value",value.ToString()}
+                //});
+
+                var result = await _client.RequestCustomData<Env>("api/v2/env",new Dictionary<string, string>()
                 {
                     { "key", key },
-                  { "value",value.ToString()}
-                });
+                    { "value", value.ToString() }
+                }.ConvertJson());
 
                 return result.Code;
             }
@@ -86,8 +97,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<int> RemoveEnv(string key)
             {
-                var result = await _client.Delete<Env>($"api/v2/env/{key}", null);
-
+                //var result = await _client.Delete<Env>($"api/v2/env/{key}", null);
+                var result = await _client.RequestCustomData<Env>($"api/v2/env/{key}", method: HttpMethod.Delete);
                 return result.Code;
             }
         }
