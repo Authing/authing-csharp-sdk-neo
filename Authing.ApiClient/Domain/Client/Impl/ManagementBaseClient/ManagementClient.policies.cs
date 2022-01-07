@@ -86,14 +86,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace=nameSpace
             };
 
-            var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest());
+            var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
 
             return result.Data.Result;
         }
 
         public async Task<Policy> Update(UpdatePolicyParam param)
         {
-            var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest());
+            var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             return result.Data.Result;
         }
 
@@ -101,7 +101,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             DeletePolicyParam param = new DeletePolicyParam(code);
 
-            var result = await client.Request<DeletePolicyResponse>(param.CreateRequest());
+            var result = await client.Request<DeletePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             return result.Data.Result;
         }
 
@@ -109,14 +109,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             DeletePoliciesParam param = new DeletePoliciesParam(codeList);
 
-            var result = await client.Request<DeletePoliciesResponse>(param.CreateRequest());
+            var result = await client.Request<DeletePoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return result.Data.Result;
         }
 
-
         public async Task<PaginatedPolicyAssignments> ListAssignments(PolicyAssignmentsParam param)
         {
-            var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest());
+            var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return result.Data.Result;
         }
 
@@ -129,7 +128,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit=limit 
             };
 
-            var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest());
+            var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return result.Data.Result;
         }
 
@@ -141,7 +140,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace=nameSpace
             };
 
-            var result = await client.Request<AddPolicyAssignmentsResponse>(param.CreateRequest());
+            var result = await client.Request<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return result.Data.Result;
         }
 
@@ -153,7 +152,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace=nameSpace
             };
 
-            var result = await client.Request<RemovePolicyAssignmentsResponse>(param.CreateRequest());
+            var result = await client.Request<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
 
             return result.Data.Result;
         }
@@ -166,7 +165,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 NameSpace=nameSpace
             };
 
-            var result = await client.Request<DisableAssignmentResponse>(param.CreateRequest());
+            var result = await client.Request<DisableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             return result.Data.Result;
         }
 
@@ -174,7 +173,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             EnableAssignmentParam param = new EnableAssignmentParam(policy, targetType, targetIdentifier);
 
-            var result = await client.Request<EnableAssignmentResponse>(param.CreateRequest());
+            var result = await client.Request<EnableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
 
             return result.Data.Result;
         }

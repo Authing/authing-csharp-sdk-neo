@@ -58,7 +58,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         { nameof(code), code },
                         { nameof(name), name },
                         { nameof(description), description },
-                    }.ConvertJson());
+                    }.ConvertJson()).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -70,9 +70,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<Namespaces> ListNamespaces(int page = 1, int limit = 10)
             {
-                var res = await client.Get<Namespaces>(
+                var res = await client.RequestCustomData<Namespaces>(
                     $"api/v2/resource-namespace/{client.UserPoolId}?limit={limit}&page={page}"
-                    , new GraphQLRequest());
+                    , method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -104,7 +104,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         { nameof(updateNamespaceParam.Code), updateNamespaceParam.Code },
                         { nameof(updateNamespaceParam.Name), updateNamespaceParam.Name },
                         { nameof(updateNamespaceParam.Description), updateNamespaceParam.Description }
-                    }.ConvertJson(), method: HttpMethod.Put, contenttype: ContentType.JSON);
+                    }.ConvertJson(), method: HttpMethod.Put, contenttype: ContentType.JSON).ConfigureAwait(false);
 
                 return res.Data ?? null;
             }
@@ -119,7 +119,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 //var res = await client.Delete<object>($"api/v2/resource-namespace/{client.UserPoolId}/{code}",
                 //    new GraphQLRequest());
                 var res = await client.RequestCustomData<object>(
-                    $"api/v2/resource-namespace/{client.UserPoolId}/{code}", method: HttpMethod.Delete);
+                    $"api/v2/resource-namespace/{client.UserPoolId}/{code}", method: HttpMethod.Delete).ConfigureAwait(false);
                 return res.Code;
             }
 
@@ -139,7 +139,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 endPoint += $"&limit={(resourceQueryFilter.FetchAll ? "-1" : $"{resourceQueryFilter.Limit}")}";
                 endPoint += $"&page={resourceQueryFilter.Page}";
 
-                var res = await client.Get<ListResourcesRes>(endPoint, new GraphQLRequest());
+                var res = await client.RequestCustomData<ListResourcesRes>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -159,7 +159,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 endPoint += $"&limit={(resourceQueryFilter.FetchAll ? "-1" : $"{resourceQueryFilter.Limit}")}";
                 endPoint += $"&page={resourceQueryFilter.Page}";
 
-                var res = await client.Get<ListResourcesRes>(endPoint, new GraphQLRequest());
+                var res = await client.RequestCustomData<ListResourcesRes>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -207,7 +207,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
                         {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
                         {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
-                    }.ConvertJson());
+                    }.ConvertJson()).ConfigureAwait(false);
 
                 return res.Data ?? null;
             }
@@ -222,7 +222,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 string endPoint = $"api/v2/resources/by-code/{code}";
                 endPoint += string.IsNullOrWhiteSpace(nameSpace) ? "" : $"?namespace={nameSpace}";
-                var resut = await client.Get<Resources>(endPoint, new GraphQLRequest());
+                var resut = await client.RequestCustomData<Resources>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return resut.Data ?? null;
             }
 
@@ -234,7 +234,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<Resources> GetResourceById(string id)
             {
                 string endPoint = $"api/v2/resources/detail?id={id}";
-                var resut = await client.Get<Resources>(endPoint, new GraphQLRequest());
+                var resut = await client.RequestCustomData<Resources>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return resut.Data ?? null;
 
             }
@@ -276,7 +276,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(options.NameSpace).ToLower(),options.NameSpace},
                         {nameof(options.Type).ToLower(),options.Type.ToString()},
                         {nameof(options.Description).ToLower(),options.Description},
-                    }.ConvertJson());
+                    }.ConvertJson()).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
@@ -290,7 +290,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 string endPoint = $"api/v2/resources/{code}?namespace={namespacecode}";
                 //var result = await client.Delete<bool>(endPoint, new GraphQLRequest());
-                var result = await client.RequestCustomData<bool>(endPoint, method: HttpMethod.Delete);
+                var result = await client.RequestCustomData<bool>(endPoint, method: HttpMethod.Delete).ConfigureAwait(false);;
                 return result.Code == 200;
             }
 
@@ -312,7 +312,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Resource = resource,
                     Namespace = nameSpace
                 };
-                var res = await client.Request<AllowResponse>(param.CreateRequest());
+                var res = await client.Request<AllowResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data.Result ?? null;
             }
 
@@ -333,7 +333,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 string endPoint = "api/v2/acl/revoke-resource";
                 //var result = await client.PostRaw<CommonMessage>(endPoint,options.ConvertJson());
                 var result = await client.RequestCustomData<CommonMessage>(endPoint, options.ConvertJson(),
-                    contenttype: ContentType.JSON);
+                    contenttype: ContentType.JSON).ConfigureAwait(false);
                 return new CommonMessage() { Code = result.Code, Message = result.Message };
             }
 
@@ -349,7 +349,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 action.CheckParameter();
                 resource.CheckParameter();
-                var result = await client.Request<IsActionAllowedResponse>(new IsActionAllowedParam(resource, action, userId, namespacecode).CreateRequest());
+                var result = await client.Request<IsActionAllowedResponse>(new IsActionAllowedParam(resource, action, userId, namespacecode).CreateRequest()).ConfigureAwait(false);
                 return result.Data.Result;
             }
 
@@ -374,7 +374,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new ListAuthorizedResourcesParam(targetType, targetIdentifier, namespacecode,
                     options.ResourceType);
-                var result = await client.Request<ListAuthorizedResourcesResponse>(param.CreateRequest());
+                var result = await client.Request<ListAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return result.Data.AuthorizedResources ?? null;
             }
 
@@ -413,7 +413,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Actions = getAuthorizedTargetsOptions.Actions,
                     TargetType = getAuthorizedTargetsOptions.TargetType
                 };
-                var res = await client.Request<AuthorizedTargetsResponse>(param.CreateRequest());
+                var res = await client.Request<AuthorizedTargetsResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data.Result ?? null;
             }
 
@@ -431,7 +431,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Resource = resource,
                     Opts = authorizeResourceOptions
                 };
-                var res = await client.Request<AuthorizeResourceResponse>(param.CreateRequest());
+                var res = await client.Request<AuthorizeResourceResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data.Result ?? null;
             }
 
@@ -439,7 +439,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/programmatic-access-accounts?limit=${options.Limit}&page=${options.Page}";
-                var res = await client.Get<Pagination<ProgrammaticAccessAccount>>(endPoint, new GraphQLRequest());
+                var res = await client.RequestCustomData<Pagination<ProgrammaticAccessAccount>>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -480,7 +480,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                                 nameof(createProgrammaticAccessAccountParam.Token_lifetime).ToLower(),
                                 createProgrammaticAccessAccountParam.Token_lifetime.ToString()
                             }
-                        }.ConvertJson());
+                        }.ConvertJson()).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -490,7 +490,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     $"v2/applications/programmatic-access-accounts?id={programmaticAccessAccountId}";
 
                 //var result = await client.Delete<RestfulResponse<bool>>(endPoint, new GraphQLRequest());
-                var result = await client.RequestCustomData<bool>(endPoint, method: HttpMethod.Delete);
+                var result = await client.RequestCustomData<bool>(endPoint, method: HttpMethod.Delete).ConfigureAwait(false);
                 return result.Code == 200;
             }
 
@@ -509,7 +509,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     {
                         {"id",programmaticAccessAccountId},
                         {"enable","true"}
-                    }.ConvertJson(), method: new HttpMethod("PATCH"));
+                    }.ConvertJson(), method: new HttpMethod("PATCH")).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
@@ -528,7 +528,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     {
                         { "id", programmaticAccessAccountId },
                         { "enable", "false" }
-                    }.ConvertJson());
+                    }.ConvertJson()).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
@@ -546,14 +546,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     {
                         {nameof(options.Id).ToLower(),options.Id},
                         {nameof(options.Secret).ToLower(),options.Secret}
-                    }.ConvertJson(), method: new HttpMethod("PATCH"));
+                    }.ConvertJson(), method: new HttpMethod("PATCH")).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
             public async Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/records?limit={options.Limit}&page={options.Page}";
-                var result = await client.Get<Pagination<ApplicationAccessPolicies>>(endPoint, new GraphQLRequest());
+                var result = await client.RequestCustomData<Pagination<ApplicationAccessPolicies>>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
@@ -563,7 +563,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
                 var result =
                     await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
-                        contenttype: ContentType.JSON);
+                        contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Code == 200;
             }
 
@@ -573,7 +573,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
                 var result =
                     await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
-                        contenttype: ContentType.JSON);
+                        contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Code == 200;
             }
 
@@ -583,7 +583,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
                 var result =
                     await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
-                        contenttype: ContentType.JSON);
+                        contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Code == 200;
             }
 
@@ -593,7 +593,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
                 var result =
                     await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
-                        contenttype: ContentType.JSON);
+                        contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Code == 200;
             }
 
@@ -603,7 +603,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
                 var result =
                     await client.RequestCustomData<bool>(endPoint, options.ConvertJson(),
-                        contenttype: ContentType.JSON);
+                        contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Code == 200;
             }
 
@@ -621,7 +621,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     {
                         {nameof(options.AppId).ToLower(),options.AppId},
                         {nameof(options.DefaultStrategy).ToLower(),options.DefaultStrategy.ToString()}
-                    }.ConvertJson());
+                    }.ConvertJson()).ConfigureAwait(false);
                 return result.Data ?? null;
             }
         }

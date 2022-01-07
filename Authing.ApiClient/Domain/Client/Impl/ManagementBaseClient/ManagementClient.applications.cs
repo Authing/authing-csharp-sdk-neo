@@ -39,7 +39,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<ApplicationList> List(int page = 1, int limit = 10)
         {
-            var res = await client.Get<ApplicationList>($"api/v2/applications?page={page}&limit={limit}", new GraphQLRequest());
+            var res = await client.Get<ApplicationList>($"api/v2/applications?page={page}&limit={limit}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -58,7 +58,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { nameof(identifier), identifier },
                 { nameof(redirectUris), redirectUris },
                 { nameof(logo), logo }
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -69,7 +69,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> Delete(string appId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}", new GraphQLRequest());
+            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}", new GraphQLRequest()).ConfigureAwait(false);
             Console.WriteLine(res);
             return true;
         }
@@ -81,7 +81,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> FindById(string id)
         {
-            var res = await client.Get<Application>($"api/v2/applications/{id}", new GraphQLRequest());
+            var res = await client.Get<Application>($"api/v2/applications/{id}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -108,7 +108,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&type={listResourceOption.Type}";
             }
-            var res = await client.Get<PaginatedResources>($"api/v2/resources{query}", new GraphQLRequest());
+            var res = await client.Get<PaginatedResources>($"api/v2/resources{query}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -141,7 +141,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
                         {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
                         {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
-                });
+                }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -160,7 +160,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { nameof(updateResourceParam.Actions), updateResourceParam.Actions },
                 { nameof(updateResourceParam.Description), updateResourceParam.Description },
                 { nameof(updateResourceParam.Type), updateResourceParam.Type }
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -172,7 +172,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> DeleteResource(string appId, string code)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/resources/${code}?namespace={appId}", new GraphQLRequest());
+            var res = await client.Delete<CommonMessage>($"api/v2/resources/${code}?namespace={appId}", new GraphQLRequest()).ConfigureAwait(false);
             return true;
         }
 
@@ -185,7 +185,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<ApplicationAccessPolicies> GetAccessPolicies(string appId, AppAccessPolicyQueryFilter appAccessPolicyQueryFilter)
         {
             var query = $"?page={appAccessPolicyQueryFilter.Page}&limit={appAccessPolicyQueryFilter.Limit}";
-            var res = await client.Get<ApplicationAccessPolicies>($"api/v2/applications/{appId}/authorization/records{query}", new GraphQLRequest());
+            var res = await client.Get<ApplicationAccessPolicies>($"api/v2/applications/{appId}/authorization/records{query}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -210,8 +210,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            });
-            Console.WriteLine(res);
+            }).ConfigureAwait(false);
             return new CommonMessage() {
                 Code = 200,
                 Message = "启用应用访问控制策略成功"
@@ -239,8 +238,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            });
-            Console.WriteLine(res);
+            }).ConfigureAwait(false);
             return new CommonMessage()
             {
                 Code = 200,
@@ -269,8 +267,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            });
-            Console.WriteLine(res);
+            }).ConfigureAwait(false);
             return new CommonMessage()
             {
                 Code = 200,
@@ -299,8 +296,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            });
-            Console.WriteLine(res);
+            }).ConfigureAwait(false);
             return new CommonMessage()
             {
                 Code = 200,
@@ -329,8 +325,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            });
-            Console.WriteLine(res);
+            }).ConfigureAwait(false);
             return new CommonMessage()
             {
                 Code = 200,
@@ -351,7 +346,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.PostRaw<PublicApplication>($"api/v2/applications/{appId}", new Dictionary<string, object>() {
                 { "permissionStrategy", permissionStrategy }
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -372,7 +367,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = description,
                 Namespace = appId
             };
-            var res = await client.Post<CreateRoleResponse>(param.CreateRequest());
+            var res = await client.Post<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -390,7 +385,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = appId
             };
-            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -408,7 +403,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = appId
             };
-            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -428,7 +423,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = updateRoleOptions.Description,
                 NewCode = updateRoleOptions.NewCode,
             };
-            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest());
+            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -447,7 +442,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = appId
             };
-            var res = await client.Post<RoleResponse>(param.CreateRequest());
+            var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -468,7 +463,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
                 Namespace = appId
             };
-            var res = await client.Post<RolesResponse>(param.CreateRequest());
+            var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -487,7 +482,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = code,
                 Namespace = appId
             };
-            var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest());
+            var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
             return _res.Data.Result.Users;
         }
 
@@ -509,7 +504,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = appId
             };
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest());
+            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -531,7 +526,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = appId,
             };
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest());
+            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -552,7 +547,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ResourceType = resourceType.ToString().ToUpper(),
                 Namespace = appId,
             };
-            var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest());
+            var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Data.Result == null)
             {
                 throw new Exception("角色不存在");
@@ -572,7 +567,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "title", agreement.Title},
                 { "required", agreement.Required},
                 { "lang ", agreement.Lang},
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -584,7 +579,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> deleteAgreement(string appId, int agreementId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}/agreements/{agreementId}", new GraphQLRequest());
+            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}/agreements/{agreementId}", new GraphQLRequest()).ConfigureAwait(false);
             return res;
         }
 
@@ -601,7 +596,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "title", agreement.Title},
                 { "required", agreement.Required.ConvertJson()},
                 { "lang ", agreement.Lang.ConvertJson()},
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -612,7 +607,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<PaginationAgreement> listAgreement(string appId)
         {
-            var res = await client.Get<PaginationAgreement>($"api/v2/applications/{appId}/agreements", new GraphQLRequest());
+            var res = await client.Get<PaginationAgreement>($"api/v2/applications/{appId}/agreements", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -626,7 +621,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/agreements/sort", new Dictionary<string, object>() {
                 { "ids", order }
-            });
+            }).ConfigureAwait(false);
             return res;
         }
 
@@ -642,7 +637,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 int page = 1,
                 int limit = 10)
         {
-            var res = await client.Get<ActiveUsers>($"api/v2/applications/{appId}/active-users", new GraphQLRequest());
+            var res = await client.Get<ActiveUsers>($"api/v2/applications/{appId}/active-users", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -653,7 +648,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> RefreshApplicationSecret(string appId)
         {
-            var res = await client.Patch<Application>($"api/v2/application/{appId}/refresh-secret", new Dictionary<string, string>());
+            var res = await client.Patch<Application>($"api/v2/application/{appId}/refresh-secret", new Dictionary<string, string>()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -667,7 +662,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var res = await client.Post<Application>($"api/v2/applications/{appId}", new Dictionary<string, string>() {
                 { "appType", type.ToString() }
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -679,7 +674,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<ApplicationTenantDetails> ApplicationTenants(string appId)
         {
-            var res = await client.Get<ApplicationTenantDetails>($"api/v2/application/{appId}/tenants", new GraphQLRequest());
+            var res = await client.Get<ApplicationTenantDetails>($"api/v2/application/{appId}/tenants", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
     }

@@ -40,7 +40,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             int page = 1,
             int limit = 10)
         {
-            var res = await client.Get<Pagination<TenantInfo>>($"api/v2/tenants?page={page}&limit={limit}", new GraphQLRequest());
+            var res = await client.Get<Pagination<TenantInfo>>($"api/v2/tenants?page={page}&limit={limit}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -51,7 +51,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<TenantDetails> Details(string tenantId)
         {
-            var res = await client.Get<TenantDetails>($"api/v2/tenant/{tenantId}", new GraphQLRequest());
+            var res = await client.Get<TenantDetails>($"api/v2/tenant/{tenantId}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -72,7 +72,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             if (option.Description != null) {
                 body.Add("description", option.Description);
             }
-            var res = await client.Post<TenantDetails>("api/v2/tenant", body);
+            var res = await client.Post<TenantDetails>("api/v2/tenant", body).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -101,7 +101,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("description", option.Description);
             }
-            var res = await client.Post<bool>($"api/v2/tenant/{tenantId}", body);
+            var res = await client.Post<bool>($"api/v2/tenant/{tenantId}", body).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -112,7 +112,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> Delete(string tenantId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/tenant/{tenantId}", new GraphQLRequest());
+            var res = await client.Delete<CommonMessage>($"api/v2/tenant/{tenantId}", new GraphQLRequest()).ConfigureAwait(false);
             return res;
         }
 
@@ -133,7 +133,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("ssoPageCustomizationSettings", option.SsoPageCustomizationSettings);
             }
-            var res = await client.PostRaw<bool>($"api/v2/tenant/{tenantId}", body);
+            var res = await client.PostRaw<bool>($"api/v2/tenant/{tenantId}", body).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -145,7 +145,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Pagination<TenantMembers>> Members(string tenantId, TenantMembersOption option)
         {
-            var res = await client.Get<Pagination<TenantMembers>>($"api/v2/tenant/{tenantId}/users?page={option.Page}&limit={option.Limit}", new GraphQLRequest());
+            var res = await client.Get<Pagination<TenantMembers>>($"api/v2/tenant/{tenantId}/users?page={option.Page}&limit={option.Limit}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -159,7 +159,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var res = await client.PostRaw<TenantAddMembersResponse>($"api/v2/tenant/{tenantId}/user", new Dictionary<string, object>() {
                 { "userIds", userIds }
-            });
+            }).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -171,7 +171,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> RemoveMembers(string tenantId, string userId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/tenant/{tenantId}/user?userId={userId}", new GraphQLRequest());
+            var res = await client.Delete<CommonMessage>($"api/v2/tenant/{tenantId}/user?userId={userId}", new GraphQLRequest()).ConfigureAwait(false);
             return res;
         }
 
@@ -182,7 +182,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<IEnumerable<ExtIdpListOutput>> ListExtIdp(string tenantId)
         {
-            var res = await client.Get<IEnumerable<ExtIdpListOutput>>($"api/v2/extIdp?tenantId={tenantId}", new GraphQLRequest());
+            var res = await client.Get<IEnumerable<ExtIdpListOutput>>($"api/v2/extIdp?tenantId={tenantId}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -193,7 +193,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<ExtIdpDetailOutput> ExtIdpDetail(string extIdpId)
         {
-            var res = await client.Get<ExtIdpDetailOutput>($"api/v2/extIdp/{extIdpId}", new GraphQLRequest());
+            var res = await client.Get<ExtIdpDetailOutput>($"api/v2/extIdp/{extIdpId}", new GraphQLRequest()).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -222,7 +222,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("tenantId", option.TenantId);
             }
-            var res = await client.PostRaw<ExtIdpDetailOutput>("api/v2/extIdp", body);
+            var res = await client.PostRaw<ExtIdpDetailOutput>("api/v2/extIdp", body).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -237,7 +237,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var body = new Dictionary<string, string>() {
                 { "name", option.Name }
             };
-            var res = await client.Put<CommonMessage>($"api/v2/extIdp/{extIdpId}", body);
+            var res = await client.Put<CommonMessage>($"api/v2/extIdp/{extIdpId}", body).ConfigureAwait(false);
             return res;
         }
 
@@ -248,7 +248,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> DeleteExtIdp(string extIdpId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/extIdp/{extIdpId}", new GraphQLRequest());
+            var res = await client.Delete<CommonMessage>($"api/v2/extIdp/{extIdpId}", new GraphQLRequest()).ConfigureAwait(false);
             return res;
         }
 
@@ -274,7 +274,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("logo", option.Logo);
             }
-            var res = await client.PostRaw<ExtIdpConnDetailOutput>("api/v2/extIdpConn", body);
+            var res = await client.PostRaw<ExtIdpConnDetailOutput>("api/v2/extIdpConn", body).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -303,7 +303,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("logo", option.Logo);
             }
-            var res = await client.PutRaw<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}", body);
+            var res = await client.PutRaw<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}", body).ConfigureAwait(false);
             return res;
         }
 
@@ -314,7 +314,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> DeleteExtIdpConnection(string extIdpConnectionId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}", new GraphQLRequest());
+            var res = await client.Delete<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}", new GraphQLRequest()).ConfigureAwait(false);
             return res;
         }
 
@@ -329,7 +329,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             try {
                 var res = await client.Post<CommonMessage>("api/v2/check/extIdpConn/identifier", new Dictionary<string, string>() {
                     { "identifier", identifier }
-                });
+                }).ConfigureAwait(false);
                 return true;
             } catch (Exception)
             {
@@ -351,7 +351,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     { "appId", option.AppId },
                     { "tenantId", option.TenantId },
                     { "enabled", option.Enabled }
-                });
+                }).ConfigureAwait(false);
                 return true;
             }
             catch (Exception)
@@ -374,7 +374,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     { "appId", option.AppId },
                     { "tenantId", option.TenantId },
                     { "enabled", option.Enabled }
-                });
+                }).ConfigureAwait(false);
                 return true;
             }
             catch (Exception)

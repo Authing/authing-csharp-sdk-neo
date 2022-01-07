@@ -40,14 +40,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Parent = parentCode,
                 Namespace=nameSpace
             };
-            var res = await client.Post<CreateRoleResponse>(param.CreateRequest());
+            var res = await client.Post<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<CommonMessage> Delete(string code)
         {
             var param = new DeleteRoleParam(code);
-            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -59,14 +59,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = nameSpace
             };
-            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList)
         {
             var param = new DeleteRolesParam(codeList);
-            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -76,7 +76,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = nameSpace
             };
-            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -87,7 +87,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = description,
                 NewCode = newCode,
             };
-            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest());
+            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -99,14 +99,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = updateRoleOptions.Description,
                 NewCode = updateRoleOptions.NewCode,
             };
-            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest());
+            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<Role> Detail(string code)
         {
             var param = new RoleParam(code);
-            var res = await client.Post<RoleResponse>(param.CreateRequest());
+            var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -116,20 +116,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = nameSpace
             };
-            var res = await client.Post<RoleResponse>(param.CreateRequest());
+            var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<Role> FindByCode(string code,string nameSpace = null)
         {
-            var res = await Detail(code, nameSpace);
+            var res = await Detail(code, nameSpace).ConfigureAwait(false);
             return res;
         }
 
         public async Task<PaginatedRoles> List(int page = 1,int limit = 10)
         {
             var param = new RolesParam() { Page = page, Limit = limit };
-            var res = await client.Post<RolesResponse>(param.CreateRequest());
+            var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -141,7 +141,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
                 Namespace = nameSpace
             };
-            var res = await client.Post<RolesResponse>(param.CreateRequest());
+            var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -149,7 +149,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<PaginatedUsers> ListUsers(string code)
         {
             var param = new RoleWithUsersParam(code);
-            var res = await client.Post<RoleWithUsersResponse>(param.CreateRequest());
+            var res = await client.Post<RoleWithUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result.Users;
         }
 
@@ -164,7 +164,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Page = listUsersOption.Page,
                     Namespace = listUsersOption.NameSpace
                 };
-                var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest());
+                var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 return _res.Data.Result.Users;
             }
             else
@@ -176,7 +176,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Page = listUsersOption.Page,
                     Limit = listUsersOption.Limit
                 };
-                var _res = await client.Post<RoleWithUsersWithCustomDataResponse>(_param.CreateRequest());
+                var _res = await client.Post<RoleWithUsersWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 return _res.Data.Result.Users;
             }
         }
@@ -188,7 +188,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UserIds = userIds,
                 RoleCode = code
             };
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest());
+            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -200,7 +200,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = nameSpace
             };
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest());
+            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -212,7 +212,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UserIds = userIds,
                 RoleCode = code
             };
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest());
+            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -225,7 +225,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = nameSpace,
             };
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest());
+            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -238,7 +238,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Page = page,
                 Limit = limit,
             };
-            var res = await client.Post<PolicyAssignmentsResponse>(param.CreateRequest());
+            var res = await client.Post<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -249,7 +249,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 TargetIdentifiers = new string[] { code },
             };
 
-            var res = await client.Post<AddPolicyAssignmentsResponse>(param.CreateRequest());
+            var res = await client.Post<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -259,7 +259,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 TargetIdentifiers = new string[] { code },
             };
-            var res = await client.Post<RemovePolicyAssignmentsResponse>(param.CreateRequest());
+            var res = await client.Post<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -270,7 +270,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ResourceType = resourceType.ToString().ToUpper(),
                 Namespace = nameSpace,
             };
-            var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest());
+            var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Data.Result == null)
             {
                 throw new Exception("角色不存在");
@@ -281,14 +281,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleCode)
         {
             var param = new UdvParam(UdfTargetType.ROLE, roleCode);
-            var res = await client.Post<UdvResponse>(param.CreateRequest());
+            var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
         }
 
         public async Task<KeyValuePair<string, object>> GetSpecificUdfValue(string roleId, string udfKey)
         {
             var param = new UdvParam(UdfTargetType.ROLE, roleId);
-            var res = await client.Post<UdvResponse>(param.CreateRequest());
+            var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             var udfList = AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
             var keyValuePair = udfList.Where(item => item.Key == udfKey).ToList();
             return keyValuePair[0];
@@ -297,7 +297,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(IEnumerable<string> roleIds)
         {
             var param = new UdfValueBatchParam(UdfTargetType.ROLE, roleIds);
-            var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest());
+            var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
             res.Data.Result.ToList().ForEach(
                 item =>
@@ -322,7 +322,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 UdvList = _udvList
             };
-            var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest());
+            var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
 
             return res.Data.Result;
         }
@@ -340,7 +340,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     param.Add(new SetUdfValueBatchInput(setUdfValueBatch.RoleId, udf.Key, udf.Value))
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.ROLE, param);
-            var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest());
+            var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
 
             return res.Data.Result;
         }
@@ -348,7 +348,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<IEnumerable<UserDefinedData>> RemoveUdfValue(string roleId, string key)
         {
             var param = new RemoveUdvParam(UdfTargetType.ROLE, roleId, key);
-            var res = await client.Post<RemoveUdvResponse>(param.CreateRequest());
+            var res = await client.Post<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
 
             return res.Data.Result;
         }

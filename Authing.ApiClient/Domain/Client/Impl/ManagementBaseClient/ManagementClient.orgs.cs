@@ -30,7 +30,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 NodeId = nodeId
             };
-            var res = await client.Post<AddMemberResponse>(param.CreateRequest());
+            var res = await client.Post<AddMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -45,7 +45,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = addNodeParam.Description,
                 DescriptionI18n = addNodeParam.DescriptionI18n
             };
-            var res = await client.Post<AddNodeResponse>(param.CreateRequest());
+            var res = await client.Post<AddNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -57,55 +57,54 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = code
             };
 
-            var res = await client.Post<CreateOrgResponse>(param.CreateRequest());
+            var res = await client.Post<CreateOrgResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<CommonMessage> DeleteById(string id)
         {
             var param = new DeleteOrgParam(id);
-            var res = await client.Post<DeleteOrgResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteOrgResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<CommonMessage> DeleteNode(string orgId, string nodeId)
         {
             var param = new DeleteNodeParam(orgId, nodeId);
-            var res = await client.Post<DeleteNodeResponse>(param.CreateRequest());
+            var res = await client.Post<DeleteNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<IEnumerable<Authing.ApiClient.Domain.Model.Management.Orgs.Org>> ExportAll()
         {
-            var result = await client.Get<IEnumerable<Authing.ApiClient.Domain.Model.Management.Orgs.Org>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest());
+            var result = await client.Get<IEnumerable<Authing.ApiClient.Domain.Model.Management.Orgs.Org>>("api/v2/orgs/export", new ExpnadAllRequest().CreateRequest()).ConfigureAwait(false);
             return result.Data;
         }
 
         public async Task<Node> ExportByOrgId(string orgId)
         {
-            var result = await client.Get<Node>($"api/v2/orgs/export?org_id={orgId}",new ExpnadAllRequest().CreateRequest());
+            var result = await client.Get<Node>($"api/v2/orgs/export?org_id={orgId}",new ExpnadAllRequest().CreateRequest()).ConfigureAwait(false);
 
-            var res = await client.Host.AppendPathSegment($"api/v2/orgs/export?org_id={orgId}").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<Node>();
+            var res = await client.Host.AppendPathSegment($"api/v2/orgs/export?org_id={orgId}").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<Node>().ConfigureAwait(false);
             return res;
         }
 
         public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> FindById(string orgId)
         {
             var param = new OrgParam(orgId);
-            var res = await client.Post<OrgResponse>(param.CreateRequest());
+            var res = await client.Post<OrgResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<Node> FindNodeById(string nodeId)
         {
             var param = new NodeByIdParam(nodeId);
-            var res = await client.Post<NodeByIdResponse>(param.CreateRequest());
+            var res = await client.Post<NodeByIdResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> ImportByJson(string json)
         {
-            //var res = await client.Host.AppendPathSegment($"api/v2/orgs/import").WithOAuthBearerToken(client.AccessToken).PostJsonAsync(json).ReceiveString();
             Dictionary<string,string> keyValuePairs = new System.Collections.Generic.Dictionary<string, string>
             {
                 {  "filetype","json" },
@@ -115,7 +114,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result =
                 await client.RequestCustomData<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import",
-                    keyValuePairs.ConvertJson());
+                    keyValuePairs.ConvertJson()).ConfigureAwait(false);
 
             return null;
         }
@@ -123,7 +122,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<bool?> IsRootNode(string orgId, string nodeId)
         {
             var param = new IsRootNodeParam(nodeId, orgId);
-            var res = await client.Post<IsRootNodeResponse>(param.CreateRequest());
+            var res = await client.Post<IsRootNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -135,7 +134,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Page = page
             };
 
-            var res = await client.Post<OrgsResponse>(param.CreateRequest());
+            var res = await client.Post<OrgsResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -146,7 +145,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace,
                 ResourceType = resourceType.ToString().ToUpper()
             };
-            var res = await client.Post<ListNodeByCodeAuthorizedResourcesResponse>(param.CreateRequest());
+            var res = await client.Post<ListNodeByCodeAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             var node = res.Data.Result;
             if (node == null)
             {
@@ -162,7 +161,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace,
                 ResourceType = resourceType.ToString().ToUpper()
             };
-            var res = await client.Post<ListNodeByIdAuthorizedResourcesResponse>(param.CreateRequest());
+            var res = await client.Post<ListNodeByIdAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             var node = res.Data.Result;
             if (node == null)
             {
@@ -174,14 +173,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<IEnumerable<Node>> ListChildren(string orgId, string nodeId)
         {
             var param = new ChildrenNodesParam(nodeId);
-            var res = await client.Post<ChildrenNodesResponse>(param.CreateRequest());
+            var res = await client.Post<ChildrenNodesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam = default)
         {
             nodeByIdWithMembersParam.Id = nodeId;
-            var res = await client.Post<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest());
+            var res = await client.Post<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result.Users;
         }
 
@@ -189,14 +188,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var moveMembersParam = new MoveMembersParam(userIds, sourceNodeId, targetNodeId) { };
 
-            var res = await client.Post<MoveMembersResponse>(moveMembersParam.CreateRequest());
+            var res = await client.Post<MoveMembersResponse>(moveMembersParam.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> MoveNode(string orgId, string nodeId, string targetParentId)
         {
             var param = new MoveNodeParam(orgId, nodeId, targetParentId);
-            var res = await client.Post<MoveNodeResponse>(param.CreateRequest());
+            var res = await client.Post<MoveNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -206,21 +205,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 NodeId = nodeId
             };
-            var res = await client.Post<RemoveMemberResponse>(param.CreateRequest());
+            var res = await client.Post<RemoveMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result.Users;
         }
 
         public async Task<Node> RootNode(string orgId)
         {
             var param = new RootNodeParam(orgId);
-            var res = await client.Post<RootNodeResponse>(param.CreateRequest());
+            var res = await client.Post<RootNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         public async Task<IEnumerable<Node>> SearchNodes(string keyword)
         {
             var param = new SearchNodesParam(keyword);
-            var res = await client.Post<SearchNodesResponse>(param.CreateRequest());
+            var res = await client.Post<SearchNodesResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -230,7 +229,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 DepartmentId = departmentId
             };
-            var res = await client.Post<SetMainDepartmentResponse>(param.CreateRequest());
+            var res = await client.Post<SetMainDepartmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
@@ -252,13 +251,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 throw new Exception("must provider adConnectorId");
             }
 
-            var res = await client.Host.AppendPathSegment(path).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(body).ReceiveJson<bool>();
+            var res = await client.Host.AppendPathSegment(path).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(body).ReceiveJson<bool>().ConfigureAwait(false);
             return res;
         }
 
         public async Task<Node> UpdateNode(string orgId, UpdateNodeParam updateNodeParam)
         {
-            var res = await client.Post<UpdateNodeResponse>(updateNodeParam.CreateRequest());
+            var res = await client.Post<UpdateNodeResponse>(updateNodeParam.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
     }

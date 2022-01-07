@@ -67,7 +67,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)
         {
             var manageClient = new ManagementClient(userPoolId, secret);
-            await manageClient.GetAccessToken();
+            await manageClient.GetAccessToken().ConfigureAwait(false);
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
             manageClient.Tennat = new TenantManagementClient(manageClient);
@@ -88,7 +88,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public static async Task<ManagementClient> InitManagementClient(Action<InitAuthenticationClientOptions> init)
         {
             var manageClient = new ManagementClient(init);
-            await manageClient.GetAccessToken();
+            await manageClient.GetAccessToken().ConfigureAwait(false);
             manageClient.Users = new UsersManagementClient(manageClient);
             manageClient.Applications = new ApplicationsManagementClient(manageClient);
             manageClient.Tennat = new TenantManagementClient(manageClient);
@@ -107,46 +107,46 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<string> RequestToken()
         {
-            var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null);
+            var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null).ConfigureAwait(false);
             return result.Data.AccessToken;
         }
 
         /// <summary>
-        /// ¼ì²âÃÜÂëÊÇ·ñºÏ·¨
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ï·ï¿½
         /// </summary>
-        /// <param name="password">ÐèÒª¼ì²âµÄÃÜÂë</param>
+        /// <param name="password">ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
         /// <returns></returns>
         public async Task<CommonMessage> isPasswordValid(string password)
         {
-            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null);
+            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null).ConfigureAwait(false);
             return result.Data;
         }
 		
 		/// <summary>
-        /// ·¢ËÍÓÊ¼þ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½
         /// </summary>
-        /// <param name="email">ÓÊ¼þ</param>
-        /// <param name="scene">³¡¾°</param>
+        /// <param name="email">ï¿½Ê¼ï¿½</param>
+        /// <param name="scene">ï¿½ï¿½ï¿½ï¿½</param>
         /// <param name="cancellationToken"></param>
         /// <returns>CommonMessage</returns>
         public async Task<CommonMessage> SendEmail(string email,
                                                    EmailScene scene)
         {
             var param = new SendEmailParam(email, scene);
-            var res = await Request<SendEmailResponse>(param.CreateRequest());
+            var res = await Request<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
         /// <summary>
-        /// ²éÑ¯ÓÃ»§µÄµÇÂ¼×´Ì¬
+        /// ï¿½ï¿½Ñ¯ï¿½Ã»ï¿½ï¿½Äµï¿½Â¼×´Ì¬
         /// </summary>
-        /// <param name="userId">ÓÃ»§ ID</param>
-        /// <param name="appId">Ó¦ÓÃ ID</param>
-        /// <param name="devicdId">Ñ¡Ïî</param>
+        /// <param name="userId">ï¿½Ã»ï¿½ ID</param>
+        /// <param name="appId">Ó¦ï¿½ï¿½ ID</param>
+        /// <param name="devicdId">Ñ¡ï¿½ï¿½</param>
         /// <returns></returns>
         public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
         {
-            return await this.Users.CheckLoginStatus(userId, appId, devicdId);
+            return await this.Users.CheckLoginStatus(userId, appId, devicdId).ConfigureAwait(false);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<UserPool> Detail()
             {
                 //var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
-                var res = await _client.RequestCustomData<UserPool>("api/v2/userpools/detail", method: HttpMethod.Get);
+                var res = await _client.RequestCustomData<UserPool>("api/v2/userpools/detail", method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -51,7 +51,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 var param = new UpdateUserpoolParam(updates);
 
-                var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest());
+                var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
                 return res.Data?.Result ?? null;
             }
 
@@ -62,7 +62,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<IEnumerable<Env>> ListEnv()
             {
                 //var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
-                var res = await _client.RequestCustomData<IEnumerable<Env>>("api/v2/env", method: HttpMethod.Get);
+                var res = await _client.RequestCustomData<IEnumerable<Env>>("api/v2/env", method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -85,7 +85,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {
                     { "key", key },
                     { "value", value.ToString() }
-                }.ConvertJson());
+                }.ConvertJson()).ConfigureAwait(false);
 
                 return result.Code;
             }
@@ -98,7 +98,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<int> RemoveEnv(string key)
             {
                 //var result = await _client.Delete<Env>($"api/v2/env/{key}", null);
-                var result = await _client.RequestCustomData<Env>($"api/v2/env/{key}", method: HttpMethod.Delete);
+                var result = await _client.RequestCustomData<Env>($"api/v2/env/{key}", method: HttpMethod.Delete).ConfigureAwait(false);
                 return result.Code;
             }
         }
