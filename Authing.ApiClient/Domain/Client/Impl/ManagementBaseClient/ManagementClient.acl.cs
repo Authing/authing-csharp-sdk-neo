@@ -70,9 +70,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <returns></returns>
             public async Task<Namespaces> ListNamespaces(int page = 1, int limit = 10)
             {
-                var res = await client.Get<Namespaces>(
+                var res = await client.RequestCustomData<Namespaces>(
                     $"api/v2/resource-namespace/{client.UserPoolId}?limit={limit}&page={page}"
-                    , new GraphQLRequest()).ConfigureAwait(false);
+                    , method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -139,7 +139,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 endPoint += $"&limit={(resourceQueryFilter.FetchAll ? "-1" : $"{resourceQueryFilter.Limit}")}";
                 endPoint += $"&page={resourceQueryFilter.Page}";
 
-                var res = await client.Get<ListResourcesRes>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var res = await client.RequestCustomData<ListResourcesRes>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -159,7 +159,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 endPoint += $"&limit={(resourceQueryFilter.FetchAll ? "-1" : $"{resourceQueryFilter.Limit}")}";
                 endPoint += $"&page={resourceQueryFilter.Page}";
 
-                var res = await client.Get<ListResourcesRes>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var res = await client.RequestCustomData<ListResourcesRes>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -222,7 +222,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 string endPoint = $"api/v2/resources/by-code/{code}";
                 endPoint += string.IsNullOrWhiteSpace(nameSpace) ? "" : $"?namespace={nameSpace}";
-                var resut = await client.Get<Resources>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var resut = await client.RequestCustomData<Resources>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return resut.Data ?? null;
             }
 
@@ -234,7 +234,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<Resources> GetResourceById(string id)
             {
                 string endPoint = $"api/v2/resources/detail?id={id}";
-                var resut = await client.Get<Resources>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var resut = await client.RequestCustomData<Resources>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return resut.Data ?? null;
 
             }
@@ -439,7 +439,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/programmatic-access-accounts?limit=${options.Limit}&page=${options.Page}";
-                var res = await client.Get<Pagination<ProgrammaticAccessAccount>>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var res = await client.RequestCustomData<Pagination<ProgrammaticAccessAccount>>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                 return res.Data ?? null;
             }
 
@@ -553,7 +553,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             public async Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options)
             {
                 string endPoint = $"api/v2/applications/{options.AppId}/authorization/records?limit={options.Limit}&page={options.Page}";
-                var result = await client.Get<Pagination<ApplicationAccessPolicies>>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var result = await client.RequestCustomData<Pagination<ApplicationAccessPolicies>>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
