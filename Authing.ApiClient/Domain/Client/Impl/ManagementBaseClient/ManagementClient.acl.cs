@@ -123,8 +123,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return res.Code;
             }
 
-
-
             /// <summary>
             /// 获取资源列表
             /// </summary>
@@ -335,7 +333,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 string endPoint = "api/v2/acl/revoke-resource";
                 //var result = await client.PostRaw<CommonMessage>(endPoint,options.ConvertJson());
                 var result = await client.RequestCustomData<CommonMessage>(endPoint, options.ConvertJson(),
-                    contenttype: ContentType.JSON);
+                    contenttype: ContentType.JSON).ConfigureAwait(false);
                 return new CommonMessage() { Code = result.Code, Message = result.Message };
             }
 

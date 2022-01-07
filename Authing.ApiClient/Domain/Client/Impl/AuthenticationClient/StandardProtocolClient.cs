@@ -573,7 +573,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        public async Task<string> GetCodeChallengeDigest(CodeChallengeDigestOption options)
+        public string GetCodeChallengeDigest(CodeChallengeDigestOption options)
         {
             if (options.CodeChallenge == null)
             {

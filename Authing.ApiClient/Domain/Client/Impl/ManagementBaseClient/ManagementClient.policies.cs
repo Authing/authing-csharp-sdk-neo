@@ -113,7 +113,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data.Result;
         }
 
-
         public async Task<PaginatedPolicyAssignments> ListAssignments(PolicyAssignmentsParam param)
         {
             var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);

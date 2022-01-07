@@ -111,17 +111,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
-        //public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body)
-        //{
-        //    var headers = new Dictionary<string, string>();
-        //    var token = await GetAccessToken();
-        //    headers["Authorization"] = token;
-        //    headers["x-authing-userpool-id"] = UserPoolId;
-        //    headers["x-authing-request-from"] = type;
-        //    headers["x-authing-sdk-version"] = version;
-        //    return await Post<TResponse>(api, body, headers);
-        //}
-
         [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, object> body)
         {
