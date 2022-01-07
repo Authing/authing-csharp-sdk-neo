@@ -193,12 +193,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             switch (Options.Protocol)
             {
                 case Protocol.OAUTH:
-                    res = await Post<UserInfo>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                    res = await RequestCustomData<UserInfo>(endPoint).ConfigureAwait(false);
                     break;
                 case Protocol.OIDC:
                 case Protocol.SAML:
                 case Protocol.CAS:
-                    res = await Get<UserInfo>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                    res = await RequestCustomData<UserInfo>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -261,7 +261,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken }
             };
 
-            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>()).ConfigureAwait(false);
+            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
 
             return result.Data;
         }
@@ -280,7 +280,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "grant_type", "refresh_token" },
                 { "refresh_token", refreshToken }
             };
-            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>()).ConfigureAwait(false);
+            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
 
             return result.Data;
         }
@@ -302,7 +302,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken },
 
             };
-            var result = await Post<HttpResponseMessage>(api, param, new Dictionary<string, string>()).ConfigureAwait(false);
+            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
             return result.Data;
         }
 
@@ -555,7 +555,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<ValidateTicketV1Res> ValidateTicketV1(string ticket, string service)
         {
-            var result = await Get<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", null).ConfigureAwait(false);
+            var result = await RequestCustomData<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", method: HttpMethod.Get).ConfigureAwait(false);
 
             if (result.Data.Result.Split('\n').Contains("yes"))
             {
@@ -609,14 +609,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<string> ValidateTicketV2(string ticket, string service, ValidateTicketFormat validateTicketFormat)
         {
-            var result = await Get<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", null).ConfigureAwait(false);
+            var result = await RequestCustomData<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}",method: HttpMethod.Get).ConfigureAwait(false);
 
             return result.Data.Result;
         }
 
         public async Task<User> TrackSession()
         {
-            var result = await Get<User>("cas/session", null).ConfigureAwait(false);
+            var result = await RequestCustomData<User>("cas/session", method: HttpMethod.Get).ConfigureAwait(false);
             return result.Data;
         }
     }
