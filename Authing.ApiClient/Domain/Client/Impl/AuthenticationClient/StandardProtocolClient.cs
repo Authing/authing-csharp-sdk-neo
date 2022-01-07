@@ -141,23 +141,28 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         { "client_secret", Options.Secret },
                         { "grant_type", "authorization_code" },
                         { "code", code },
-                        { "redirect_uri", Options.RedirectUri }
+                        { "redirect_uri", Options.RedirectUri },
                     }.ConvertJson()).ConfigureAwait(false);
                     return result.Data;
                 case TokenEndPointAuthMethod.CLIENT_SECRET_BASIC:
+                    var headers = GetAuthHeaders();
+                    headers.Add("Authorization",
+                        $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}");
                     result = await RequestCustomData<CodeToTokenRes>(url, new Dictionary<string, string>()
                         {
                             { "grant_type", "authorization_code" },
                             { "code", code },
                             { "redirect_uri", Options.RedirectUri },
                         }.ConvertJson(),
-                        new Dictionary<string, string>()
-                        {
-                            {
-                                "Authorization",
-                                $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}"
-                            }
-                        }).ConfigureAwait(false);
+                        headers
+                            //new Dictionary<string, string>()
+                            //{
+                            //    {
+                            //        "Authorization",
+                            //        $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}"
+                            //    }
+                            //}
+                            ).ConfigureAwait(false);
                     return result.Data;
                 case TokenEndPointAuthMethod.NONE:
                     result = await RequestCustomData<CodeToTokenRes>(url, new Dictionary<string, string>()
@@ -577,7 +582,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             if (options.Method == CodeChallengeDigestMethod.S256)
             {
                 string result = EncryptHelper.SHA256Hash(options.CodeChallenge);
-                return result.Replace('+', '-').Replace('/', '_').Replace("=",string.Empty);
+                return result.Replace('+', '-').Replace('/', '_').Replace("=", string.Empty);
             }
             if (options.Method == CodeChallengeDigestMethod.PLAIN)
             {
@@ -602,7 +607,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="service"></param>
         /// <param name="validateTicketFormat"></param>
         /// <returns></returns>
-        public async Task<string> ValidateTicketV2(string ticket, string service,ValidateTicketFormat validateTicketFormat)
+        public async Task<string> ValidateTicketV2(string ticket, string service, ValidateTicketFormat validateTicketFormat)
         {
             var result = await Get<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", null).ConfigureAwait(false);
 

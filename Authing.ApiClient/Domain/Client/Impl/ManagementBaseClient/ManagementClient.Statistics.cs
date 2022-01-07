@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management.Statistics;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces.ManagementClient;
@@ -52,7 +53,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
                 endPoint += $"&page={options.Page}";
                 endPoint += $"&limit={options.Limit}";
-                var result = await _client.Get<UserLogs>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var result = await _client.RequestCustomData<UserLogs>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                 return result.Data ?? null;
             }
 
@@ -83,7 +84,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
                 endPoint += $"&page={options.Page}";
                 endPoint += $"&limit={options.Limit}";
-                var result = await _client.Get<AdminLogs>(endPoint, new GraphQLRequest()).ConfigureAwait(false);
+                var result = await _client.RequestCustomData<AdminLogs>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                 return result.Data ?? null;
             }
         }

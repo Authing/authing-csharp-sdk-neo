@@ -295,48 +295,24 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
 
             HttpRequestMessage message = null;
-
             switch (method.Method)
             {
+
                 case "GET":
                     message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
                     //message.Headers.Add("Content-Type", contenttype.ToDescription());
                     break;
-
                 case "DELETE":
                     message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
                     //message.Headers.Add("Content-Type", contenttype.ToDescription());
                     break;
-
                 case "POST":
-                    switch (contenttype)
-                    {
-                        case ContentType.DEFAULT:
-                            var data = JsonConvert.DeserializeObject<Dictionary<string, String>>(serializedata);
-                            SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key, x => x.Value is null ? "" : x.Value.ToString()));
-                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-                            {
-                                Content = new FormUrlEncodedContent(sortedParam)
-                                //Content = new StringContent(serializedata, Encoding.UTF8, "application/x-www-form-urlencoded")
-                            };
-                            // message.Content.Headers.Clear();
-                            // message.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-                            break;
-                        case ContentType.JSON:
-                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-                            {
-
-                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
-                                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
-                            };
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
-                    }
+                case "PATCH":
+                case "PUT":
+                    message = HttpRequestMessage<TResponse>(url, serializedata,method, contenttype);
                     break;
-
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+                    throw new ArgumentOutOfRangeException(nameof(method.Method), method, "不支持此方法");
             }
 
             if (headers != null)
@@ -366,6 +342,122 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                         content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
+        }
+
+        private HttpRequestMessage HttpRequestMessage<TResponse>(string url, string serializedata,HttpMethod method, ContentType contenttype)
+        {
+            Dictionary<string, string> data;
+            SortedDictionary<string, string> sortedParam;
+            HttpRequestMessage message;
+
+            #region old
+
+            /*
+            switch (method.Method)
+            {
+                default:
+                    switch (contenttype)
+                    {
+                        case ContentType.DEFAULT:
+                            data = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedata) ??
+                                   new Dictionary<string, string>();
+                            sortedParam =
+                                new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key,
+                                    x => x.Value is null ? "" : x.Value.ToString()));
+                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+                            {
+                                Content = new FormUrlEncodedContent(sortedParam)
+                                //Content = new StringContent(serializedata, Encoding.UTF8, "application/x-www-form-urlencoded")
+                            };
+                            // message.Content.Headers.Clear();
+                            // message.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+                            break;
+                        case ContentType.JSON:
+                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+                            {
+                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
+                                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
+                            };
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+                    }
+                    break;
+                case "PATCH":
+                    switch (contenttype)
+                    {
+                        case ContentType.DEFAULT:
+                            data = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedata) ??
+                                   new Dictionary<string, string>();
+                            sortedParam =
+                                new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key,
+                                    x => x.Value is null ? "" : x.Value.ToString()));
+                            message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
+                            {
+                                Content = new FormUrlEncodedContent(sortedParam)
+                            };
+                            break;
+                        case ContentType.JSON:
+                            message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
+                            {
+                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
+                            };
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+                    }
+                    break;
+                case "PUT":
+                    switch (contenttype)
+                    {
+                        case ContentType.DEFAULT:
+                            data = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedata) ??
+                                   new Dictionary<string, string>();
+                            sortedParam =
+                                new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key,
+                                    x => x.Value is null ? "" : x.Value.ToString()));
+                            message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
+                            {
+                                Content = new FormUrlEncodedContent(sortedParam)
+                            };
+                            break;
+                        case ContentType.JSON:
+                            message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
+                            {
+                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
+                            };
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+                    }
+                    break;
+            }
+            */
+            #endregion
+
+            switch (contenttype)
+            {
+                case ContentType.DEFAULT:
+                    data = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedata) ??
+                           new Dictionary<string, string>();
+                    sortedParam =
+                        new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key,
+                            x => x.Value is null ? "" : x.Value.ToString()));
+                    message = new HttpRequestMessage(method, new Uri(url))
+                    {
+                        Content = new FormUrlEncodedContent(sortedParam)
+                    };
+                    break;
+                case ContentType.JSON:
+                    message = new HttpRequestMessage(method, new Uri(url))
+                    {
+                        Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
+                    };
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
+            }
+            return message;
         }
     }
 
