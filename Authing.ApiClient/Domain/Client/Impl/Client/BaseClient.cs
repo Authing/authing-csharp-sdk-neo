@@ -171,6 +171,12 @@ GKl64GDcIq3au+aqJQIDAQAB
             return result;
         }
 
+        protected async Task<TResponse> RequestNoGraphQLResponse<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
+            ContentType contenttype = ContentType.DEFAULT)
+        {
+            var result = await client.RequestCustomData<TResponse>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            return result;
+        }
 
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {

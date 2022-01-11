@@ -131,11 +131,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
 
             var url = Options.Protocol == Protocol.OAUTH ? $"oauth/token" : $"oidc/token";
-            GraphQLResponse<CodeToTokenRes> result;
+            CodeToTokenRes result;
             switch (Options.TokenEndPointAuthMethod)
             {
                 case TokenEndPointAuthMethod.CLIENT_SECRET_POST:
-                    result = await RequestCustomData<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
                     {
                         { "client_id", Options.AppId },
                         { "client_secret", Options.Secret },
@@ -143,12 +143,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         { "code", code },
                         { "redirect_uri", Options.RedirectUri },
                     }.ConvertJson()).ConfigureAwait(false);
-                    return result.Data;
+                    return result;
                 case TokenEndPointAuthMethod.CLIENT_SECRET_BASIC:
                     var headers = GetAuthHeaders();
                     headers.Add("Authorization",
                         $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}");
-                    result = await RequestCustomData<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
                         {
                             { "grant_type", "authorization_code" },
                             { "code", code },
@@ -163,9 +163,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                             //    }
                             //}
                             ).ConfigureAwait(false);
-                    return result.Data;
+                    return result;
                 case TokenEndPointAuthMethod.NONE:
-                    result = await RequestCustomData<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
                     {
                         { "client_id", Options.AppId },
                         //{ "client_secret", Options.Secret },
@@ -173,7 +173,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         { "code", code },
                         { "redirect_uri", Options.RedirectUri },
                     }.ConvertJson()).ConfigureAwait(false);
-                    return result.Data;
+                    return result;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
