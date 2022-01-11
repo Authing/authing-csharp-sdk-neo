@@ -212,7 +212,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="refreshToken"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshToken(string refreshToken)
+        public async Task<RefreshTokenRes> GetNewAccessTokenByRefreshToken(string refreshToken)
         {
             // TODO: 注意返回类型的转换
             var _ = Options?.Protocol switch
@@ -221,7 +221,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 Protocol.OAUTH => "oauth/token",
                 _ => throw new ArgumentException("初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数")
             };
-            if (Options?.Secret != null && Options.TokenEndPointAuthMethod != TokenEndPointAuthMethod.NONE)
+            if (Options?.Secret == null && Options?.Secret == null && Options.TokenEndPointAuthMethod  != TokenEndPointAuthMethod.NONE)
             {
                 throw new ArgumentException("请在初始化 AuthenticationClient 时传入 appId 和 secret 参数");
             }
@@ -245,7 +245,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
+        private async Task<RefreshTokenRes> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -261,12 +261,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken }
             };
 
-            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
 
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
+        private async Task<RefreshTokenRes> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -280,12 +280,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "grant_type", "refresh_token" },
                 { "refresh_token", refreshToken }
             };
-            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
 
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
+        private async Task<RefreshTokenRes> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -302,8 +302,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken },
 
             };
-            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
-            return result.Data;
+            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            return result;
         }
 
         /// <summary>

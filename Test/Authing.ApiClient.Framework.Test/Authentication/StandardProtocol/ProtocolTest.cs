@@ -18,7 +18,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             string saml = authenticationClient.BuildAuthorizeUrl(new SamlOption());
             //TODO:需要核实
             authenticationClient.Options.Protocol = Protocol.OIDC;
-            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption(){ RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a"});
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
             var url2 = new Uri(oidc);
             //TODO:需要核实
             authenticationClient.Options.Protocol = Protocol.OAUTH;
@@ -27,42 +27,40 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         [Fact]
         public async Task GetAccessTokenByCodeTest()
         {
-            //TODO:无法调试
-            /*
-             * {
-               "error": "未知错误",
-               "error_description": "Cannot read property 'split' of undefined"
-               }
-             */
-            //authenticationClient.Options.AppId = AppId;
-            //authenticationClient.Options.Secret = Secret;
-            //authenticationClient.Options.UserPoolId = UserPoolId;
-            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
-            //authenticationClient.Options.RedirectUri =
-                //"https://console.authing.cn/console/get-started/6172807001258f603126a78a";
-            //authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.CLIENT_SECRET_POST;
-            var res = await authenticationClient.GetAccessTokenByCode("hUufWdiXuzSSXNyb1bRIx_iPymly3KSJ02SJvdIg0ZU");
-            Assert.NotNull(res);
+            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
+            #region OIDC登陆测试
+            //string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption(){"https://www.baidu.com"});
+            //var res1 = await authenticationClient.GetAccessTokenByCode("hUufWdiXuzSSXNyb1bRIx_iPymly3KSJ02SJvdIg0ZU");
+            #endregion
+
+            #region OAUTH登陆测试
+
+            authenticationClient.Options.Protocol = Protocol.OAUTH;
+            string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://www.baidu.com" });
+            var res2 = await authenticationClient.GetAccessTokenByCode("45aae0297823723f4b8081e88cc8959d5c1d7e77");
+            #endregion
+
+            Assert.NotNull(res2);
         }
 
         [Fact]
         public async Task GetUserInfoByAccessTokenTest()
         {
-            //TODO:返回错误 {"error":"invalid_request","error_description":"access token must only be provided using one mechanism"}
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
-            var res = await authenticationClient.GetAccessTokenByCode("phfn_wpMbT-t6Rsm2bxHdQUnH1478qSKADPMQjLplwm");
-            var result  = await authenticationClient.GetUserInfoByAccessToken(res.AccessToken);
+            var res = await authenticationClient.GetAccessTokenByCode("qb8CKNnJ88PN1OMJ_d3gWq4zsiamgAx5xC58N8PepLX");
+            var result = await authenticationClient.GetUserInfoByAccessToken(res.AccessToken);
         }
 
         [Fact]
         public async Task GetNewAccessTokenByRefreshToken()
         {
-            authenticationClient.Options.Protocol = Protocol.OIDC;
-            var res = await authenticationClient.LoginByUsername("tm574378328", "123456", false);
-            var data = await authenticationClient.GetAccessTokenByCode("0c273f1b8393487e4fb72474d43e1464636b8d97&state=6gA3t-HWO");
+            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
+            authenticationClient.Options.Protocol = Protocol.OAUTH;
+            string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://www.baidu.com" });
+            var res2 = await authenticationClient.GetAccessTokenByCode("e957ab20a5a202ce25de9583473304d335d4ade1");
 
             var result =
-                await authenticationClient.GetNewAccessTokenByRefreshToken(data.RefreshToken);
+                await authenticationClient.GetNewAccessTokenByRefreshToken(res2.RefreshToken);
         }
     }
 }

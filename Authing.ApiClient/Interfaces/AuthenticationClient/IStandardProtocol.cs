@@ -56,7 +56,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// </summary>
         /// <param name="refreshToken"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> GetNewAccessTokenByRefreshToken(string refreshToken);
+        Task<RefreshTokenRes> GetNewAccessTokenByRefreshToken(string refreshToken);
 
         /// <summary>
         /// 检查 Access token 或 Refresh token 的状态
