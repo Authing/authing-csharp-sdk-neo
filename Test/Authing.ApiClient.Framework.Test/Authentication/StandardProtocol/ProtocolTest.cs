@@ -49,8 +49,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         public async Task GetUserInfoByAccessTokenTest()
         {
             //TODO:返回错误 {"error":"invalid_request","error_description":"access token must only be provided using one mechanism"}
-            var res = await authenticationClient.LoginByUsername("tm574378328", "123456",false);
-            var result  = await authenticationClient.GetUserInfoByAccessToken(res.Token);
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
+            var res = await authenticationClient.GetAccessTokenByCode("hUufWdiXuzSSXNyb1bRIx_iPymly3KSJ02SJvdIg0ZU");
+            var result  = await authenticationClient.GetUserInfoByAccessToken(res.AccessToken);
         }
 
         [Fact]
