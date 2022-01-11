@@ -37,11 +37,11 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             //authenticationClient.Options.AppId = AppId;
             //authenticationClient.Options.Secret = Secret;
             //authenticationClient.Options.UserPoolId = UserPoolId;
-            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
-            authenticationClient.Options.RedirectUri =
-                "https://console.authing.cn/console/get-started/6172807001258f603126a78a";
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
+            //authenticationClient.Options.RedirectUri =
+                //"https://console.authing.cn/console/get-started/6172807001258f603126a78a";
             //authenticationClient.Options.TokenEndPointAuthMethod = TokenEndPointAuthMethod.CLIENT_SECRET_POST;
-            var res = await authenticationClient.GetAccessTokenByCode("kqEay2ooIPEPeVF7nzUCLI3D437LIBmZhQZNa7o_jTx");
+            var res = await authenticationClient.GetAccessTokenByCode("hUufWdiXuzSSXNyb1bRIx_iPymly3KSJ02SJvdIg0ZU");
             Assert.NotNull(res);
         }
 
