@@ -189,22 +189,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var endPoint = Options.Protocol == Protocol.OAUTH
                 ? "oauth/me?access_token={token}"
                 : $"oidc/me?access_token={token}";
-            GraphQLResponse<UserInfo> res;
+            UserInfo res;
             switch (Options.Protocol)
             {
                 case Protocol.OAUTH:
-                    res = await RequestCustomData<UserInfo>(endPoint).ConfigureAwait(false);
+                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint).ConfigureAwait(false);
                     break;
                 case Protocol.OIDC:
                 case Protocol.SAML:
                 case Protocol.CAS:
-                    res = await RequestCustomData<UserInfo>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
+                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            return res.Data;
+            return res;
         }
 
         /// <summary>

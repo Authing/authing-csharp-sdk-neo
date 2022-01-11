@@ -50,7 +50,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         {
             //TODO:返回错误 {"error":"invalid_request","error_description":"access token must only be provided using one mechanism"}
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
-            var res = await authenticationClient.GetAccessTokenByCode("hUufWdiXuzSSXNyb1bRIx_iPymly3KSJ02SJvdIg0ZU");
+            var res = await authenticationClient.GetAccessTokenByCode("phfn_wpMbT-t6Rsm2bxHdQUnH1478qSKADPMQjLplwm");
             var result  = await authenticationClient.GetUserInfoByAccessToken(res.AccessToken);
         }
 
