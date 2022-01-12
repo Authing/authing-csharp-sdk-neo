@@ -114,7 +114,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 //code_challenge_method = option.CodeChallengeMethod?.ToString().ToLower(),
                 //code_challenge = option.CodeChallenge,
             }.Convert2QueryParams();
-            return $"{Options.Host ?? Host}/login{res}";
+            return $"{Options.Host ?? Host}/oidc/auth{res}";
         }
 
         /// <summary>
@@ -189,22 +189,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var endPoint = Options.Protocol == Protocol.OAUTH
                 ? "oauth/me?access_token={token}"
                 : $"oidc/me?access_token={token}";
-            GraphQLResponse<UserInfo> res;
+            UserInfo res;
             switch (Options.Protocol)
             {
                 case Protocol.OAUTH:
-                    res = await RequestCustomData<UserInfo>(endPoint).ConfigureAwait(false);
+                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint).ConfigureAwait(false);
                     break;
                 case Protocol.OIDC:
                 case Protocol.SAML:
                 case Protocol.CAS:
-                    res = await RequestCustomData<UserInfo>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
+                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            return res.Data;
+            return res;
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="refreshToken"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> GetNewAccessTokenByRefreshToken(string refreshToken)
+        public async Task<RefreshTokenRes> GetNewAccessTokenByRefreshToken(string refreshToken)
         {
             // TODO: 注意返回类型的转换
             var _ = Options?.Protocol switch
@@ -221,7 +221,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 Protocol.OAUTH => "oauth/token",
                 _ => throw new ArgumentException("初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数")
             };
-            if (Options?.Secret != null && Options.TokenEndPointAuthMethod != TokenEndPointAuthMethod.NONE)
+            if (Options?.Secret == null && Options?.AppId == null && Options.TokenEndPointAuthMethod  != TokenEndPointAuthMethod.NONE)
             {
                 throw new ArgumentException("请在初始化 AuthenticationClient 时传入 appId 和 secret 参数");
             }
@@ -245,7 +245,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
+        private async Task<RefreshTokenRes> GetNewAccessTokenByRefreshTokenWithNone(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -261,12 +261,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken }
             };
 
-            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
 
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
+        private async Task<RefreshTokenRes> GetNewAccessTokenByRefreshTokenWithClientSecretBasic(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -280,12 +280,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "grant_type", "refresh_token" },
                 { "refresh_token", refreshToken }
             };
-            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
 
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
+        private async Task<RefreshTokenRes> GetNewAccessTokenByRefreshTokenWithClientSecretPost(string refreshToken)
         {
             var api = Options.Protocol switch
             {
@@ -302,8 +302,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken },
 
             };
-            var result = await RequestCustomData<HttpResponseMessage>(api, param.ConvertJson()).ConfigureAwait(false);
-            return result.Data;
+            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            return result;
         }
 
         /// <summary>
@@ -311,15 +311,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> IntrospectToken(string token)
+        public async Task<IntrospectTokenRes> IntrospectToken(string token)
         {
             var api = Options?.Protocol switch
             {
-                Protocol.OIDC => "oidc/token",
-                Protocol.OAUTH => "oauth/token",
+                Protocol.OIDC => "oidc/token/introspection",
+                Protocol.OAUTH => "oauth/token/introspection",
                 _ => throw new Exception("初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数")
             };
-            if (Options?.Secret != null && Options.TokenEndPointAuthMethod != TokenEndPointAuthMethod.NONE)
+            if (Options?.Secret == null && Options?.AppId == null && Options.TokenEndPointAuthMethod != TokenEndPointAuthMethod.NONE)
             {
                 throw new Exception("请在初始化 AuthenticationClient 时传入 appId 和 secret 参数");
             }
@@ -344,21 +344,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         }
 
-        private async Task<HttpResponseMessage> IntrospectTokenWithClientSecretPost(string url, string token)
+        private async Task<IntrospectTokenRes> IntrospectTokenWithClientSecretPost(string url, string token)
         {
-            var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
             {
                 { "client_id", Options.AppId },
                 { "client_secret", Options.Secret },
-                { "grant_type", "authorization_code" },
                 { "token", token },
             }.ConvertJson()).ConfigureAwait(false);
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> IntrospectTokenWithClientSecretBasic(string url, string token)
+        private async Task<IntrospectTokenRes> IntrospectTokenWithClientSecretBasic(string url, string token)
         {
-            var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
                 {
                     { "token", token },
                 }.ConvertJson(),
@@ -369,17 +368,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}"
                     }
                 }).ConfigureAwait(false);
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> IntrospectTokenWithNone(string url, string token)
+        private async Task<IntrospectTokenRes> IntrospectTokenWithNone(string url, string token)
         {
-            var result = await RequestCustomData<HttpResponseMessage>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
             {
                 { "client_id", Options.AppId },
                 { "token", token },
             }.ConvertJson()).ConfigureAwait(false);
-            return result.Data;
+            return result;
         }
 
         /// <summary>
@@ -387,18 +386,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> ValidateToken(ValidateTokenParams param)
+        public async Task<ValidateTokenRes> ValidateToken(ValidateTokenParams param)
         {
             if (string.IsNullOrWhiteSpace(param.AccessToken) && string.IsNullOrWhiteSpace(param.IdToken))
                 throw new AggregateException("请在传入的参数对象中包含 accessToken 或 idToken 属性");
-            if (param.AccessToken.Length > 0 && param.IdToken.Length > 0)
+            if (param.AccessToken?.Length > 0 && param.IdToken?.Length > 0)
                 throw new ArgumentException("accessToken 和 idToken 只能传入一个，不能同时传入");
 
             var url = $"api/v2/oidc/validate_token";
             url += !string.IsNullOrWhiteSpace(param.AccessToken) ? $"?access_token={param.AccessToken}" : $"?id_token={param.IdToken}";
 
-            var result = await RequestCustomData<HttpResponseMessage>(url, "", null, HttpMethod.Get, ContentType.JSON).ConfigureAwait(false);
-            return result.Data;
+            var result = await RequestNoGraphQLResponse<ValidateTokenRes>(url, "", null, HttpMethod.Get, ContentType.JSON).ConfigureAwait(false);
+            return result;
         }
 
         /// <summary>

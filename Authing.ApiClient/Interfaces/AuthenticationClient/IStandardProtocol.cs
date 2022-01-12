@@ -56,21 +56,21 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// </summary>
         /// <param name="refreshToken"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> GetNewAccessTokenByRefreshToken(string refreshToken);
+        Task<RefreshTokenRes> GetNewAccessTokenByRefreshToken(string refreshToken);
 
         /// <summary>
         /// 检查 Access token 或 Refresh token 的状态
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> IntrospectToken(string token);
+        Task<IntrospectTokenRes> IntrospectToken(string token);
 
         /// <summary>
         /// 效验Token合法性
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> ValidateToken(ValidateTokenParams param);
+        Task<ValidateTokenRes> ValidateToken(ValidateTokenParams param);
 
         /// <summary>
         /// 拼接登出 URL
