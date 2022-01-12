@@ -10,9 +10,7 @@ namespace Authing.ApiClient.Types
         public string AppId { get; set; }
         public string UserPoolId { get; set; }
         public string Host { get; set; }
-
         public string Authorization { get; set; }
-
         public string Secret { get; set; }
         public string RedirectUri { get; set; }
         public string RequestFrom { get; set; }
@@ -417,6 +415,50 @@ namespace Authing.ApiClient.Types
         [JsonProperty("scope")]
         public string Scope { get; set; }
     }
+
+
+    public class ValidateTokenRes
+    {
+        [JsonProperty("jti")]
+        public string jti { get; set; }
+        [JsonProperty("sub")]
+        public string sub { get; set; }
+        [JsonProperty("iat")]
+        public int iat { get; set; }
+        [JsonProperty("exp")]
+        public int exp { get; set; }
+        [JsonProperty("scope")]
+        public string scope { get; set; }
+        [JsonProperty("iss")]
+        public string iss { get; set; }
+        [JsonProperty("aud")]
+        public string aud { get; set; }
+    }
+
+
+
+    public class IntrospectTokenRes
+    {
+        [JsonProperty("active")]
+        public bool Active { get; set; }
+        [JsonProperty("sub")]
+        public string Sub { get; set; }
+        [JsonProperty("client_id")]
+        public string ClientId { get; set; }
+        [JsonProperty("exp")]
+        public int Exp { get; set; }
+        [JsonProperty("iat")]
+        public int Iat { get; set; }
+        [JsonProperty("iss")]
+        public string Iss { get; set; }
+        [JsonProperty("jti")]
+        public string Jti { get; set; }
+        [JsonProperty("scope")]
+        public string Scope { get; set; }
+        [JsonProperty("token_type")]
+        public string TokenType { get; set; }
+    }
+
 
 
     public class UserInfo

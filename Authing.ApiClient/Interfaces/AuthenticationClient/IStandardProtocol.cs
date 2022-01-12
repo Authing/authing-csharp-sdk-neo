@@ -63,14 +63,14 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> IntrospectToken(string token);
+        Task<IntrospectTokenRes> IntrospectToken(string token);
 
         /// <summary>
         /// 效验Token合法性
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> ValidateToken(ValidateTokenParams param);
+        Task<ValidateTokenRes> ValidateToken(ValidateTokenParams param);
 
         /// <summary>
         /// 拼接登出 URL
