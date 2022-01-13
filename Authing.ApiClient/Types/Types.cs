@@ -543,7 +543,7 @@ namespace Authing.ApiClient.Types
 
         [JsonProperty("locale")] public string Locale { get; set; }
 
-        [JsonProperty("address")] public string Address { get; set; }
+        [JsonProperty("address")] public Address Address { get; set; }
 
         [JsonProperty("formatted")] public string Formatted { get; set; }
 
@@ -572,6 +572,20 @@ namespace Authing.ApiClient.Types
 
         [JsonProperty("token")] public string Token { get; set; }
     }
+
+
+    public class Address
+    {
+        [JsonProperty("country")]
+        public string Country { get; set; }
+        [JsonProperty("postal_code")]
+        public string PostalCode { get; set; }
+        [JsonProperty("region")]
+        public string Region { get; set; }
+        [JsonProperty("formatted")]
+        public string Formatted { get; set; }
+    }
+
 
 
     public enum TotpSourceEnum

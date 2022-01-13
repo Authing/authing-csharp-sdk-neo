@@ -187,7 +187,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<UserInfo> GetUserInfoByAccessToken(string token)
         {
             var endPoint = Options.Protocol == Protocol.OAUTH
-                ? "oauth/me?access_token={token}"
+                ? $"oauth/me?access_token={token}"
                 : $"oidc/me?access_token={token}";
             UserInfo res;
             switch (Options.Protocol)
