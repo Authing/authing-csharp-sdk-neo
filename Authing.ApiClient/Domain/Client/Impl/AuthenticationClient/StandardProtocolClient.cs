@@ -100,11 +100,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             //{
             //    prompt = "consent";
             //}
-            option.Scope ??= "";
+            option.Scope ??= "openid profile email phone address";
             var res = new
             {
                 client_id = option?.AppId ?? Options.AppId,
-                scope = $"openid profile email phone address {option.Scope}",
+                scope = $"{option.Scope}",
                 state = option?.State ?? AuthingUtils.GenerateRandomString(12),
                 nonce = option?.Nonce ?? AuthingUtils.GenerateRandomString(12),
                 response_mode = option?.ResponseMode?.ToString().ToLower(),
@@ -409,9 +409,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             switch (Options.Protocol)
             {
-                case Protocol.OIDC:
-                    return BuildCasLogoutUrl(options);
                 case Protocol.OAUTH:
+                    return BuildCasLogoutUrl(options);
+                case Protocol.OIDC:
                     if (options.Expert != null)
                         return BuildOidcLogoutUrl(options);
                     return BuildEasyLogoutUrl(options);
@@ -433,9 +433,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public string BuildEasyLogoutUrl(LogoutParams options)
         {
             if (string.IsNullOrWhiteSpace(options.RedirectUri) && string.IsNullOrWhiteSpace(options.IdToken) ||
-                !string.IsNullOrWhiteSpace(options.RedirectUri) || !string.IsNullOrWhiteSpace(options.IdToken))
+                string.IsNullOrWhiteSpace(options.RedirectUri) || string.IsNullOrWhiteSpace(options.IdToken))
                 throw new ArgumentException("必须同时传入 idToken 和 redirectUri 参数，或者同时都不传入");
-            return string.IsNullOrWhiteSpace(options.RedirectUri)
+            return !string.IsNullOrWhiteSpace(options.RedirectUri)
                 ? $"{Host}/oidc/session/end?id_token_hint={options.IdToken}&post_logout_redirect_uri={options.RedirectUri}"
                 : $"{Host}/oidc/session/end";
         }
@@ -478,7 +478,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> RevokeToken(string token)
+        public async Task<GraphQLResponse<string>> RevokeToken(string token)
         {
             if (Options.Protocol != Protocol.OAUTH && Options.Protocol != Protocol.OIDC)
                 throw new ArgumentException(
@@ -502,9 +502,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        private async Task<HttpResponseMessage> RevokeTokenWithClientSecretPost(string url, string token)
+        private async Task<GraphQLResponse<string>> RevokeTokenWithClientSecretPost(string url, string token)
         {
-            var result = await RequestCustomData<HttpResponseMessage>(
+            var result = await RequestCustomData<string>(
                 url,
                 new Dictionary<string, string>()
                 {
@@ -512,14 +512,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     {"client_id",Options.AppId},
                     {"client_secret",Options.Secret}
                 }.ConvertJson()).ConfigureAwait(false);
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> RevokeTokenWithClientSecretBasic(string url, string token)
+        private async Task<GraphQLResponse<string>> RevokeTokenWithClientSecretBasic(string url, string token)
         {
             if (Options.Protocol == Protocol.OAUTH)
                 throw new ArgumentException("OAuth 2.0 暂不支持用 client_secret_basic 模式身份验证撤回 Token");
-            var result = await RequestCustomData<HttpResponseMessage>(
+            var result = await RequestCustomData<string>(
                 "oidc/token/revocation",
                 new Dictionary<string, string>()
                 {
@@ -531,19 +531,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                         $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}"
                     }
                 }).ConfigureAwait(false);
-            return result.Data;
+            return result;
         }
 
-        private async Task<HttpResponseMessage> RevokeTokenWithNone(string url, string token)
+        private async Task<GraphQLResponse<string>> RevokeTokenWithNone(string url, string token)
         {
-            var result = await RequestCustomData<HttpResponseMessage>(
+            var result = await RequestCustomData<string>(
                 url,
                 new Dictionary<string, string>()
                 {
                     {"token",token},
                     {"client_id",Options.AppId}
                 }.ConvertJson()).ConfigureAwait(false);
-            return result.Data;
+            return result;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Authentication;
+using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Interfaces.AuthenticationClient
@@ -96,6 +97,6 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> RevokeToken(string token);
+        Task<GraphQLResponse<string>> RevokeToken(string token);
     }
 }

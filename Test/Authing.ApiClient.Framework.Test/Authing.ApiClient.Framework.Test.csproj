@@ -6,7 +6,7 @@
     <IsPackable>false</IsPackable>
 
     <RootNamespace>Authing.ApiClient.Framework.Test</RootNamespace>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>OIDC</DefineConstants>
 
   </PropertyGroup>
 
