@@ -188,7 +188,7 @@ GKl64GDcIq3au+aqJQIDAQAB
 
 
 
-            if (result.Errors != null && result.Errors.Any() || (result.Code != 200 && result.Code != 0))
+            if (result?.Errors != null && (bool) result?.Errors.Any() || (result?.Code != 200 && result?.Code != 0))
             {
                 var error = result.Errors?[0].Message;
                 if (error is null)

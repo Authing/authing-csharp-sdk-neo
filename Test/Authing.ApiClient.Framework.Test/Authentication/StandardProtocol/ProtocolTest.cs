@@ -14,6 +14,11 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 {
     public class ProtocolTest : BaseTest
     {
+        public ProtocolTest()
+        {
+            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
+        }
+
         [Fact]
         [Description("需要手动调试")]
         public async Task BuildAuthorizeUrlTest()
@@ -21,7 +26,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             authenticationClient.Options.Protocol = Protocol.SAML;
             string saml = authenticationClient.BuildAuthorizeUrl(new SamlOption());
             authenticationClient.Options.Protocol = Protocol.OIDC;
-            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a", Scope = "offline_access" });
             var url2 = new Uri(oidc);
             authenticationClient.Options.Protocol = Protocol.OAUTH;
             string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://console.authing.cn/console/get-started/6172807001258f603126a78a" });
@@ -31,7 +36,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         [Description("需要手动调试")]
         public async Task GetAccessTokenByCodeTest()
         {
-            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
 #if OIDC
             #region OIDC 登陆测试
 
@@ -53,7 +57,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         [Description("需要手动调试")]
         public async Task GetUserInfoByAccessTokenTest()
         {
-            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
 #if OIDC
             #region OIDC 换取用户信息
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
@@ -75,13 +78,22 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         [Description("需要手动调试")]
         public async Task GetNewAccessTokenByRefreshToken()
         {
-            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
+#if OIDC
+            #region OIDC 刷新Token
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "offline_access" });
+            var res2 = await authenticationClient.GetAccessTokenByCode("TFjR_hamTzjrmsAnlWI3qxkpxJRxnnNZ0zCb0ZUplq8");
+            var result = await authenticationClient.GetNewAccessTokenByRefreshToken(res2.RefreshToken);
+            #endregion
+#else
+            #region OAuth 刷新Token
             authenticationClient.Options.Protocol = Protocol.OAUTH;
             string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://www.baidu.com" });
-            var res2 = await authenticationClient.GetAccessTokenByCode("e957ab20a5a202ce25de9583473304d335d4ade1");
+            var res2 = await authenticationClient.GetAccessTokenByCode("01ed0aa1127edd9cecb85581fec73ebe6b3ed34f");
+            var result = await authenticationClient.GetNewAccessTokenByRefreshToken(res2.RefreshToken);
+            #endregion
+#endif
 
-            var result =
-                await authenticationClient.GetNewAccessTokenByRefreshToken(res2.RefreshToken);
+
             Assert.NotNull(result);
         }
 
@@ -89,12 +101,10 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         [Description("需要手动调试")]
         public async Task IntrospectToken()
         {
-            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
 #if OIDC
             #region OIDC 检查Token
-            //TODO:{"error":"invalid_client","error_description":"client authentication failed"}
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
-            var res1 = await authenticationClient.GetAccessTokenByCode("Sl-IejBvixGlUL2EBfmJkFqfj3gRqxVBg3rXfOk4cQX");
+            var res1 = await authenticationClient.GetAccessTokenByCode("ZvtfRZ82l2oM52V0GgUr3qpRd-hq0kfUg6xa8zqzpVE");
             var check = await authenticationClient.IntrospectToken(res1.AccessToken);
             #endregion
 #else
@@ -112,12 +122,10 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         [Description("需要手动调试")]
         public async Task ValidateToken()
         {
-            authenticationClient.Options.RedirectUri = "https://www.baidu.com";
-
 #if OIDC
             #region OIDC 校验Token
-            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
-            var res1 = await authenticationClient.GetAccessTokenByCode("ICx2rvRQ03mN6m5E_Pry-a7fQ1p-ylmSDt0GUAKyf1G");
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "offline_access" });
+            var res1 = await authenticationClient.GetAccessTokenByCode("I34X7LW2YBtlY06ztbeAPzgqw8ev5QReOeydZu8L0OO");
             var check = await authenticationClient.ValidateToken(
                 new ValidateTokenParams()
                 { AccessToken = res1.AccessToken }
@@ -142,10 +150,24 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
         [Description("需要手动调试")]
         public async Task RevokeToken()
         {
-            //TODO:{"error":"invalid_client","error_description":"client authentication failed"}
-            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com" });
-            var res1 = await authenticationClient.GetAccessTokenByCode("SWfxVr7B_6CC1q3EBBOjQuVtX__p_U7NatUC3i1VinE");
+#if OIDC
+            #region OIDC 撤回
+            string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "offline_access" });
+            var res1 = await authenticationClient.GetAccessTokenByCode("623IXuP9WDOXA-ZenC5V-Qf2R-4qipkWaQuQpZTwQ2x");
             var check = await authenticationClient.RevokeToken(res1.AccessToken);
+            #endregion
+#else
+
+            #region OAuth 撤回
+            //TODO:测试不通过
+            authenticationClient.Options.Protocol = Protocol.OAUTH;
+            string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://www.baidu.com" });
+            var res2 = await authenticationClient.GetAccessTokenByCode("767b6e8fd032e931307680a62e7fdb3914e2ae16");
+            var check = await authenticationClient.RevokeToken(res2.AccessToken);
+            #endregion
+#endif
+            Assert.NotNull(check);
+
         }
     }
 }

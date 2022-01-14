@@ -95,22 +95,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public string BuildOidcAuthorizeUrl(OidcOption option)
         {
-            var prompt = "";
-            if (option?.Scope?.IndexOf("offline_access") != -1)
-            {
-                prompt = "consent";
-            }
-
+            //var prompt = "";
+            //if (option?.Scope?.IndexOf("offline_access") != -1)
+            //{
+            //    prompt = "consent";
+            //}
+            option.Scope ??= "";
             var res = new
             {
                 client_id = option?.AppId ?? Options.AppId,
-                scope = "openid profile email phone address",
+                scope = $"openid profile email phone address {option.Scope}",
                 state = option?.State ?? AuthingUtils.GenerateRandomString(12),
                 nonce = option?.Nonce ?? AuthingUtils.GenerateRandomString(12),
                 response_mode = option?.ResponseMode?.ToString().ToLower(),
                 response_type = !(option?.ResponseType is null) ? option.ResponseType.ToString().ToLower() : "code",
                 redirect_uri = option?.RedirectUri ?? Options.RedirectUri,
-                prompt = prompt.Contains("offline_access") ? "consent" : "",
+                prompt = option.Scope.Contains("offline_access") ? "consent" : "",
                 //code_challenge_method = option.CodeChallengeMethod?.ToString().ToLower(),
                 //code_challenge = option.CodeChallenge,
             }.Convert2QueryParams();
@@ -198,7 +198,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 case Protocol.OIDC:
                 case Protocol.SAML:
                 case Protocol.CAS:
-                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint,method: HttpMethod.Get).ConfigureAwait(false);
+                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -221,7 +221,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 Protocol.OAUTH => "oauth/token",
                 _ => throw new ArgumentException("初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数")
             };
-            if (Options?.Secret == null && Options?.AppId == null && Options.TokenEndPointAuthMethod  != TokenEndPointAuthMethod.NONE)
+            if (Options?.Secret == null && Options?.AppId == null && Options.TokenEndPointAuthMethod != TokenEndPointAuthMethod.NONE)
             {
                 throw new ArgumentException("请在初始化 AuthenticationClient 时传入 appId 和 secret 参数");
             }
@@ -608,7 +608,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<string> ValidateTicketV2(string ticket, string service, ValidateTicketFormat validateTicketFormat)
         {
-            var result = await RequestCustomData<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}",method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestCustomData<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", method: HttpMethod.Get).ConfigureAwait(false);
 
             return result.Data.Result;
         }
