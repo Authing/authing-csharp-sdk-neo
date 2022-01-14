@@ -332,6 +332,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     using (var reader = new StreamReader(contentStream))
                     {
                         var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
+
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }

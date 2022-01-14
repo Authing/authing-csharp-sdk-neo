@@ -168,7 +168,7 @@ GKl64GDcIq3au+aqJQIDAQAB
         {
             var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             CheckResult(result);
-            return result;
+            return result ??= new GraphQLResponse<TResponse>() { Code = 200, Message = "请求成功，但服务器没有返回数据！" }; ;
         }
 
         protected async Task<TResponse> RequestNoGraphQLResponse<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
@@ -186,16 +186,15 @@ GKl64GDcIq3au+aqJQIDAQAB
             //    return;
             //}
 
-
-
-            if (result.Errors != null && result.Errors.Any() || (result.Code != 200 && result.Code != 0))
+            if (result?.Errors != null && ((bool) result?.Errors.Any() || (result?.Code != 200 && result?.Code != 0)))
             {
-                var error = result.Errors?[0].Message;
+                var error = result?.Errors?[0].Message;
                 if (error is null)
                 {
-                    error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
+                    if (result != null)
+                        error = new GraphQLErrorMessage() {Message = result.Message, Code = result.Code};
                 }
-                if (result.Errors != null && result.Errors.Count()>0)
+                if (result != null && result.Errors != null && result.Errors.Count()>0)
                 {
                     if (result.Errors[0].Message != null)
                     {
