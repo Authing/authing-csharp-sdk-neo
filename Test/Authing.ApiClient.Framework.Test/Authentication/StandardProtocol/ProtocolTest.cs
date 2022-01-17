@@ -177,7 +177,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 #else
 
             #region OAuth 撤回
-            //TODO:测试不通过
             authenticationClient.Options.Protocol = Protocol.OAUTH;
             string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://www.baidu.com" });
             var res2 = await authenticationClient.GetAccessTokenByCode("767b6e8fd032e931307680a62e7fdb3914e2ae16");

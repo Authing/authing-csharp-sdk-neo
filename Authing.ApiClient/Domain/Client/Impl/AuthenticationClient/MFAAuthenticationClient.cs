@@ -15,28 +15,48 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
     public  class MfaAuthenticationClient : BaseAuthenticationClient, IMfaAuthenticationClient
     {
+
         public MfaAuthenticationClient(Action<InitAuthenticationClientOptions> init) : base(init)
         {
         }
 
+        /// <summary>
+        /// 获取 MFA 认证器
+        /// </summary>
+        /// <param name="getMfaAuthenticatorsParam"></param>
+        /// <returns></returns>
         public async Task<List< IMfaAuthenticator>> GetMfaAuthenticators(GetMfaAuthenticatorsParam getMfaAuthenticatorsParam)
         {
             var result = await Get<GetMfaAuthenticatorsResponse>($"api/v2/mfa/authenticator/?type={getMfaAuthenticatorsParam.Type}&source={getMfaAuthenticatorsParam.TotpSource}", null).ConfigureAwait(false);
             return result.Data.Result;
         }
 
+        /// <summary>
+        /// 请求 MFA 二维码和密钥信息
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public async Task<IMfaAssociation> AssosicateMfaAuthenticator(AssosicateMfaAuthenticatorParam parameter)
         {
             var result = await PostRaw<IMfaAssociation>("api/v2/mfa/totp/associate", parameter.ConvertJson(),parameter.MfaToken).ConfigureAwait(false);
             return result.Data;
         }
 
+        /// <summary>
+        ///解绑 MFA
+        /// </summary>
+        /// <returns></returns>
         public async Task<CommonMessage> DeleteMfaAuthenticator()
         {
             var result = await Delete<CommonMessage>("api/v2/mfa/totp/associate",null).ConfigureAwait(false);
             return result.Data;
         }
 
+        /// <summary>
+        /// 确认绑定 MFA
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public async Task<CommonMessage> ConfirmAssosicateMfaAuthenticator(ConfirmAssosicateMfaAuthenticatorParam parameter)
         {
 
@@ -45,36 +65,67 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result.Data.Result;
         }
 
+        /// <summary>
+        /// 检验二次验证 MFA 口令
+        /// </summary>
+        /// <param name="verifyTotpMfaParam"></param>
+        /// <returns></returns>
         public async Task<User> VerifyTotpMfa(VerifyTotpMfaParam verifyTotpMfaParam)
         {
             var result = await PostRaw<User>("api/v2/mfa/totp/verify", verifyTotpMfaParam.ConvertJson(), verifyTotpMfaParam.MfaToken).ConfigureAwait(false);
             return result.Data;
         }
 
+        /// <summary>
+        /// 检验二次验证 MFA 短信验证码
+        /// </summary>
+        /// <param name="verifyAppSmsMfaParam"></param>
+        /// <returns></returns>
         public async Task<User> VerifyAppSmsMfa(VerifyAppSmsMfaParam verifyAppSmsMfaParam)
         {
             var result = await PostRaw<User>("api/v2/applications/mfa/sms/verify", verifyAppSmsMfaParam.ConvertJson(), verifyAppSmsMfaParam.MfaToken).ConfigureAwait(false);
             return result.Data;
         }
 
+        /// <summary>
+        /// 检验二次验证 MFA 邮箱验证码
+        /// </summary>
+        /// <param name="verifyAppEmailMfaParam"></param>
+        /// <returns></returns>
         public async Task<User> VerifyAppEmailMfa(VerifyAppEmailMfaParam verifyAppEmailMfaParam)
         {
             var result = await PostRaw<User>("api/v2/applications/mfa/email/verify", verifyAppEmailMfaParam.ConvertJson(),verifyAppEmailMfaParam.MfaToken).ConfigureAwait(false);
             return result.Data;
         }
 
+        /// <summary>
+        /// 检测手机号或邮箱是否已被绑定
+        /// </summary>
+        /// <param name="phoneOrEmailBindableParam"></param>
+        /// <returns></returns>
         public async Task<bool> PhoneOrEmailBindable(PhoneOrEmailBindableParam phoneOrEmailBindableParam)
         {
             var result = await PostRaw<PhoneOrEmailBindableResponse>("api/v2/applications/mfa/check", phoneOrEmailBindableParam.ConvertJson(), phoneOrEmailBindableParam.MfaToken).ConfigureAwait(false);
             return result.Data.Result;
         }
 
+        /// <summary>
+        /// 检验二次验证 MFA 恢复代码
+        /// </summary>
+        /// <param name="verifyTotpRecoveryCodeParam"></param>
+        /// <returns></returns>
         public async Task<User> VerifyTotpRecoveryCode(VerifyTotpRecoveryCodeParam verifyTotpRecoveryCodeParam)
         {
             var result = await PostRaw<User>("api/v2/mfa/totp/recovery", verifyTotpRecoveryCodeParam.ConvertJson(), verifyTotpRecoveryCodeParam.MfaToken).ConfigureAwait(false);
             return result.Data;
         }
-
+        
+        /// <summary>
+        /// 通过图片 URL 绑定人脸
+        /// TODO:未测试
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public async Task<User> AssociateFaceByUrl(AssociateFaceByUrlParams options)
         {
             var res = await RequestCustomDataWithToken<RestfulResponse<User>>("api/v2/mfa/face/associate",
@@ -82,6 +133,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return res.Data.Data;
         }
 
+        /// <summary>
+        /// 人脸二次认证
+        /// TODO:未测试
+        /// </summary>
+        /// <param name="photo"></param>
+        /// <param name="mfaToken"></param>
+        /// <returns></returns>
         public async Task<User> VerifyFaceMfa(string photo, string mfaToken)
         {
             var res = await RequestCustomDataWithToken<RestfulResponse<User>>("api/v2/mfa/face/verify",

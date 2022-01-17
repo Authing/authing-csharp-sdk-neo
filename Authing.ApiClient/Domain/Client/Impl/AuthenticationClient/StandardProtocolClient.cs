@@ -120,7 +120,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// CODE 换取 Token
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="code"> 网页回调返回的 CODE </param>
         /// <returns></returns>
         public async Task<CodeToTokenRes> GetAccessTokenByCode(string code)
         {
@@ -182,7 +182,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// AccessToken 换取用户信息
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token"> 用户的AccessToken </param>
         /// <returns></returns>
         public async Task<UserInfo> GetUserInfoByAccessToken(string token)
         {
@@ -210,7 +210,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 使用 Refresh token 获取新的 Access token
         /// </summary>
-        /// <param name="refreshToken"></param>
+        /// <param name="refreshToken">用户的 RefreshToken</param>
         /// <returns></returns>
         public async Task<RefreshTokenRes> GetNewAccessTokenByRefreshToken(string refreshToken)
         {
@@ -309,7 +309,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 检查 Access token 或 Refresh token 的状态
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">用户的 Refresh token 或 Access token</param>
         /// <returns></returns>
         public async Task<IntrospectTokenRes> IntrospectToken(string token)
         {
@@ -382,9 +382,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         /// <summary>
-        /// 效验Token合法性
+        /// 校验Token合法性
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="param">校验内容</param>
         /// <returns></returns>
         public async Task<ValidateTokenRes> ValidateToken(ValidateTokenParams param)
         {
@@ -403,7 +403,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 拼接登出 URL
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">登出参数</param>
         /// <returns></returns>
         public string BuildLogoutUrl(LogoutParams options)
         {
@@ -476,7 +476,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 撤回 Access token 或 Refresh token
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">用户的 Access token 或 Refresh token</param>
         /// <returns></returns>
         public async Task<GraphQLResponse<string>> RevokeToken(string token)
         {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management.Principal;
 using Authing.ApiClient.Extensions;
@@ -22,6 +19,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 _client = client;
             }
 
+            /// <summary>
+            /// 获取主体认证详情，获取主体认证详情，未认证时返回 null
+            /// </summary>
+            /// <param name="userId">用户 ID</param>
+            /// <returns>PrincipalDetail or null</returns>
             public async Task<PrincipalDetail> Detail(string userId)
             {
                 var result = await _client.RequestCustomData<RestfulResponse<PrincipalDetail>>(
@@ -29,17 +31,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     contenttype: ContentType.JSON).ConfigureAwait(false);
                 return result.Data.Data;
             }
-
+            /// <summary>
+            /// TODO:补全注释
+            /// </summary>
+            /// <param name="userId"></param>
+            /// <param name="info"></param>
+            /// <returns></returns>
             public async Task<bool> Authenticate(string userId, PrincipalInput info)
             {
                 var url = $"api/v2/users/{userId}/management/principal_authentication";
                 Dictionary<string, string> param = new Dictionary<string, string>();
                 if (info.Type == "P")
                 {
-                    param.Add("type","P");
-                    param.Add("name",info.Name);
-                    param.Add("idCard",info.IdCard);
-                    param.Add("ext",info.BankCard);
+                    param.Add("type", "P");
+                    param.Add("name", info.Name);
+                    param.Add("idCard", info.IdCard);
+                    param.Add("ext", info.BankCard);
                 }
                 else
                 {
