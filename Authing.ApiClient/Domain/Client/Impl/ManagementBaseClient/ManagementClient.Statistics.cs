@@ -27,6 +27,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             /// <summary>
             /// 用户日志
+            /// TODO:过滤参数无效
             /// </summary>
             /// <param name="options">管理日志统计信息分页查询参数
             /// options.clientIp <String> 客户端真实 IP，如果你在服务器端调用此接口，请务必将此参数设置为终端用户的真实 IP。
@@ -59,6 +60,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             /// <summary>
             /// 审计日志
+            /// TODO:过滤参数无效
             /// </summary>
             /// <param name="options">审计日志参数
             /// options.clientIp <String> 客户端真实 IP，如果你在服务器端调用此接口，请务必将此参数设置为终端用户的真实 IP。

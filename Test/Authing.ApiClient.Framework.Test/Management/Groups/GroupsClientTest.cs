@@ -73,10 +73,13 @@ namespace Authing.ApiClient.Framework.Test.Management.Groups
         [Fact]
         public async Task Groups_ListUsers()
         {
-            //TODO:返回的用户列表不包含目标用户
-            await managementClient.Groups.Create("testgroup_ListUsers", "testgroup_ListUsers", "testgroup_ListUsers");
+            //TODO:返回的用户列表不包含目标用户,
+            /*
+             * {"data":{"role":null}}
+             */
+            var temp = await managementClient.Groups.Create("testgroup_ListUsers", "testgroup_ListUsers", "testgroup_ListUsers");
             await managementClient.Groups.AddUsers("testgroup_ListUsers", new List<string>() { TestUserId });
-            var users = await managementClient.Groups.ListUsers("testgroup_ListUsers", new ListUsersOption());
+            var users = await managementClient.Groups.ListUsers("testgroup_ListUsers", new ListUsersOption(){NameSpace = temp.Code });
             Assert.NotEmpty(users.List); ;
             Assert.Equal(users.List.Take(1).First().Id, TestUserId);
         }

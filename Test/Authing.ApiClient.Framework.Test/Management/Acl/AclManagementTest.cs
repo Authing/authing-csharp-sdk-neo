@@ -193,6 +193,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         [Fact]
         public async Task Acl_DeleteProgrammaticAccessAccount()
         {
+            //TODO:测试不通过
             var result = await managementClient.Acl.DeleteProgrammaticAccessAccount("123");
             Assert.True(result);
         }
@@ -200,13 +201,15 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         [Fact]
         public async Task Acl_EnableProgrammaticAccessAccount()
         {
-            var result = await managementClient.Acl.EnableProgrammaticAccessAccount("123");
+            //TODO:测试不通过
+            var result = await managementClient.Acl.EnableProgrammaticAccessAccount("61e52a0b3e3e7b4cae7cab06");
             Assert.NotNull(result);
         }
 
         [Fact]
         public async Task Acl_DisableProgrammaticAccessAccount()
         {
+            //TODO:测试不通过
             var result = await managementClient.Acl.DisableProgrammaticAccessAccount("123");
             Assert.NotNull(result);
         }
