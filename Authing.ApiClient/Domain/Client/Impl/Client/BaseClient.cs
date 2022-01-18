@@ -168,7 +168,7 @@ GKl64GDcIq3au+aqJQIDAQAB
         {
             var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             CheckResult(result);
-            return result ??= new GraphQLResponse<TResponse>() { Code = 200, Message = "请求成功，但服务器没有返回数据！" }; ;
+            return result ?? new GraphQLResponse<TResponse>() { Code = 200, Message = "请求成功，但服务器没有返回数据！" }; ;
         }
 
         protected async Task<TResponse> RequestNoGraphQLResponse<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
