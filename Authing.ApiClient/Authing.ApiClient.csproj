@@ -18,8 +18,10 @@ Version 0.0.2
 Version 0.0.3
 - 修复 OIDC 登录链接存在的错误
 Version 0.0.4
-- 修复 token 获取用户信息地址解析错误的问题</PackageReleaseNotes>
-    <Version>0.0.4</Version>
+- 修复 token 获取用户信息地址解析错误的问题
+Version 0.0.5
+- 修复部分场景获取组织机构列表会出现的异常</PackageReleaseNotes>
+    <Version>0.0.5</Version>
     <PackageId>Authing.Library</PackageId>
   </PropertyGroup>
 
