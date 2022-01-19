@@ -383,13 +383,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<PaginatedOrgsAndNodes> ListOrgs(string userId)
         {
-            var res = await client.Get<ListOrgsResponse>($"api/v2/users/{userId}/orgs", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomData<IEnumerable<IEnumerable<OrgAndNode>>>($"api/v2/users/{userId}/orgs", method: System.Net.Http.HttpMethod.Get,contenttype: ContentType.JSON).ConfigureAwait(false);
+            //var res = await client.Get<ListOrgsResponse>($"api/v2/users/{userId}/orgs", new GraphQLRequest()).ConfigureAwait(false);
             if (res.Code == 200)
             {
                 var result = new PaginatedOrgsAndNodes()
                 {
-                    TotalCount = res.Data.Data.Count(),
-                    List = res.Data.Data
+                    TotalCount = res.Data.Count(),
+                    List = res.Data
                 };
                 return result;
             }
