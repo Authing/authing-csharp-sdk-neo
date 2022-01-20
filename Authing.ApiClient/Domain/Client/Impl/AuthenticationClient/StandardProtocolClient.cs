@@ -62,7 +62,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="option">CAS 授权类</param>
         /// <returns></returns>
-        public string BuildCasAuthorizeUrl(CasOption option)
+        private string BuildCasAuthorizeUrl(CasOption option)
         {
             return option.Service is null
                 ? $"{Host}/cas-idp/{AppId}"
@@ -74,7 +74,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="option">OAuth 授权类</param>
         /// <returns></returns>
-        public string BuildOauthAuthorizeUrl(OauthOption option)
+        private string BuildOauthAuthorizeUrl(OauthOption option)
         {
             var rd = new Random();
             var param = new
@@ -93,7 +93,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="option">OIDC 授权类</param>
         /// <returns></returns>
-        public string BuildOidcAuthorizeUrl(OidcOption option)
+        private string BuildOidcAuthorizeUrl(OidcOption option)
         {
             //var prompt = "";
             //if (option?.Scope?.IndexOf("offline_access") != -1)
@@ -423,14 +423,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        public string BuildOidcLogoutUrl(LogoutParams options)
+        private string BuildOidcLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
                 ? $"{Host}/login/profile/logout?redirect_uri={options.RedirectUri}"
                 : $"{Host}/login/profile/logout";
         }
 
-        public string BuildEasyLogoutUrl(LogoutParams options)
+        private string BuildEasyLogoutUrl(LogoutParams options)
         {
             if (string.IsNullOrWhiteSpace(options.RedirectUri) && string.IsNullOrWhiteSpace(options.IdToken) ||
                 string.IsNullOrWhiteSpace(options.RedirectUri) || string.IsNullOrWhiteSpace(options.IdToken))
@@ -440,7 +440,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 : $"{Host}/oidc/session/end";
         }
 
-        public string BuildCasLogoutUrl(LogoutParams options)
+        private string BuildCasLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
                 ? $"{Host}/cas-idp/logout"
