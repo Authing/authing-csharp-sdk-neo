@@ -67,7 +67,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Orgs
         public string DescriptionI18n { get; set; }
 
         [JsonProperty("order")]
-        public long Order { get; set; }
+        public long? Order { get; set; }
 
         [JsonProperty("code")]
         public string Code { get; set; }
