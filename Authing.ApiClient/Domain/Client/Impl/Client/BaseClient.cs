@@ -54,7 +54,7 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         protected BaseClient()
         {
-            this.client = AuthingClient.CreateAhtingClient();
+            this.client = AuthingClient.CreateAhtingClient(Timeout);
         }
 
         public async Task<TResponse> Post<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)

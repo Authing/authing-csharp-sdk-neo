@@ -15,14 +15,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 {
     public class AuthingClient : IAuthingClient
     {
-
-        private AuthingClient()
+        private readonly TimeSpan _timeOut;
+        private AuthingClient(TimeSpan timeout)
         {
+            _timeOut = timeout;
         }
 
-        public static AuthingClient CreateAhtingClient()
+        public static AuthingClient CreateAhtingClient(TimeSpan timeout)
         {
-            return new AuthingClient();
+            return new AuthingClient(timeout);
         }
 
         public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, TRequest body,
@@ -95,7 +96,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -177,7 +178,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -221,7 +222,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -266,7 +267,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -309,7 +310,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 case "POST":
                 case "PATCH":
                 case "PUT":
-                    message = HttpRequestMessage<TResponse>(url, serializedata,method, contenttype);
+                    message = HttpRequestMessage<TResponse>(url, serializedata, method, contenttype);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(method.Method), method, "不支持此方法");
@@ -323,7 +324,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -345,7 +346,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             }
         }
 
-        private HttpRequestMessage HttpRequestMessage<TResponse>(string url, string serializedata,HttpMethod method, ContentType contenttype)
+        private HttpRequestMessage HttpRequestMessage<TResponse>(string url, string serializedata, HttpMethod method, ContentType contenttype)
         {
             Dictionary<string, string> data;
             SortedDictionary<string, string> sortedParam;

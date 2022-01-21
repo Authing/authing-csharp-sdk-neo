@@ -37,7 +37,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Host = Options.Host ?? Host;
             if (UserPoolId == string.Empty)
             {
-                throw new Exception("参数错误");
+                throw new ArgumentException("UserPoolId 为空");
             }
         }
 
