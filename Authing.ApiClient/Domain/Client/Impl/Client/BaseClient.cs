@@ -21,7 +21,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         /// <summary>
         /// 接口超时时间，默认为 10 秒
         /// </summary>
-        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(60);
 
         /// <summary>
         /// Authing 接口 URL，默认为 https://core.authing.cn

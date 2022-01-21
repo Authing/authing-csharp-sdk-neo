@@ -43,6 +43,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<string> GetAccessToken()
         {
+            //TODO:判断 Token 过期时间问题有待商榷
             long now = DateTimeOffset.Now.Second;
 
             if (accessTokenExpiredAt.HasValue && accessTokenExpiredAt > now + 3600)
