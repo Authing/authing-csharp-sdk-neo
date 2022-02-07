@@ -409,35 +409,35 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             switch (Options.Protocol)
             {
-                case Protocol.OAUTH:
+                case Protocol.CAS:
                     return BuildCasLogoutUrl(options);
                 case Protocol.OIDC:
                     if (options.Expert != null)
                         return BuildOidcLogoutUrl(options);
                     return BuildEasyLogoutUrl(options);
                 case Protocol.SAML:
-                case Protocol.CAS:
+                case Protocol.OAUTH:
                     return BuildEasyLogoutUrl(options);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private string BuildOidcLogoutUrl(LogoutParams options)
+        private string BuildEasyLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/login/profile/logout?redirect_uri={options.RedirectUri}"
-                : $"{Host}/login/profile/logout";
+                ? $"{Host}/login/profile/logout"
+                : $"{Host}/login/profile/logout?redirect_uri={options.RedirectUri}";
         }
 
-        private string BuildEasyLogoutUrl(LogoutParams options)
+        private string BuildOidcLogoutUrl(LogoutParams options)
         {
             if (string.IsNullOrWhiteSpace(options.RedirectUri) && string.IsNullOrWhiteSpace(options.IdToken) ||
                 string.IsNullOrWhiteSpace(options.RedirectUri) || string.IsNullOrWhiteSpace(options.IdToken))
                 throw new ArgumentException("必须同时传入 idToken 和 redirectUri 参数，或者同时都不传入");
-            return !string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/oidc/session/end?id_token_hint={options.IdToken}&post_logout_redirect_uri={options.RedirectUri}"
-                : $"{Host}/oidc/session/end";
+            return string.IsNullOrWhiteSpace(options.RedirectUri)
+                ? $"{Host}/oidc/session/end"
+                : $"{Host}/oidc/session/end?id_token_hint={options.IdToken}&post_logout_redirect_uri={options.RedirectUri}";
         }
 
         private string BuildCasLogoutUrl(LogoutParams options)
