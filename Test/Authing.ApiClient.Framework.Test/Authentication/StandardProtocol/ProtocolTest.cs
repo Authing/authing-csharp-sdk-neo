@@ -38,15 +38,16 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 #if OIDC
             #region OIDC 登出
             string oidcurl = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "openid profile email phone address offline_access" });
-            var res = await authenticationClient.GetAccessTokenByCode("pMXHOFunjq02nJL9Zpb6jQRjra-FZRNYPocAj1HtWcs");
-            string oidcout = authenticationClient.BuildLogoutUrl(new LogoutParams() { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken });
+            var res = await authenticationClient.GetAccessTokenByCode("KIoMvME1MHDvKiM5u0ETvGvMptUDo6ywXbMoI5Zi4Bx");
+            string oidcout = authenticationClient.BuildLogoutUrl(new LogoutParams() { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken,Expert = true});
             #endregion
 #else
             #region OAuth 登出
+            //TODO:已提示登出成功，但后台还是显示该用户在线
             authenticationClient.Options.Protocol = Protocol.OAUTH;
             string oauthurl = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://www.baidu.com" });
-            var res = await authenticationClient.GetAccessTokenByCode("66b9ce990fe918953d6745faff73a7be1f65dce9");
-            string oauthout = authenticationClient.BuildLogoutUrl(new LogoutParams() { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken });
+            var res = await authenticationClient.GetAccessTokenByCode("061fa5de2ac584611a0a0eb6f92a559a0c0a44dc");
+            string oauthout = authenticationClient.BuildLogoutUrl(new LogoutParams() { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken});
             #endregion
 #endif
         }
@@ -177,7 +178,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 #else
 
             #region OAuth 撤回
-            //TODO:测试不通过
             authenticationClient.Options.Protocol = Protocol.OAUTH;
             string oauth = authenticationClient.BuildAuthorizeUrl(new OauthOption() { RedirectUri = "https://www.baidu.com" });
             var res2 = await authenticationClient.GetAccessTokenByCode("767b6e8fd032e931307680a62e7fdb3914e2ae16");

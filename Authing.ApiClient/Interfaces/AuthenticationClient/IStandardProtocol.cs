@@ -15,29 +15,6 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns></returns>
         string BuildAuthorizeUrl(IProtocolInterface option);
 
-        string BuildSamlAuthorizeUrl();
-
-        /// <summary>
-        /// 拼接 CAS 协议授权链接
-        /// </summary>
-        /// <param name="option">CAS 授权类</param>
-        /// <returns></returns>
-        string BuildCasAuthorizeUrl(CasOption option);
-
-        /// <summary>
-        /// 拼接 OAuth 2.0 协议授权链接
-        /// </summary>
-        /// <param name="option">OAuth 授权类</param>
-        /// <returns></returns>
-        string BuildOauthAuthorizeUrl(OauthOption option);
-
-        /// <summary>
-        /// 拼接 OIDC 协议授权链接
-        /// </summary>
-        /// <param name="option">OIDC 授权类</param>
-        /// <returns></returns>
-        string BuildOidcAuthorizeUrl(OidcOption option);
-
         /// <summary>
         /// CODE 换取 Token
         /// </summary>
@@ -79,10 +56,6 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="options"></param>
         /// <returns></returns>
         string BuildLogoutUrl(LogoutParams options);
-
-        string BuildOidcLogoutUrl(LogoutParams options);
-        string BuildEasyLogoutUrl(LogoutParams options);
-        string BuildCasLogoutUrl(LogoutParams options);
 
         /// <summary>
         /// Client Credentials 模式获取 Access Token

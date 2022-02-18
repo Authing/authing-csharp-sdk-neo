@@ -34,7 +34,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <summary>
             /// 创建分组
             /// </summary>
-            /// <param name="code">分组唯一标志</param>
+            /// <param name="code">分组唯一标识符</param>
             /// <param name="name">分组名称</param>
             /// <param name="description">描述</param>
             /// <returns></returns>
@@ -49,7 +49,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <summary>
             /// 删除分组
             /// </summary>
-            /// <param name="code">分组唯一标志</param>
+            /// <param name="code">分组唯一标识符</param>
             /// <returns></returns>
             public async Task<CommonMessage> Delete(string code)
             {
@@ -62,10 +62,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <summary>
             /// 更新分组信息
             /// </summary>
-            /// <param name="code"></param>
-            /// <param name="name"></param>
-            /// <param name="description"></param>
-            /// <param name="newCode"></param>
+            /// <param name="code">分组唯一标识符</param>
+            /// <param name="name">分组名称</param>
+            /// <param name="description">描述</param>
+            /// <param name="newCode">新分组唯一标识符</param>
             /// <returns></returns>
             public async Task<Group> Update(string code, string name = null, string description = null, string newCode = null)
             {
@@ -83,7 +83,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <summary>
             /// 获取分组详情
             /// </summary>
-            /// <param name="code">分组唯一标志</param>
+            /// <param name="code">分组唯一标识符</param>
             /// <returns></returns>
             public async Task<Group> Detail(string code)
             {
@@ -114,7 +114,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <summary>
             /// 批量删除分组
             /// </summary>
-            /// <param name="codeList">分组唯一标志列表</param>
+            /// <param name="codeList">分组唯一标识符列表</param>
             /// <returns></returns>
             public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList)
             {
@@ -174,7 +174,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <summary>
             /// 批量添加用户
             /// </summary>
-            /// <param name="code">分组唯一标志</param>
+            /// <param name="code">分组唯一标识符标志</param>
             /// <param name="userIds">用户 ID 列表</param>
             /// <returns></returns>
             public async Task<CommonMessage> AddUsers(string code, IEnumerable<string> userIds)
@@ -191,7 +191,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             /// <summary>
             /// 批量移除用户
             /// </summary>
-            /// <param name="code">分组唯一标志</param>
+            /// <param name="code">分组唯一标识符</param>
             /// <param name="userIds">用户 ID 列表</param>
             /// <returns></returns>
             public async Task<CommonMessage> RemoveUsers(string code, IEnumerable<string> userIds)

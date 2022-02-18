@@ -62,7 +62,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="option">CAS 授权类</param>
         /// <returns></returns>
-        public string BuildCasAuthorizeUrl(CasOption option)
+        private string BuildCasAuthorizeUrl(CasOption option)
         {
             return option.Service is null
                 ? $"{Host}/cas-idp/{AppId}"
@@ -74,7 +74,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="option">OAuth 授权类</param>
         /// <returns></returns>
-        public string BuildOauthAuthorizeUrl(OauthOption option)
+        private string BuildOauthAuthorizeUrl(OauthOption option)
         {
             var rd = new Random();
             var param = new
@@ -93,7 +93,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="option">OIDC 授权类</param>
         /// <returns></returns>
-        public string BuildOidcAuthorizeUrl(OidcOption option)
+        private string BuildOidcAuthorizeUrl(OidcOption option)
         {
             //var prompt = "";
             //if (option?.Scope?.IndexOf("offline_access") != -1)
@@ -120,7 +120,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// CODE 换取 Token
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="code"> 网页回调返回的 CODE </param>
         /// <returns></returns>
         public async Task<CodeToTokenRes> GetAccessTokenByCode(string code)
         {
@@ -182,7 +182,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// AccessToken 换取用户信息
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token"> 用户的AccessToken </param>
         /// <returns></returns>
         public async Task<UserInfo> GetUserInfoByAccessToken(string token)
         {
@@ -210,7 +210,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 使用 Refresh token 获取新的 Access token
         /// </summary>
-        /// <param name="refreshToken"></param>
+        /// <param name="refreshToken">用户的 RefreshToken</param>
         /// <returns></returns>
         public async Task<RefreshTokenRes> GetNewAccessTokenByRefreshToken(string refreshToken)
         {
@@ -309,7 +309,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 检查 Access token 或 Refresh token 的状态
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">用户的 Refresh token 或 Access token</param>
         /// <returns></returns>
         public async Task<IntrospectTokenRes> IntrospectToken(string token)
         {
@@ -382,9 +382,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         /// <summary>
-        /// 效验Token合法性
+        /// 校验Token合法性
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="param">校验内容</param>
         /// <returns></returns>
         public async Task<ValidateTokenRes> ValidateToken(ValidateTokenParams param)
         {
@@ -403,44 +403,44 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 拼接登出 URL
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">登出参数</param>
         /// <returns></returns>
         public string BuildLogoutUrl(LogoutParams options)
         {
             switch (Options.Protocol)
             {
-                case Protocol.OAUTH:
+                case Protocol.CAS:
                     return BuildCasLogoutUrl(options);
                 case Protocol.OIDC:
                     if (options.Expert != null)
                         return BuildOidcLogoutUrl(options);
                     return BuildEasyLogoutUrl(options);
                 case Protocol.SAML:
-                case Protocol.CAS:
+                case Protocol.OAUTH:
                     return BuildEasyLogoutUrl(options);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        public string BuildOidcLogoutUrl(LogoutParams options)
+        private string BuildEasyLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/login/profile/logout?redirect_uri={options.RedirectUri}"
-                : $"{Host}/login/profile/logout";
+                ? $"{Host}/login/profile/logout"
+                : $"{Host}/login/profile/logout?redirect_uri={options.RedirectUri}";
         }
 
-        public string BuildEasyLogoutUrl(LogoutParams options)
+        private string BuildOidcLogoutUrl(LogoutParams options)
         {
             if (string.IsNullOrWhiteSpace(options.RedirectUri) && string.IsNullOrWhiteSpace(options.IdToken) ||
                 string.IsNullOrWhiteSpace(options.RedirectUri) || string.IsNullOrWhiteSpace(options.IdToken))
                 throw new ArgumentException("必须同时传入 idToken 和 redirectUri 参数，或者同时都不传入");
-            return !string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/oidc/session/end?id_token_hint={options.IdToken}&post_logout_redirect_uri={options.RedirectUri}"
-                : $"{Host}/oidc/session/end";
+            return string.IsNullOrWhiteSpace(options.RedirectUri)
+                ? $"{Host}/oidc/session/end"
+                : $"{Host}/oidc/session/end?id_token_hint={options.IdToken}&post_logout_redirect_uri={options.RedirectUri}";
         }
 
-        public string BuildCasLogoutUrl(LogoutParams options)
+        private string BuildCasLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
                 ? $"{Host}/cas-idp/logout"
@@ -476,7 +476,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <summary>
         /// 撤回 Access token 或 Refresh token
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">用户的 Access token 或 Refresh token</param>
         /// <returns></returns>
         public async Task<GraphQLResponse<string>> RevokeToken(string token)
         {

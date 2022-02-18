@@ -110,6 +110,6 @@ namespace Authing.ApiClient.Domain.Model.Management.Groups
             }
           }
         }
-        ";
+";
     }
 }

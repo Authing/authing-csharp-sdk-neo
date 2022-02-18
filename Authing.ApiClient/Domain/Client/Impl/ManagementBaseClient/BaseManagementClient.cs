@@ -37,12 +37,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Host = Options.Host ?? Host;
             if (UserPoolId == string.Empty)
             {
-                throw new Exception("参数错误");
+                throw new ArgumentException("UserPoolId 为空");
             }
         }
 
         public async Task<string> GetAccessToken()
         {
+            //TODO:判断 Token 过期时间问题有待商榷
             long now = DateTimeOffset.Now.Second;
 
             if (accessTokenExpiredAt.HasValue && accessTokenExpiredAt > now + 3600)
@@ -63,7 +64,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest()).ConfigureAwait(false);
 
 
-            return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
+            return Tuple.Create(res.Data?.Result.AccessToken, res.Data?.Result.Exp);
         }
 
         public async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)

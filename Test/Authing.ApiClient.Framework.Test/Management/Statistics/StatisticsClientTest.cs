@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management.Statistics;
 using Xunit;
 
@@ -12,6 +13,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Statistics
             var result = await managementClient.Statistics.
                 listUserActions(new LogsPageParam()
                 {
+                    UserId = new List<string>() { "61728068c7e3e10ca9cbe8a9" }
                 });
             Assert.NotEmpty(result.List);
         }

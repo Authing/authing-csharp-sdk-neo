@@ -21,7 +21,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         /// <summary>
         /// 接口超时时间，默认为 10 秒
         /// </summary>
-        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(60);
 
         /// <summary>
         /// Authing 接口 URL，默认为 https://core.authing.cn
@@ -54,7 +54,7 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         protected BaseClient()
         {
-            this.client = AuthingClient.CreateAhtingClient();
+            this.client = AuthingClient.CreateAhtingClient(Timeout);
         }
 
         public async Task<TResponse> Post<TRequest, TResponse>(TRequest body, Dictionary<string, string> headers)
@@ -168,7 +168,7 @@ GKl64GDcIq3au+aqJQIDAQAB
         {
             var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             CheckResult(result);
-            return result ??= new GraphQLResponse<TResponse>() { Code = 200, Message = "请求成功，但服务器没有返回数据！" }; ;
+            return result ?? new GraphQLResponse<TResponse>() { Code = 200, Message = "请求成功，但服务器没有返回数据！" }; ;
         }
 
         protected async Task<TResponse> RequestNoGraphQLResponse<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
