@@ -1,5 +1,4 @@
-﻿using Authing.ApiClient.Core.Model;
-using Authing.ApiClient.Infrastructure.GraphQL;
+﻿using Authing.ApiClient.Infrastructure.GraphQL;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;

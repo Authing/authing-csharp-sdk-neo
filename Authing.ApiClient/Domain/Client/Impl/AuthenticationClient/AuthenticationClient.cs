@@ -16,6 +16,8 @@ using Authing.ApiClient.Domain.Model.Management.Department;
 using System.Text.RegularExpressions;
 using Authing.ApiClient.Domain.Model.Management.Users;
 using System.Linq;
+using Authing.ApiClient.Domain.Model.GraphQLParam;
+using Authing.ApiClient.Domain.Model.GraphQLResponse;
 using Authing.ApiClient.Interfaces.AuthenticationClient;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient

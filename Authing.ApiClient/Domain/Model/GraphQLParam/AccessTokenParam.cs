@@ -1,7 +1,7 @@
 ﻿using Authing.ApiClient.Infrastructure.GraphQL;
 using Newtonsoft.Json;
 
-namespace Authing.ApiClient.Domain.Model
+namespace Authing.ApiClient.Domain.Model.GraphQLParam
 {
     public class AccessTokenParam
     {

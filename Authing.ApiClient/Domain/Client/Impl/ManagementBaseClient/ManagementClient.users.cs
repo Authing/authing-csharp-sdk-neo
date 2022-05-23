@@ -16,6 +16,7 @@ using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
 using System.Linq;
+using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Extensions;
 using Flurl;
 using Flurl.Http;
