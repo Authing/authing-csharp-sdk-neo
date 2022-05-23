@@ -3,15 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Netstandard20", "Authing.ApiClient.Netstandard20\Authing.ApiClient.Netstandard20.csproj", "{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Netstandard20.Test", "Test\Authing.ApiClient.Netstandard20.Test\Authing.ApiClient.Netstandard20.Test.csproj", "{0BF2034C-088A-45D3-9708-3D9F4DD9242F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Framework.Test", "Test\Authing.ApiClient.Framework.Test\Authing.ApiClient.Framework.Test.csproj", "{EFFE944D-D59F-4327-9B88-752323F4E364}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient", "Authing.ApiClient\Authing.ApiClient.csproj", "{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Netstandard20-up.Test", "Test\Authing.ApiClient.Netstandard20-up.Test\Authing.ApiClient.Netstandard20-up.Test.csproj", "{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authing.ApiClient.Test.Base", "Test\Authing.ApiClient.Test.Base\Authing.ApiClient.Test.Base.csproj", "{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}"
 EndProject
@@ -21,14 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3935DA5C-0EB8-4959-AEA1-7B0BE7BF1BF9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BF2034C-088A-45D3-9708-3D9F4DD9242F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFFE944D-D59F-4327-9B88-752323F4E364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EFFE944D-D59F-4327-9B88-752323F4E364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFFE944D-D59F-4327-9B88-752323F4E364}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,10 +23,6 @@ Global
 		{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4C19AAD-2517-4E01-9056-8B5921B5A7FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D73F6A5-4CE5-4B03-8F33-CDD7BD4A8FC8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43CB8F5F-A3C1-4825-B9F3-B8A57E8935B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
