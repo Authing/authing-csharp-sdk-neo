@@ -1,5 +1,4 @@
-﻿using Authing.ApiClient.Core.Model;
-using Authing.ApiClient.Domain.Model;
+﻿using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Types;
 using System;

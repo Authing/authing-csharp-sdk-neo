@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
 using Authing.ApiClient.Interfaces;
+using Authing.ApiClient.Interfaces.ManagementClient;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {

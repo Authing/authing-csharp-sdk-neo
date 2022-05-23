@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Authing.ApiClient.Core.Model
+namespace Authing.ApiClient.Domain.Model
 {
     public enum UdfDataType
     {

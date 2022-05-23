@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Udf
@@ -15,7 +16,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.USER, "asdad", Core.Model.UdfDataType.STRING, "1312312");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.USER, "asdad", UdfDataType.STRING, "1312312");
 
             Assert.NotNull(result);
             
@@ -26,7 +27,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.ROLE, "role", Core.Model.UdfDataType.STRING, "12313131");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.ROLE, "role", UdfDataType.STRING, "12313131");
 
             Assert.NotNull(result);
         }
@@ -36,7 +37,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.APPLICATION, "app", Core.Model.UdfDataType.STRING, "13123123");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.APPLICATION, "app", UdfDataType.STRING, "13123123");
 
             var key = await client.Udf.List(UdfTargetType.APPLICATION);
 
@@ -48,7 +49,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.NODE, "node", Core.Model.UdfDataType.STRING, "nodestring");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.NODE, "node", UdfDataType.STRING, "nodestring");
 
             var key = await client.Udf.List(UdfTargetType.NODE);
 
@@ -60,7 +61,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.ORG, "org", Core.Model.UdfDataType.STRING, "orgString");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.ORG, "org", UdfDataType.STRING, "orgString");
 
             var key = await client.Udf.List(UdfTargetType.ORG);
 
@@ -72,7 +73,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.PERMISSION, "org", Core.Model.UdfDataType.STRING, "orgString");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.PERMISSION, "org", UdfDataType.STRING, "orgString");
 
             var key = await client.Udf.List(UdfTargetType.ORG);
 
@@ -84,7 +85,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.USERPOOL, "userPool", Core.Model.UdfDataType.STRING, "userPoolString");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.USERPOOL, "userPool", UdfDataType.STRING, "userPoolString");
 
             var key = await client.Udf.List(UdfTargetType.USERPOOL);
 

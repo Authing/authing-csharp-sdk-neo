@@ -1,5 +1,4 @@
-﻿using Authing.ApiClient.Core.Model;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Authing.ApiClient.Domain.Model.Management.Udf
 {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Authing.ApiClient.Domain.Model
+namespace Authing.ApiClient.Domain.Model.GraphQLResponse
 {
     public class CheckLoginStatusResponse
     {

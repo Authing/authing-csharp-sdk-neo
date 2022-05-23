@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Flurl.Util;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
@@ -64,7 +65,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<Tuple<string, int?>> GetAccessTokenFromServer()
         {
-            var param = new Model.AccessTokenParam(UserPoolId, Secret);
+            var param = new AccessTokenParam(UserPoolId, Secret);
             //  如果不加 WithAccessToken 會死循環
             var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest()).ConfigureAwait(false);
 

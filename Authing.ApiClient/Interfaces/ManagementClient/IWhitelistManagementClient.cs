@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
 using Authing.ApiClient.Types;
 
-namespace Authing.ApiClient.Interfaces
+namespace Authing.ApiClient.Interfaces.ManagementClient
 {
     public interface IWhitelistManagementClient
     {
