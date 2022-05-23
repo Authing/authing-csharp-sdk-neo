@@ -7,7 +7,7 @@ namespace Authing.ApiClient.Framework.Test
     public class BaseTest : TestBase
     {
         protected AuthenticationClient authenticationClient { get; set; }
-        protected Domain.Client.Impl.ManagementBaseClient.ManagementClient managementClient { get; set; }
+        protected ManagementClient managementClient { get; set; }
 
         protected MfaAuthenticationClient mfaAuthenticationClient { get; set; }
 
