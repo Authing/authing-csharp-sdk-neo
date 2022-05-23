@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Authing.ApiClient.Domain.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
