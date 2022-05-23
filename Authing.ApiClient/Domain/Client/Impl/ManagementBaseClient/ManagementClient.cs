@@ -1,14 +1,15 @@
 using System;
 using System.Threading.Tasks;
-using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Authentication;
+using Authing.ApiClient.Domain.Model.Management.Users;
+using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
-using Authing.ApiClient.Domain.Utils;
-using Authing.ApiClient.Domain.Model.Management.Users;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
+
 {
     public partial class ManagementClient : BaseManagementClient
     {
@@ -54,7 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Udf = new UdfManagementClient(this);
             Orgs = new OrgsManagementClient(this);
             Roles = new RolesManagementClient(this);
-            Whitelist = new ManagementClient.WhitelistManagementClient(this);
+            Whitelist = new WhitelistManagementClient(this);
             Groups = new GroupsManagementClient(this);
             Userpool = new UserpoolManagement(this);
             Statistics = new StatisticsManagement(this);

@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Authing.ApiClient.Types;
 using Xunit;
 
-namespace Authing.ApiClient.Framework.Test.ManagementClient.Whitelist
+namespace Authing.ApiClient.Framework.Test.Management.Whitelist
 {
     public class WhitelistClienTtest : BaseTest
     {

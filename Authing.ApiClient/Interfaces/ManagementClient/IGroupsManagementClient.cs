@@ -5,7 +5,7 @@ using Authing.ApiClient.Domain.Model.Management;
 using Authing.ApiClient.Domain.Model.Management.Groups;
 using Authing.ApiClient.Types;
 
-namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
+namespace Authing.ApiClient.Interfaces.ManagementClient
 {
     public interface IGroupsManagementClient
     {
