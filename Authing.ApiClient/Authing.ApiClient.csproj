@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
-    <RootNamespace>Authing.Library</RootNamespace>
+    <RootNamespace>Authing.ApiClient</RootNamespace>
     <PackageTags>Authing.Library</PackageTags>
     <TargetName>Authing.Library</TargetName>
     <Copyright>Beijing Steamory Technology Co., Ltd.</Copyright>
