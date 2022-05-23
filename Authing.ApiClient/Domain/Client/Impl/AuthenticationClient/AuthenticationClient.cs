@@ -973,6 +973,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         /// <summary>
+        /// 根据 AccessToken 获取当前用户信息
+        /// </summary>
+        /// <param name="accessToken">AccessToken</param>
+        /// <returns></returns>
+        public async Task<User> GetCurrentUser(string accessToken)
+        {
+            var param = new UserParam();
+            var res = await Request<UserResponse>(param.CreateRequest(), accessToken).ConfigureAwait(false);
+            user = res.Data.Result;
+            return res.Data.Result;
+        }
+
+        /// <summary>
         /// 当前用户登出
         /// </summary>
         /// <param name="cancellationToken"></param>

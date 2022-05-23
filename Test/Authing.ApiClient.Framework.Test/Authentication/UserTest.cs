@@ -20,6 +20,17 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(user);
         }
 
+
+        [Fact]
+        public async void User_GetCurrentUserWithToken()
+        {
+            var client = authenticationClient;
+            await client.LoginByUsername("13348926753", "3866364", null);
+            var user = await client.GetCurrentUser(client.AccessToken);
+
+            Assert.NotNull(user);
+        }
+
         [Fact]
         public async void Logout_Test()
         {
@@ -291,7 +302,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var result = await client.LoginByUsername("qidong5566", "12345678", null);
 
 
-            var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "12345678","3866364");
+            var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "12345678", "3866364");
 
             Assert.True(message.Code == 200);
         }
@@ -301,7 +312,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-             await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("qidong5566", "12345678", null);
 
 
             var result = await client.GetToken();

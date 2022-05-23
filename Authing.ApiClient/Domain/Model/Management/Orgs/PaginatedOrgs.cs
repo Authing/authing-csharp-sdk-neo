@@ -24,7 +24,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Orgs
         public int TotalCount { get; set; }
 
         [JsonProperty("list")]
-        public IEnumerable<Object> List { get; set; }
+        public IEnumerable<IEnumerable<OrgAndNode>> List { get; set; }
         #endregion
     }
 }
