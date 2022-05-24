@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Client.Impl.Client;
+using Authing.ApiClient.Domain.Exceptions;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Extensions;
@@ -64,6 +65,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             //  如果不加 WithAccessToken 會死循環
             var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest()).ConfigureAwait(false);
 
+            if (res.Errors?.Length > 0)
+                throw new AuthingException(res.Errors[0].Message.Message);
 
             return Tuple.Create(res.Data?.Result.AccessToken, res.Data?.Result.Exp);
         }

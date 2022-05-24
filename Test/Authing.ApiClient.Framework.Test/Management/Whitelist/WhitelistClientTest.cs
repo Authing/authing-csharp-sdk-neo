@@ -47,6 +47,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
             var client = managementClient;
             await client.Whitelist.Add(WhitelistType.PHONE, phones);
             var result = await client.Whitelist.Remove(WhitelistType.PHONE, phones);
+             result = await client.Whitelist.List(WhitelistType.PHONE);
             foreach (var phone in phones)
             {
                 Assert.Null(result.FirstOrDefault(c => c.Value == phone));
