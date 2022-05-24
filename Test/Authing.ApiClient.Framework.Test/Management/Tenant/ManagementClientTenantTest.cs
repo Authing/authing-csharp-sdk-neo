@@ -1,12 +1,5 @@
-﻿using System;
+﻿using Authing.ApiClient.Domain.Model.Management.Tenant;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model.Management.Users;
-using Authing.ApiClient.Domain.Model.Management.Applications;
-using Authing.ApiClient.Domain.Model.Management.Resources;
-using Authing.ApiClient.Domain.Model.Management.Tenant;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Tenant
@@ -33,7 +26,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_Create()
         {
             var client = managementClient;
-            var result = await client.Tennat.Create(new CreateTenantOption() {
+            var result = await client.Tennat.Create(new CreateTenantOption()
+            {
                 Name = "测试10-2",
                 AppIds = "61c963a1631c60a9a8979bff"
             });
@@ -44,7 +38,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_Update()
         {
             var client = managementClient;
-            var result = await client.Tennat.Update("61c963adcc6da58494a3ef43", new CreateTenantOption() {
+            var result = await client.Tennat.Update("61c963adcc6da58494a3ef43", new CreateTenantOption()
+            {
                 Name = "测试10-1",
             });
             Assert.True(result);
@@ -62,8 +57,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_Config()
         {
             var client = managementClient;
-            var result = await client.Tennat.Config("61c963adcc6da58494a3ef43", new ConfigTenantOption() {
-                SsoPageCustomizationSettings = new SsoPageCustomizationSettings() {
+            var result = await client.Tennat.Config("61c963adcc6da58494a3ef43", new ConfigTenantOption()
+            {
+                SsoPageCustomizationSettings = new SsoPageCustomizationSettings()
+                {
                     AutoRegisterThenLogin = false
                 }
             });
@@ -74,7 +71,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_Members()
         {
             var client = managementClient;
-            var result = await client.Tennat.Members("61c963adcc6da58494a3ef43", new TenantMembersOption() {});
+            var result = await client.Tennat.Members("61c963adcc6da58494a3ef43", new TenantMembersOption() { });
             Assert.NotEmpty(result.List);
         }
 
@@ -114,7 +111,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_CreateExtIdp()
         {
             var client = managementClient;
-            var result = await client.Tennat.CreateExtIdp(new CreateExtIdpOption() {
+            var result = await client.Tennat.CreateExtIdp(new CreateExtIdpOption()
+            {
                 Name = "wechat",
                 Type = Types.ExtIdpType.WECHAT,
                 TenantId = "61c963adcc6da58494a3ef43",
@@ -135,7 +133,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_UpdateExtIdp()
         {
             var client = managementClient;
-            var result = await client.Tennat.UpdateExtIdp("tennat", new UpdateExtIdpOption(){
+            var result = await client.Tennat.UpdateExtIdp("tennat", new UpdateExtIdpOption()
+            {
                 Name = "gitlab"
             });
             Assert.Equal(result.Code, 200);
@@ -153,7 +152,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_CreateExtIdpConnection()
         {
             var client = managementClient;
-            var result = await client.Tennat.CreateExtIdpConnection(new CreateExtIdpConnectionOption() {
+            var result = await client.Tennat.CreateExtIdpConnection(new CreateExtIdpConnectionOption()
+            {
                 ExtIdpId = "61cc12d21769b93fb1f55e56",
                 DisplayName = "weixin3",
                 Type = Types.ExtIdpConnType.WECHATPC,
@@ -201,7 +201,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         public async void Tenant_ChangeExtIdpConnectionState()
         {
             var client = managementClient;
-            var result = await client.Tennat.ChangeExtIdpConnectionState("61cbca29206969bf63d38da9", new ChangeExtIdpConnectionStateOption() {
+            var result = await client.Tennat.ChangeExtIdpConnectionState("61cbca29206969bf63d38da9", new ChangeExtIdpConnectionStateOption()
+            {
                 Enabled = false
             });
             Assert.True(result);

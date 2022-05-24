@@ -1,9 +1,5 @@
 ﻿using Authing.ApiClient.Domain.Model.Management.Orgs;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs

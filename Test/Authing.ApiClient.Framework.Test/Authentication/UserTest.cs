@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
 {
@@ -19,7 +14,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             Assert.NotNull(user);
         }
-
 
         [Fact]
         public async void User_GetCurrentUserWithToken()
@@ -58,7 +52,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             Assert.NotNull(result);
         }
-
 
         [Fact]
         public async void SetUdv_Test()
@@ -109,7 +102,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             Assert.NotNull(result);
         }
-
 
         [Fact]
         public async void RemoveUdv_Test()
@@ -197,7 +189,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var result = await client.LoginBySubAccount("qidong6655", "qd3866364", null);
 
             Assert.NotNull(result);
-
         }
 
         [Fact]
@@ -206,7 +197,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var client = authenticationClient;
 
             var user = await client.LoginByUsername("qidong5566", "12345678", null);
-
 
             var result = await client.LinkAccount(user.Token, "11233");
 
@@ -281,26 +271,22 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.False(result.Message == "");
         }
 
-
         [Fact]
         public async void ResetPasswordByFirstLoginToken()
         {
             var client = authenticationClient;
             var result = await client.LoginByUsername("qidong5566", "12345678", null);
 
-
             var message = await client.ResetPasswordByFirstLoginToken(client.AccessToken, "3866364");
 
             Assert.True(message.Code == 200);
         }
-
 
         [Fact]
         public async void ResetPasswordByForceResetToken()
         {
             var client = authenticationClient;
             var result = await client.LoginByUsername("qidong5566", "12345678", null);
-
 
             var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "12345678", "3866364");
 
@@ -313,7 +299,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var client = authenticationClient;
 
             await client.LoginByUsername("qidong5566", "12345678", null);
-
 
             var result = await client.GetToken();
 
@@ -330,10 +315,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             client.ClearUser();
 
             Assert.Null(client.User);
-
         }
-
-
-
     }
 }

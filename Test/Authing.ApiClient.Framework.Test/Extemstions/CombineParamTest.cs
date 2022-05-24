@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authing.ApiClient.Extensions;
+﻿using Authing.ApiClient.Extensions;
 using Xunit;
-using Authing.ApiClient.Domain.Utils;
 
 namespace Authing.ApiClient.Framework.Test.Extemstions
 {
@@ -15,7 +9,6 @@ namespace Authing.ApiClient.Framework.Test.Extemstions
         public void CombineParamTeststring()
         {
             string host = "http://www.baidu.com";
-
 
             var combineQueryParams = host + new { test1 = 1, test2 = 2 }.Convert2QueryParams();
             Assert.Equal(combineQueryParams, "http://www.baidu.com?test1=1&test2=2");

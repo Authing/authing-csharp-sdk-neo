@@ -29,7 +29,7 @@ namespace Authing.ApiClient.Framework.Test
                 opt.Host = Host;
             });
 
-            mfaAuthenticationClient = new MfaAuthenticationClient(opt => 
+            mfaAuthenticationClient = new MfaAuthenticationClient(opt =>
             {
                 opt.AppId = AppId;
                 opt.Host = Host;

@@ -1,14 +1,10 @@
 ﻿using Authing.ApiClient.Domain.Model.Management.Orgs;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
-   public class IsRootNodeTest:BaseTest
+    public class IsRootNodeTest : BaseTest
     {
         [Fact]
         public async void IsRootNode_Test()
@@ -25,7 +21,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 
             string childNodeId = nodeList.FirstOrDefault().Id;
 
-           var result= await client.Orgs.IsRootNode(sourceOrg.RootNode.OrgId, sourceOrg.RootNode.Id);
+            var result = await client.Orgs.IsRootNode(sourceOrg.RootNode.OrgId, sourceOrg.RootNode.Id);
 
             Assert.True(result);
 

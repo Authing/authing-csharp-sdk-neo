@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Authing.ApiClient.Domain.Model.Management.Acl;
+using Authing.ApiClient.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model.Management.Acl;
-using Authing.ApiClient.Extensions;
-using Authing.ApiClient.Types;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Acl
@@ -304,6 +302,5 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 });
             Assert.NotNull(result);
         }
-
     }
 }

@@ -1,9 +1,5 @@
 ﻿using Authing.ApiClient.Domain.Model.Management.Roles;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Roles
@@ -30,7 +26,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             Assert.NotNull(result);
         }
 
-
         [Fact]
         public async void CreateRole_Test_WithDescription_ParenCode()
         {
@@ -40,7 +35,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 
             Assert.NotNull(result);
         }
-
 
         [Fact]
         public async void CreateRole_Test_WithDescription_Code()
@@ -52,7 +46,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             Assert.NotNull(result);
         }
 
-
         [Fact]
         public async void DeleteRole_Test()
         {
@@ -61,7 +54,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             string roleCode = "TestDelete";
 
             await client.Roles.Create(roleCode);
-
 
             var result = await client.Roles.Delete(roleCode);
 
@@ -74,7 +66,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             var client = managementClient;
 
             string roleCode = "TestNameSpace";
-
 
             string nameSpace = "613189b38b6c66cac1d211bd";
 
@@ -104,7 +95,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             await client.Roles.Create(roleCode);
             await client.Roles.Create(roleCode2);
 
-
             var result = await client.Roles.DeleteMany(codeList);
 
             Assert.True(result.Code == 200);
@@ -127,21 +117,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             await client.Roles.Create(roleCode, null, null, nameSpace);
             await client.Roles.Create(roleCode2, null, null, nameSpace);
 
-
             var result = await client.Roles.DeleteMany(codeList, nameSpace);
 
             Assert.True(result.Code == 200);
         }
 
-
         [Fact]
         public async void UpdateRole_Test()
         {
-
             var client = managementClient;
 
             string roleCode = "TestNameSpace";
-
 
             string nameSpace = "613189b38b6c66cac1d211bd";
 
@@ -161,6 +147,5 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 
             Assert.True(result.Code == "TestNameSpaceUpdate");
         }
-
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
@@ -30,8 +25,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 
             //root.children[0].children[0].name = "后端";
 
-           await client.Userpool.RemoveEnv("1");
-
+            await client.Userpool.RemoveEnv("1");
 
             string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(root);
 
@@ -39,7 +33,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
             ob.filetype = "json";
             ob.file = root;
 
-          string js=  Newtonsoft.Json.JsonConvert.SerializeObject(ob);
+            string js = Newtonsoft.Json.JsonConvert.SerializeObject(ob);
 
             var result = await client.Orgs.ImportByJson(js);
 
@@ -48,11 +42,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
     }
 
     public class JsontObj
-    { 
+    {
         public string filetype { get; set; }
         public Root file { get; set; }
     }
-
 
     public class Root
     {
@@ -67,7 +60,4 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         public string description { get; set; }
         public Node[] children { get; set; }
     }
-
-
-
 }

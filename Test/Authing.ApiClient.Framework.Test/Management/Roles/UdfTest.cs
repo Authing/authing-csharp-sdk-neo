@@ -1,10 +1,6 @@
 ﻿using Authing.ApiClient.Domain.Model.Management.Roles;
 using Authing.ApiClient.Types;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Roles
@@ -35,6 +31,5 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 
             //TODO: 添加拓展字段失败
         }
-
     }
 }

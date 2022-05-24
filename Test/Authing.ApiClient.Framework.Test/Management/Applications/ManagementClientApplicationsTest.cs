@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model.Management.Users;
-using Authing.ApiClient.Domain.Model.Management.Applications;
+﻿using Authing.ApiClient.Domain.Model.Management.Applications;
 using Authing.ApiClient.Domain.Model.Management.Resources;
 using Authing.ApiClient.Domain.Model.Management.Roles;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Applications
@@ -52,10 +47,11 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_CreateResource()
         {
-            var result = await managementClient.Applications.CreateResource("6195ebcf5255f3d735ba9063", new CreateResourceParam() {
+            var result = await managementClient.Applications.CreateResource("6195ebcf5255f3d735ba9063", new CreateResourceParam()
+            {
                 Code = "orderTest",
                 Type = Types.ResourceType.DATA,
-                Actions = new List<ResourceAction>(){ new ResourceAction() { Name = "orderTest:read" } }
+                Actions = new List<ResourceAction>() { new ResourceAction() { Name = "orderTest:read" } }
             });
             Assert.NotEmpty(result.Actions);
         }
@@ -63,7 +59,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_UpdateResource()
         {
-            var result = await managementClient.Applications.UpdateResource("6195ebcf5255f3d735ba9063", "orderTest", new UpdateResourceParam() {
+            var result = await managementClient.Applications.UpdateResource("6195ebcf5255f3d735ba9063", "orderTest", new UpdateResourceParam()
+            {
                 Type = Types.ResourceType.DATA,
             });
             Assert.Equal(result.NameSpaceId, "6195ebcf5255f3d735ba9063");
@@ -79,7 +76,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_GetAccessPolicies()
         {
-            var result = await managementClient.Applications.GetAccessPolicies("6195ebcf5255f3d735ba9063", new AppAccessPolicyQueryFilter() {
+            var result = await managementClient.Applications.GetAccessPolicies("6195ebcf5255f3d735ba9063", new AppAccessPolicyQueryFilter()
+            {
                 Page = 1,
                 Limit = 10
             });
@@ -89,7 +87,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_EnableAccessPolicy()
         {
-            var result = await managementClient.Applications.EnableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
+            var result = await managementClient.Applications.EnableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
@@ -100,7 +99,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DisableAccessPolicy()
         {
-            var result = await managementClient.Applications.DisableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
+            var result = await managementClient.Applications.DisableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
@@ -111,7 +111,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DeleteAccessPolicy()
         {
-            var result = await managementClient.Applications.DeleteAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
+            var result = await managementClient.Applications.DeleteAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
@@ -122,7 +123,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_AllowAccess()
         {
-            var result = await managementClient.Applications.AllowAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
+            var result = await managementClient.Applications.AllowAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
@@ -133,7 +135,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DenyAccess()
         {
-            var result = await managementClient.Applications.DenyAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy() {
+            var result = await managementClient.Applications.DenyAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
@@ -144,7 +147,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_UpdateDefaultAccessPolicy()
         {
-            var result = await managementClient.Applications.UpdateDefaultAccessPolicy("6195ebcf5255f3d735ba9063", new UpdateDefaultApplicationAccessPolicyParam() {
+            var result = await managementClient.Applications.UpdateDefaultAccessPolicy("6195ebcf5255f3d735ba9063", new UpdateDefaultApplicationAccessPolicyParam()
+            {
                 DefaultStrategy = Types.DefaultStrategyEnum.ALLOW_ALL
             });
 
@@ -168,14 +172,15 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DeleteRoles()
         {
-            var result = await managementClient.Applications.DeleteRoles("6195ebcf5255f3d735ba9063", new List<string>() { "orderList"  });
+            var result = await managementClient.Applications.DeleteRoles("6195ebcf5255f3d735ba9063", new List<string>() { "orderList" });
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_UpdateRole()
         {
-            var result = await managementClient.Applications.UpdateRole("6195ebcf5255f3d735ba9063", new UpdateRoleOptions() {
+            var result = await managementClient.Applications.UpdateRole("6195ebcf5255f3d735ba9063", new UpdateRoleOptions()
+            {
                 Code = "orderList",
                 NewCode = "orderList2",
                 NameSpace = "6195ebcf5255f3d735ba9063"
@@ -228,7 +233,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_createAgreement()
         {
-            var result = await managementClient.Applications.createAgreement("6195ebcf5255f3d735ba9063", new AgreementInput() {
+            var result = await managementClient.Applications.createAgreement("6195ebcf5255f3d735ba9063", new AgreementInput()
+            {
                 Title = "userAgreement",
                 Lang = Types.LangEnum.ZH_CN,
                 Required = true
@@ -246,7 +252,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_modifyAgreement()
         {
-            var result = await managementClient.Applications.modifyAgreement("6195ebcf5255f3d735ba9063", 0, new AgreementInput() {
+            var result = await managementClient.Applications.modifyAgreement("6195ebcf5255f3d735ba9063", 0, new AgreementInput()
+            {
                 Title = "userAgreement2"
             });
             Assert.Equal(result.Title, "userAgreement2");

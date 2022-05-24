@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
 {
@@ -24,7 +19,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var client = authenticationClient;
 
             var result = await client.LoginByUsername("tm574378328", "123456", null);
-            
+
             //client.SetCurrentUser(result);
 
             //client.SetCurrentUser(null);
@@ -93,6 +88,5 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             Assert.True(result.Valid);
         }
-
     }
 }

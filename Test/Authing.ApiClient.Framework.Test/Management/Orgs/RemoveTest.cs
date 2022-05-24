@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
@@ -14,7 +9,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         {
             var client = managementClient;
 
-            var node =await client.Orgs.Create("组织节点2", "新增加的组织节点2", "002");
+            var node = await client.Orgs.Create("组织节点2", "新增加的组织节点2", "002");
 
             Assert.NotNull(node);
 

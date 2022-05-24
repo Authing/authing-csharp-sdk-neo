@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
@@ -13,7 +8,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         public async void ListOrgs_Test()
         {
             var client = managementClient;
-
 
             //for (int i = 0; i < 10; i++)
             //{
