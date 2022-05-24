@@ -18,14 +18,14 @@ namespace Authing.ApiClient.Framework.Test
                 {
                     opt.AppId = AppId;
                     opt.Host = Host;
-                    opt.Secret = Secret;
+                    opt.Secret = AppSecret;
                     opt.UserPoolId = UserPoolId;
                 }
             );
             managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(init: opt =>
             {
                 opt.UserPoolId = UserPoolId;
-                opt.Secret = Secret;
+                opt.Secret = UserPoolSecret;
                 opt.Host = Host;
             });
 
@@ -33,7 +33,7 @@ namespace Authing.ApiClient.Framework.Test
             {
                 opt.AppId = AppId;
                 opt.Host = Host;
-                opt.Secret = Secret;
+                opt.Secret = AppSecret;
                 opt.UserPoolId = UserPoolId;
             });
         }
