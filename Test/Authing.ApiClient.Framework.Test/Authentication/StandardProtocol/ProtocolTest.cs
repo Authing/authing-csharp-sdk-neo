@@ -21,7 +21,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 
         [Fact]
         [Description("需要手动调试")]
-        public async Task BuildAuthorizeUrlTest()
+        public void BuildAuthorizeUrlTest()
         {
             authenticationClient.Options.Protocol = Protocol.SAML;
             string saml = authenticationClient.BuildAuthorizeUrl(new SamlOption());
@@ -39,7 +39,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             #region OIDC 登出
             string oidcurl = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "openid profile email phone address offline_access" });
             var res = await authenticationClient.GetAccessTokenByCode("KIoMvME1MHDvKiM5u0ETvGvMptUDo6ywXbMoI5Zi4Bx");
-            string oidcout = authenticationClient.BuildLogoutUrl(new LogoutParams() { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken,Expert = true});
+            string oidcout = authenticationClient.BuildLogoutUrl(new LogoutParams() { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken, Expert = true });
             #endregion
 #else
             #region OAuth 登出

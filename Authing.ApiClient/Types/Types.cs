@@ -297,6 +297,11 @@ namespace Authing.ApiClient.Types
             Value = value;
         }
 
+        public override string ToString()
+        {
+            return Value;
+        }
+
 
         public static ResponseType CODE
         {
