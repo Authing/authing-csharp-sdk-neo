@@ -1,10 +1,6 @@
-﻿using Authing.ApiClient.Domain.Model;
-using Authing.ApiClient.Domain.Model.Management.Orgs;
-using System;
+﻿using Authing.ApiClient.Domain.Model.Management.Orgs;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
@@ -21,22 +17,19 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
             Authing.ApiClient.Domain.Model.Management.Orgs.Org newOrg = null;
             for (int i = 0; i < 10; i++)
             {
-                AddNodeParam addNodeParam = new AddNodeParam(org.RootNode.OrgId, org.RootNode.Id, "测试删除子节点添加的节点"+i);
+                AddNodeParam addNodeParam = new AddNodeParam(org.RootNode.OrgId, org.RootNode.Id, "测试删除子节点添加的节点" + i);
 
-               newOrg = await client.Orgs.AddNode(org.RootNode.OrgId, addNodeParam);
+                newOrg = await client.Orgs.AddNode(org.RootNode.OrgId, addNodeParam);
             }
 
             List<Domain.Model.Management.Orgs.Node> nodeList = newOrg.Nodes.Where(p => p.Root == false).ToList();
 
-            for (int i = 0; i <nodeList.Count() ; i++)
+            for (int i = 0; i < nodeList.Count(); i++)
             {
                 var mes = await client.Orgs.DeleteNode(newOrg.RootNode.OrgId, nodeList[i].Id);
 
                 Assert.True(mes.Code == 200);
             }
-
-          
-           
         }
     }
 }

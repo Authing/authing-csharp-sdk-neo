@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
@@ -14,7 +9,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         {
             var client = managementClient;
 
-           var org= await client.Orgs.Create("获取组织机构详情添加", "详情描述", "9527");
+            var org = await client.Orgs.Create("获取组织机构详情添加", "详情描述", "9527");
 
             var orgDetail = await client.Orgs.FindById(org.RootNode.OrgId);
 

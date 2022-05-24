@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
@@ -14,7 +9,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         {
             var client = managementClient;
 
-           var ss=await client.Orgs.List();
+            var ss = await client.Orgs.List();
 
             var result = await client.Orgs.ExportAll();
 

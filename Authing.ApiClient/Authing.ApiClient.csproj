@@ -4,12 +4,12 @@
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <RootNamespace>Authing.ApiClient</RootNamespace>
-    <PackageTags>Authing.Library</PackageTags>
-    <TargetName>Authing.Library</TargetName>
+    <PackageTags>Authing.ApiClient</PackageTags>
+    <TargetName>Authing.ApiClient</TargetName>
     <Copyright>Beijing Steamory Technology Co., Ltd.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Authing</Authors>
-    <Product>Authing.Library</Product>
+    <Product>Authing.ApiClient</Product>
     <Description>通过简单、安全的接口使用 Authing 提供的功能。</Description>
     <PackageReleaseNotes>Version 0.0.1
 - SDK 改版升级，支持 Net40 和 NetStandard2.0 平台
@@ -22,7 +22,7 @@ Version 0.0.4
 Version 0.0.5
 - 修复部分场景获取组织机构列表会出现的异常</PackageReleaseNotes>
     <Version>0.0.5</Version>
-    <PackageId>Authing.Library</PackageId>
+    <PackageId>Authing.ApiClient</PackageId>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
@@ -45,6 +45,10 @@ Version 0.0.5
   <PropertyGroup Condition="'$(TargetFramework)'=='net20'">
     <AssemblyTitle>Json.NET .NET 2.0</AssemblyTitle>
     <DefineConstants>NET20;HAVE_ADO_NET;HAVE_APP_DOMAIN;HAVE_BINARY_FORMATTER;HAVE_BINARY_SERIALIZATION;HAVE_BINARY_EXCEPTION_SERIALIZATION;HAVE_CAS;HAVE_CHAR_TO_LOWER_WITH_CULTURE;HAVE_CHAR_TO_STRING_WITH_CULTURE;HAVE_COM_ATTRIBUTES;HAVE_COMPONENT_MODEL;HAVE_DB_NULL_TYPE_CODE;HAVE_EMPTY_TYPES;HAVE_FAST_REVERSE;HAVE_FULL_REFLECTION;HAVE_ICLONEABLE;HAVE_ICONVERTIBLE;HAVE_MEMORY_BARRIER;HAVE_NON_SERIALIZED_ATTRIBUTE;HAVE_REFLECTION_EMIT;HAVE_STREAM_READER_WRITER_CLOSE;HAVE_TRACE_WRITER;HAVE_TYPE_DESCRIPTOR;HAVE_UNICODE_SURROGATE_DETECTION;HAVE_XML_DOCUMENT;HAVE_XML_DOCUMENT_TYPE;$(AdditionalConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">

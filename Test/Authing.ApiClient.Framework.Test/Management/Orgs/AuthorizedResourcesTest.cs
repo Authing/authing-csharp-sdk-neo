@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
@@ -27,7 +22,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
             var node = await client.Orgs.SearchNodes("资源机构");
 
             var result = await client.Orgs.ListAuthorizedResourcesByNodeCode("61af013d090074d1ea8e84bf", "9527", "613189b38b6c66cac1d211bd");
-
 
             Assert.NotNull(result);
         }

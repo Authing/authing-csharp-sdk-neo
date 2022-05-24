@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Roles
 {
@@ -18,8 +13,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 
             string nameSpace = "613189b38b6c66cac1d211bd";
 
-
-          var result=  await client.Roles.ListPolicies(roleCode);
+            var result = await client.Roles.ListPolicies(roleCode);
 
             Assert.True(result.TotalCount == 0);
         }

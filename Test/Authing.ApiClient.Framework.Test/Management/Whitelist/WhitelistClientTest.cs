@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Authing.ApiClient.Types;
+using System.Collections.Generic;
 using System.Linq;
-using Authing.ApiClient.Types;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Whitelist
@@ -47,6 +47,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
             var client = managementClient;
             await client.Whitelist.Add(WhitelistType.PHONE, phones);
             var result = await client.Whitelist.Remove(WhitelistType.PHONE, phones);
+             result = await client.Whitelist.List(WhitelistType.PHONE);
             foreach (var phone in phones)
             {
                 Assert.Null(result.FirstOrDefault(c => c.Value == phone));
@@ -61,7 +62,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
 
             var client = managementClient;
             await client.Whitelist.Add(WhitelistType.PHONE, phones);
-            var result = await client.Whitelist.List( WhitelistType.PHONE);
+            var result = await client.Whitelist.List(WhitelistType.PHONE);
             Assert.NotEmpty(result);
             await client.Whitelist.Remove(WhitelistType.PHONE, phones);
         }

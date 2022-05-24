@@ -1,14 +1,10 @@
 ﻿using Authing.ApiClient.Domain.Model.Management.Orgs;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
-    public class ListChildrenTest:BaseTest
+    public class ListChildrenTest : BaseTest
     {
         [Fact]
         public async void ListChildren_Test()
@@ -35,7 +31,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 
             string nodeId = nodeList.FirstOrDefault().Id;
 
-          var listNode=  await client.Orgs.ListChildren(sourceOrg.RootNode.OrgId, nodeId);
+            var listNode = await client.Orgs.ListChildren(sourceOrg.RootNode.OrgId, nodeId);
 
             Assert.NotNull(listNode);
         }

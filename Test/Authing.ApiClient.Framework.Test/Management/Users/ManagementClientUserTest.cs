@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model;
+﻿using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Users;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Users
@@ -26,12 +23,14 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         public async void Users_Update()
         {
             var client = managementClient;
-            var user = await client.Users.Find(new FindUserOption() {
+            var user = await client.Users.Find(new FindUserOption()
+            {
                 Email = "qitaotest@authing.cn"
             });
             Console.WriteLine("user", user);
             Assert.NotNull(user);
-            var result = await client.Users.Update(user.Id,new UpdateUserInput() {
+            var result = await client.Users.Update(user.Id, new UpdateUserInput()
+            {
                 Name = "qitao"
             });
             Console.WriteLine("result", result);
@@ -118,7 +117,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         public async void Users_Exists()
         {
             var client = managementClient;
-            var result = await client.Users.Exists(new Types.ExistsOption() {
+            var result = await client.Users.Exists(new Types.ExistsOption()
+            {
                 Email = "qitaotest@authing.cn"
             });
             Console.WriteLine("result", result);
@@ -313,7 +313,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             });
             var udf = new Types.KeyValueDictionary();
             udf.Add("asdad", "val1");
-            var udfBatch = new Domain.Model.Management.Udf.SetUserUdfValueBatchParam() {
+            var udfBatch = new Domain.Model.Management.Udf.SetUserUdfValueBatchParam()
+            {
                 UserId = user.Id,
                 Data = udf
             };
@@ -357,7 +358,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
-
         [Fact]
         public async void Users_Logout()
         {
@@ -366,7 +366,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.Logout(new LogoutParam() {
+            var result = await client.Users.Logout(new LogoutParam()
+            {
                 AppId = "6195ebcf5255f3d735ba9063",
                 UserId = user.Id
             });
@@ -433,7 +434,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         public async void Users_LinkIdentity()
         {
             var client = managementClient;
-            var result = await client.Users.LinkIdentity(new LinkIdentityOption() {
+            var result = await client.Users.LinkIdentity(new LinkIdentityOption()
+            {
                 UserId = "61c560fc3e85f6d56bc6aa77",
                 UserIdInIdp = "12345",
                 Identifier = "github",

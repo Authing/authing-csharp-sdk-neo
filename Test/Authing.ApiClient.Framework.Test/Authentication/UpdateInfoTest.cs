@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
 {
@@ -52,9 +47,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-
             var user = await client.LoginByEmail("635877990@qq.com", "12345678", null);
-
 
             string oldToken = client.AccessToken;
 
@@ -89,7 +82,6 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.True(string.IsNullOrEmpty(result.Phone));
         }
 
-
         [Fact]
         public async void BindEmail_Test()
         {
@@ -102,7 +94,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             var result = await client.BindEmail("2481452007@qq.com", "6743");
 
-            Assert.True(string.IsNullOrEmpty(result.Email)==false);
+            Assert.True(string.IsNullOrEmpty(result.Email) == false);
         }
 
         [Fact]

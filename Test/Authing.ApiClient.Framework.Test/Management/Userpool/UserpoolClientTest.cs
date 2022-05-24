@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Authing.ApiClient.Domain.Model;
 using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Userpool
 {
-    public class UserpoolClientTest:BaseTest
+    public class UserpoolClientTest : BaseTest
     {
         [Fact]
         public async Task Userpool_Detail()
         {
             var result = await managementClient.Userpool.Detail();
-            Assert.Equal(result.Id,UserPoolId);
+            Assert.Equal(result.Id, UserPoolId);
         }
 
         [Fact]
@@ -23,8 +18,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         {
             var result = await managementClient.Userpool.Detail();
             result.Description = "测试描述";
-            result = await managementClient.Userpool.Update(new UpdateUserpoolInput(){Description = "测试描述"});
-            Assert.Equal(result.Description,"测试描述");
+            result = await managementClient.Userpool.Update(new UpdateUserpoolInput() { Description = "测试描述" });
+            Assert.Equal(result.Description, "测试描述");
         }
 
         [Fact]
@@ -38,8 +33,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         [Fact]
         public async Task Userpool_AddEnv()
         {
-            var result = await managementClient.Userpool.AddEnv("123","123");
-            Assert.Equal(result,200);
+            var result = await managementClient.Userpool.AddEnv("123", "123");
+            Assert.Equal(result, 200);
         }
 
         [Fact]

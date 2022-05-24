@@ -1,11 +1,5 @@
 ﻿using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Udf;
-using Authing.ApiClient.Test.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Udf
@@ -19,8 +13,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
             CommonMessage result = await client.Udf.Remove(UdfTargetType.USER, "asdad");
 
-            Assert.NotNull(result.Code==200);
-
+            Assert.NotNull(result.Code == 200);
         }
 
         //[Fact]

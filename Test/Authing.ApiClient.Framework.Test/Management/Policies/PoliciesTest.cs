@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Policies
@@ -42,7 +40,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
             }
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(inputList);
-
 
             var result = await client.Policies.Create(code, inputList, "diescadsada");
 
@@ -89,8 +86,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
 
             var po = list.List.Where(p => p.Code == "order").FirstOrDefault();
 
-
-
             foreach (var item in po.Statements)
             {
                 item.Effect = Domain.Model.Management.Acl.PolicyEffect.ALLOW;
@@ -122,7 +117,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
 
             var list = await client.Policies.List();
 
-
             for (int i = 0; i < 5; i++)
             {
                 CreatePolicy(i.ToString());
@@ -144,9 +138,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
                 CreatePolicy(i.ToString(), "613189b38b6c66cac1d211bd");
             }
 
-            var result = await client.Policies.List(1,100, "613189b38b6c66cac1d211bd");
+            var result = await client.Policies.List(1, 100, "613189b38b6c66cac1d211bd");
 
-            List<string> poList = result.List.Select(p=>p.Code).ToList();
+            List<string> poList = result.List.Select(p => p.Code).ToList();
             poList.Add("order");
 
             List<string> targetIden = new List<string>();
@@ -178,7 +172,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
         {
             var client = managementClient;
 
-
             List<string> poList = new List<string>();
             poList.Add("order");
 
@@ -193,7 +186,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
         public async void EnableAssignments_Test()
         {
             var client = managementClient;
-
 
             List<string> poList = new List<string>();
             poList.Add("order");
@@ -218,8 +210,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
             Assert.NotNull(result);
         }
 
-
-        private async void CreatePolicy(string createCode,string nameSpace=null)
+        private async void CreatePolicy(string createCode, string nameSpace = null)
         {
             var client = managementClient;
 
@@ -249,7 +240,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
                 inputList.Add(input);
             }
 
-            await client.Policies.Create(code, inputList, "diescadsada",nameSpace);
+            await client.Policies.Create(code, inputList, "diescadsada", nameSpace);
         }
     }
 }

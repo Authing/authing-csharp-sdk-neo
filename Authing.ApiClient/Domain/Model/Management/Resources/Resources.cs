@@ -1,7 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Authing.ApiClient.Types;
-using System.Collections.Generic;
 
 namespace Authing.ApiClient.Domain.Model.Management.Resources
 {
@@ -30,25 +29,5 @@ namespace Authing.ApiClient.Domain.Model.Management.Resources
 
         [JsonProperty("apiIdentifier")]
         public string ApiIdentifier { get; set; }
-    }
-
-    public class ResourceAction
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("description")]
-        public string Description { get; set; }
-    }
-
-    public class PaginatedResources
-    {
-        #region members
-        [JsonProperty("totalCount")]
-        public int TotalCount { get; set; }
-
-        [JsonProperty("list")]
-        public IEnumerable<Resources> List { get; set; }
-        #endregion
     }
 }

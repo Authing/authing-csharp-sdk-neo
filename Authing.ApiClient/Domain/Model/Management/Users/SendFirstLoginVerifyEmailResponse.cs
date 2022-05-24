@@ -1,0 +1,12 @@
+﻿using System;
+using Newtonsoft.Json;
+
+namespace Authing.ApiClient.Domain.Model.Management.Users
+{
+    public class SendFirstLoginVerifyEmailResponse
+    {
+
+        [JsonProperty("sendFirstLoginVerifyEmail")]
+        public CommonMessage Result { get; set; }
+    }
+}

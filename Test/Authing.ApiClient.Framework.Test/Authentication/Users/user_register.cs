@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication.Users
 {
@@ -20,7 +19,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.Users
         {
             var client = authenticationClient;
 
-            var result= await client.LoginByPhonePassword("13348926753", "3866364",null);
+            var result = await client.LoginByPhonePassword("13348926753", "3866364", null);
         }
     }
 }

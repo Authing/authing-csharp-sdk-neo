@@ -1,10 +1,6 @@
-﻿using Authing.ApiClient.Domain.Model.Management.Udf;
-using System;
-using System.Collections.Generic;
+﻿using Authing.ApiClient.Domain.Model;
+using Authing.ApiClient.Domain.Model.Management.Udf;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Udf
@@ -19,7 +15,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
             UserDefinedField result = await client.Udf.Set(UdfTargetType.USER, "asdad", UdfDataType.STRING, "1312312");
 
             Assert.NotNull(result);
-            
         }
 
         [Fact]
@@ -91,6 +86,5 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
             Assert.NotNull(key.First().Key == "userPool");
         }
-
     }
 }

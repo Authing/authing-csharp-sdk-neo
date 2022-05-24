@@ -1,13 +1,4 @@
-﻿using Authing.ApiClient.Domain.Model;
-using Authing.ApiClient.Domain.Model.Management.Udf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace Authing.ApiClient.Framework.Test.Management.Udf
+﻿namespace Authing.ApiClient.Framework.Test.Management.Udf
 {
     public class ManagementUdfListTest : BaseTest
     {

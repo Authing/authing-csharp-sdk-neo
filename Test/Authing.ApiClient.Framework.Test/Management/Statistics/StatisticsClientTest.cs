@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Authing.ApiClient.Domain.Model.Management.Statistics;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Authing.ApiClient.Domain.Model.Management.Statistics;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Statistics
 {
-    public class StatisticsClientTest:BaseTest
+    public class StatisticsClientTest : BaseTest
     {
         [Fact]
         public async Task Statistics_UserLogs()

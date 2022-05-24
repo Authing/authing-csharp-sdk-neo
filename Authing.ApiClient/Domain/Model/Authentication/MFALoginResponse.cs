@@ -27,15 +27,4 @@ namespace Authing.ApiClient.Domain.Model.Authentication
         [JsonProperty("applicationMfa")]
         public Applicationmfa[] ApplicationMfa { get; set; }
     }
-
-    public class Applicationmfa
-    {
-        [JsonProperty("mfaPolicy")]
-        public string MfaPolicy { get; set; }
-        [JsonProperty("status")]
-        public int Status { get; set; }
-        [JsonProperty("sort")]
-        public int Sort { get; set; }
-    }
-
 }
