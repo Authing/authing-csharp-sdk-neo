@@ -40,24 +40,4 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
             Assert.NotNull(result);
         }
     }
-
-    public class JsontObj
-    {
-        public string filetype { get; set; }
-        public Root file { get; set; }
-    }
-
-    public class Root
-    {
-        public string name { get; set; }
-        public string code { get; set; }
-    }
-
-    public class Node
-    {
-        public string code { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public Node[] children { get; set; }
-    }
 }

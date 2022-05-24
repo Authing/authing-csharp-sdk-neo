@@ -1,5 +1,4 @@
-﻿using Authing.ApiClient.Infrastructure.GraphQL;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +11,4 @@ namespace Authing.ApiClient.Domain.Model.Management.Orgs
         [JsonProperty("")]
         public List<Org> Orgs { get; set; }
     }
-
-    public class ExpnadAllRequest
-    {
-        public GraphQLRequest CreateRequest()
-        {
-
-            return new GraphQLRequest
-            {
-                Query = "",
-                OperationName = "org",
-                Variables = this
-            };
-        }
-}
 }

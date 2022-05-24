@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Authing.ApiClient.Types;
 
 namespace Authing.ApiClient.Domain.Model.Management.Applications
 {
@@ -49,53 +48,14 @@ namespace Authing.ApiClient.Domain.Model.Management.Applications
     #endregion
 
     #region PolicyStatement
-    public class PolicyStatement
-    {
-        #region members
-        [JsonProperty("resource")]
-        public string Resource { get; set; }
 
-        [JsonProperty("actions")]
-        public IEnumerable<string> Actions { get; set; }
-
-        [JsonProperty("effect")]
-        public PolicyEffect? Effect { get; set; }
-
-        [JsonProperty("condition")]
-        public IEnumerable<PolicyStatementCondition> Condition { get; set; }
-        #endregion
-    }
     #endregion
 
     #region PolicyStatementCondition
-    public class PolicyStatementCondition
-    {
-        #region members
-        [JsonProperty("param")]
-        public string Param { get; set; }
 
-        [JsonProperty("operator")]
-        public string Operator { get; set; }
-
-        [JsonProperty("value")]
-        public object Value { get; set; }
-        #endregion
-    }
     #endregion
 
     #region PolicyAssignment
-    public class PolicyAssignment
-    {
-        #region members
-        [JsonProperty("code")]
-        public string Code { get; set; }
 
-        [JsonProperty("targetType")]
-        public PolicyAssignmentTargetType TargetType { get; set; }
-
-        [JsonProperty("targetIdentifier")]
-        public string TargetIdentifier { get; set; }
-        #endregion
-    }
     #endregion
 }

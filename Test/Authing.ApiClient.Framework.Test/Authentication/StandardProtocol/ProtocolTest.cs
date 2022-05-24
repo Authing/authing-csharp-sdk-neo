@@ -67,7 +67,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             #region OIDC 登陆测试
 
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "username openid profile email phone address offline_access" });
-            var res = await authenticationClient.GetAccessTokenByCode("kPrQEdNrakhymjBrNfmi_1YvLdBVGN2KIsJm6nqnN8L");
+            var res = await authenticationClient.GetAccessTokenByCode("WQMiybsSGe1tFpIO9B4IkZXThYtFApHVQdLJK1qda0_");
             authenticationClient.SetToken(res.AccessToken);
             var ress = await authenticationClient.GetUdfValue();
             var temp = await authenticationClient.GetUserInfoByAccessToken(res.AccessToken);
