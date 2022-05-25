@@ -113,7 +113,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             //var result = await client.Post<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import", keyValuePairs);
 
             var result =
-                await client.RequestCustomData<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import",
+                await client.RequestCustomDataWithToken<Authing.ApiClient.Domain.Model.Management.Orgs.Org>("api/v2/orgs/import",
                     keyValuePairs.ConvertJson()).ConfigureAwait(false);
 
             return null;

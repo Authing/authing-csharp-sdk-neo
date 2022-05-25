@@ -82,6 +82,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Request<TResponse>(body, headers).ConfigureAwait(false);
         }
 
+        public async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
+        {
+            var headers = new Dictionary<string, string>();
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            return await Post<TResponse>(body, headers).ConfigureAwait(false);
+        }
+
         //public async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api, GraphQLRequest body)
         //{
         //    var headers = new Dictionary<string, string>();
@@ -199,18 +208,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         [Obsolete("已过时, 不建议使用")]
-        public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson)
-        {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await PutRaw<TResponse>(api, rawjson.ConvertJson(), headers).ConfigureAwait(false);
-        }
-
-        [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, Dictionary<string,object> dic)
         {
             var headers = new Dictionary<string, string>();
@@ -234,16 +231,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await PostRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
         }
 
-        public async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Post<TResponse>(body, headers).ConfigureAwait(false);
-        }
-
-        public new async Task<GraphQLResponse<TResponse>> RequestCustomData<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
+        public new async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
             headers ??= new Dictionary<string, string>();

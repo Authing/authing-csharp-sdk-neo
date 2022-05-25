@@ -24,7 +24,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns>PrincipalDetail or null</returns>
         public async Task<PrincipalDetail> Detail(string userId)
         {
-            var result = await _client.RequestCustomData<RestfulResponse<PrincipalDetail>>(
+            var result = await _client.RequestCustomDataWithToken<RestfulResponse<PrincipalDetail>>(
                 $"api/v2/users/{userId}/management/principal_authentication", "", method: HttpMethod.Delete,
                 contenttype: ContentType.JSON).ConfigureAwait(false);
             return result.Data.Data;
@@ -54,7 +54,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 param.Add("ext", info.LegalPersonName);
             }
 
-            var result = await _client.RequestCustomData<RestfulResponse<bool>>(url, param.ConvertJson()).ConfigureAwait(false);
+            var result = await _client.RequestCustomDataWithToken<RestfulResponse<bool>>(url, param.ConvertJson()).ConfigureAwait(false);
             return result.Data.Data;
         }
     }
