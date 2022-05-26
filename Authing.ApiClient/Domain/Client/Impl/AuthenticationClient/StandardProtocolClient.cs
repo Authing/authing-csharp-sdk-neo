@@ -461,7 +461,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             if (options is null)
                 throw new ArgumentException(
                     "请在调用本方法时传入 { accessKey: string, accessSecret: string }，请看文档：https://docs.authing.cn/v2/guides/authorization/m2m-authz.html");
-            var result = await RequestCustomData<HttpResponseMessage>(
+            var result = await RequestCustomDataWithOutToken<HttpResponseMessage>(
                 "oidc/token",
                 new Dictionary<string, string>()
                 {
@@ -504,7 +504,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<GraphQLResponse<string>> RevokeTokenWithClientSecretPost(string url, string token)
         {
-            var result = await RequestCustomData<string>(
+            var result = await RequestCustomDataWithOutToken<string>(
                 url,
                 new Dictionary<string, string>()
                 {
@@ -519,7 +519,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             if (Options.Protocol == Protocol.OAUTH)
                 throw new ArgumentException("OAuth 2.0 暂不支持用 client_secret_basic 模式身份验证撤回 Token");
-            var result = await RequestCustomData<string>(
+            var result = await RequestCustomDataWithOutToken<string>(
                 "oidc/token/revocation",
                 new Dictionary<string, string>()
                 {
@@ -536,7 +536,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<GraphQLResponse<string>> RevokeTokenWithNone(string url, string token)
         {
-            var result = await RequestCustomData<string>(
+            var result = await RequestCustomDataWithOutToken<string>(
                 url,
                 new Dictionary<string, string>()
                 {
@@ -554,7 +554,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<ValidateTicketV1Res> ValidateTicketV1(string ticket, string service)
         {
-            var result = await RequestCustomData<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestCustomDataWithOutToken<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", method: HttpMethod.Get).ConfigureAwait(false);
 
             if (result.Data.Result.Split('\n').Contains("yes"))
             {
@@ -608,14 +608,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<string> ValidateTicketV2(string ticket, string service, ValidateTicketFormat validateTicketFormat)
         {
-            var result = await RequestCustomData<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestCustomDataWithOutToken<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", method: HttpMethod.Get).ConfigureAwait(false);
 
             return result.Data.Result;
         }
 
         public async Task<User> TrackSession()
         {
-            var result = await RequestCustomData<User>("cas/session", method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestCustomDataWithOutToken<User>("cas/session", method: HttpMethod.Get).ConfigureAwait(false);
             return result.Data;
         }
     }

@@ -34,7 +34,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            await client.SendSmsCode("13348926753");
+            var res = await client.SendSmsCode("17665662048");
 
             var result = await client.LoginByPhoneCode("13348926753", "2950", null);
 

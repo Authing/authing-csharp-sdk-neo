@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
-    <RootNamespace>Authing.ApiClient</RootNamespace>
-    <PackageTags>Authing.ApiClient</PackageTags>
-    <TargetName>Authing.ApiClient</TargetName>
+    <RootNamespace>Authing.Library</RootNamespace>
+    <PackageTags>Authing.Library</PackageTags>
+    <TargetName>Authing.Library</TargetName>
     <Copyright>Beijing Steamory Technology Co., Ltd.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Authing</Authors>
-    <Product>Authing.ApiClient</Product>
+    <Product>Authing.Library</Product>
     <Description>通过简单、安全的接口使用 Authing 提供的功能。</Description>
     <PackageReleaseNotes>Version 0.0.1
 - SDK 改版升级，支持 Net40 和 NetStandard2.0 平台

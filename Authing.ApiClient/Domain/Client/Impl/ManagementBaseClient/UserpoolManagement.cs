@@ -31,7 +31,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<UserPool> Detail()
         {
             //var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
-            var res = await _client.RequestCustomData<UserPool>("api/v2/userpools/detail", method: HttpMethod.Get).ConfigureAwait(false);
+            var res = await _client.RequestCustomDataWithToken<UserPool>("api/v2/userpools/detail", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data ?? null;
         }
 
@@ -55,7 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<IEnumerable<Env>> ListEnv()
         {
             //var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
-            var res = await _client.RequestCustomData<IEnumerable<Env>>("api/v2/env", method: HttpMethod.Get).ConfigureAwait(false);
+            var res = await _client.RequestCustomDataWithToken<IEnumerable<Env>>("api/v2/env", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data ?? null;
         }
 
@@ -74,7 +74,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             //  { "value",value.ToString()}
             //});
 
-            var result = await _client.RequestCustomData<Env>("api/v2/env", new Dictionary<string, string>()
+            var result = await _client.RequestCustomDataWithToken<Env>("api/v2/env", new Dictionary<string, string>()
                 {
                     { "key", key },
                     { "value", value.ToString() }
@@ -91,7 +91,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<int> RemoveEnv(string key)
         {
             //var result = await _client.Delete<Env>($"api/v2/env/{key}", null);
-            var result = await _client.RequestCustomData<Env>($"api/v2/env/{key}", method: HttpMethod.Delete).ConfigureAwait(false);
+            var result = await _client.RequestCustomDataWithToken<Env>($"api/v2/env/{key}", method: HttpMethod.Delete).ConfigureAwait(false);
             return result.Code;
         }
     }

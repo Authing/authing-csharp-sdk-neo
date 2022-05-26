@@ -28,7 +28,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<UserMfaStatus> GetStatus(string userid)
         {
             var result =
-               await client.RequestCustomData<RestfulResponse<UserMfaStatus>>($"api/v2/users/{userid}/mfa-bound", "",
+               await client.RequestCustomDataWithToken<RestfulResponse<UserMfaStatus>>($"api/v2/users/{userid}/mfa-bound", "",
                     method: HttpMethod.Get, contenttype: ContentType.JSON).ConfigureAwait(false);
             return result.Data.Data;
 
@@ -42,7 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> UnAssociateMfa(string userid, UserMfaType type)
         {
-            var result = await client.RequestCustomData<RestfulResponse<bool>>(
+            var result = await client.RequestCustomDataWithToken<RestfulResponse<bool>>(
                 $"api/v2/users/{userid}/mfa-bound?type={type.ToString()}", "", method: HttpMethod.Delete,
                 contenttype: ContentType.JSON).ConfigureAwait(false);
             return result.Data.Code == 200;
@@ -60,7 +60,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<SetTotpResp> ImportTotp(ImportTotpParams options)
         {
-            var result = await client.RequestCustomData<RestfulResponse<SetTotpResp>>("api/v2/mfa/totp/import",
+            var result = await client.RequestCustomDataWithToken<RestfulResponse<SetTotpResp>>("api/v2/mfa/totp/import",
                 new Dictionary<string, string>()
                 {
                         { "userid", options.UserId },

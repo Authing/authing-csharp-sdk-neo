@@ -25,7 +25,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
     /// <summary>
     /// Authing 认证客户端类
     /// </summary>
-    public partial class AuthenticationClient : BaseAuthenticationClient, IStandardProtocol,IAuthenticationClient
+    public partial class AuthenticationClient : BaseAuthenticationClient, IStandardProtocol, IAuthenticationClient
     {
 
 
@@ -75,13 +75,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
 
             var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken);
-            var userDataString = tokenInfo.ContainsKey("data") ? tokenInfo["data"]: "";
+            var userDataString = tokenInfo.ContainsKey("data") ? tokenInfo["data"] : "";
             var userData = JsonConvert.DeserializeObject<UserData>(userDataString.ToString() ?? "");
             var userId = tokenInfo.ContainsKey("sub") ? tokenInfo["sub"].ToString() : userData.Id;
             if (string.IsNullOrEmpty(userId))
             {
                 throw new Exception("不合法的 accessToken");
-            } 
+            }
             return userId;
         }
 
@@ -371,10 +371,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// TODO: 破坏性更新
         public async Task<CommonMessage> SendSmsCode(string phone)
         {
-            var res = await Post<CommonMessage>("api/v2/sms/send", new Dictionary<string, object>
+            var res = await RequestCustomDataWithOutToken<CommonMessage>("api/v2/sms/send", new Dictionary<string, object>
             {
                 {nameof(phone), phone }
-            }).ConfigureAwait(false);
+            }.ConvertJson()).ConfigureAwait(false);
 
             CommonMessage ms = new CommonMessage()
             {

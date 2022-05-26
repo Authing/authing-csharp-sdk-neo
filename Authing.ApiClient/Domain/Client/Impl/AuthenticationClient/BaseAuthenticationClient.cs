@@ -73,6 +73,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
         }
 
+        protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
+        {
+            var headers = new Dictionary<string, string>();
+            headers = GetAuthHeaders(false);
+            return await Post<TResponse>(body, headers).ConfigureAwait(false);
+        }
+
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, string accessToken = null)
         {
             var headers = new Dictionary<string, string>();
@@ -81,56 +88,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         [Obsolete("已过时, 不建议使用")]
-        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api, GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await Request<TResponse>(api, body, headers).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await Request<TResponse>(body, headers).ConfigureAwait(false);
-        }
-
-        [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
-        }
-
-        [Obsolete("已过时, 不建议使用")]
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, object> body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-
-            Dictionary<string, string> dic = new Dictionary<string, string>();
-
-            foreach (var item in body)
-            {
-                if (item.Value is string)
-                {
-                    dic.Add(item.Key, item.Value.ToString());
-                    continue;
-                }
-                if (item.Value is int)
-                {
-                    dic.Add(item.Key, item.Value.ToString());
-                    continue;
-                }
-                dic.Add(item.Key, Newtonsoft.Json.JsonConvert.SerializeObject(item.Value));
-
-            }
-            return await Post<TResponse>(api, dic, headers).ConfigureAwait(false);
-        }
-
-        [Obsolete("已过时, 不建议使用")]
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
@@ -151,13 +109,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
             return await Delete<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
-        }
-
-        protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(false);
-            return await Post<TResponse>(body, headers).ConfigureAwait(false);
         }
 
         [Obsolete("已过时, 不建议使用")]
@@ -186,6 +137,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             ContentType contenttype = ContentType.DEFAULT)
         {
             var amphitheaters = GetAuthHeaders(true);
+            if (headers != null)
+                foreach (var pair in headers)
+                {
+                    if (amphitheaters.ContainsKey(pair.Key))
+                        amphitheaters[pair.Key] = pair.Value;
+                }
+            return await RequestCustomData<TResponse>(url, serializedata, amphitheaters, method, contenttype).ConfigureAwait(false);
+        }
+
+        protected async Task<GraphQLResponse<TResponse>> RequestCustomDataWithOutToken<TResponse>(string url,
+            string serializedata = "", Dictionary<string, string>? headers = null, HttpMethod method = null!,
+            ContentType contenttype = ContentType.DEFAULT)
+        {
+            var amphitheaters = GetAuthHeaders(false);
             if (headers != null)
                 foreach (var pair in headers)
                 {

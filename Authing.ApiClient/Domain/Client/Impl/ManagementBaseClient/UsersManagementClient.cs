@@ -384,7 +384,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<PaginatedOrgsAndNodes> ListOrgs(string userId)
         {
-            var res = await client.RequestCustomData<IEnumerable<IEnumerable<OrgAndNode>>>($"api/v2/users/{userId}/orgs", method: System.Net.Http.HttpMethod.Get,contenttype: ContentType.JSON).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<IEnumerable<IEnumerable<OrgAndNode>>>($"api/v2/users/{userId}/orgs", method: System.Net.Http.HttpMethod.Get,contenttype: ContentType.JSON).ConfigureAwait(false);
             //var res = await client.Get<ListOrgsResponse>($"api/v2/users/{userId}/orgs", new GraphQLRequest()).ConfigureAwait(false);
             if (res.Code == 200)
             {
@@ -581,7 +581,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> Kick(IEnumerable<string> userIds)
         {
-            var result = await client.RequestCustomData<CommonMessage>("api/v2/users/kick", 
+            var result = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/kick", 
                 new Dictionary<string, object>
                 {
                     { nameof(userIds), userIds }

@@ -48,7 +48,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             endPoint += $"&page={options.Page}";
             endPoint += $"&limit={options.Limit}";
-            var result = await _client.RequestCustomData<UserLogs>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await _client.RequestCustomDataWithToken<UserLogs>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
             return result.Data ?? null;
         }
 
@@ -80,7 +80,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             endPoint += $"&page={options.Page}";
             endPoint += $"&limit={options.Limit}";
-            var result = await _client.RequestCustomData<AdminLogs>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await _client.RequestCustomDataWithToken<AdminLogs>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
             return result.Data ?? null;
         }
     }
