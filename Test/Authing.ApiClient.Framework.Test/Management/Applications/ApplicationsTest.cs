@@ -26,14 +26,14 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_Delete()
         {
-            var result = await managementClient.Applications.Delete("61c298f70ba3eea621d27ebf");
+            var result = await managementClient.Applications.Delete("6215dd9277d6ef55dfab41f8");
             Assert.True(result);
         }
 
         [Fact]
         public async void Applications_FindById()
         {
-            var result = await managementClient.Applications.FindById("6195ebcf5255f3d735ba9063");
+            var result = await managementClient.Applications.FindById("6215dd9277d6ef55dfab41f8");
             Assert.Equal(result.Name, "测试3");
         }
 

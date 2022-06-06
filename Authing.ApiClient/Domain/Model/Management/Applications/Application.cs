@@ -5,6 +5,38 @@ namespace Authing.ApiClient.Domain.Model.Management.Applications
 {
     public class Application
     {
+        public Loginfailcheck loginFailCheck { get; set; }
+        public Loginpasswordfailcheck loginPasswordFailCheck { get; set; }
+        public Frequentregistercheck frequentRegisterCheck { get; set; }
+        public Qrcodeloginstrategy qrcodeLoginStrategy { get; set; }
+        public DateTime createdAt { get; set; }
+        public DateTime updatedAt { get; set; }
+        public bool isDemo { get; set; }
+        public object initLoginUrl { get; set; }
+        public Passwordtabconfig passwordTabConfig { get; set; }
+        public Verifycodetabconfig verifyCodeTabConfig { get; set; }
+        public object[] complateFiledsPlace { get; set; }
+        public bool skipComplateFileds { get; set; }
+        public bool cssEnabled { get; set; }
+        public object oidcJWEConfig { get; set; }
+        public object asaConfig { get; set; }
+        public bool enableDeviceMutualExclusion { get; set; }
+        public bool isIntegrate { get; set; }
+        public bool ssoEnabled { get; set; }
+        public object ssoOpenAt { get; set; }
+        public object template { get; set; }
+        public bool casExpireBaseBrowser { get; set; }
+        public bool isAsa { get; set; }
+        public string applicationType { get; set; }
+        public string loadingBackground { get; set; }
+        public bool customSecurityEnabled { get; set; }
+        public string loginFailStrategy { get; set; }
+        public bool emailVerifiedDefault { get; set; }
+        public bool customBrandingEnabled { get; set; }
+        public bool sendWelcomeEmail { get; set; }
+        public bool uploadedApn { get; set; }
+
+
         public QrcodeScanning QrcodeScanning { get; set; }
         public string Id { get; set; }
         public string UserPoolId { get; set; }
@@ -27,11 +59,11 @@ namespace Authing.ApiClient.Domain.Model.Management.Applications
         public object? SsoPageCustomizationSettings { get; set; }
         public string Logo { get; set; }
         public object? LogoutRedirectUris { get; set; }
-        public object? LoginTabs { get; set; }
+        public string[] LoginTabs { get; set; }
 
         public string DefaultLoginTab { get; set; }
 
-        public object RegisterTabs { get; set; }
+        public string[] RegisterTabs { get; set; }
         public string DefaultRegisterTab { get; set; }
         public object? LdapConnections { get; set; }
         public object? AdConnections { get; set; }
@@ -61,5 +93,46 @@ namespace Authing.ApiClient.Domain.Model.Management.Applications
         public bool LoginRequireEmailVerified { get; set; }
         public bool AgreementEnabled { get; set; }
         public string AppType { get; set; }
+
+
+    }
+
+    public class Passwordtabconfig
+    {
+        public string[] enabledLoginMethods { get; set; }
+    }
+
+    public class Verifycodetabconfig
+    {
+        public string[] enabledLoginMethods { get; set; }
+    }
+
+    public class Loginfailcheck
+    {
+        public int timeInterval { get; set; }
+        public int limit { get; set; }
+        public bool enabled { get; set; }
+    }
+
+    public class Loginpasswordfailcheck
+    {
+        public int timeInterval { get; set; }
+        public int limit { get; set; }
+        public bool enabled { get; set; }
+    }
+
+    public class Frequentregistercheck
+    {
+        public int timeInterval { get; set; }
+        public int limit { get; set; }
+        public bool enabled { get; set; }
+    }
+
+    public class Qrcodeloginstrategy
+    {
+        public int qrcodeExpiresAfter { get; set; }
+        public int ticketExpiresAfter { get; set; }
+        public bool returnFullUserInfo { get; set; }
+        public bool allowExchangeUserInfoFromBrowser { get; set; }
     }
 }
