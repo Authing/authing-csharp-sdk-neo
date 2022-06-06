@@ -59,11 +59,11 @@ namespace Authing.ApiClient.Domain.Model.Management.Applications
         public object? SsoPageCustomizationSettings { get; set; }
         public string Logo { get; set; }
         public object? LogoutRedirectUris { get; set; }
-        public string[] LoginTabs { get; set; }
+        public object? LoginTabs { get; set; }
 
         public string DefaultLoginTab { get; set; }
 
-        public string[] RegisterTabs { get; set; }
+        public object RegisterTabs { get; set; }
         public string DefaultRegisterTab { get; set; }
         public object? LdapConnections { get; set; }
         public object? AdConnections { get; set; }

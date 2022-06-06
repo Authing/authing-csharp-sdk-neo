@@ -1,6 +1,7 @@
 ﻿using Authing.ApiClient.Domain.Client.Impl.AuthenticationClient;
 using Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient;
 using Authing.ApiClient.Test.Base;
+using Authing.Library.Domain.Client.Impl.AuthenticationClient;
 
 namespace Authing.ApiClient.Framework.Test
 {
@@ -8,6 +9,8 @@ namespace Authing.ApiClient.Framework.Test
     {
         protected AuthenticationClient authenticationClient { get; set; }
         protected ManagementClient managementClient { get; set; }
+
+        protected QrCodeAuthenticationClient qrCodeAuthenticationClient { get; set; }
 
         protected MfaAuthenticationClient mfaAuthenticationClient { get; set; }
 
@@ -30,6 +33,14 @@ namespace Authing.ApiClient.Framework.Test
             });
 
             mfaAuthenticationClient = new MfaAuthenticationClient(opt =>
+            {
+                opt.AppId = AppId;
+                opt.Host = Host;
+                opt.Secret = AppSecret;
+                opt.UserPoolId = UserPoolId;
+            });
+
+            qrCodeAuthenticationClient = new QrCodeAuthenticationClient(opt=> 
             {
                 opt.AppId = AppId;
                 opt.Host = Host;

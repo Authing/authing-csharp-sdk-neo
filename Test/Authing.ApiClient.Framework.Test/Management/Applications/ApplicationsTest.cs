@@ -34,6 +34,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         public async void Applications_FindById()
         {
             var result = await managementClient.Applications.FindById("6215dd9277d6ef55dfab41f8");
+
+            //var ss= result.RegisterTabs.ToString();
+            var ss = result.RegisterTabs;
+
             Assert.Equal(result.Name, "测试3");
         }
 
