@@ -192,19 +192,22 @@ GKl64GDcIq3au+aqJQIDAQAB
                 if (error is null)
                 {
                     if (result != null)
-                        error = new GraphQLErrorMessage() {Message = result.Message, Code = result.Code};
+                        error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
                 }
-                if (result != null && result.Errors != null && result.Errors.Count()>0)
+                else if (result != null && result.Errors != null && result.Errors.Count() > 0)
                 {
                     if (result.Errors[0].Message != null)
                     {
-                        if (result.Errors[0].Message.Data != null)
+                        if (result.Errors[0].Message.Data != null || !string.IsNullOrWhiteSpace(result.Errors[0].Message.Message))
                         {
-                            throw new AuthingException(error.Message, error.Code, error.Data);
+                            error = new GraphQLErrorMessage() { Message = error.Message, Code = error.Code };
                         }
                     }
                 }
-                throw new AuthingException(error.Message, error.Code);
+                else
+                {
+                    throw new AuthingException(error.Message, error.Code);
+                }
             }
         }
     }
