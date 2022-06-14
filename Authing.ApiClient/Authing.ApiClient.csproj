@@ -41,6 +41,8 @@ Version 0.0.13
 - 修复不能正确返回消息的问题
 Version 0.0.14
 - 修复获取应用详细信息错误的问题
+Version 0.0.15
+- 修复手机号通过 code 注册时的空异常
 </PackageReleaseNotes>
 		<Version>0.0.14</Version>
 		<PackageId>Authing.Library</PackageId>

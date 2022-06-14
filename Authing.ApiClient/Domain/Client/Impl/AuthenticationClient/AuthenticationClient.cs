@@ -27,8 +27,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
     /// </summary>
     public partial class AuthenticationClient : BaseAuthenticationClient, IStandardProtocol, IAuthenticationClient
     {
-
-
         /// <summary>
         /// 通过应用 ID 初始化
         /// </summary>
@@ -57,6 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 AccessToken = value?.Token ?? AccessToken;
             }
         }
+
         private User user;
 
         /// <summary>
@@ -106,12 +105,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         [Obsolete("该函数已弃用，请使用　GetCurrentUser")]
-        /// <summary>
-        /// 获取当前用户
-        /// </summary>
-        /// <param name="accessToken">用户 access token</param>
-        /// <param name="cancellationToken">请求令牌</param>
-        /// <returns>当前用户</returns>
         public async Task<User> CurrentUser(string accessToken = null)
         {
             var param = new UserParam();
@@ -121,17 +114,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         [Obsolete("该方法已弃用")]
-        /// <summary>
-        /// 通过邮箱注册
-        /// </summary>
-        /// <param name="email">邮箱</param>
-        /// <param name="password">密码</param>
-        /// <param name="profile">用户资料</param>
-        /// <param name="forceLogin">强制登录</param>
-        /// <param name="generateToken">自动生成 token</param>
-        /// <param name="cancellationToken">请求令牌</param>
-        /// <returns>注册的用户</returns>
-        /// TODO: 下个大版本弃用
         public async Task<User> RegisterByEmail(string email, string password, RegisterProfile profile = null,
                                                 bool forceLogin = false, bool generateToken = false)
         {
@@ -193,17 +175,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         [Obsolete("此方法已弃用")]
-        /// <summary>
-        /// 通过用户名注册
-        /// </summary>
-        /// <param name="username">用户名</param>
-        /// <param name="password">密码</param>
-        /// <param name="profile">用户资料</param>
-        /// <param name="forceLogin">强制登录</param>
-        /// <param name="generateToken">自动生成 token</param>
-        /// <param name="cancellationToken">请求令牌</param>
-        /// <returns>注册的用户</returns>
-        /// TODO: 下个大版本弃用
         public async Task<User> RegisterByUsername(string username,
                                                    string password,
                                                    RegisterProfile profile = null,
@@ -333,7 +304,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var param = new RegisterByPhoneCodeParam(
                 new RegisterByPhoneCodeInput(phone, code)
                 {
-                    Password = EncryptHelper.RsaEncryptWithPublic(password, PublicKey),
+                    Password = password is null ? null : EncryptHelper.RsaEncryptWithPublic(password, PublicKey),
                     Profile = profile,
                     ForceLogin = registerAndLoginOptions?.ForceLogin,
                     GenerateToken = registerAndLoginOptions?.GenerateToken,
@@ -385,15 +356,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         }
 
         [Obsolete("此方法已弃用")]
-        /// <summary>
-        /// 通过邮箱登录
-        /// </summary>
-        /// <param name="email">邮箱</param>
-        /// <param name="password">密码</param>
-        /// <param name="autoRegister">自动注册</param>
-        /// <param name="captchaCode">人机验证码</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>User</returns>
         public async Task<User> LoginByEmail(string email,
                                              string password,
                                              bool autoRegister = false,
@@ -519,7 +481,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             User = res.Data.Result;
             return res.Data.Result;
         }
-
 
         /// <summary>
         /// 通过手机号验证码登录
@@ -1065,7 +1026,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return resUdv;
         }
 
-
         /// <summary>
         /// 移除用户自定义字段的值
         /// </summary>
@@ -1116,7 +1076,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             ListOrgsResult listOrgsResult = new ListOrgsResult { Orgs = orgs };
 
             return listOrgsResult;
-
         }
 
         public async Task<PaginatedDepartments> ListDepartment()
@@ -1171,9 +1130,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 {"username",username },
                 { "password",password}
             }).ConfigureAwait(false);
-
-
-
 
             SetCurrentUser(result.Data);
             return result.Data;
@@ -1298,7 +1254,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var middleLevel = new Regex(@"((?=.*\d)(?=.*\D)|(?=.*[a-zA-Z])(?=.*[^a-zA-Z]))(?!^.*[\u4E00-\u9FA5].*$).{6,}",
                                             RegexOptions.Multiline
 | RegexOptions.IgnorePatternWhitespace);
-
 
             if (higLevel.IsMatch(password))
             {
@@ -1454,6 +1409,5 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
             return AccessToken;
         }
-
     }
 }
