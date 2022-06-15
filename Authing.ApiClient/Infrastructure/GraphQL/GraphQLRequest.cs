@@ -26,7 +26,8 @@ namespace Authing.ApiClient.Infrastructure.GraphQL
             set => this[VARIABLES_KEY] = value;
         }
 
-        public GraphQLRequest() { }
+        public GraphQLRequest()
+        { }
 
         public GraphQLRequest(string query, object variables = null, string operationName = null)
         {

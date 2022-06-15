@@ -16,7 +16,13 @@ namespace Authing.ApiClient.Extensions
                 // 设置为驼峰命名
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-            var resObj = JsonConvert.SerializeObject(_object,settings:serializerSettings);
+            var resObj = JsonConvert.SerializeObject(_object, settings: serializerSettings);
+            return resObj;
+        }
+
+        public static string ConvertJsonNoCamel(this object _object)
+        {
+            var resObj = JsonConvert.SerializeObject(_object);
             return resObj;
         }
     }

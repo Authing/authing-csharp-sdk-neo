@@ -13,6 +13,7 @@ using Authing.ApiClient.Domain.Model.Management.Resources;
 using Authing.ApiClient.Domain.Model.Management.Applications;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Infrastructure.GraphQL;
+using Authing.Library.Domain.Model.Management.Applications;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
 {
@@ -49,6 +50,13 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="id">应用 ID</param>
         /// <returns></returns>
         Task<Application> FindById(string id);
+
+        /// <summary>
+        /// 通过 ID 获取应用详情,公共
+        /// </summary>
+        /// <param name="id">应用 ID</param>
+        /// <returns></returns>
+        Task<ApplicationV2> FindByIdV2(string id);
 
         /// <summary>
         /// 获取应用的资源列表

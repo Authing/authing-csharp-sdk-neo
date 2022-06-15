@@ -126,38 +126,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         [Obsolete("已过时, 不建议使用")]
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, object> body)
-        {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-
-
-            Dictionary<string, string> dic = new Dictionary<string, string>();
-
-            foreach (var item in body)
-            {
-                if (item.Value is string)
-                {
-                    dic.Add(item.Key, item.Value.ToString());
-                    continue;
-                }
-                if (item.Value is int)
-                {
-                    dic.Add(item.Key, item.Value.ToString());
-                    continue;
-                }
-                dic.Add(item.Key, Newtonsoft.Json.JsonConvert.SerializeObject(item.Value));
-
-            }
-
-            return await Post<TResponse>(api, dic, headers).ConfigureAwait(false);
-        }
-
-        [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
@@ -172,7 +140,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
         {
-
             var headers = new Dictionary<string, string>();
             var token = await GetAccessToken().ConfigureAwait(false);
             headers["Authorization"] = token;
@@ -180,19 +147,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
             return await Delete<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
-        }
-
-        [Obsolete("已过时, 不建议使用")]
-        public async Task<GraphQLResponse<TResponse>> Patch<TResponse>(string api, Dictionary<string, string> body)
-        {
-
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Patch<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         [Obsolete("已过时, 不建议使用")]
@@ -208,7 +162,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         [Obsolete("已过时, 不建议使用")]
-        public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, Dictionary<string,object> dic)
+        public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, Dictionary<string, object> dic)
         {
             var headers = new Dictionary<string, string>();
             var token = await GetAccessToken().ConfigureAwait(false);
@@ -242,6 +196,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-sdk-version"] = version;
             var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
+        }
+
+        public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithOutToken<TResponse>(string url,
+            string serializedata = "", Dictionary<string, string>? headers = null, HttpMethod method = null!,
+            ContentType contenttype = ContentType.DEFAULT)
+        {
+            return await RequestCustomData<TResponse>(url, serializedata, headers, method, contenttype).ConfigureAwait(false);
         }
 
         public object GetAuthHeaders()
