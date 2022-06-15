@@ -167,12 +167,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Resources> UpdateResource(string appId, string code, UpdateResourceParam updateResourceParam)
         {
             updateResourceParam.NameSpace = appId;
-            var res = await client.RequestCustomDataWithToken<Resources>($"api/v2/resources/${code}", new Dictionary<string, object>() {
-                { nameof(updateResourceParam.NameSpace), updateResourceParam.NameSpace },
-                { nameof(updateResourceParam.Actions), updateResourceParam.Actions },
+            var res = await client.RequestCustomDataWithToken<Resources>($"api/v2/resources/{code}", new Dictionary<string, object>() {
+                { nameof(updateResourceParam.Actions), updateResourceParam.Actions},
+                { nameof(updateResourceParam.NameSpace).ToLower(), updateResourceParam.NameSpace},
+                { nameof(updateResourceParam.Type), updateResourceParam.Type.ToString() },
                 { nameof(updateResourceParam.Description), updateResourceParam.Description },
-                { nameof(updateResourceParam.Type), updateResourceParam.Type }
-            }.ConvertJsonNoCamel(), contenttype: ContentType.JSON).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return res.Data;
         }
 
