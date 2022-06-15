@@ -16,7 +16,9 @@ using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
 using System.Linq;
+using System.Net.Http;
 using Authing.ApiClient.Extensions;
+using Authing.Library.Domain.Model.Management.Applications;
 using Flurl;
 using Flurl.Http;
 
@@ -70,7 +72,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<bool> Delete(string appId)
         {
             var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}", new GraphQLRequest()).ConfigureAwait(false);
-            Console.WriteLine(res);
             return true;
         }
 
@@ -82,6 +83,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Application> FindById(string id)
         {
             var res = await client.Get<Application>($"api/v2/applications/{id}", new GraphQLRequest()).ConfigureAwait(false);
+            return res.Data;
+        }
+
+        /// <summary>
+        /// 通过 ID 获取应用详情,公共
+        /// </summary>
+        /// <param name="id">应用 ID</param>
+        /// <returns></returns>
+        public async Task<ApplicationV2> FindByIdV2(string id)
+        {
+            var res = await client.RequestCustomDataWithOutToken<ApplicationV2>($"api/v2/applications/{id}/public-config", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -108,7 +120,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&type={listResourceOption.Type}";
             }
-            var res = await client.Get<PaginatedResources>($"api/v2/resources{query}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<PaginatedResources>($"api/v2/resources{query}", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -133,7 +145,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
 
             createResourceParam.NameSpace = appId;
-            var res = await client.PostRaw<Resources>("api/v2/resources",
+            var res = await client.RequestCustomDataWithToken<Resources>("api/v2/resources",
                 new Dictionary<string, object>()
                 {
                         {nameof(createResourceParam.Code).ToLower(),createResourceParam.Code},
@@ -141,12 +153,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                         {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
                         {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
                         {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
-                }).ConfigureAwait(false);
+                }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return res.Data;
         }
 
         /// <summary>
-        /// 更新应用的资源
+        /// 更新应用的资源资源
         /// </summary>
         /// <param name="appId">应用 ID</param>
         /// <param name="code"></param>
@@ -155,12 +167,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Resources> UpdateResource(string appId, string code, UpdateResourceParam updateResourceParam)
         {
             updateResourceParam.NameSpace = appId;
-            var res = await client.Post<Resources>($"api/v2/resources/${code}", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<Resources>($"api/v2/resources/${code}", new Dictionary<string, object>() {
                 { nameof(updateResourceParam.NameSpace), updateResourceParam.NameSpace },
                 { nameof(updateResourceParam.Actions), updateResourceParam.Actions },
                 { nameof(updateResourceParam.Description), updateResourceParam.Description },
                 { nameof(updateResourceParam.Type), updateResourceParam.Type }
-            }).ConfigureAwait(false);
+            }.ConvertJsonNoCamel(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -211,7 +223,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
             }).ConfigureAwait(false);
-            return new CommonMessage() {
+            return new CommonMessage()
+            {
                 Code = 200,
                 Message = "启用应用访问控制策略成功"
             };
@@ -341,7 +354,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<PublicApplication> UpdateDefaultAccessPolicy(string appId, UpdateDefaultApplicationAccessPolicyParam updateDefaultApplicationAccessPolicyParam)
         {
-            var permissionStrategy = new {
+            var permissionStrategy = new
+            {
                 defaultStrategy = updateDefaultApplicationAccessPolicyParam.DefaultStrategy
             };
             var res = await client.PostRaw<PublicApplication>($"api/v2/applications/{appId}", new Dictionary<string, object>() {
@@ -428,12 +442,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         [Obsolete("已过时, 不建议使用")]
-        /// <summary>
-        /// 获取角色详情
-        /// </summary>
-        /// <param name="appId">应用 ID</param>
-        /// <param name="code">角色唯一标志符</param>
-        /// <returns></returns>
         public async Task<Role> FindRole(
             string appId,
             string code)
@@ -648,7 +656,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> RefreshApplicationSecret(string appId)
         {
-            var res = await client.Patch<Application>($"api/v2/application/{appId}/refresh-secret", new Dictionary<string, string>()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<Application>($"api/v2/application/{appId}/refresh-secret", method: new HttpMethod("PATCH")).ConfigureAwait(false);
             return res.Data;
         }
 

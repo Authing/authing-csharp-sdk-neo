@@ -181,12 +181,13 @@ GKl64GDcIq3au+aqJQIDAQAB
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {
             //TODO errorcode = 0 的情况存在
+            //TODO errorcode = 404 Errors 为 NULL
             //if (result.Code == 200)
             //{
             //    return;
             //}
 
-            if (result?.Errors != null && ((bool) result?.Errors.Any() || (result?.Code != 200 && result?.Code != 0)))
+            if (result?.Errors != null && (bool)result?.Errors.Any() || (result?.Code != 200 && result?.Code != 0))
             {
                 var error = result?.Errors?[0].Message;
                 if (error is null)
@@ -194,7 +195,7 @@ GKl64GDcIq3au+aqJQIDAQAB
                     if (result != null)
                         error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
                 }
-                else if (result != null && result.Errors != null && result.Errors.Count() > 0)
+                else if (result.Errors != null && result.Errors.Any())
                 {
                     if (result.Errors[0].Message != null)
                     {

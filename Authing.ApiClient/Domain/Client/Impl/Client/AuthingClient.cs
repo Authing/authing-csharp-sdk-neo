@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Types;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using HttpMethod = System.Net.Http.HttpMethod;
 
 namespace Authing.ApiClient.Domain.Client.Impl.Client
@@ -16,6 +17,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
     public class AuthingClient : IAuthingClient
     {
         private readonly TimeSpan _timeOut;
+
         private AuthingClient(TimeSpan timeout)
         {
             _timeOut = timeout;
@@ -49,9 +51,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
         public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, Dictionary<string, string> body,
             Dictionary<string, string> headers)
         {
-
             return await SendRequest<TResponse>(url, body, headers, httpType).ConfigureAwait(false);
-
         }
 
         private async Task<TResponse> SendRequest<TResponse>(string url, string strContent,
@@ -91,9 +91,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 {
                     message.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", headers["Bearer"]);
                 }
-
-
-
             }
             using (var httpResponseMessage =
                 await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
@@ -116,7 +113,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                         content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
-
         }
 
         private async Task<TResponse> SendRequest<TResponse>(string url, Dictionary<string, string> body,
@@ -134,7 +130,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             }
             else if (httpType == HttpType.Delete)
             {
-
                 message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
             }
             else if (httpType == HttpType.Patch)
@@ -143,9 +138,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
 
                 {
-
                     Content = new FormUrlEncodedContent(sortedParam)
-
                 };
             }
             else if (httpType == HttpType.Put)
@@ -154,9 +147,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
 
                 {
-
                     Content = new FormUrlEncodedContent(sortedParam)
-
                 };
             }
             else
@@ -165,9 +156,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
 
                 {
-
                     Content = new FormUrlEncodedContent(sortedParam)
-
                 };
             }
             if (headers != null)
@@ -208,7 +197,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
             {
-
                 Content = new StringContent(serializedata, Encoding.UTF8, "application/json")
                 //TODO:JAVA SDK中存在 application/x-www-form-urlencoded
                 //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
@@ -241,7 +229,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                         content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
-
         }
 
         public async Task<TResponse> PostRaw<TResponse>(string url, string serializedata, Dictionary<string, string> headers)
@@ -253,7 +240,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
 
             message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
             {
-
                 Content = new StringContent(serializedata, Encoding.UTF8, "application/json")
                 //TODO:JAVA SDK中存在 application/x-www-form-urlencoded
                 //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
@@ -286,7 +272,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                         content = await sr.ReadToEndAsync().ConfigureAwait(false);
                 throw new Exception(content);
             }
-
         }
 
         public async Task<TResponse> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null, HttpMethod method = null,
@@ -298,20 +283,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             HttpRequestMessage message = null;
             switch (method.Method)
             {
-
                 case "GET":
                     message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
                     //message.Headers.Add("Content-Type", contenttype.ToDescription());
                     break;
+
                 case "DELETE":
                     message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
                     //message.Headers.Add("Content-Type", contenttype.ToDescription());
                     break;
+
                 case "POST":
                 case "PATCH":
                 case "PUT":
                     message = HttpRequestMessage<TResponse>(url, serializedata, method, contenttype);
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(method.Method), method, "不支持此方法");
             }
@@ -374,6 +361,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                             // message.Content.Headers.Clear();
                             // message.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
                             break;
+
                         case ContentType.JSON:
                             message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
                             {
@@ -381,10 +369,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                                 //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
                             };
                             break;
+
                         default:
                             throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
                     }
                     break;
+
                 case "PATCH":
                     switch (contenttype)
                     {
@@ -399,16 +389,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                                 Content = new FormUrlEncodedContent(sortedParam)
                             };
                             break;
+
                         case ContentType.JSON:
                             message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
                             {
                                 Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
                             };
                             break;
+
                         default:
                             throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
                     }
                     break;
+
                 case "PUT":
                     switch (contenttype)
                     {
@@ -423,19 +416,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                                 Content = new FormUrlEncodedContent(sortedParam)
                             };
                             break;
+
                         case ContentType.JSON:
                             message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
                             {
                                 Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
                             };
                             break;
+
                         default:
                             throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
                     }
                     break;
             }
             */
-            #endregion
+
+            #endregion old
 
             switch (contenttype)
             {
@@ -450,17 +446,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                         Content = new FormUrlEncodedContent(sortedParam)
                     };
                     break;
+
                 case ContentType.JSON:
                     message = new HttpRequestMessage(method, new Uri(url))
                     {
                         Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
                     };
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
             }
             return message;
         }
     }
-
 }

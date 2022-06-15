@@ -2,6 +2,8 @@
 using Authing.ApiClient.Domain.Model.Management.Resources;
 using Authing.ApiClient.Domain.Model.Management.Roles;
 using System.Collections.Generic;
+using System.Linq;
+using Authing.ApiClient.Types;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Applications
@@ -42,16 +44,27 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         }
 
         [Fact]
+        public async void Applications_FindByIdV2()
+        {
+            var result = await managementClient.Applications.FindByIdV2("62148031cb5dbb3520f5f774");
+
+            //var ss= result.RegisterTabs.ToString();
+            var ss = result.loginTabs;
+
+            Assert.NotNull(ss);
+        }
+
+        [Fact]
         public async void Applications_ListResource()
         {
-            var result = await managementClient.Applications.ListResource("6195ebcf5255f3d735ba9063");
+            var result = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c");
             Assert.NotEmpty(result.List);
         }
 
         [Fact]
         public async void Applications_CreateResource()
         {
-            var result = await managementClient.Applications.CreateResource("6195ebcf5255f3d735ba9063", new CreateResourceParam()
+            var result = await managementClient.Applications.CreateResource("62a99822ff635db21c2ec21c", new CreateResourceParam()
             {
                 Code = "orderTest",
                 Type = Types.ResourceType.DATA,
@@ -63,10 +76,15 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_UpdateResource()
         {
-            var result = await managementClient.Applications.UpdateResource("6195ebcf5255f3d735ba9063", "orderTest", new UpdateResourceParam()
+            //TODO:资源不存在
+            //var res = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c");
+            var result = await managementClient.Applications.UpdateResource("62a99822ff635db21c2ec21c", "orderTest", new UpdateResourceParam()
             {
+                Description = "test",
                 Type = Types.ResourceType.DATA,
+                Actions = new List<ResourceAction>() { new ResourceAction() { Name = "orderTest:write" } }
             });
+
             Assert.Equal(result.NameSpaceId, "6195ebcf5255f3d735ba9063");
         }
 
@@ -256,9 +274,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_modifyAgreement()
         {
-            var result = await managementClient.Applications.modifyAgreement("6195ebcf5255f3d735ba9063", 0, new AgreementInput()
+            var result = await managementClient.Applications.modifyAgreement("62a99822ff635db21c2ec21c", 0, new AgreementInput()
             {
-                Title = "userAgreement2"
+                Title = "userAgreement2",
             });
             Assert.Equal(result.Title, "userAgreement2");
         }
@@ -287,7 +305,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_RefreshApplicationSecret()
         {
-            var result = await managementClient.Applications.RefreshApplicationSecret("6195ebcf5255f3d735ba9063");
+            var result = await managementClient.Applications.RefreshApplicationSecret("6172807001258f603126a78a");
             Assert.NotNull(result);
         }
 

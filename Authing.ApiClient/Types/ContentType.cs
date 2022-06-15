@@ -10,6 +10,7 @@ namespace Authing.ApiClient.Types
     {
         [Description("application/x-www-form-urlencoded")]
         DEFAULT,
+
         [Description("application/json")]
         JSON,
     }

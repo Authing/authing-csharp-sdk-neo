@@ -29,6 +29,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 contenttype: ContentType.JSON).ConfigureAwait(false);
             return result.Data.Data;
         }
+
         /// <summary>
         /// TODO:补全注释
         /// </summary>
