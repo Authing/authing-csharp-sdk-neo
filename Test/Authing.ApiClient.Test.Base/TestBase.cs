@@ -9,10 +9,10 @@
 
         //protected static string TestUserId = "61a82941979c96c04ed9e920";
 
-        protected static string UserPoolId { get; set; } = "613189b2eed393affbbf396e";
-        protected static string UserPoolSecret { get; set; } = "ccf4951a33e5d54d64e145782a65f0a7";
-        protected static string AppSecret { get; set; } = "ccf4951a33e5d54d64e145782a65f0a7";
-        protected static string AppId { get; set; } = "6215dd9277d6ef55dfab41f8";
+        protected static string UserPoolId { get; set; } = "617280674680a6ca2b1f6317";
+        protected static string UserPoolSecret { get; set; } = "6671136fa932eb692735a6f82af3b67b";
+        protected static string AppSecret { get; set; } = "b092865e6244791d0d70bcc779954a88";
+        protected static string AppId { get; set; } = "62148031cb5dbb3520f5f774";
 
         protected static string TestUserId = "61a82941979c96c04ed9e920";
 

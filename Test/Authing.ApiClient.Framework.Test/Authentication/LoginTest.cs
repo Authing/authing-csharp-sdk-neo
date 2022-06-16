@@ -88,5 +88,12 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             Assert.True(result.Valid);
         }
+
+        [Fact]
+        public async void LoginByAd_Test()
+        {
+            var user = await authenticationClient.LoginByAd("Administrator", "19950630@tm");
+            Assert.NotNull(user);
+        }
     }
 }

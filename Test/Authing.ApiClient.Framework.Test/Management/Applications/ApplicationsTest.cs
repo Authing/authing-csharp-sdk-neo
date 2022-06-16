@@ -80,7 +80,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             //var res = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c");
             var result = await managementClient.Applications.UpdateResource("62a99822ff635db21c2ec21c", "orderTest", new UpdateResourceParam()
             {
-                Description = "test",
                 Type = Types.ResourceType.DATA,
                 Actions = new List<ResourceAction>() { new ResourceAction() { Name = "orderTest:write" } }
             });
