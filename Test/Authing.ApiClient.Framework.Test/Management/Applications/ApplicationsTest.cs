@@ -21,14 +21,15 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_Create()
         {
-            var result = await managementClient.Applications.Create("测试3", "ceshi3", new string[] { "https://www.baidu.com" });
+            //TODO:域名被占用
+            var result = await managementClient.Applications.Create("测试3", "ceshi3", new string[] { "https://www.google.com" });
             Assert.Equal(result.Name, "测试3");
         }
 
         [Fact]
         public async void Applications_Delete()
         {
-            var result = await managementClient.Applications.Delete("6215dd9277d6ef55dfab41f8");
+            var result = await managementClient.Applications.Delete("62aacef788a9ca9093a1350b");
             Assert.True(result);
         }
 
@@ -76,11 +77,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_UpdateResource()
         {
-            //TODO:资源不存在
             //var res = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c");
             var result = await managementClient.Applications.UpdateResource("62a99822ff635db21c2ec21c", "orderTest", new UpdateResourceParam()
             {
-                Description = "test",
                 Type = Types.ResourceType.DATA,
                 Actions = new List<ResourceAction>() { new ResourceAction() { Name = "orderTest:write" } }
             });
@@ -91,14 +90,14 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DeleteResource()
         {
-            var result = await managementClient.Applications.DeleteResource("6195ebcf5255f3d735ba9063", "orderTest");
+            var result = await managementClient.Applications.DeleteResource("62a99822ff635db21c2ec21c", "orderTest");
             Assert.True(result);
         }
 
         [Fact]
         public async void Applications_GetAccessPolicies()
         {
-            var result = await managementClient.Applications.GetAccessPolicies("6195ebcf5255f3d735ba9063", new AppAccessPolicyQueryFilter()
+            var result = await managementClient.Applications.GetAccessPolicies("62a99822ff635db21c2ec21c", new AppAccessPolicyQueryFilter()
             {
                 Page = 1,
                 Limit = 10
@@ -109,7 +108,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_EnableAccessPolicy()
         {
-            var result = await managementClient.Applications.EnableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            var result = await managementClient.Applications.EnableAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
@@ -121,7 +120,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DisableAccessPolicy()
         {
-            var result = await managementClient.Applications.DisableAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            var result = await managementClient.Applications.DisableAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
@@ -133,7 +132,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DeleteAccessPolicy()
         {
-            var result = await managementClient.Applications.DeleteAccessPolicy("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            var result = await managementClient.Applications.DeleteAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
@@ -145,7 +144,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_AllowAccess()
         {
-            var result = await managementClient.Applications.AllowAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            var result = await managementClient.Applications.AllowAccess("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
@@ -157,7 +156,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DenyAccess()
         {
-            var result = await managementClient.Applications.DenyAccess("6195ebcf5255f3d735ba9063", new AppAccessPolicy()
+            var result = await managementClient.Applications.DenyAccess("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
@@ -169,7 +168,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_UpdateDefaultAccessPolicy()
         {
-            var result = await managementClient.Applications.UpdateDefaultAccessPolicy("6195ebcf5255f3d735ba9063", new UpdateDefaultApplicationAccessPolicyParam()
+            var result = await managementClient.Applications.UpdateDefaultAccessPolicy("62a99822ff635db21c2ec21c", new UpdateDefaultApplicationAccessPolicyParam()
             {
                 DefaultStrategy = Types.DefaultStrategyEnum.ALLOW_ALL
             });
@@ -180,28 +179,28 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_CreateRole()
         {
-            var result = await managementClient.Applications.CreateRole("6195ebcf5255f3d735ba9063", "orderList");
+            var result = await managementClient.Applications.CreateRole("62a99822ff635db21c2ec21c", "orderList");
             Assert.Equal(result.Code, "orderList");
         }
 
         [Fact]
         public async void Applications_DeleteRole()
         {
-            var result = await managementClient.Applications.DeleteRole("6195ebcf5255f3d735ba9063", "orderList");
+            var result = await managementClient.Applications.DeleteRole("62a99822ff635db21c2ec21c", "orderList");
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_DeleteRoles()
         {
-            var result = await managementClient.Applications.DeleteRoles("6195ebcf5255f3d735ba9063", new List<string>() { "orderList" });
+            var result = await managementClient.Applications.DeleteRoles("62a99822ff635db21c2ec21c", new List<string>() { "orderList" });
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_UpdateRole()
         {
-            var result = await managementClient.Applications.UpdateRole("6195ebcf5255f3d735ba9063", new UpdateRoleOptions()
+            var result = await managementClient.Applications.UpdateRole("62a99822ff635db21c2ec21c", new UpdateRoleOptions()
             {
                 Code = "orderList",
                 NewCode = "orderList2",
@@ -213,49 +212,59 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_FindRole()
         {
-            var result = await managementClient.Applications.FindRole("6195ebcf5255f3d735ba9063", "orderList2");
+            var result = await managementClient.Applications.FindRole("62a99822ff635db21c2ec21c", "orderList2");
             Assert.Equal(result.Code, "orderList2");
         }
 
         [Fact]
         public async void Applications_GetRoles()
         {
-            var result = await managementClient.Applications.GetRoles("6195ebcf5255f3d735ba9063");
+            var result = await managementClient.Applications.GetRoles("62a99822ff635db21c2ec21c");
             Assert.NotEmpty(result.List);
         }
 
         [Fact]
         public async void Applications_GetUsersByRoleCode()
         {
-            var result = await managementClient.Applications.GetUsersByRoleCode("6195ebcf5255f3d735ba9063", "userList");
+            var result = await managementClient.Applications.GetUsersByRoleCode("62a99822ff635db21c2ec21c", "userList");
             Assert.NotEmpty(result.List);
         }
 
         [Fact]
         public async void Applications_AddUsersToRole()
         {
-            var result = await managementClient.Applications.AddUsersToRole("6195ebcf5255f3d735ba9063", "userList", new List<string>() { "61c05ea86623dbe950bd5831" });
+            var result = await managementClient.Applications.AddUsersToRole("62a99822ff635db21c2ec21c", "userList", new List<string>() { "62147e6b5e21c7b1c402e144" });
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_RemoveUsersFromRole()
         {
-            var result = await managementClient.Applications.RemoveUsersFromRole("6195ebcf5255f3d735ba9063", "userList", new List<string>() { "61c05ea86623dbe950bd5831" });
+            var result = await managementClient.Applications.RemoveUsersFromRole("62a99822ff635db21c2ec21c", "userList", new List<string>() { "62147e6b5e21c7b1c402e144" });
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_ListAuthorizedResourcesByRole()
         {
-            var result = await managementClient.Applications.ListAuthorizedResourcesByRole("6195ebcf5255f3d735ba9063", "userList");
+            var result = await managementClient.Applications.ListAuthorizedResourcesByRole("62a99822ff635db21c2ec21c", "userList");
             Assert.Equal(result.Code, "userList");
         }
 
         [Fact]
         public async void Applications_createAgreement()
         {
-            var result = await managementClient.Applications.createAgreement("6195ebcf5255f3d735ba9063", new AgreementInput()
+            /*
+             {
+               "code": 400,
+               "statusCode": 400,
+               "message": "参数格式错误",
+               "data": {
+               "detailedMessage": "An instance of AgreementDto has failed the validation:\n - property lang has failed the following constraints: isNotEmpty, isEnum \n"
+               }
+             }
+             */
+            var result = await managementClient.Applications.createAgreement("62a99822ff635db21c2ec21c", new AgreementInput()
             {
                 Title = "userAgreement",
                 Lang = Types.LangEnum.ZH_CN,
@@ -267,13 +276,23 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_deleteAgreement()
         {
-            var result = await managementClient.Applications.deleteAgreement("6195ebcf5255f3d735ba9063", 0);
+            var result = await managementClient.Applications.deleteAgreement("62a99822ff635db21c2ec21c", 0);
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_modifyAgreement()
         {
+            /*
+             {
+               "code": 400,
+               "statusCode": 400,
+               "message": "参数格式错误",
+               "data": {
+               "detailedMessage": "An instance of AgreementDto has failed the validation:\n - property lang has failed the following constraints: isNotEmpty, isEnum \n"
+               }
+             }
+             */
             var result = await managementClient.Applications.modifyAgreement("62a99822ff635db21c2ec21c", 0, new AgreementInput()
             {
                 Title = "userAgreement2",
@@ -284,21 +303,21 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_listAgreement()
         {
-            var result = await managementClient.Applications.listAgreement("6195ebcf5255f3d735ba9063");
+            var result = await managementClient.Applications.listAgreement("62a99822ff635db21c2ec21c");
             Assert.NotEmpty(result.List);
         }
 
         [Fact]
         public async void Applications_sortAgreement()
         {
-            var result = await managementClient.Applications.sortAgreement("6195ebcf5255f3d735ba9063", new List<int>() { 0 });
+            var result = await managementClient.Applications.sortAgreement("62a99822ff635db21c2ec21c", new List<int>() { 0 });
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_ActiveUsers()
         {
-            var result = await managementClient.Applications.ActiveUsers("6195ebcf5255f3d735ba9063");
+            var result = await managementClient.Applications.ActiveUsers("62a99822ff635db21c2ec21c");
             Assert.NotEmpty(result.List);
         }
 

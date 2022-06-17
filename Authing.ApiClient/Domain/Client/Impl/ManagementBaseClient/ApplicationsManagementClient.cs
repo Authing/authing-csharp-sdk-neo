@@ -19,8 +19,11 @@ using System.Linq;
 using System.Net.Http;
 using Authing.ApiClient.Extensions;
 using Authing.Library.Domain.Model.Management.Applications;
+using Authing.Library.Extensions;
 using Flurl;
 using Flurl.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -41,7 +44,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<ApplicationList> List(int page = 1, int limit = 10)
         {
-            var res = await client.Get<ApplicationList>($"api/v2/applications?page={page}&limit={limit}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ApplicationList>($"api/v2/applications?page={page}&limit={limit}", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -55,12 +58,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> Create(string name, string identifier, string[] redirectUris, string logo = null)
         {
-            var res = await client.PostRaw<Application>($"api/v2/applications", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<Application>($"api/v2/applications", new Dictionary<string, object>() {
                 { nameof(name), name },
                 { nameof(identifier), identifier },
                 { nameof(redirectUris), redirectUris },
                 { nameof(logo), logo }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -71,7 +74,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> Delete(string appId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}", method: HttpMethod.Delete).ConfigureAwait(false);
             return true;
         }
 
@@ -158,7 +161,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         /// <summary>
-        /// 更新应用的资源资源
+        /// 更新应用的资源
         /// </summary>
         /// <param name="appId">应用 ID</param>
         /// <param name="code"></param>
@@ -184,7 +187,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<bool> DeleteResource(string appId, string code)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/resources/${code}?namespace={appId}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/resources/{code}?namespace={appId}", method: HttpMethod.Delete).ConfigureAwait(false);
             return true;
         }
 
@@ -197,7 +200,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<ApplicationAccessPolicies> GetAccessPolicies(string appId, AppAccessPolicyQueryFilter appAccessPolicyQueryFilter)
         {
             var query = $"?page={appAccessPolicyQueryFilter.Page}&limit={appAccessPolicyQueryFilter.Limit}";
-            var res = await client.Get<ApplicationAccessPolicies>($"api/v2/applications/{appId}/authorization/records{query}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ApplicationAccessPolicies>($"api/v2/applications/{appId}/authorization/records{query}", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -217,16 +220,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Message = "请传入主体 id"
                 };
             }
-            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/enable-effect", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}/authorization/enable-effect", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return new CommonMessage()
             {
-                Code = 200,
-                Message = "启用应用访问控制策略成功"
+                Code = res.Code,
+                Message = res.Message
             };
         }
 
@@ -246,16 +249,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Message = "请传入主体 id"
                 };
             }
-            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/disable-effect", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}/authorization/disable-effect", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return new CommonMessage()
             {
-                Code = 200,
-                Message = "停用应用访问控制策略成功"
+                Code = res.Code,
+                Message = res.Message
             };
         }
 
@@ -275,16 +278,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Message = "请传入主体 id"
                 };
             }
-            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/revoke", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}/authorization/revoke", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return new CommonMessage()
             {
-                Code = 200,
-                Message = "删除应用访问控制策略成功"
+                Code = res.Code,
+                Message = res.Message
             };
         }
 
@@ -304,16 +307,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Message = "请传入主体 id"
                 };
             }
-            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/allow", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}/authorization/allow", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return new CommonMessage()
             {
-                Code = 200,
-                Message = "允许主体访问应用的策略配置已生效"
+                Code = res.Code,
+                Message = res.Message
             };
         }
 
@@ -333,16 +336,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Message = "请传入主体 id"
                 };
             }
-            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/authorization/deny", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}/authorization/deny", new Dictionary<string, object>() {
                 { "nameSpace", appId },
                 { "targetType", appAccessPolicy.TargetType },
                 { "targetIdentifiers", appAccessPolicy.TargetIdentifiers },
                 { "inheritByChildren", appAccessPolicy.InheritByChildren }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return new CommonMessage()
             {
-                Code = 200,
-                Message = "拒绝主体访问应用的策略配置已生效"
+                Code = res.Code,
+                Message = res.Message
             };
         }
 
@@ -358,9 +361,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 defaultStrategy = updateDefaultApplicationAccessPolicyParam.DefaultStrategy
             };
-            var res = await client.PostRaw<PublicApplication>($"api/v2/applications/{appId}", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<PublicApplication>($"api/v2/applications/{appId}", new Dictionary<string, object>() {
                 { "permissionStrategy", permissionStrategy }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -574,7 +577,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.PostRaw<Agreement>($"api/v2/applications/{appId}/agreements", new Dictionary<string, object>() {
                 { "title", agreement.Title},
                 { "required", agreement.Required},
-                { "lang ", agreement.Lang},
+                { "lang ", agreement.Lang.GetEnumMemberValue()},
             }).ConfigureAwait(false);
             return res.Data;
         }
@@ -587,7 +590,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> deleteAgreement(string appId, int agreementId)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/applications/{appId}/agreements/{agreementId}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}/agreements/{agreementId}", method: HttpMethod.Delete).ConfigureAwait(false);
             return res;
         }
 
@@ -615,7 +618,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<PaginationAgreement> listAgreement(string appId)
         {
-            var res = await client.Get<PaginationAgreement>($"api/v2/applications/{appId}/agreements", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<PaginationAgreement>($"api/v2/applications/{appId}/agreements", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -627,9 +630,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> sortAgreement(string appId, IEnumerable<int> order)
         {
-            var res = await client.PostRaw<CommonMessage>($"api/v2/applications/{appId}/agreements/sort", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}/agreements/sort", new Dictionary<string, object>() {
                 { "ids", order }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return res;
         }
 
@@ -645,7 +648,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 int page = 1,
                 int limit = 10)
         {
-            var res = await client.Get<ActiveUsers>($"api/v2/applications/{appId}/active-users", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ActiveUsers>($"api/v2/applications/{appId}/active-users", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -668,9 +671,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> ChangeApplicationType(string appId, ApplicationType type)
         {
-            var res = await client.Post<Application>($"api/v2/applications/{appId}", new Dictionary<string, string>() {
+            var res = await client.RequestCustomDataWithToken<Application>($"api/v2/applications/{appId}", new Dictionary<string, string>() {
                 { "appType", type.ToString() }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             return res.Data;
         }
 
@@ -682,7 +685,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<ApplicationTenantDetails> ApplicationTenants(string appId)
         {
-            var res = await client.Get<ApplicationTenantDetails>($"api/v2/application/{appId}/tenants", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ApplicationTenantDetails>($"api/v2/application/{appId}/tenants", method: HttpMethod.Get).ConfigureAwait(false);
             return res.Data;
         }
     }

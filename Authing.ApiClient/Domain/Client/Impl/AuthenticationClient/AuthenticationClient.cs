@@ -1125,7 +1125,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var firstLevelDomain = new Uri(Host).Host;
 
-            var result = await Post<User>("api/v2/ldap/verify-user", new Dictionary<string, string>
+            var result = await Post<User>("api/v2/ad/verify-user", new Dictionary<string, string>
             {
                 {"username",username },
                 { "password",password}
