@@ -73,7 +73,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 throw new Exception("请先登录!");
             }
 
-            var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken);
+          //  var header=RequestCustomData
+
+            var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken,PublicKey,Secret);
             var userDataString = tokenInfo.ContainsKey("data") ? tokenInfo["data"] : "";
             var userData = JsonConvert.DeserializeObject<UserData>(userDataString.ToString() ?? "");
             var userId = tokenInfo.ContainsKey("sub") ? tokenInfo["sub"].ToString() : userData.Id;

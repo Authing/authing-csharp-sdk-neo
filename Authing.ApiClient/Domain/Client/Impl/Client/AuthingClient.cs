@@ -294,6 +294,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     break;
 
                 case "POST":
+                     message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
+                     {
+                         Content = new StringContent(serializedata, Encoding.UTF8, "application/json")
+                     };break;
                 case "PATCH":
                 case "PUT":
                     message = HttpRequestMessage<TResponse>(url, serializedata, method, contenttype);

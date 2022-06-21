@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Utils;
 using JWT.Algorithms;
 using JWT.Builder;
 using Newtonsoft.Json;
@@ -18,14 +20,38 @@ namespace Authing.ApiClient.Domain.Utils
             Page = 1,
         };
 
-        public static IDictionary<string, object> GetPayloadByToken(string token)
+        public static IDictionary<string, object> GetPayloadByToken(string token,string pubKey,string secret)
         {
             //TODO:确认是否需要检查签名
             var json = JwtBuilder.Create()
                 .DoNotVerifySignature()
                 .Decode<IDictionary<string, object>>(token);
             Console.WriteLine(json);
-            return json;
+
+            List<string> tokenList = token.Split('.').ToList();
+
+            //先判断使用那种算法来检查签名
+            bool checkResult = false;
+            Dictionary<string, object> headerDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(tokenList[0])));
+            if (headerDic.ContainsKey("alg"))
+            {
+                if (headerDic["alg"].ToString() == "HS256")
+                {
+                    checkResult= EncryptHelper.HMAcCheck(token, secret);
+                }
+                else
+                {
+                   checkResult= EncryptHelper.RASCheckWithPemPublicKey(token, pubKey);
+                }
+            }
+
+            Dictionary<string, object> payloadDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(tokenList[1])));
+
+            
+
+            return payloadDic;
+
+           // EncryptHelper.
         }
 
         public static IEnumerable<ResUdv> ConvertUdv(IEnumerable<UserDefinedData> udvList)
