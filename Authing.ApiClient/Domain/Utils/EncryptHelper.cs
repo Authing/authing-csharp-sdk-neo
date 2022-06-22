@@ -1,9 +1,5 @@
 ﻿using Authing.Library.Domain.Model;
 using Authing.Library.Domain.Utils;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Encodings;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.OpenSsl;
 using System;
 using System.IO;
 using System.Linq;
@@ -22,19 +18,16 @@ namespace Authing.ApiClient.Domain.Utils
         /// <returns></returns>
         public static string RsaEncryptWithPublic(string clearText, string publicKey)
         {
-            var bytesToEncrypt = Encoding.UTF8.GetBytes(clearText);
+            byte[] bytes = DecodeOpenSSLPublicKey(publicKey);
 
-            var encryptEngine = new Pkcs1Encoding(new RsaEngine());
-
-            using (var txtreader = new StringReader(publicKey))
+            using (RSACryptoServiceProvider rsa = DecodeX509PublicKey(bytes))
             {
-                var keyParameter = (AsymmetricKeyParameter)new PemReader(txtreader).ReadObject();
+                var sss = rsa.ToXmlString(false);
+                var result = rsa.Encrypt(Encoding.UTF8.GetBytes(clearText), false);
 
-                encryptEngine.Init(true, keyParameter);
+                var enStr = Convert.ToBase64String(result);
+                return enStr;
             }
-
-            var encrypted = Convert.ToBase64String(encryptEngine.ProcessBlock(bytesToEncrypt, 0, bytesToEncrypt.Length));
-            return encrypted;
         }
 
         public static string SHA256Hash(string str)
@@ -156,7 +149,6 @@ namespace Authing.ApiClient.Domain.Utils
 
         }
 
-        //--------   Get the binary RSA PUBLIC key   --------
         public static byte[] DecodeOpenSSLPublicKey(String instr)
         {
             const String pempubheader = "-----BEGIN PUBLIC KEY-----";
@@ -166,17 +158,17 @@ namespace Authing.ApiClient.Domain.Utils
             if (!pemstr.StartsWith(pempubheader) || !pemstr.EndsWith(pempubfooter))
                 return null;
             StringBuilder sb = new StringBuilder(pemstr);
-            sb.Replace(pempubheader, "");  //remove headers/footers, if present
+            sb.Replace(pempubheader, "");  
             sb.Replace(pempubfooter, "");
 
-            String pubstr = sb.ToString().Trim();   //get string after removing leading/trailing whitespace
+            String pubstr = sb.ToString().Trim();   
 
             try
             {
                 binkey = Convert.FromBase64String(pubstr);
             }
             catch (System.FormatException)
-            {       //if can't b64 decode, data is not valid
+            {       
                 return null;
             }
             return binkey;
@@ -194,8 +186,17 @@ namespace Authing.ApiClient.Domain.Utils
             return rsaPublickeyXML;
         }
 
+        public static string GetPublickeyFromJWKS(JWKS jwks)
+        {
+            string n = Convert.ToBase64String(Base64Url.Decode(jwks.keys.First().n));
 
-        public static bool RSACheck(string token, string publickKey)
+            string rsaPublickeyXML = $"<RSAPublicKey><Modulus>{n}</Modulus><Exponent>{jwks.keys.FirstOrDefault().e}</Exponent></RSAPublicKey>";
+
+            return rsaPublickeyXML;
+        }
+
+
+        public static bool RSACheckWithXMLPublicKey(string token, string publickKey)
         {
             string[] tokenList = token.Split('.');
 
@@ -212,7 +213,7 @@ namespace Authing.ApiClient.Domain.Utils
             }
         }
 
-        public static bool RASCheckWithPemPublicKey(string token, string pemPublicKey)
+        public static bool RSACheckWithPemPublicKey(string token, string pemPublicKey)
         {
             string[] tokenList = token.Split('.');
 
@@ -254,13 +255,11 @@ namespace Authing.ApiClient.Domain.Utils
 
             using (RSACryptoServiceProvider rsa = DecodeX509PublicKey(bytes))
             {
-
                 var sss = rsa.ToXmlString(false);
                 var result = rsa.Encrypt(Encoding.UTF8.GetBytes(str), false);
 
                 var enStr = Convert.ToBase64String(result);
                 return enStr;
-                //rsa.ImportFromPem(new RSAParameters { s})
             }
         }
     }

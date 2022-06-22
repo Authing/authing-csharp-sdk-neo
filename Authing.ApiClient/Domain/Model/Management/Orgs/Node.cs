@@ -85,7 +85,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Orgs
         /// 该节点的子节点 **ID** 列表
         /// </summary>
         [JsonProperty("children")]
-        public IEnumerable<string> Children { get; set; }
+        public IEnumerable<object> Children { get; set; }
 
         /// <summary>
         /// 节点的用户列表

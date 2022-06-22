@@ -9,8 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Authing.ApiClient.Extensions;
-using Flurl;
-using Flurl.Http;
 
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
@@ -85,8 +83,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var result = await client.Get<Node>($"api/v2/orgs/export?org_id={orgId}",new ExpnadAllRequest().CreateRequest()).ConfigureAwait(false);
 
-            var res = await client.Host.AppendPathSegment($"api/v2/orgs/export?org_id={orgId}").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<Node>().ConfigureAwait(false);
-            return res;
+            //var res = await client.Host.AppendPathSegment($"api/v2/orgs/export?org_id={orgId}").WithOAuthBearerToken(client.AccessToken).GetJsonAsync<Node>().ConfigureAwait(false);
+            return result.Data;
         }
 
         public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> FindById(string orgId)
@@ -251,8 +249,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 throw new Exception("must provider adConnectorId");
             }
 
-            var res = await client.Host.AppendPathSegment(path).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(body).ReceiveJson<bool>().ConfigureAwait(false);
-            return res;
+            //var res = await client.Host.AppendPathSegment(path).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(body).ReceiveJson<bool>().ConfigureAwait(false);
+
+            var result = await client.Get<bool>(path, null).ConfigureAwait(false);
+
+            return result.Data;
         }
 
         public async Task<Node> UpdateNode(string orgId, UpdateNodeParam updateNodeParam)

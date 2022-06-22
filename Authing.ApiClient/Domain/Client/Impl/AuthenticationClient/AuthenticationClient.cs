@@ -19,6 +19,9 @@ using System.Linq;
 using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Domain.Model.GraphQLResponse;
 using Authing.ApiClient.Interfaces.AuthenticationClient;
+using System.Text;
+using Authing.Library.Domain.Utils;
+using Authing.Library.Domain.Model;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -73,9 +76,23 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 throw new Exception("请先登录!");
             }
 
-          //  var header=RequestCustomData
+            //先判断才用哪种
+            var header = AccessToken.Split('.');
+            JWKS jwks = null;
+            var headerDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(header[0])));
+            if (headerDic.ContainsKey("alg"))
+            {
+                if (headerDic["alg"].ToString() == "RS256")
+                {
+                    var payLoadDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(header[1])));
+                    if (payLoadDic.ContainsKey("iss"))
+                    {
+                        jwks =  client.SendRequest<string, JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json", HttpType.Get,"", null).Result;
+                    }
+                }
+            }
 
-            var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken,PublicKey,Secret);
+            var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken, PublicKey, Secret,jwks);
             var userDataString = tokenInfo.ContainsKey("data") ? tokenInfo["data"] : "";
             var userData = JsonConvert.DeserializeObject<UserData>(userDataString.ToString() ?? "");
             var userId = tokenInfo.ContainsKey("sub") ? tokenInfo["sub"].ToString() : userData.Id;

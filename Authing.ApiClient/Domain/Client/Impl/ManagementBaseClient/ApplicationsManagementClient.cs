@@ -20,8 +20,6 @@ using System.Net.Http;
 using Authing.ApiClient.Extensions;
 using Authing.Library.Domain.Model.Management.Applications;
 using Authing.Library.Extensions;
-using Flurl;
-using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

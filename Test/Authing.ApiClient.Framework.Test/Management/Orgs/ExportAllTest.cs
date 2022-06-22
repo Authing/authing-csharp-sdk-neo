@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using Authing.ApiClient.Domain.Model.Management.Orgs;
+using Authing.ApiClient.Infrastructure.GraphQL;
+using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
@@ -21,7 +23,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         {
             var client = managementClient;
 
-            var result = await client.Orgs.ExportByOrgId("61af03a04c01888ddc24f5bb");
+            var result = await client.Orgs.ExportByOrgId("629871ba7e4f930974879472");
 
             Assert.NotNull(result);
         }
