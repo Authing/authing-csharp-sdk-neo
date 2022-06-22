@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Authing.ApiClient.Domain.Utils;
+using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
 {
@@ -30,7 +31,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("qidong6655", "3866364", null);
             client.CheckLoggedIn();
             var msg = await client.Logout();
 
@@ -315,6 +316,19 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             client.ClearUser();
 
             Assert.Null(client.User);
+        }
+
+        [Fact]
+        public void EncryptTest()
+        {
+            string PublicKey  = @"-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4xKeUgQ+Aoz7TLfAfs9+paePb
+5KIofVthEopwrXFkp8OCeocaTHt9ICjTT2QeJh6cZaDaArfZ873GPUn00eOIZ7Ae
++TiA2BKHbCvloW3w5Lnqm70iSsUi5Fmu9/2+68GZRH9L7Mlh8cFksCicW2Y2W2uM
+GKl64GDcIq3au+aqJQIDAQAB
+-----END PUBLIC KEY-----";
+
+            EncryptHelper.RsaEncryptWithPublic("3866364", PublicKey);
         }
     }
 }

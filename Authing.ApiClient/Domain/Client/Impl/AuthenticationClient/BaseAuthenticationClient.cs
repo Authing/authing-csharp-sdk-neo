@@ -8,7 +8,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.GraphQLParam;
-using Flurl.Util;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {

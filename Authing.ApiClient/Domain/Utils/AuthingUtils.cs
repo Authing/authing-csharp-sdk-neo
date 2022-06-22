@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Types;
-using JWT.Algorithms;
-using JWT.Builder;
+using Authing.Library.Domain.Model;
+using Authing.Library.Domain.Utils;
 using Newtonsoft.Json;
 
 namespace Authing.ApiClient.Domain.Utils
@@ -18,14 +19,34 @@ namespace Authing.ApiClient.Domain.Utils
             Page = 1,
         };
 
-        public static IDictionary<string, object> GetPayloadByToken(string token)
+        public static IDictionary<string, object> GetPayloadByToken(string token,string pubKey,string secret,JWKS jwks=null)
         {
-            //TODO:确认是否需要检查签名
-            var json = JwtBuilder.Create()
-                .DoNotVerifySignature()
-                .Decode<IDictionary<string, object>>(token);
-            Console.WriteLine(json);
-            return json;
+            List<string> tokenList = token.Split('.').ToList();
+
+            //先判断使用那种算法来检查签名
+            bool checkResult = false;
+            Dictionary<string, object> headerDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(tokenList[0])));
+            if (headerDic.ContainsKey("alg"))
+            {
+                if (headerDic["alg"].ToString() == "HS256")
+                {
+                    checkResult= EncryptHelper.HMAcCheck(token, secret);
+                }
+                else
+                {
+                    string xmlPublickey = EncryptHelper.GetPublickeyFromJWKS(jwks);
+                   checkResult= EncryptHelper.RSACheckWithXMLPublicKey(token, xmlPublickey);
+                }
+            }
+
+            if (!checkResult)
+            {
+                throw new Exception("签名验证失败");
+            }
+
+            Dictionary<string, object> payloadDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(tokenList[1])));
+
+            return payloadDic;
         }
 
         public static IEnumerable<ResUdv> ConvertUdv(IEnumerable<UserDefinedData> udvList)
