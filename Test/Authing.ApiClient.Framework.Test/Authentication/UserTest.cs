@@ -129,7 +129,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("qidong9999", "3866364", null);
 
             var result = await client.ListOrgs();
 
