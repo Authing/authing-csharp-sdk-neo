@@ -52,11 +52,13 @@ Version 0.0.18
 Version 0.0.19
 - 验证签名，修复导出组织机构失败的错误
 Version 0.0.20
-- 删除包的强引用</PackageReleaseNotes>
-		<Version>0.0.20</Version>
+- 删除包的强引用
+Version 0.0.21
+- 添加缺少的引用</PackageReleaseNotes>
+		<Version>0.0.21</Version>
 		<PackageId>Authing.Library</PackageId>
-		<AssemblyVersion>0.0.20.0</AssemblyVersion>
-		<FileVersion>0.0.20.0</FileVersion>
+		<AssemblyVersion>0.0.21.0</AssemblyVersion>
+		<FileVersion>0.0.21.0</FileVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
@@ -84,6 +86,9 @@ Version 0.0.20
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
 		<DebugType>full</DebugType>
 		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
+	  <DocumentationFile>D:\Authing\SDK\authing-csharp-sdk-neo0release\Authing.ApiClient\Authing.ApiClient.xml</DocumentationFile>
 	</PropertyGroup>
 
 

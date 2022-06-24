@@ -14,15 +14,14 @@ namespace Authing.ApiClient.Domain.Utils
         /// RAS加密
         /// </summary>
         /// <param name="clearText">要加密的信息</param>
-        /// <param name="publicKey">公钥</param>
+        /// <param name="xmlPublicKey">XML 格式的公钥</param>
         /// <returns></returns>
-        public static string RsaEncryptWithPublic(string clearText, string publicKey)
+        public static string RsaEncryptWithPublic(string clearText, string xmlPublicKey)
         {
-            byte[] bytes = DecodeOpenSSLPublicKey(publicKey);
+            byte[] bytes = DecodeOpenSSLPublicKey(xmlPublicKey);
 
             using (RSACryptoServiceProvider rsa = DecodeX509PublicKey(bytes))
             {
-                var sss = rsa.ToXmlString(false);
                 var result = rsa.Encrypt(Encoding.UTF8.GetBytes(clearText), false);
 
                 var enStr = Convert.ToBase64String(result);
@@ -175,6 +174,11 @@ namespace Authing.ApiClient.Domain.Utils
         }
 
 
+        /// <summary>
+        /// 将 Json 格式的公钥转换成 XML 格式
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
         public static string GetPublickeyFromJson(string json)
         {
             JWKS jwks = Newtonsoft.Json.JsonConvert.DeserializeObject<JWKS>(json);
@@ -186,6 +190,11 @@ namespace Authing.ApiClient.Domain.Utils
             return rsaPublickeyXML;
         }
 
+        /// <summary>
+        /// 将 JWKS 格式的公钥转换成 XML 格式
+        /// </summary>
+        /// <param name="jwks"></param>
+        /// <returns></returns>
         public static string GetPublickeyFromJWKS(JWKS jwks)
         {
             string n = Convert.ToBase64String(Base64Url.Decode(jwks.keys.First().n));
@@ -196,6 +205,12 @@ namespace Authing.ApiClient.Domain.Utils
         }
 
 
+        /// <summary>
+        /// RAS 算法验证
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="publickKey">XML 格式的公钥</param>
+        /// <returns></returns>
         public static bool RSACheckWithXMLPublicKey(string token, string publickKey)
         {
             string[] tokenList = token.Split('.');
@@ -213,6 +228,12 @@ namespace Authing.ApiClient.Domain.Utils
             }
         }
 
+        /// <summary>
+        /// RAS 算法验证
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="pemPublicKey">PEM 格式的公钥</param>
+        /// <returns></returns>
         public static bool RSACheckWithPemPublicKey(string token, string pemPublicKey)
         {
             string[] tokenList = token.Split('.');
@@ -231,6 +252,12 @@ namespace Authing.ApiClient.Domain.Utils
             }
         }
 
+        /// <summary>
+        /// HMac 算法下验证
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="secret"></param>
+        /// <returns></returns>
         public static bool HMAcCheck(string token, string secret)
         {
             byte[] secretBytes = Encoding.UTF8.GetBytes(secret);
@@ -249,18 +276,5 @@ namespace Authing.ApiClient.Domain.Utils
             }
         }
 
-        public static string RSAEncrypt(string str, string pemPublicKey)
-        {
-            byte[] bytes = DecodeOpenSSLPublicKey(pemPublicKey);
-
-            using (RSACryptoServiceProvider rsa = DecodeX509PublicKey(bytes))
-            {
-                var sss = rsa.ToXmlString(false);
-                var result = rsa.Encrypt(Encoding.UTF8.GetBytes(str), false);
-
-                var enStr = Convert.ToBase64String(result);
-                return enStr;
-            }
-        }
     }
 }
