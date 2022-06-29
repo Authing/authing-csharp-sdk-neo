@@ -12,6 +12,8 @@ namespace Authing.ApiClient.Framework.Test
 
         protected QrCodeAuthenticationClient qrCodeAuthenticationClient { get; set; }
 
+        protected SocialAuthenticationClient socialAuthenticationClient { get; set; }
+
         protected MfaAuthenticationClient mfaAuthenticationClient { get; set; }
 
         public BaseTest()
@@ -40,7 +42,15 @@ namespace Authing.ApiClient.Framework.Test
                 opt.UserPoolId = UserPoolId;
             });
 
-            qrCodeAuthenticationClient = new QrCodeAuthenticationClient(opt=> 
+            qrCodeAuthenticationClient = new QrCodeAuthenticationClient(opt =>
+            {
+                opt.AppId = AppId;
+                opt.Host = Host;
+                opt.Secret = AppSecret;
+                opt.UserPoolId = UserPoolId;
+            });
+
+            socialAuthenticationClient = new SocialAuthenticationClient(opt =>
             {
                 opt.AppId = AppId;
                 opt.Host = Host;

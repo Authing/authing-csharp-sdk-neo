@@ -1,68 +1,71 @@
-﻿namespace Authing.Library.Domain.Model.Management.Applications
+﻿using Newtonsoft.Json;
+
+namespace Authing.Library.Domain.Model.Management.Applications
 {
     public class ApplicationV2
     {
-        public object[] allowedOrigins { get; set; }
-        public string[] corsWhitelist { get; set; }
-        public bool userPoolInWhitelist { get; set; }
-        public bool skipComplateFileds { get; set; }
-        public object[] complateFiledsPlace { get; set; }
-        public object[] extendsFields { get; set; }
-        public bool extendsFieldsEnabled { get; set; }
-        public string cdnBase { get; set; }
-        public string id { get; set; }
-        public object template { get; set; }
-        public string userPoolId { get; set; }
-        public object description { get; set; }
-        public string identifier { get; set; }
-        public bool showAuthorizationPage { get; set; }
-        public string publicKey { get; set; }
-        public string name { get; set; }
-        public string css { get; set; }
-        public string logo { get; set; }
-        public string userpoolLogo { get; set; }
-        public string userpoolName { get; set; }
-        public Ssopagecomponentdisplay ssoPageComponentDisplay { get; set; }
-        public bool registerDisabled { get; set; }
-        public Logintabs loginTabs { get; set; }
-        public Qrcodetabssettings qrcodeTabsSettings { get; set; }
-        public Registertabs registerTabs { get; set; }
-        public object[] socialConnections { get; set; }
-        public object[] ecConnections { get; set; }
-        public object[] identityProviders { get; set; }
-        public string[] redirectUris { get; set; }
-        public object[] logoutRedirectUris { get; set; }
-        public string protocol { get; set; }
-        public Oidcconfig oidcConfig { get; set; }
-        public Oauthconfig oauthConfig { get; set; }
-        public object samlConfig { get; set; }
-        public object casConfig { get; set; }
-        public string rootUserPoolId { get; set; }
-        public bool enableSubAccount { get; set; }
-        public int packageType { get; set; }
-        public bool customBrandingEnabled { get; set; }
-        public Userportal userPortal { get; set; }
-        public string websocket { get; set; }
-        public int verifyCodeLength { get; set; }
-        public bool agreementEnabled { get; set; }
-        public object[] agreements { get; set; }
-        public int passwordStrength { get; set; }
-        public Custompasswordstrength customPasswordStrength { get; set; }
-        public Api api { get; set; }
-        public bool loginFailCheckEnabled { get; set; }
-        public Passwordtabconfig passwordTabConfig { get; set; }
-        public Verifycodetabconfig verifyCodeTabConfig { get; set; }
-        public Changeemailstrategy changeEmailStrategy { get; set; }
-        public Changephonestrategy changePhoneStrategy { get; set; }
-        public string userPoolType { get; set; }
-        public object sceneCode { get; set; }
-        public object welcomeMessage { get; set; }
-        public Docs docs { get; set; }
-        public string requestHostname { get; set; }
-        public object customLoading { get; set; }
-        public object internationalSmsConfig { get; set; }
-        public string loadingBackground { get; set; }
-        public Asa asa { get; set; }
+        
+        public object[] AllowedOrigins { get; set; }
+        public string[] CorsWhitelist { get; set; }
+        public bool UserPoolInWhitelist { get; set; }
+        public bool SkipComplateFileds { get; set; }
+        public object[] ComplateFiledsPlace { get; set; }
+        public object[] ExtendsFields { get; set; }
+        public bool ExtendsFieldsEnabled { get; set; }
+        public string CdnBase { get; set; }
+        public string Id { get; set; }
+        public object Template { get; set; }
+        public string UserPoolId { get; set; }
+        public object Description { get; set; }
+        public string Identifier { get; set; }
+        public bool ShowAuthorizationPage { get; set; }
+        public string PublicKey { get; set; }
+        public string Name { get; set; }
+        public string Css { get; set; }
+        public string Logo { get; set; }
+        public string UserpoolLogo { get; set; }
+        public string UserpoolName { get; set; }
+        public Ssopagecomponentdisplay SsoPageComponentDisplay { get; set; }
+        public bool RegisterDisabled { get; set; }
+        public Logintabs LoginTabs { get; set; }
+        public Qrcodetabssettings QrcodeTabsSettings { get; set; }
+        public Registertabs RegisterTabs { get; set; }
+        public object[] SocialConnections { get; set; }
+        public object[] EcConnections { get; set; }
+        public object[] IdentityProviders { get; set; }
+        public string[] RedirectUris { get; set; }
+        public object[] LogoutRedirectUris { get; set; }
+        public string Protocol { get; set; }
+        public Oidcconfig OidcConfig { get; set; }
+        public Oauthconfig OauthConfig { get; set; }
+        public object SamlConfig { get; set; }
+        public object CasConfig { get; set; }
+        public string RootUserPoolId { get; set; }
+        public bool EnableSubAccount { get; set; }
+        public int PackageType { get; set; }
+        public bool CustomBrandingEnabled { get; set; }
+        public Userportal UserPortal { get; set; }
+        public string Websocket { get; set; }
+        public int VerifyCodeLength { get; set; }
+        public bool AgreementEnabled { get; set; }
+        public object[] Agreements { get; set; }
+        public int PasswordStrength { get; set; }
+        public Custompasswordstrength CustomPasswordStrength { get; set; }
+        public Api Api { get; set; }
+        public bool LoginFailCheckEnabled { get; set; }
+        public Passwordtabconfig PasswordTabConfig { get; set; }
+        public Verifycodetabconfig VerifyCodeTabConfig { get; set; }
+        public Changeemailstrategy ChangeEmailStrategy { get; set; }
+        public Changephonestrategy ChangePhoneStrategy { get; set; }
+        public string UserPoolType { get; set; }
+        public object SceneCode { get; set; }
+        public object WelcomeMessage { get; set; }
+        public Docs Docs { get; set; }
+        public string RequestHostname { get; set; }
+        public object CustomLoading { get; set; }
+        public object InternationalSmsConfig { get; set; }
+        public string LoadingBackground { get; set; }
+        public Asa Asa { get; set; }
     }
 
     public class Ssopagecomponentdisplay
@@ -86,8 +89,11 @@
 
     public class Logintabs
     {
-        public string[] list { get; set; }
-        public string _default { get; set; }
+        [JsonProperty("list")]
+        public string[] List { get; set; }
+
+        [JsonProperty("default")]
+        public string Default { get; set; }
         public Title title { get; set; }
     }
 
@@ -110,8 +116,10 @@
 
     public class Registertabs
     {
-        public string[] list { get; set; }
-        public string _default { get; set; }
+        [JsonProperty("list")]
+        public string[] List { get; set; }
+        [JsonProperty("default")]
+        public string Default { get; set; }
         public Title1 title { get; set; }
     }
 

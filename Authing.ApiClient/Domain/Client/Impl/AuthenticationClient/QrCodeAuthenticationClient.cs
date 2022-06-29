@@ -26,7 +26,7 @@ namespace Authing.Library.Domain.Client.Impl.AuthenticationClient
         {
             //var result = await PostRaw<object>("api/v2/qrcode/gene",).ConfigureAwait(false);
             GraphQLResponse<GeneQrCodeResponse> result = await 
-                RequestCustomDataWithToken<GeneQrCodeResponse>("api/v2/qrcode/gene", Newtonsoft.Json.JsonConvert.SerializeObject(geneQrCodeParam), method: System.Net.Http.HttpMethod.Post).
+                RequestCustomDataWithToken<GeneQrCodeResponse>("api/v2/qrcode/gene", Newtonsoft.Json.JsonConvert.SerializeObject(geneQrCodeParam), method: System.Net.Http.HttpMethod.Post,contenttype:ContentType.JSON).
                 ConfigureAwait(false);
             return result.Data;
         }

@@ -9,7 +9,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.RegisterByEmail("635877990@qq.com", "3866364", null, null);
+            var result = await client.RegisterByEmail("qidong5566@outlook.com", "3866364", null, null);
 
             Assert.NotNull(result);
         }
@@ -19,7 +19,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.RegisterByUsername("qidong2333", "Qd3866364,,..", null, null);
+            var result = await client.RegisterByUsername("qidong2333", "Qd3866364,,..",null, null);
 
             Assert.NotNull(result);
         }
@@ -33,7 +33,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             Assert.True(msg.Code == 200);
 
-            var result = await client.RegisterByPhoneCode("13348926753", "3422", "3866364", null, null);
+            Library.Domain.Model.Exceptions.AuthingErrorBox error = new Library.Domain.Model.Exceptions.AuthingErrorBox();
+
+            var result = await client.RegisterByPhoneCode("13348926753", "3422", "3866364", null, null,error);
 
             Assert.NotNull(result);
         }

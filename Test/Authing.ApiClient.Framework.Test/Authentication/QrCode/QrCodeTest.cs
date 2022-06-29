@@ -13,7 +13,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.QrCode
         [Fact]
         public async Task GeneCodeTest()
         {
-            var result =await qrCodeAuthenticationClient.GeneCode(new GeneQrCodeParam { AutoMergeQrCode=false,Scene=QrCodeScene.WECHATMP_AUTH});
+            var result =await qrCodeAuthenticationClient.GeneCode(new GeneQrCodeParam { AutoMergeQrCode=false,Scene=QrCodeScene.APP_AUTH});
 
             Assert.NotNull(result);
         }

@@ -50,7 +50,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             var result = await managementClient.Applications.FindByIdV2("62148031cb5dbb3520f5f774");
 
             //var ss= result.RegisterTabs.ToString();
-            var ss = result.loginTabs;
+            var ss = result.LoginTabs;
 
             Assert.NotNull(ss);
         }

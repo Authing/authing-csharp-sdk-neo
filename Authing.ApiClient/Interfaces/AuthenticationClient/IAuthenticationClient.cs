@@ -5,6 +5,7 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Domain.Model.Management.Department;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Interfaces.AuthenticationClient
 {
@@ -20,7 +21,8 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// 用户是否进行登录，登录返回用户信息，没有登录则抛出错误
         /// </summary>
         /// <returns>用户 ID</returns>
-        Task<string> CheckLoggedIn(CancellationToken cancellationToken);
+        Task<string> CheckLoggedIn(CancellationToken cancellationToken,
+                                   AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 设置当前用户信息
@@ -68,7 +70,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         Task<User> RegisterByEmail(string email,
             string password,
             RegisterProfile profile = null,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过用户名注册
@@ -99,7 +101,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         Task<User> RegisterByUsername(string username,
             string password,
             RegisterProfile profile = null,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过手机号注册
@@ -134,7 +136,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
             string code,
             string password = null,
             RegisterProfile profile = null,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 检查密码强度
@@ -142,7 +144,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="password">密码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>CheckPasswordStrengthResult</returns>
-        Task<CheckPasswordStrengthResult> CheckPasswordStrength(string password);
+        Task<CheckPasswordStrengthResult> CheckPasswordStrength(string password, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 发送短信验证码
@@ -151,7 +153,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// TODO: 破坏性更新
-        Task<CommonMessage> SendSmsCode(string phone);
+        Task<CommonMessage> SendSmsCode(string phone, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过邮箱登录
@@ -178,7 +180,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns>User</returns>
         Task<User> LoginByEmail(string email,
             string password,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过用户名登录
@@ -201,11 +203,12 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="username">用户名</param>
         /// <param name="password">密码</param>
         /// <param name="registerAndLoginOptions">注册配置信息</param>
+        /// <param name="authingErrorBox">登录的异常信息</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
         Task<User> LoginByUsername(string username,
             string password,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过手机号验证码登录
@@ -226,11 +229,12 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="phone">手机号</param>
         /// <param name="code">验证码</param>
         /// <param name="registerAndLoginOptions">登录配置信息</param>
+        /// <param name="authingErrorBox">错误信息</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
         Task<User> LoginByPhoneCode(string phone,
             string code,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过手机号密码登录
@@ -253,11 +257,12 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="phone">手机号</param>
         /// <param name="password">密码</param>
         /// <param name="registerAndLoginOptions">登录信息</param>
+        /// <param name="authingErrorBox">错误信息</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
         Task<User> LoginByPhonePassword(string phone,
             string password,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过子账户登录
@@ -269,7 +274,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns>User</returns>
         Task<User> LoginBySubAccount(string account,
             string password,
-            RegisterAndLoginOptions registerAndLoginOptions = null);
+            RegisterAndLoginOptions registerAndLoginOptions = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 检查登录状态
@@ -277,7 +282,8 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="accessToken">用户的 access token</param>
         /// <param name="cancellationToken"></param>
         /// <returns>JWTTokenStatus</returns>
-        Task<JWTTokenStatus> CheckLoginStatus(string accessToken = null);
+        Task<JWTTokenStatus> CheckLoginStatus(string accessToken = null,
+                                              AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 发送邮件
@@ -287,7 +293,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns>CommonMessage</returns>
         Task<CommonMessage> SendEmail(string email,
-            EmailScene scene);
+            EmailScene scene, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过手机号验证码重置密码
@@ -299,7 +305,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns>CommonMessage</returns>
         Task<CommonMessage> ResetPasswordByPhoneCode(string phone,
             string code,
-            string newPassword);
+            string newPassword, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过邮箱验证码重置密码
@@ -311,7 +317,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <returns>CommonMessage</returns>
         Task<CommonMessage> ResetPasswordByEmailCode(string email,
             string code,
-            string newPassword);
+            string newPassword, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过首次登录的 Token 重置密码
@@ -319,7 +325,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="token">首次登录的Token</param>
         /// <param name="password">修改后的密码</param>
         /// <returns></returns>
-        Task<CommonMessage> ResetPasswordByFirstLoginToken(string token, string password);
+        Task<CommonMessage> ResetPasswordByFirstLoginToken(string token, string password, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过密码强制跟临时 Token 修改密码
@@ -328,7 +334,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="oldPassword">旧密码</param>
         /// <param name="newPassword">新密码</param>
         /// <returns></returns>
-        Task<CommonMessage> ResetPasswordByForceResetToken(string token, string oldPassword, string newPassword);
+        Task<CommonMessage> ResetPasswordByForceResetToken(string token, string oldPassword, string newPassword, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 更新用户信息
@@ -336,7 +342,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="updates">更新项</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> UpdateProfile(UpdateUserInput updates);
+        Task<User> UpdateProfile(UpdateUserInput updates, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 更新密码
@@ -345,7 +351,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="oldPassword">旧密码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> UpdatePassword(string newPassword, string oldPassword);
+        Task<User> UpdatePassword(string newPassword, string oldPassword, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 更新手机号
@@ -357,7 +363,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
         Task<User> UpdatePhone(string phone, string phoneCode, string oldPhone = null,
-            string oldPhoneCode = null);
+            string oldPhoneCode = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 更新邮箱
@@ -369,14 +375,14 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
         Task<User> UpdateEmail(string email, string emailCode, string oldEmail = null,
-            string oldEmailCode = null);
+            string oldEmailCode = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 刷新 AccessToken
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>RefreshToken</returns>
-        Task<RefreshToken> RefreshToken();
+        Task<RefreshToken> RefreshToken(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 刷新 access token
@@ -385,7 +391,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns>RefreshToken</returns>
         // INFO: 这个 RefreshToken 与上面的 RefreshToken 是有区别的
-        Task<RefreshToken> RefreshToken(string accessToken);
+        Task<RefreshToken> RefreshToken(string accessToken, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 关联账户
@@ -394,7 +400,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="secondaryUserToken">子账号</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
-        Task<CommonMessage> LinkAccount(string primaryUserToken, string secondaryUserToken);
+        Task<CommonMessage> LinkAccount(string primaryUserToken, string secondaryUserToken, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 取消关联账户
@@ -403,7 +409,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="provider">提供者</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
-        Task<CommonMessage> UnLinkAccount(string primaryUserToken, ProviderType provider);
+        Task<CommonMessage> UnLinkAccount(string primaryUserToken, ProviderType provider, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 绑定手机号，如果已绑定则会报错
@@ -412,14 +418,14 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="phoneCode">手机号验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> BindPhone(string phone, string phoneCode);
+        Task<User> BindPhone(string phone, string phoneCode, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 解绑定手机号，如果未绑定则会报错
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> UnbindPhone();
+        Task<User> UnbindPhone(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 绑定邮箱
@@ -428,28 +434,28 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="emailCode">邮箱验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> BindEmail(string email, string emailCode);
+        Task<User> BindEmail(string email, string emailCode, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 取消绑定的邮箱
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> UnbindEmail();
+        Task<User> UnbindEmail(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取当前用户
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> GetCurrentUser();
+        Task<User> GetCurrentUser(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 当前用户登出
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<CommonMessage> Logout();
+        Task<CommonMessage> Logout(AuthingErrorBox authingErrorBox = null);
 
         void ClearUser();
 
@@ -458,7 +464,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>自定义字段列表</returns>
-        Task<IEnumerable<ResUdv>> ListUdv();
+        Task<IEnumerable<ResUdv>> ListUdv(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 设置自定义字段值
@@ -467,7 +473,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="value">自定义字段的 value</param>
         /// <param name="cancellationToken"></param>
         /// <returns>用户自定义字段</returns>
-        Task<IEnumerable<ResUdv>> SetUdv(string key, object value);
+        Task<IEnumerable<ResUdv>> SetUdv(string key, object value, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 移除用户自定义字段的值
@@ -475,16 +481,16 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="key">自定义字段的 key </param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<IEnumerable<ResUdv>> RemoveUdv(string key);
+        Task<IEnumerable<ResUdv>> RemoveUdv(string key, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 组织列表
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <returns>HttpResponseMessage</returns>
-        Task<ListOrgsResult> ListOrgs();
+        /// <returns>组织列表</returns>
+        Task<ListOrgsResult> ListOrgs(AuthingErrorBox authingErrorBox = null);
 
-        Task<PaginatedDepartments> ListDepartment();
+        Task<PaginatedDepartments> ListDepartment(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过 LDAP 进行登录
@@ -503,14 +509,14 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="password">AD 用户密码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        Task<User> LoginByAd(string username, string password);
+        Task<User> LoginByAd(string username, string password, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取自定义字段列表
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>自定义字段列表</returns>
-        Task<List<KeyValuePair<string, object>>> GetUdfValue();
+        Task<List<KeyValuePair<string, object>>> GetUdfValue(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 设置自定义字段
@@ -518,7 +524,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="data">自定义字段相关数据</param>
         /// <param name="cancellationToken"></param>
         /// <returns>自定义字段列表</returns>
-        Task<List<KeyValuePair<string, object>>> SetUdfValue(KeyValueDictionary data);
+        Task<List<KeyValuePair<string, object>>> SetUdfValue(KeyValueDictionary data, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 删除自定义字段
@@ -526,14 +532,14 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="key">自定义字段的 key</param>
         /// <param name="cancellationToken"></param>
         /// <returns>是否成功</returns>
-        Task<bool> RemoveUdfValue(string key);
+        Task<bool> RemoveUdfValue(string key, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取密码等级
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>SecurityLevel</returns>
-        Task<SecurityLevel> GetSecurityLevel();
+        Task<SecurityLevel> GetSecurityLevel(AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 允许访问的资源列表
@@ -542,7 +548,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="_resourceType">资源类型</param>
         /// <param name="cancellationToken"></param>
         /// <returns>PaginatedAuthorizedResources</returns>
-        Task<PaginatedAuthorizedResources> ListAuthorizedResources(string nameSpace, ResourceType? _resourceType);
+        Task<PaginatedAuthorizedResources> ListAuthorizedResources(string nameSpace, ResourceType? _resourceType, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 计算密码强度
@@ -558,7 +564,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="_namespace">命名空间</param>
         /// <param name="cancellationToken"></param>
         /// <returns>bool</returns>
-        Task<bool> HasRole(string roleCode, string _namespace = "");
+        Task<bool> HasRole(string roleCode, string _namespace = "", AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 应用程序列表
@@ -566,7 +572,7 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="_params">列表参数</param>
         /// <param name="cancellationToken"></param>
         /// <returns>HttpResponseMessage</returns>
-        Task<ListApplicationsResponse> ListApplications(ListParams _params = null);
+        Task<ListApplicationsResponse> ListApplications(ListParams _params = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 设置语言
@@ -582,14 +588,14 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="phone">电话号码</param>
         /// <param name="externalId">ExternalID</param>
         /// <returns></returns>
-        Task<bool?> IsUserExists(string userName = null, string email = null, string phone = null, string externalId = null);
+        Task<bool?> IsUserExists(string userName = null, string email = null, string phone = null, string externalId = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 检测密码是否合法
         /// </summary>
         /// <param name="password">需要检测的密码</param>
         /// <returns></returns>
-        Task<CommonMessage> isPasswordValid(string password);
+        Task<CommonMessage> isPasswordValid(string password, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过微信登录
@@ -599,12 +605,12 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="lang"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        Task<User> LoginByWechat(string code, string country = null, string lang = null, string state = null);
+        Task<User> LoginByWechat(string code, string country = null, string lang = null, string state = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取Token
         /// </summary>
         /// <returns></returns>
-        Task<string> GetToken();
+        Task<string> GetToken(AuthingErrorBox authingErrorBox = null);
     }
 }

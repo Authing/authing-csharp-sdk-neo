@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.Exceptions;
+using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
 {
@@ -18,7 +20,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByUsername("qidong2333", "Qd3866364,,..", null);
+            AuthingErrorBox error;
+
+            var result = await client.LoginByUsername("635877990@qq.com", "3866364", new RegisterAndLoginOptions { AutoRegister = false },authingErrorBox: error = new Library.Domain.Model.Exceptions.AuthingErrorBox { });
 
             //client.SetCurrentUser(result);
 
@@ -34,9 +38,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var res = await client.SendSmsCode("17665662048");
+            var res = await client.SendSmsCode("13348926753");
 
-            var result = await client.LoginByPhoneCode("13348926753", "2950", null);
+            var result = await client.LoginByPhoneCode("13348926753", "2421", null);
 
             Assert.NotNull(result);
         }
