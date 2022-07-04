@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Management.Statistics;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces.ManagementClient;
+using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -31,7 +33,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// options.limit<Integer> 每页条目数量，默认为 10 个
         /// </param>
         /// <returns></returns>
-        public async Task<UserLogs> listUserActions(LogsPageParam options)
+        public async Task<UserLogs> listUserActions(LogsPageParam options,AuthingErrorBox authingErrorBox=null)
         {
             string endPoint = "api/v2/analysis/user-action?";
             endPoint += !string.IsNullOrEmpty(options.ClientIp) == true ? $"&clientip={options.ClientIp}" : "";
@@ -49,6 +51,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             endPoint += $"&page={options.Page}";
             endPoint += $"&limit={options.Limit}";
             var result = await _client.RequestCustomDataWithToken<UserLogs>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data ?? null;
         }
 
@@ -64,7 +67,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// options.limit<Integer> 每页条目数量，默认为 10 个
         /// </param>
         /// <returns></returns>
-        public async Task<AdminLogs> listAuditLogs(AuditLogPageParam options)
+        public async Task<AdminLogs> listAuditLogs(AuditLogPageParam options,AuthingErrorBox authingErrorBox=null)
         {
             string endPoint = "api/v2/analysis/audit?";
             endPoint += !string.IsNullOrEmpty(options.ClientIp) == true ? $"&clientip={options.ClientIp}" : "";
@@ -81,6 +84,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             endPoint += $"&page={options.Page}";
             endPoint += $"&limit={options.Limit}";
             var result = await _client.RequestCustomDataWithToken<AdminLogs>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data ?? null;
         }
     }

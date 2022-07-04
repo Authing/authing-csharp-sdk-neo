@@ -2,6 +2,7 @@
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
 using Authing.Library.Domain.Model.Authentication;
+using Authing.Library.Domain.Model.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,14 @@ namespace Authing.Library.Domain.Client.Impl.AuthenticationClient
         /// 生成二维码
         /// </summary>
         /// <returns></returns>
-        public async Task<GeneQrCodeResponse> GeneCode(GeneQrCodeParam geneQrCodeParam)
+        public async Task<GeneQrCodeResponse> GeneCode(GeneQrCodeParam geneQrCodeParam,AuthingErrorBox authingErrorBox=null)
         {
             //var result = await PostRaw<object>("api/v2/qrcode/gene",).ConfigureAwait(false);
             GraphQLResponse<GeneQrCodeResponse> result = await 
                 RequestCustomDataWithToken<GeneQrCodeResponse>("api/v2/qrcode/gene", Newtonsoft.Json.JsonConvert.SerializeObject(geneQrCodeParam), method: System.Net.Http.HttpMethod.Post,contenttype:ContentType.JSON).
                 ConfigureAwait(false);
+
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
 
@@ -37,9 +40,10 @@ namespace Authing.Library.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="id">二维码唯一 ID</param>
         /// <returns></returns>
-        public async Task<QrCodeCheckStatusResponse> CheckStatus(string id)
+        public async Task<QrCodeCheckStatusResponse> CheckStatus(string id,AuthingErrorBox authingErrorBox=null)
         {
             var result = await RequestCustomDataWithToken<QrCodeCheckStatusResponse>($"api/v2/qrcode/check?random={id}", null,method:System.Net.Http.HttpMethod.Get).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
 
@@ -48,13 +52,13 @@ namespace Authing.Library.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="ticket"></param>
         /// <returns>完整的用户信息，其中 user.token 为用户的登录凭证。</returns>
-        public async Task<UserInfo> ExchangeUserInfo(string ticket)
+        public async Task<UserInfo> ExchangeUserInfo(string ticket,AuthingErrorBox authingErrorBox=null)
         {
             var result = await RequestCustomDataWithOutToken<UserInfo>($"api/v2/qrcode/userinfo",JsonConvert.SerializeObject(new Dictionary<string, string>
             {
                 {  "ticket",ticket}
             }),method:System.Net.Http.HttpMethod.Post).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
     }

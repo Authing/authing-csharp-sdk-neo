@@ -47,7 +47,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_FindByIdV2()
         {
-            var result = await managementClient.Applications.FindByIdV2("62148031cb5dbb3520f5f774");
+            var result = await managementClient.Applications.FindByIdV2("62a9902a80f55c22346eb296");
 
             //var ss= result.RegisterTabs.ToString();
             var ss = result.LoginTabs;

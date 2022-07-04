@@ -15,6 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Management\MFA\**" />
+    <EmbeddedResource Remove="Management\MFA\**" />
+    <None Remove="Management\MFA\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -26,10 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Authing.ApiClient\Authing.ApiClient.csproj" />
     <ProjectReference Include="..\Authing.ApiClient.Test.Base\Authing.ApiClient.Test.Base.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Management\MFA\" />
   </ItemGroup>
 
 </Project>

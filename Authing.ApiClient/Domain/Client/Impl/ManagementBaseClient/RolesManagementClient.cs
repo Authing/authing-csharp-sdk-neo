@@ -13,6 +13,8 @@ using Authing.ApiClient.Domain.Utils;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -32,7 +34,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             this.client = client;
         }
 
-        public async Task<Role> Create(string code,string description = null,string parentCode = null,string nameSpace=null)
+        public async Task<Role> Create(string code,string description = null,string parentCode = null,string nameSpace=null,AuthingErrorBox authingErrorBox=null)
         {
             var param = new CreateRoleParam(code)
             {
@@ -41,46 +43,51 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace=nameSpace
             };
             var res = await client.Post<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> Delete(string code)
+        public async Task<CommonMessage> Delete(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new DeleteRoleParam(code);
             var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> Delete(
-            string code,
-            string nameSpace = null)
+        public async Task<CommonMessage> Delete(string code,
+                                                string nameSpace = null,
+                                                AuthingErrorBox authingErrorBox = null)
         {
             var param = new DeleteRoleParam(code)
             {
                 Namespace = nameSpace
             };
             var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList)
+        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,AuthingErrorBox authingErrorBox=null)
         {
             var param = new DeleteRolesParam(codeList);
             var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,string nameSpace = null)
+        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
             var param = new DeleteRolesParam(codeList)
             {
                 Namespace = nameSpace
             };
             var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<Role> Update(string code,string description = null,string newCode = null)
+        public async Task<Role> Update(string code,string description = null,string newCode = null,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UpdateRoleParam(code)
             {
@@ -88,10 +95,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 NewCode = newCode,
             };
             var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<Role> Update(UpdateRoleOptions updateRoleOptions)
+        public async Task<Role> Update(UpdateRoleOptions updateRoleOptions,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UpdateRoleParam(updateRoleOptions.Code)
             {
@@ -100,40 +108,44 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 NewCode = updateRoleOptions.NewCode,
             };
             var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<Role> Detail(string code)
+        public async Task<Role> Detail(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RoleParam(code);
             var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<Role> Detail(string code,string nameSpace = null)
+        public async Task<Role> Detail(string code,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RoleParam(code)
             {
                 Namespace = nameSpace
             };
             var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<Role> FindByCode(string code,string nameSpace = null)
+        public async Task<Role> FindByCode(string code,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
-            var res = await Detail(code, nameSpace).ConfigureAwait(false);
+            var res = await Detail(code, nameSpace,authingErrorBox).ConfigureAwait(false);
             return res;
         }
 
-        public async Task<PaginatedRoles> List(int page = 1,int limit = 10)
+        public async Task<PaginatedRoles> List(int page = 1,int limit = 10,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RolesParam() { Page = page, Limit = limit };
             var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<PaginatedRoles> List(string nameSpace,int page = 1,int limit = 10)
+        public async Task<PaginatedRoles> List(string nameSpace,int page = 1,int limit = 10,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RolesParam()
             {
@@ -142,18 +154,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
             var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
                  
-        public async Task<PaginatedUsers> ListUsers(string code)
+        public async Task<PaginatedUsers> ListUsers(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RoleWithUsersParam(code);
             var res = await client.Post<RoleWithUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result.Users;
         }
 
-        public async Task<PaginatedUsers> ListUsers(string code,ListUsersOption listUsersOption)
+        public async Task<PaginatedUsers> ListUsers(string code,ListUsersOption listUsersOption,AuthingErrorBox authingErrorBox=null)
         {
             if (!listUsersOption.WithCustomData)
             {
@@ -165,6 +179,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Namespace = listUsersOption.NameSpace
                 };
                 var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data.Result.Users;
             }
             else
@@ -177,11 +192,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Limit = listUsersOption.Limit
                 };
                 var _res = await client.Post<RoleWithUsersWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data.Result.Users;
             }
         }
 
-        public async Task<CommonMessage> AddUsers(string code,IEnumerable<string> userIds)
+        public async Task<CommonMessage> AddUsers(string code,IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)
         {
             var param = new AssignRoleParam()
             {
@@ -189,10 +205,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code
             };
             var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> AddUsers(string code,IEnumerable<string> userIds,string nameSpace = null)
+        public async Task<CommonMessage> AddUsers(string code,IEnumerable<string> userIds,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
             var param = new AssignRoleParam()
             {
@@ -201,11 +218,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
             var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
       
-        public async Task<CommonMessage> RemoveUsers(string code,IEnumerable<string> userIds)
+        public async Task<CommonMessage> RemoveUsers(string code,IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RevokeRoleParam()
             {
@@ -213,11 +231,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code
             };
             var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> RemoveUsers(string code,IEnumerable<string> userIds,string nameSpace = null
-        )
+        public async Task<CommonMessage> RemoveUsers(string code,
+                                                     IEnumerable<string> userIds,
+                                                     string nameSpace = null,
+                                                     AuthingErrorBox authingErrorBox = null)
         {
             var param = new RevokeRoleParam()
             {
@@ -229,7 +250,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<PaginatedPolicyAssignments> ListPolicies(string code,int page = 1,int limit = 10)
+        public async Task<PaginatedPolicyAssignments> ListPolicies(string code,int page = 1,int limit = 10,AuthingErrorBox authingErrorBox=null)
         {
             var param = new PolicyAssignmentsParam()
             {
@@ -239,10 +260,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
             };
             var res = await client.Post<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> AddPolicies(string code,IEnumerable<string> policies)
+        public async Task<CommonMessage> AddPolicies(string code,IEnumerable<string> policies,AuthingErrorBox authingErrorBox=null)
         {
             var param = new AddPolicyAssignmentsParam(policies, PolicyAssignmentTargetType.ROLE)
             {
@@ -250,20 +272,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<CommonMessage> RemovePolicies(string code,IEnumerable<string> policies)
+        public async Task<CommonMessage> RemovePolicies(string code,IEnumerable<string> policies,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RemovePolicyAssignmentsParam(policies, PolicyAssignmentTargetType.ROLE)
             {
                 TargetIdentifiers = new string[] { code },
             };
             var res = await client.Post<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<Role> ListAuthorizedResources(string code, string nameSpace, ResourceType resourceType = default)
+        public async Task<Role> ListAuthorizedResources(string code, string nameSpace, ResourceType resourceType = default,AuthingErrorBox authingErrorBox=null)
         {
             var param = new ListRoleAuthorizedResourcesParam(code)
             {
@@ -271,6 +295,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace,
             };
             var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             if (res.Data.Result == null)
             {
                 throw new Exception("角色不存在");
@@ -278,26 +303,29 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result;
         }
 
-        public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleCode)
+        public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleCode,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdvParam(UdfTargetType.ROLE, roleCode);
             var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
         }
 
-        public async Task<KeyValuePair<string, object>> GetSpecificUdfValue(string roleId, string udfKey)
+        public async Task<KeyValuePair<string, object>> GetSpecificUdfValue(string roleId, string udfKey,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdvParam(UdfTargetType.ROLE, roleId);
             var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             var udfList = AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
             var keyValuePair = udfList.Where(item => item.Key == udfKey).ToList();
             return keyValuePair[0];
         }
 
-        public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(IEnumerable<string> roleIds)
+        public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(IEnumerable<string> roleIds,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdfValueBatchParam(UdfTargetType.ROLE, roleIds);
             var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
             res.Data.Result.ToList().ForEach(
                 item =>
@@ -306,7 +334,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return dic;
         }
 
-        public async Task<IEnumerable<UserDefinedData>> SetUdfValue(SetUdfValueParam setUdfValueParam)
+        public async Task<IEnumerable<UserDefinedData>> SetUdfValue(SetUdfValueParam setUdfValueParam,AuthingErrorBox authingErrorBox=null)
         {
             if (setUdfValueParam.UdvList?.Count < 1)
             {
@@ -323,11 +351,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UdvList = _udvList
             };
             var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(IEnumerable<SetUdfValueParam> setUdfValueBatchParam)
+        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(IEnumerable<SetUdfValueParam> setUdfValueBatchParam,AuthingErrorBox authingErrorBox=null)
         {
             if (setUdfValueBatchParam.ToList().Count < 1)
             {
@@ -341,15 +369,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.ROLE, param);
             var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
-        public async Task<IEnumerable<UserDefinedData>> RemoveUdfValue(string roleId, string key)
+        public async Task<IEnumerable<UserDefinedData>> RemoveUdfValue(string roleId, string key,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RemoveUdvParam(UdfTargetType.ROLE, roleId, key);
             var res = await client.Post<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 

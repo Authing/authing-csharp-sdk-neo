@@ -8,6 +8,8 @@ using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -28,10 +30,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// 用户池详情
         /// </summary>
         /// <returns></returns>
-        public async Task<UserPool> Detail()
+        public async Task<UserPool> Detail(AuthingErrorBox authingErrorBox=null)
         {
             //var res = await _client.Get<UserPool>("api/v2/userpools/detail", new GraphQLRequest());
             var res = await _client.RequestCustomDataWithToken<UserPool>("api/v2/userpools/detail", method: HttpMethod.Get).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data ?? null;
         }
 
@@ -40,11 +43,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="updates"></param>
         /// <returns></returns>
-        public async Task<UserPool> Update(UpdateUserpoolInput updates)
+        public async Task<UserPool> Update(UpdateUserpoolInput updates,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UpdateUserpoolParam(updates);
 
             var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -52,10 +56,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// 获取环境变量列表
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<Env>> ListEnv()
+        public async Task<IEnumerable<Env>> ListEnv(AuthingErrorBox authingErrorBox=null)
         {
             //var res = await _client.Get<IEnumerable<Env>>("api/v2/env", new GraphQLRequest());
             var res = await _client.RequestCustomDataWithToken<IEnumerable<Env>>("api/v2/env", method: HttpMethod.Get).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data ?? null;
         }
 
@@ -65,7 +70,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="key">环境变量键</param>
         /// <param name="value">环境变量值</param>
         /// <returns></returns>
-        public async Task<int> AddEnv(string key, object value)
+        public async Task<int> AddEnv(string key, object value,AuthingErrorBox authingErrorBox=null)
         {
 
             //var result = await _client.Post<Env>("api/v2/env", new Dictionary<string, string>
@@ -79,7 +84,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     { "key", key },
                     { "value", value.ToString() }
                 }.ConvertJson()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Code;
         }
 
@@ -88,10 +93,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="key">环境变量键</param>
         /// <returns></returns>
-        public async Task<int> RemoveEnv(string key)
+        public async Task<int> RemoveEnv(string key,AuthingErrorBox authingErrorBox=null)
         {
             //var result = await _client.Delete<Env>($"api/v2/env/{key}", null);
             var result = await _client.RequestCustomDataWithToken<Env>($"api/v2/env/{key}", method: HttpMethod.Delete).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Code;
         }
     }

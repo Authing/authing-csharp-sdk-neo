@@ -55,7 +55,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 
             await client.Roles.Create(roleCode);
 
-            var result = await client.Roles.Delete(roleCode);
+            var error = new Library.Domain.Model.Exceptions.AuthingErrorBox { };
+
+            var result = await client.Roles.Delete(roleCode,error);
 
             Assert.NotNull(result.Code == 200);
         }

@@ -4,6 +4,7 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management;
 using Authing.ApiClient.Domain.Model.Management.Groups;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
 {
@@ -19,14 +20,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         Task<Group> Create(
             string code,
             string name,
-            string description = null);
+            string description = null,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 删除分组
         /// </summary>
         /// <param name="code">分组唯一标志</param>
         /// <returns></returns>
-        Task<CommonMessage> Delete(string code);
+        Task<CommonMessage> Delete(string code,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 更新分组信息
@@ -40,14 +41,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
             string code,
             string name = null,
             string description = null,
-            string newCode = null);
+            string newCode = null,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 获取分组详情
         /// </summary>
         /// <param name="code">分组唯一标志</param>
         /// <returns></returns>
-        Task<Group> Detail(string code);
+        Task<Group> Detail(string code,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 获取分组列表
@@ -57,14 +58,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <returns></returns>
         Task<PaginatedGroups> List(
             int page = 1,
-            int limit = 10);
+            int limit = 10,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 批量删除分组
         /// </summary>
         /// <param name="codeList">分组唯一标志列表</param>
         /// <returns></returns>
-        Task<CommonMessage> DeleteMany(IEnumerable<string> codeList);
+        Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 获取分组用户列表
@@ -77,11 +78,11 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         Task<PaginatedUsers> ListUsers(
             string code,
             int page = 1,
-            int limit = 10);
+            int limit = 10,AuthingErrorBox authingErrorBox=null);
 
         Task<PaginatedUsers> ListUsers(
             string code,
-            ListUsersOption listUsersOption = null);
+            ListUsersOption listUsersOption = null,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 批量添加用户
@@ -91,7 +92,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <returns></returns>
         Task<CommonMessage> AddUsers(
             string code,
-            IEnumerable<string> userIds);
+            IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 批量移除用户
@@ -101,10 +102,10 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <returns></returns>
         Task<CommonMessage> RemoveUsers(
             string code,
-            IEnumerable<string> userIds);
+            IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null);
         /**
          * 获取用户被授权的所有资源
          */
-        Task<PaginatedAuthorizedResources> ListAuthorizedResources(string code, string _namespace, ResourceType resourceType = default);
+        Task<PaginatedAuthorizedResources> ListAuthorizedResources(string code, string _namespace, ResourceType resourceType = default,AuthingErrorBox authingErrorBox=null);
     }
 }

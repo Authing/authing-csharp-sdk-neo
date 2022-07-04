@@ -13,6 +13,7 @@ using Authing.ApiClient.Domain.Model.Management.AuthorizedResources;
 using Authing.ApiClient.Domain.Model.Management.UserAction;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Infrastructure.GraphQL;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
 {
@@ -24,7 +25,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userInfo">用户信息</param>
         /// <param name="createUserOption">选项</param>
         /// <returns></returns>
-        Task<User> Create(CreateUserInput userInfo, CreateUserOption createUserOption = null);
+        Task<User> Create(CreateUserInput userInfo, CreateUserOption createUserOption = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 更新用户信息
@@ -32,7 +33,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="updates">更新信息</param>
         /// <returns></returns>
-        Task<User> Update(string userId, UpdateUserInput updates);
+        Task<User> Update(string userId, UpdateUserInput updates, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户信息
@@ -40,28 +41,28 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="withCustomData">是否带用户自定义数据</param>
         /// <returns></returns>
-        Task<User> Detail(string userId, bool withCustomData = false);
+        Task<User> Detail(string userId, bool withCustomData = false, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 删除用户
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<CommonMessage> Delete(string userId);
+        Task<CommonMessage> Delete(string userId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 批量删除用户
         /// </summary>
         /// <param name="userIds">用户 ID 列表，多个 ID 以英文逗号分隔</param>
         /// <returns></returns>
-        Task<CommonMessage> DeleteMany(IEnumerable<string> userIds);
+        Task<CommonMessage> DeleteMany(IEnumerable<string> userIds, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过 ID 列表批量获取用户信息
         /// </summary>
         /// <param name="userIds">用户 ID 列表</param>
         /// <returns></returns>
-        Task<IEnumerable<User>> Batch(IEnumerable<string> userIds, BatchFetchUserTypes batchFetchUserType = BatchFetchUserTypes.id);
+        Task<IEnumerable<User>> Batch(IEnumerable<string> userIds, BatchFetchUserTypes batchFetchUserType = BatchFetchUserTypes.id, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户列表
@@ -69,7 +70,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="page">当前页数，默认为 1</param>
         /// <param name="limit">每页最大数量，默认为 10</param>
         /// <returns></returns>
-        Task<PaginatedUsers> List(int page = 1, int limit = 10);
+        Task<PaginatedUsers> List(int page = 1, int limit = 10, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取已归档用户列表
@@ -77,21 +78,21 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="page">当前页数，默认为 1</param>
         /// <param name="limit">每页最大数量，默认为 10</param>
         /// <returns></returns>
-        Task<PaginatedUsers> ListArchivedUsers(int page = 1, int limit = 10);
+        Task<PaginatedUsers> ListArchivedUsers(int page = 1, int limit = 10, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 检查用户是否存在
         /// </summary>
         /// <param name="options">选项</param>
         /// <returns></returns>
-        Task<bool?> Exists(ExistsOption options);
+        Task<bool?> Exists(ExistsOption options, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 通过手机号、游戏、用户名查找用户
         /// </summary>
         /// <param name="FindUserOption">选项</param>
         /// <returns></returns>
-        Task<User> Find(FindUserOption options);
+        Task<User> Find(FindUserOption options, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 模糊搜索用户
@@ -99,21 +100,21 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="query">关键字</param>
         /// <param name="SearchOption">选项</param>
         /// <returns></returns>
-        Task<PaginatedUsers> Search(string query, SearchOption option = null);
+        Task<PaginatedUsers> Search(string query, SearchOption option = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 刷新 access token
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<RefreshToken> RefreshToken(string userId);
+        Task<RefreshToken> RefreshToken(string userId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户分组列表
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<PaginatedGroups> ListGroups(string userId);
+        Task<PaginatedGroups> ListGroups(string userId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 加入分组
@@ -121,7 +122,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="group">分组 ID</param>
         /// <returns></returns>
-        Task<CommonMessage> AddGroup(string userId, string group);
+        Task<CommonMessage> AddGroup(string userId, string group, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 退出分组
@@ -129,14 +130,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="group">分组 ID</param>
         /// <returns></returns>
-        Task<CommonMessage> RemoveGroup(string userId, string group);
+        Task<CommonMessage> RemoveGroup(string userId, string group, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户角色列表
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<PaginatedRoles> ListRoles(string userId, string _namespace = null);
+        Task<PaginatedRoles> ListRoles(string userId, string _namespace = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 批量授权角色
@@ -144,7 +145,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="roles">用户角色 Code 列表</param>
         /// <returns></returns>
-        Task<CommonMessage> AddRoles(string userId, IEnumerable<string> roles, string _namespace = null);
+        Task<CommonMessage> AddRoles(string userId, IEnumerable<string> roles, string _namespace = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 批量撤销用户角色
@@ -152,21 +153,21 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="roles">用户角色 Code 列表</param>
         /// <returns></returns>
-        Task<CommonMessage> RemoveRoles(string userId, IEnumerable<string> roles, string _namespace = null);
+        Task<CommonMessage> RemoveRoles(string userId, IEnumerable<string> roles, string _namespace = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户所在组织机构
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<PaginatedOrgsAndNodes> ListOrgs(string userId);
+        Task<PaginatedOrgsAndNodes> ListOrgs(string userId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户所在部门
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<PaginatedDepartments> ListDepartment(string userId);
+        Task<PaginatedDepartments> ListDepartment(string userId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户被授权的所有资源
@@ -175,21 +176,21 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="_namespace">资源分组</param>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        Task<PaginatedAuthorizedResources> ListAuthorizedResources(string userId, string _namespace, ListAuthorizedResourcesOption option = null);
+        Task<PaginatedAuthorizedResources> ListAuthorizedResources(string userId, string _namespace, ListAuthorizedResourcesOption option = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取某个用户的所有自定义数据
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId);
+        Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 批量获取多个用户的自定义数据
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds);
+        Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 设置某个用户的自定义数据
@@ -197,14 +198,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="data">数据</param>
         /// <returns></returns>
-        Task<IEnumerable<UserDefinedData>> SetUdfValue(string userId, KeyValueDictionary data);
+        Task<IEnumerable<UserDefinedData>> SetUdfValue(string userId, KeyValueDictionary data, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 批量设置自定义数据
         /// </summary>
         /// <param name="setUdfValueBatchInput"></param>
         /// <returns></returns>
-        Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput);
+        Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 清除用户的自定义数据
@@ -212,7 +213,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="userId">用户 ID</param>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<CommonMessage> RemoveUdfValue(string userId, string key);
+        Task<CommonMessage> RemoveUdfValue(string userId, string key, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 判断用户是否有某个角色
@@ -221,7 +222,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="roleCode">角色 Code</param>
         /// <param name="_namespace">权限分组 ID</param>
         /// <returns></returns>
-        Task<bool> hasRole(string userId, string roleCode, string _namespace = null);
+        Task<bool> hasRole(string userId, string roleCode, string _namespace = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 强制一批用户下线
@@ -230,14 +231,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="roleCode">角色 Code</param>
         /// <param name="_namespace">权限分组 ID</param>
         /// <returns></returns>
-        Task<CommonMessage> Kick(IEnumerable<string> userIds);
+        Task<CommonMessage> Kick(IEnumerable<string> userIds, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 用户退出登录
         /// </summary>
         /// <param name="logoutParam">选项</param>
         /// <returns></returns>
-        Task<CommonMessage> Logout(LogoutParam logoutParam);
+        Task<CommonMessage> Logout(LogoutParam logoutParam, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 查询用户的登录状态
@@ -246,48 +247,48 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="appId">应用 ID</param>
         /// <param name="devicdId">选项</param>
         /// <returns></returns>
-        Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null);
+        Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 审计日志列表
         /// </summary>
         /// <param name="listUserActionsParam">选项</param>
         /// <returns></returns>
-        Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null);
+        Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 发送首次登录验证邮件
         /// </summary>
         /// <param name="sendFirstLoginVerifyEmailParam">选项</param>
         /// <returns></returns>
-        Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam);
+        Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 批量导入用户
         /// </summary>
         /// <param name="userInfos">用户信息列表</param>
         /// <returns></returns>
-        Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos);
+        Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户所在租户
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        Task<User> GetUserTenants(string userId);
+        Task<User> GetUserTenants(string userId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 给用户绑定一个身份
         /// </summary>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option);
+        Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 解除用户某个身份源下的所有身份
         /// </summary>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option);
+        Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option, AuthingErrorBox authingErrorBox = null);
     }
 }

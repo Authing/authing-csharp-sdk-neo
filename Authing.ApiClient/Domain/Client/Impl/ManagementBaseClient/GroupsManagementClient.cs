@@ -6,6 +6,8 @@ using Authing.ApiClient.Domain.Model.Management;
 using Authing.ApiClient.Domain.Model.Management.Groups;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -32,11 +34,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="name">分组名称</param>
         /// <param name="description">描述</param>
         /// <returns></returns>
-        public async Task<Group> Create(string code, string name, string description = null)
+        public async Task<Group> Create(string code, string name, string description = null,AuthingErrorBox authingErrorBox=null)
         {
             var param = new CreateGroupParam(code, name, description);
 
             var res = await client.Request<CreateGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -45,11 +48,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="code">分组唯一标识符</param>
         /// <returns></returns>
-        public async Task<CommonMessage> Delete(string code)
+        public async Task<CommonMessage> Delete(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new DeleteGroupsParam(new string[] { code });
 
             var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -61,7 +65,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="description">描述</param>
         /// <param name="newCode">新分组唯一标识符</param>
         /// <returns></returns>
-        public async Task<Group> Update(string code, string name = null, string description = null, string newCode = null)
+        public async Task<Group> Update(string code, string name = null, string description = null, string newCode = null,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UpdateGroupParam(code)
             {
@@ -71,6 +75,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Request<UpdateGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -79,11 +84,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="code">分组唯一标识符</param>
         /// <returns></returns>
-        public async Task<Group> Detail(string code)
+        public async Task<Group> Detail(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new GroupParam(code);
 
             var res = await client.Request<GroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -93,7 +99,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="page">分页页数，默认为 1</param>
         /// <param name="limit">分页大小，默认为 10</param>
         /// <returns></returns>
-        public async Task<PaginatedGroups> List(int page = 1, int limit = 10)
+        public async Task<PaginatedGroups> List(int page = 1, int limit = 10,AuthingErrorBox authingErrorBox=null)
         {
             var param = new GroupsParam()
             {
@@ -102,6 +108,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Request<GroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -110,11 +117,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="codeList">分组唯一标识符列表</param>
         /// <returns></returns>
-        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList)
+        public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,AuthingErrorBox authingErrorBox=null)
         {
             var param = new DeleteGroupsParam(codeList);
 
             var res = await client.Request<DeleteGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -127,7 +135,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         /// TODO: 下一个大版本去除
         [Obsolete("旧版本")]
-        public async Task<PaginatedUsers> ListUsers(string code, int page = 1, int limit = 10)
+        public async Task<PaginatedUsers> ListUsers(string code, int page = 1, int limit = 10,AuthingErrorBox authingErrorBox=null)
         {
             var param = new GroupWithUsersParam(code)
             {
@@ -136,10 +144,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Request<GroupWithUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result.Users ?? null;
         }
 
-        public async Task<PaginatedUsers> ListUsers(string code, ListUsersOption listUsersOption = null)
+        public async Task<PaginatedUsers> ListUsers(string code, ListUsersOption listUsersOption = null,AuthingErrorBox authingErrorBox=null)
         {
             if (listUsersOption != null && !listUsersOption.WithCustomData)
             {
@@ -150,6 +159,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Limit = listUsersOption?.Limit,
                 };
                 var _res = await client.Request<GroupWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data?.Result?.Users ?? null;
             }
             else
@@ -161,6 +171,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Limit = listUsersOption?.Limit
                 };
                 var _res = await client.Request<GroupWithUsersWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data?.Result?.Users ?? null;
             }
         }
@@ -171,7 +182,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="code">分组唯一标识符标志</param>
         /// <param name="userIds">用户 ID 列表</param>
         /// <returns></returns>
-        public async Task<CommonMessage> AddUsers(string code, IEnumerable<string> userIds)
+        public async Task<CommonMessage> AddUsers(string code, IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)
         {
             var param = new AddUserToGroupParam(userIds)
             {
@@ -179,6 +190,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Request<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -188,7 +200,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="code">分组唯一标识符</param>
         /// <param name="userIds">用户 ID 列表</param>
         /// <returns></returns>
-        public async Task<CommonMessage> RemoveUsers(string code, IEnumerable<string> userIds)
+        public async Task<CommonMessage> RemoveUsers(string code, IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RemoveUserFromGroupParam(userIds)
             {
@@ -196,6 +208,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Request<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
 
@@ -212,7 +225,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// BUTTON：按钮类型数据。
         /// </param>
         /// <returns></returns>
-        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string code, string _namespace, ResourceType resourceType = default)
+        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string code, string _namespace, ResourceType resourceType = default,AuthingErrorBox authingErrorBox=null)
         {
             var param = new ListGroupAuthorizedResourcesParam(code)
             {
@@ -220,6 +233,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ResourceType = resourceType.ToString().ToUpper(),
             };
             var res = await client.Request<ListGroupAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             var group = res.Data?.Result;
             if (group == null)
             {
