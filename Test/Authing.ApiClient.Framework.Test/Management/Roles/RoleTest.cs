@@ -1,4 +1,5 @@
 ﻿using Authing.ApiClient.Domain.Model.Management.Roles;
+using Authing.Library.Domain.Model.Exceptions;
 using System.Collections.Generic;
 using Xunit;
 
@@ -97,7 +98,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             await client.Roles.Create(roleCode);
             await client.Roles.Create(roleCode2);
 
-            var result = await client.Roles.DeleteMany(codeList);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Roles.DeleteMany(codeList,authingErrorBox);
 
             Assert.True(result.Code == 200);
         }

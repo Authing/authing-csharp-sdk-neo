@@ -47,7 +47,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<AddNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                return res.Data.Result;
+            }
+            return null;
         }
 
         public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> Create(string name, string description = null, string code = null, AuthingErrorBox authingErrorBox = null)

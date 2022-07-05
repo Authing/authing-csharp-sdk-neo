@@ -20,7 +20,7 @@ namespace Authing.Library.Domain.Client.Impl
             authingErrorBox?.Clear();
             if (response.Errors != null && response.Errors.Length > 0)
             {
-                authingErrorBox.Set(response.Errors);
+                authingErrorBox?.Set(response.Errors);
             }
         }
     }

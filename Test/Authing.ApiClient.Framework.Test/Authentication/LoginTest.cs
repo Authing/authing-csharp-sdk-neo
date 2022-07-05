@@ -11,7 +11,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByEmail("635877990@qq.com", "3866364", null);
+            var result = await client.LoginByEmail("qidong5566@outlook.com", "3866364", null);
             Assert.NotNull(result);
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Authing.Library.Domain.Model.Exceptions;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -18,7 +19,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             List<string> userIds = new List<string>();
             userIds.Add("61a7274c582843df40616620");
 
-            var message = await client.Roles.AddUsers(roleCode, userIds);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var message = await client.Roles.AddUsers(roleCode, userIds,authingErrorBox);
 
             Assert.True(message.Code == 200);
 
@@ -65,7 +68,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 
             Assert.True(result.Code == roleCode);
 
-            var msg = await client.Roles.Delete(roleCode);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var msg = await client.Roles.Delete(roleCode,authingErrorBox);
 
             Assert.True(msg.Code == 200);
         }
