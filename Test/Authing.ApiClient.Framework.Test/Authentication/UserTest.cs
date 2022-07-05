@@ -1,4 +1,5 @@
 ﻿using Authing.ApiClient.Domain.Utils;
+using Authing.Library.Domain.Model.Exceptions;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
@@ -31,9 +32,12 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong6655", "3866364", null);
+            await client.LoginByUsername("qidong5566", "12345678", null);
             client.CheckLoggedIn();
-            var msg = await client.Logout();
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var msg = await client.Logout(authingErrorBox);
 
             Assert.True(msg.Code == 200);
         }
@@ -63,7 +67,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             var dics = await client.ListUdv();
 
-            var result = await client.SetUdv("key1", "value11");
+            var result = await client.SetUdv("UserInfo", "value11");
 
             Assert.NotNull(result);
         }
@@ -99,7 +103,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             await client.SetUdfValue(dic);
 
-            var result = await client.RemoveUdfValue("22222");
+            var result = await client.RemoveUdfValue("UserInfo");
 
             Assert.NotNull(result);
         }
@@ -143,7 +147,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             await client.LoginByUsername("qidong5566", "12345678", null);
 
-            var result = await client.GetSecurityLevel();
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.GetSecurityLevel(authingErrorBox);
 
             Assert.True(result.Password);
         }
@@ -155,7 +161,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             await client.LoginByUsername("qidong5566", "12345678", null);
 
-            var result = await client.ListAuthorizedResources("613189b38b6c66cac1d211bd", Types.ResourceType.DATA);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.ListAuthorizedResources("default", Types.ResourceType.DATA,authingErrorBox);
 
             Assert.NotNull(result);
         }
@@ -177,7 +185,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             await client.LoginByUsername("qidong5566", "12345678", null);
 
-            var result = await client.HasRole("admin");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.HasRole("admin", authingErrorBox: authingErrorBox);
 
             Assert.False(result);
         }
@@ -187,7 +197,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginBySubAccount("qidong6655", "qd3866364", null);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.LoginBySubAccount("qidong6655", "qd3866364", null, authingErrorBox);
 
             Assert.NotNull(result);
         }
@@ -218,8 +230,11 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginBySubAccount("qidong6655", "qd3866364", null);
-            var apps = await client.ListApplications();
+            var result = await client.LoginByUsername("qidong6655", "12345678", null);
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var apps = await client.ListApplications(authingErrorBox: authingErrorBox);
 
             Assert.NotNull(apps);
         }
@@ -243,7 +258,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             await client.LoginByUsername("qidong5566", "12345678", null);
 
-            var result = await client.IsUserExists("qidong5566", null, null, null);
+            var result = await client.IsUserExists("qidong556", null, null, null);
 
             Assert.True(result);
         }
@@ -267,7 +282,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             await client.LoginByUsername("qidong5566", "12345678", null);
 
-            var result = await client.isPasswordValid("12345678");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.isPasswordValid("1",authingErrorBox);
 
             Assert.False(result.Message == "");
         }
@@ -278,7 +295,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var client = authenticationClient;
             var result = await client.LoginByUsername("qidong5566", "12345678", null);
 
-            var message = await client.ResetPasswordByFirstLoginToken(client.AccessToken, "3866364");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var message = await client.ResetPasswordByFirstLoginToken(client.AccessToken, "3866364",authingErrorBox);
 
             Assert.True(message.Code == 200);
         }
@@ -289,7 +308,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var client = authenticationClient;
             var result = await client.LoginByUsername("qidong5566", "12345678", null);
 
-            var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "12345678", "3866364");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "12345678", "3866364", authingErrorBox);
 
             Assert.True(message.Code == 200);
         }
