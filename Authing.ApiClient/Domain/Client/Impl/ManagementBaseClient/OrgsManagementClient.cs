@@ -305,5 +305,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 param.ConvertJson(), contenttype: ContentType.JSON);
             return res;
         }
+
+        public async Task<CommonResponse<T>> SetPartMentCustomData<T>(string nodeid, string key, object value)
+        {
+            var param = new SetCustomDataParam()
+            {
+                _namespace = "", list = new List<Dic>(){new Dic() { key = key, value = value }}, targetIdentifier = nodeid,
+                targetType = TargetType.DEPARTMENT
+            };
+            var res = await client.RequestCustomDataWithTokenV3<T>("api/v3/set-custom-data",
+                param.ConvertJson(), contenttype: ContentType.JSON);
+            return res;
+        }
     }
 }
