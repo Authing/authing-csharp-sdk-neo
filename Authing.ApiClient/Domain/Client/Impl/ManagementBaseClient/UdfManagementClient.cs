@@ -4,6 +4,8 @@ using Authing.ApiClient.Domain.Utils;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -33,16 +35,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="dataType">数据类型，目前共支持五种数据类型。STRING 为字符串、NUMBER 为数字、DATETIME 为日期、BOOLEAN 为 boolean 值、OBJECT 为对象。</param>
         /// <param name="label">字段 Label，一般是一个 Human Readable 字符串。</param>
         /// <returns></returns>
-        public async Task<UserDefinedField> Set(
-            UdfTargetType type,
-            string key,
-            UdfDataType dataType,
-            string label)
+        public async Task<UserDefinedField> Set(UdfTargetType type,
+                                                string key,
+                                                UdfDataType dataType,
+                                                string label,
+                                                AuthingErrorBox authingErrorBox = null)
         {
             var param = new SetUdfParam(type, key, dataType, label);
 
             var res = await client.Post<SetUdfResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -52,12 +54,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="type">自定义字段目标类型， USER 表示用户、ROLE 表示角色。</param>
         /// <param name="key">字段 key</param>
         /// <returns></returns>
-        public async Task<CommonMessage> Remove(UdfTargetType type, string key)
+        public async Task<CommonMessage> Remove(UdfTargetType type, string key,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RemoveUdfParam(type, key);
 
             var res = await client.Post<RemoveUdfResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -66,12 +68,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="type">自定义字段目标类型， USER 表示用户、ROLE 表示角色。</param>
         /// <returns></returns>
-        public async Task<IEnumerable<UserDefinedField>> List(UdfTargetType type)
+        public async Task<IEnumerable<UserDefinedField>> List(UdfTargetType type,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdfParam(type);
 
             var res = await client.Post<UdfResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -81,11 +83,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="targetType">自定义字段目标类型， USER 表示用户、ROLE 表示角色。</param>
         /// <param name="targetId"> 自定义字段目标类型的主键</param>
         /// <returns></returns>
-        public async Task<IEnumerable<ResUdv>> ListUdv(UdfTargetType targetType, string targetId)
+        public async Task<IEnumerable<ResUdv>> ListUdv(UdfTargetType targetType, string targetId,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdvParam(targetType, targetId);
 
             var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return AuthingUtils.ConvertUdv(res.Data.Result);
         }
 
@@ -96,7 +99,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="targetId"> 自定义字段目标类型的主键</param>
         /// <param name="udvList">自定义数据键值对集合</param>
         /// <returns></returns>
-        public async Task<IEnumerable<ResUdv>> SetUdvBatch(UdfTargetType udfTargetType, string targetId, KeyValueDictionary udvList)
+        public async Task<IEnumerable<ResUdv>> SetUdvBatch(UdfTargetType udfTargetType, string targetId, KeyValueDictionary udvList,AuthingErrorBox authingErrorBox=null)
         {
             var _udvList = new List<UserDefinedDataInput>();
             udvList.ToList().ForEach(udv => _udvList.Add(new UserDefinedDataInput(udv.Key)
@@ -111,7 +114,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(res, authingErrorBox);
             return AuthingUtils.ConvertUdv(res.Data.Result);
         }
     }

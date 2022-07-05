@@ -19,7 +19,7 @@ namespace Authing.ApiClient.Domain.Utils
             Page = 1,
         };
 
-        public static IDictionary<string, object> GetPayloadByToken(string token,string pubKey,string secret,JWKS jwks=null)
+        public static IDictionary<string, object> GetPayloadByToken(string token, string pubKey, string secret, JWKS jwks = null)
         {
             List<string> tokenList = token.Split('.').ToList();
 
@@ -30,12 +30,12 @@ namespace Authing.ApiClient.Domain.Utils
             {
                 if (headerDic["alg"].ToString() == "HS256")
                 {
-                    checkResult= EncryptHelper.HMAcCheck(token, secret);
+                    checkResult = EncryptHelper.HMAcCheck(token, secret);
                 }
                 else
                 {
                     string xmlPublickey = EncryptHelper.GetPublickeyFromJWKS(jwks);
-                   checkResult= EncryptHelper.RSACheckWithXMLPublicKey(token, xmlPublickey);
+                    checkResult = EncryptHelper.RSACheckWithXMLPublicKey(token, xmlPublickey);
                 }
             }
 
@@ -111,6 +111,33 @@ namespace Authing.ApiClient.Domain.Utils
             // });
             var resStr = String.Join("", resAtt.Select(p => strAtt[rd.Next(0, 35)]).ToArray());
             return resStr;
+        }
+
+        /// <summary>
+        /// 拼接处理 query 参数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string CreateQueryParams<T>(T obj)
+        {
+            string url = "";
+            string json = JsonConvert.SerializeObject(obj);
+
+            List<KeyValuePair<string, string>> dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(json).ToList();
+
+            for (int i = 0; i < dic.Count; i++)
+            {
+                if (dic[i].Value == null)
+                {
+                    continue;
+                }
+
+                string tail = dic.Count > i + 1 ? "&" : "";
+
+                url += $"{dic[i].Key}={dic[i].Value}{tail}";
+            }
+            return url;
         }
     }
 }

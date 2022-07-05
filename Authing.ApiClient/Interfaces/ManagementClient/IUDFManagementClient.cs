@@ -1,6 +1,7 @@
 ﻿using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Udf;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +20,8 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="dataType">数据类型，目前共支持五种数据类型。STRING 为字符串、NUMBER 为数字、DATETIME 为日期、BOOLEAN 为 boolean 值、OBJECT 为对象。</param>
         /// <param name="label">字段 Label，一般是一个 Human Readable 字符串。</param>
         /// <returns></returns>
-        Task<UserDefinedField> Set(
-                UdfTargetType type,
-                string key,
-                UdfDataType dataType,
-                string label);
+        Task<UserDefinedField> Set(UdfTargetType type, string key, UdfDataType dataType, string label,
+                                   AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 删除自定义字段
@@ -31,14 +29,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="type">自定义字段目标类型， USER 表示用户、ROLE 表示角色。</param>
         /// <param name="key">字段 key</param>
         /// <returns></returns>
-        Task<CommonMessage> Remove(UdfTargetType type, string key);
+        Task<CommonMessage> Remove(UdfTargetType type, string key, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取自定义字段列表
         /// </summary>
         /// <param name="type">自定义字段目标类型， USER 表示用户、ROLE 表示角色。</param>
         /// <returns></returns>
-        Task<IEnumerable<UserDefinedField>> List(UdfTargetType type);
+        Task<IEnumerable<UserDefinedField>> List(UdfTargetType type, AuthingErrorBox authingErrorBox = null);
 
 
         /// <summary>
@@ -47,7 +45,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="targetType">自定义字段目标类型， USER 表示用户、ROLE 表示角色。</param>
         /// <param name="targetId"> 自定义字段目标类型的主键</param>
         /// <returns></returns>
-        Task<IEnumerable<ResUdv>> ListUdv(UdfTargetType targetType, string targetId);
+        Task<IEnumerable<ResUdv>> ListUdv(UdfTargetType targetType, string targetId, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 批量添加自定义数据
@@ -56,6 +54,6 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="targetId"> 自定义字段目标类型的主键</param>
         /// <param name="udvList">自定义数据键值对集合</param>
         /// <returns></returns>
-        Task<IEnumerable<ResUdv>> SetUdvBatch(UdfTargetType udfTargetType, string targetId, KeyValueDictionary udvList);
+        Task<IEnumerable<ResUdv>> SetUdvBatch(UdfTargetType udfTargetType, string targetId, KeyValueDictionary udvList, AuthingErrorBox authingErrorBox = null);
     }
 }

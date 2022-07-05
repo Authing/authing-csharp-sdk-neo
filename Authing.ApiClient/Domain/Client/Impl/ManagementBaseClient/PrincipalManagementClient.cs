@@ -31,7 +31,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         /// <summary>
-        /// TODO:补全注释
+        /// 进行主体认证
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="info"></param>

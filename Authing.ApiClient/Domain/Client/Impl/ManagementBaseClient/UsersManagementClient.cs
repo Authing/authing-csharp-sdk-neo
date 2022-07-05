@@ -18,6 +18,8 @@ using Authing.ApiClient.Domain.Utils;
 using System.Linq;
 using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Extensions;
+using Authing.Library.Domain.Model.Exceptions;
+using Authing.Library.Domain.Client.Impl;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -34,9 +36,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userInfo">用户信息</param>
         /// <returns></returns>
-        public async Task<User> Create(
-            CreateUserInput userInfo,
-            CreateUserOption createUserOption = null)
+        public async Task<User> Create(CreateUserInput userInfo,
+                                       CreateUserOption createUserOption = null,
+                                       AuthingErrorBox authingErrorBox = null)
         {
             userInfo.Password = EncryptHelper.RsaEncryptWithPublic(userInfo.Password, client.PublicKey);
             var param = new CreateUserParam(userInfo)
@@ -47,6 +49,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<CreateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -56,9 +59,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="updates">更新信息</param>
         /// <returns></returns>
-        public async Task<User> Update(
-            string userId,
-            UpdateUserInput updates)
+        public async Task<User> Update(string userId,
+                                       UpdateUserInput updates,
+                                       AuthingErrorBox authingErrorBox = null)
         {
             //updates.Password = client.Encrypt(updates.Password);
             var param = new UpdateUserParam(updates)
@@ -68,6 +71,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -77,9 +81,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="withCustomData">是否带用户自定义数据</param>
         /// <returns></returns>
-        public async Task<User> Detail(
-                string userId,
-                bool withCustomData = false)
+        public async Task<User> Detail(string userId,
+                                       bool withCustomData = false,
+                                       AuthingErrorBox authingErrorBox = null)
         {
             if (withCustomData)
             {
@@ -93,6 +97,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new UserParam() { Id = userId };
             await client.GetAccessToken().ConfigureAwait(false);
             var res = await client.Post<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -101,11 +106,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<CommonMessage> Delete(
-            string userId)
+        public async Task<CommonMessage> Delete(string userId,
+                                                AuthingErrorBox authingErrorBox = null)
         {
             var param = new DeleteUserParam(userId);
             var res = await client.Post<DeleteUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -114,12 +120,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userIds">用户 ID 列表，多个 ID 以英文逗号分隔</param>
         /// <returns></returns>
-        public async Task<CommonMessage> DeleteMany(
-            IEnumerable<string> userIds)
+        public async Task<CommonMessage> DeleteMany(IEnumerable<string> userIds,
+                                                    AuthingErrorBox authingErrorBox = null)
         {
             var param = new DeleteUsersParam(userIds);
 
             var res = await client.Post<DeleteUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -128,15 +135,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userIds">用户 ID 列表</param>
         /// <returns></returns>
-        public async Task<IEnumerable<User>> Batch(
-            IEnumerable<string> userIds,
-            BatchFetchUserTypes batchFetchUserType = BatchFetchUserTypes.id)
+        public async Task<IEnumerable<User>> Batch(IEnumerable<string> userIds,
+                                                   BatchFetchUserTypes batchFetchUserType = BatchFetchUserTypes.id,
+                                                   AuthingErrorBox authingErrorBox = null)
         {
             var param = new UserBatchParam(userIds)
             {
                 Type = batchFetchUserType.ToString()
             };
             var res = await client.Post<UserBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -146,9 +154,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="page">当前页数，默认为 1</param>
         /// <param name="limit">每页最大数量，默认为 10</param>
         /// <returns></returns>
-        public async Task<PaginatedUsers> List(
-            int page = 1,
-            int limit = 10)
+        public async Task<PaginatedUsers> List(int page = 1,
+                                               int limit = 10,
+                                               AuthingErrorBox authingErrorBox = null)
         {
             var param = new UsersParam()
             {
@@ -157,6 +165,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<UsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -166,9 +175,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="page">当前页数，默认为 1</param>
         /// <param name="limit">每页最大数量，默认为 10</param>
         /// <returns></returns>
-        public async Task<PaginatedUsers> ListArchivedUsers(
-            int page = 1,
-            int limit = 10)
+        public async Task<PaginatedUsers> ListArchivedUsers(int page = 1,
+                                                            int limit = 10,
+                                                            AuthingErrorBox authingErrorBox = null)
         {
             var param = new ArchivedUsersParam()
             {
@@ -176,6 +185,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
             };
             var res = await client.Post<ArchivedUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -184,7 +194,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="options">选项</param>
         /// <returns></returns>
-        public async Task<bool?> Exists(ExistsOption options)
+        public async Task<bool?> Exists(ExistsOption options, AuthingErrorBox authingErrorBox = null)
         {
             var param = new IsUserExistsParam()
             {
@@ -194,6 +204,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ExternalId = options.ExternalId
             };
             var res = await client.Post<IsUserExistsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -202,7 +213,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="FindUserOption">选项</param>
         /// <returns></returns>
-        public async Task<User> Find(FindUserOption options)
+        public async Task<User> Find(FindUserOption options, AuthingErrorBox authingErrorBox = null)
         {
             var param = new FindUserParam()
             {
@@ -213,6 +224,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<FindUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -222,9 +234,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="query">关键字</param>
         /// <param name="SearchOption">选项</param>
         /// <returns></returns>
-        public async Task<PaginatedUsers> Search(
-            string query,
-            SearchOption option = null)
+        public async Task<PaginatedUsers> Search(string query,
+                                                 SearchOption option = null,
+                                                 AuthingErrorBox authingErrorBox = null)
         {
             if (option == null)
             {
@@ -241,6 +253,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             await client.GetAccessToken().ConfigureAwait(false);
             var res = await client.Post<SearchUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -249,11 +262,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<RefreshToken> RefreshToken(string userId)
+        public async Task<RefreshToken> RefreshToken(string userId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new RefreshTokenParam() { Id = userId };
 
             var res = await client.Post<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -262,11 +276,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<PaginatedGroups> ListGroups(string userId)
+        public async Task<PaginatedGroups> ListGroups(string userId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new GetUserGroupsParam(userId);
 
             var res = await client.Post<GetUserGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result.Groups;
         }
 
@@ -276,9 +291,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="group">分组 ID</param>
         /// <returns></returns>
-        public async Task<CommonMessage> AddGroup(
-            string userId,
-            string group)
+        public async Task<CommonMessage> AddGroup(string userId,
+                                                  string group,
+                                                  AuthingErrorBox authingErrorBox = null)
         {
             var param = new AddUserToGroupParam(new string[] { userId })
             {
@@ -286,6 +301,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -295,9 +311,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="group">分组 ID</param>
         /// <returns></returns>
-        public async Task<CommonMessage> RemoveGroup(
-            string userId,
-            string group)
+        public async Task<CommonMessage> RemoveGroup(string userId,
+                                                     string group,
+                                                     AuthingErrorBox authingErrorBox = null)
         {
             var param = new RemoveUserFromGroupParam(new string[] { userId })
             {
@@ -305,6 +321,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -313,9 +330,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<PaginatedRoles> ListRoles(
-            string userId,
-            string _namespace = null)
+        public async Task<PaginatedRoles> ListRoles(string userId,
+                                                    string _namespace = null,
+                                                    AuthingErrorBox authingErrorBox = null)
         {
             var param = new GetUserRolesParam(userId)
             {
@@ -323,6 +340,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             await client.GetAccessToken().ConfigureAwait(false);
             var res = await client.Post<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             var user = res.Data.Result;
             if (user == null)
             {
@@ -337,10 +355,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="roles">用户角色 Code 列表</param>
         /// <returns></returns>
-        public async Task<CommonMessage> AddRoles(
-            string userId,
-            IEnumerable<string> roles,
-            string _namespace = null)
+        public async Task<CommonMessage> AddRoles(string userId,
+                                                  IEnumerable<string> roles,
+                                                  string _namespace = null,
+                                                  AuthingErrorBox authingErrorBox = null)
         {
             var param = new AssignRoleParam()
             {
@@ -350,6 +368,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -359,10 +378,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="roles">用户角色 Code 列表</param>
         /// <returns></returns>
-        public async Task<CommonMessage> RemoveRoles(
-            string userId,
-            IEnumerable<string> roles,
-            string _namespace = null)
+        public async Task<CommonMessage> RemoveRoles(string userId,
+                                                     IEnumerable<string> roles,
+                                                     string _namespace = null,
+                                                     AuthingErrorBox authingErrorBox = null)
         {
             var param = new RevokeRoleParam()
             {
@@ -372,6 +391,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             await client.GetAccessToken().ConfigureAwait(false);
             var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -380,9 +400,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<PaginatedOrgsAndNodes> ListOrgs(string userId)
+        public async Task<PaginatedOrgsAndNodes> ListOrgs(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.RequestCustomDataWithToken<IEnumerable<IEnumerable<OrgAndNode>>>($"api/v2/users/{userId}/orgs", method: System.Net.Http.HttpMethod.Get,contenttype: ContentType.JSON).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<IEnumerable<IEnumerable<OrgAndNode>>>($"api/v2/users/{userId}/orgs", method: System.Net.Http.HttpMethod.Get, contenttype: ContentType.JSON).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             //var res = await client.Get<ListOrgsResponse>($"api/v2/users/{userId}/orgs", new GraphQLRequest()).ConfigureAwait(false);
             if (res.Code == 200)
             {
@@ -409,10 +430,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<PaginatedDepartments> ListDepartment(string userId)
+        public async Task<PaginatedDepartments> ListDepartment(string userId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new GetUserDepartmentsParam(userId);
             var res = await client.Post<GetUserDepartmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             var user = res.Data.Result;
             if (user == null)
             {
@@ -428,10 +450,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="_namespace">资源分组</param>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(
-            string userId,
-            string _namespace,
-            ListAuthorizedResourcesOption option = null)
+        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string userId,
+                                                                                string _namespace,
+                                                                                ListAuthorizedResourcesOption option = null,
+                                                                                AuthingErrorBox authingErrorBox = null)
         {
             var param = new ListUserAuthorizedResourcesParam(userId)
             {
@@ -442,6 +464,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 param.ResourceType = option.ResourceType.ToString().ToUpper();
             }
             var res = await client.Post<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             var user = res.Data.Result;
             if (user == null)
             {
@@ -456,10 +479,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId)
+        public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new UdvParam(UdfTargetType.USER, userId);
             var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
         }
 
@@ -468,7 +492,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds)
+        public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds, AuthingErrorBox authingErrorBox = null)
         {
             if (userIds.Length < 1)
             {
@@ -476,6 +500,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
             var param = new UdfValueBatchParam(UdfTargetType.USER, userIds);
             var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
             foreach (var item in res.Data.Result)
             {
@@ -490,7 +515,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="data">数据</param>
         /// <returns></returns>
-        public async Task<IEnumerable<UserDefinedData>> SetUdfValue(string userId, KeyValueDictionary data)
+        public async Task<IEnumerable<UserDefinedData>> SetUdfValue(string userId, KeyValueDictionary data, AuthingErrorBox authingErrorBox = null)
         {
             if (data.Count() < 1)
             {
@@ -504,6 +529,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 }),
             };
             var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -512,7 +538,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="setUdfValueBatchInput"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput)
+        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null)
         {
             if (setUdfValueBatchInput.Length < 1)
             {
@@ -533,6 +559,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.USER, param);
             var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -542,10 +569,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<CommonMessage> RemoveUdfValue(string userId, string key)
+        public async Task<CommonMessage> RemoveUdfValue(string userId, string key, AuthingErrorBox authingErrorBox = null)
         {
             var param = new RemoveUdvParam(UdfTargetType.USER, userId, key);
             var res = await client.Post<SetUdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
 
@@ -556,9 +584,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="roleCode">角色 Code</param>
         /// <param name="_namespace">权限分组 ID</param>
         /// <returns></returns>
-        public async Task<bool> hasRole(string userId, string roleCode, string _namespace = null)
+        public async Task<bool> hasRole(string userId, string roleCode, string _namespace = null, AuthingErrorBox authingErrorBox = null)
         {
-            var roleList = await ListRoles(userId, _namespace).ConfigureAwait(false);
+            var roleList = await ListRoles(userId, _namespace, authingErrorBox).ConfigureAwait(false);
 
             if (roleList.TotalCount < 1)
             {
@@ -577,15 +605,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="roleCode">角色 Code</param>
         /// <param name="_namespace">权限分组 ID</param>
         /// <returns></returns>
-        public async Task<CommonMessage> Kick(IEnumerable<string> userIds)
+        public async Task<CommonMessage> Kick(IEnumerable<string> userIds, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/kick", 
+            var result = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/kick",
                 new Dictionary<string, object>
                 {
                     { nameof(userIds), userIds }
-                }.ConvertJson(),contenttype: ContentType.JSON).ConfigureAwait(false);
-            
-            return new CommonMessage(){Code =result.Code,Message = result.Message};
+                }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
+            return new CommonMessage() { Code = result.Code, Message = result.Message };
             //await client.Host.AppendPathSegment("api/v2/users/kick").WithHeaders(client.GetAuthHeaders()).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(new
             //{
             //    userIds
@@ -604,14 +632,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="logoutParam">选项</param>
         /// <returns></returns>
-        public async Task<CommonMessage> Logout(LogoutParam logoutParam)
+        public async Task<CommonMessage> Logout(LogoutParam logoutParam, AuthingErrorBox authingErrorBox = null)
         {
             if (logoutParam.UserId == null)
             {
                 throw new Exception("请传入 options.userId，内容为要下线的用户 ID");
             }
 
-            await client.Get<CommonMessage>("logout", new ExpnadAllRequest().CreateRequest()).ConfigureAwait(false);
+            var result = await client.Get<CommonMessage>("logout", new ExpnadAllRequest().CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return new CommonMessage
             {
                 Code = 200,
@@ -626,10 +655,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="appId">应用 ID</param>
         /// <param name="devicdId">选项</param>
         /// <returns></returns>
-        public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
+        public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null,AuthingErrorBox authingErrorBox=null)
         {
             var query = $"?userId={userId}";
-            if (appId != null) {
+            if (appId != null)
+            {
                 query += $"&appId={appId}";
             }
             if (devicdId != null)
@@ -637,6 +667,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 query += $"&devicdId={devicdId}";
             }
             var res = await client.Get<CheckLoginStatusRes>($"api/v2/users/login-status{query}", new GraphQLRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
 
@@ -645,7 +676,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="listUserActionsParam">选项</param>
         /// <returns></returns>
-        public async Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null)
+        public async Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null,AuthingErrorBox authingErrorBox=null)
         {
             var query = "";
             if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("ExcludeNonAppRecords") != null)
@@ -689,6 +720,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 query += $"&end={listUserActionsParam.End}";
             }
             var res = await client.Get<ListUserActionsResObject>("api/v2/analysis/user-action", new GraphQLRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             if (res.Data.Data.TotalCount == 0)
             {
                 var resEmpty = new ListUserActionsRealRes()
@@ -726,10 +758,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="sendFirstLoginVerifyEmailParam">选项</param>
         /// <returns></returns>
-        public async Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam)
+        public async Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam,AuthingErrorBox authingErrorBox=null)
         {
             var param = sendFirstLoginVerifyEmailParam;
             var res = await client.Post<SendFirstLoginVerifyEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
 
@@ -738,7 +771,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userInfos">用户信息列表</param>
         /// <returns></returns>
-        public async Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos)
+        public async Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos,AuthingErrorBox authingErrorBox=null)
         {
             if (userInfos.Count() > 100)
             {
@@ -755,9 +788,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     item.Gender = "U";
                 }
             }
-            var res = await client.PostRaw<CreateUsersRes>("api/v2/users/create/batch", new Dictionary<string,object>() {
+            var res = await client.PostRaw<CreateUsersRes>("api/v2/users/create/batch", new Dictionary<string, object>() {
                 { "users", userInfos }
             }).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
 
@@ -766,9 +800,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<User> GetUserTenants(string userId)
+        public async Task<User> GetUserTenants(string userId,AuthingErrorBox authingErrorBox=null)
         {
             var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
 
@@ -777,7 +812,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        public async Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option)
+        public async Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option,AuthingErrorBox authingErrorBox=null)
         {
             var body = new Dictionary<string, object>() {
                 { "userId", option.UserId },
@@ -785,10 +820,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "isSocial", option.IsSocial },
                 { "identifier", option.Identifier },
             };
-            if (option.Type != null) {
+            if (option.Type != null)
+            {
                 body.Add("type", option.Type);
             }
             var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
 
@@ -797,7 +834,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        public async Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option)
+        public async Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option,AuthingErrorBox authingErrorBox=null)
         {
             var body = new Dictionary<string, object>() {
                 { "userId", option.UserId },
@@ -809,6 +846,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 body.Add("type", option.Type);
             }
             var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body).ConfigureAwait(false);
+            ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
     }

@@ -2,6 +2,8 @@
 using Authing.ApiClient.Domain.Model.Management.Policies;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             this.client = client;
         }
-       
-        public async Task<PaginatedPolicies> List(int page = 1, int limit = 10, string nameSpace = null)
+
+        public async Task<PaginatedPolicies> List(int page = 1, int limit = 10, string nameSpace = null, AuthingErrorBox authingErrorBox = null)
         {
             PoliciesParam param = new PoliciesParam()
             {
@@ -29,11 +31,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var result = await client.Request<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result; ;
         }
 
-        public async Task<PaginatedPolicies> List(PoliciesParam param)
+        public async Task<PaginatedPolicies> List(PoliciesParam param, AuthingErrorBox authingErrorBox = null)
         {
             if (param == null)
             {
@@ -49,10 +51,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
 
             var result = await client.Request<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<Policy> Create(string code, List<PolicyStatementInput> statements, string description = null, string nameSpace = null)
+        public async Task<Policy> Create(string code, List<PolicyStatementInput> statements, string description = null, string nameSpace = null, AuthingErrorBox authingErrorBox=null)
         {
             CreatePolicyParam param = new CreatePolicyParam(code, statements)
             {
@@ -61,120 +64,128 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
 
             var result = await client.Request<CreatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<Policy> Detail(string code, string nameSpace = null)
+        public async Task<Policy> Detail(string code, string nameSpace = null, AuthingErrorBox authingErrorBox = null)
         {
-            PolicyParam param = new PolicyParam(code) 
+            PolicyParam param = new PolicyParam(code)
             {
-                Namespace=nameSpace
+                Namespace = nameSpace
             };
 
             var result = await client.Request<PolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<Policy> Update(string code, List<PolicyStatementInput> statements, string description = null, string newCode = null, string nameSpace = null)
+        public async Task<Policy> Update(string code, List<PolicyStatementInput> statements, string description = null, string newCode = null, string nameSpace = null, AuthingErrorBox authingErrorBox = null)
         {
-            UpdatePolicyParam param = new UpdatePolicyParam(code) 
+            UpdatePolicyParam param = new UpdatePolicyParam(code)
             {
-                Statements=statements,
-                Description=description,
-                NewCode=newCode,
-                Namespace=nameSpace
+                Statements = statements,
+                Description = description,
+                NewCode = newCode,
+                Namespace = nameSpace
             };
 
             var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<Policy> Update(UpdatePolicyParam param)
+        public async Task<Policy> Update(UpdatePolicyParam param,AuthingErrorBox authingErrorBox=null)
         {
             var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<CommonMessage> Delete(string code)
+        public async Task<CommonMessage> Delete(string code,AuthingErrorBox authingErrorBox=null)
         {
             DeletePolicyParam param = new DeletePolicyParam(code);
 
             var result = await client.Request<DeletePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<CommonMessage> DeleteMany(List<string> codeList)
+        public async Task<CommonMessage> DeleteMany(List<string> codeList,AuthingErrorBox authingErrorBox=null)
         {
             DeletePoliciesParam param = new DeletePoliciesParam(codeList);
 
             var result = await client.Request<DeletePoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<PaginatedPolicyAssignments> ListAssignments(PolicyAssignmentsParam param)
+        public async Task<PaginatedPolicyAssignments> ListAssignments(PolicyAssignmentsParam param,AuthingErrorBox authingErrorBox=null)
         {
             var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<PaginatedPolicyAssignments> ListAssignments(string code, int page = 1, int limit = 10)
+        public async Task<PaginatedPolicyAssignments> ListAssignments(string code, int page = 1, int limit = 10,AuthingErrorBox authingErrorBox=null)
         {
-            PolicyAssignmentsParam param = new PolicyAssignmentsParam() 
-            { 
-                Code = code, 
+            PolicyAssignmentsParam param = new PolicyAssignmentsParam()
+            {
+                Code = code,
                 Page = page,
-                Limit=limit 
+                Limit = limit
             };
 
             var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<CommonMessage> AddAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null)
+        public async Task<CommonMessage> AddAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
-            AddPolicyAssignmentsParam param = new AddPolicyAssignmentsParam(policies, targetType) 
+            AddPolicyAssignmentsParam param = new AddPolicyAssignmentsParam(policies, targetType)
             {
-                TargetIdentifiers=targetIdentifiers,
-                Namespace=nameSpace
+                TargetIdentifiers = targetIdentifiers,
+                Namespace = nameSpace
             };
 
             var result = await client.Request<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<CommonMessage> RemoveAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null)
+        public async Task<CommonMessage> RemoveAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
             RemovePolicyAssignmentsParam param = new RemovePolicyAssignmentsParam(policies, targetType)
-            { 
-                TargetIdentifiers=targetIdentifiers,
-                Namespace=nameSpace
+            {
+                TargetIdentifiers = targetIdentifiers,
+                Namespace = nameSpace
             };
 
             var result = await client.Request<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<CommonMessage> DisableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null)
+        public async Task<CommonMessage> DisableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
             DisableAssignmentParam param = new DisableAssignmentParam(policy, targetType)
             {
-                TargetIdentifier=targetIdentifier,
-                NameSpace=nameSpace
+                TargetIdentifier = targetIdentifier,
+                NameSpace = nameSpace
             };
 
             var result = await client.Request<DisableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
 
-        public async Task<CommonMessage> EnableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null)
+        public async Task<CommonMessage> EnableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
             EnableAssignmentParam param = new EnableAssignmentParam(policy, targetType, targetIdentifier);
 
             var result = await client.Request<EnableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
     }

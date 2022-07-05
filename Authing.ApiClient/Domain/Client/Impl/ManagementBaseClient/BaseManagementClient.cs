@@ -113,7 +113,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Request<TResponse>(body, headers).ConfigureAwait(false);
         }
 
-        [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
         {
             var headers = new Dictionary<string, string>();
@@ -125,7 +124,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
-        [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
@@ -137,7 +135,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Get<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
-        [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
@@ -149,7 +146,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Delete<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
-        [Obsolete("已过时, 不建议使用")]
         public async Task<GraphQLResponse<TResponse>> Put<TResponse>(string api, Dictionary<string, string> body)
         {
             var headers = new Dictionary<string, string>();
@@ -161,7 +157,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await Put<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
-        [Obsolete("已过时, 不建议使用")]
+
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, Dictionary<string, object> dic)
         {
             var headers = new Dictionary<string, string>();
@@ -173,7 +169,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return await PostRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
         }
 
-        [Obsolete("已过时, 不建议使用")]
+
         public async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, Dictionary<string, object> dic)
         {
             var headers = new Dictionary<string, string>();

@@ -22,6 +22,7 @@ using Authing.ApiClient.Interfaces.AuthenticationClient;
 using System.Text;
 using Authing.Library.Domain.Utils;
 using Authing.Library.Domain.Model;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -87,12 +88,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     var payLoadDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(header[1])));
                     if (payLoadDic.ContainsKey("iss"))
                     {
-                        jwks =  client.SendRequest<string, JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json", HttpType.Get,"", null).Result;
+                        jwks = client.SendRequest<string, JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json", HttpType.Get, "", null).Result;
                     }
                 }
             }
 
-            var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken, PublicKey, Secret,jwks);
+            var tokenInfo = AuthingUtils.GetPayloadByToken(AccessToken, PublicKey, Secret, jwks);
             var userDataString = tokenInfo.ContainsKey("data") ? tokenInfo["data"] : "";
             var userData = JsonConvert.DeserializeObject<UserData>(userDataString.ToString() ?? "");
             var userId = tokenInfo.ContainsKey("sub") ? tokenInfo["sub"].ToString() : userData.Id;
@@ -162,7 +163,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<User> RegisterByEmail(string email,
                                                 string password,
                                                 RegisterProfile profile = null,
-                                                RegisterAndLoginOptions registerAndLoginOptions = null)
+                                                RegisterAndLoginOptions registerAndLoginOptions = null,
+                                                AuthingErrorBox authingErrorBox = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -187,8 +189,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
-            var res = await Request<RegisterByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
 
+            var res = await Request<RegisterByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -226,7 +233,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<User> RegisterByUsername(string username,
                                                    string password,
                                                    RegisterProfile profile = null,
-                                                   RegisterAndLoginOptions registerAndLoginOptions = null)
+                                                   RegisterAndLoginOptions registerAndLoginOptions = null,
+                                                   AuthingErrorBox authingErrorBox = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -252,8 +260,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
+            authingErrorBox?.Clear();
             var res = await Request<RegisterByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -269,7 +281,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="generateToken">自动生成 token</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        /// TODO: 下个大版本弃用
+        [Obsolete("此方法已弃用")]
         public async Task<User> RegisterByPhoneCode(string phone,
                                                     string code,
                                                     string password = null,
@@ -306,7 +318,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                                                     string code,
                                                     string password = null,
                                                     RegisterProfile profile = null,
-                                                    RegisterAndLoginOptions registerAndLoginOptions = null)
+                                                    RegisterAndLoginOptions registerAndLoginOptions = null,
+                                                    AuthingErrorBox authingErrorBox = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -333,8 +346,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
+            authingErrorBox?.Clear();
             var res = await Request<RegisterByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
-
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -345,10 +362,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="password">密码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>CheckPasswordStrengthResult</returns>
-        public async Task<CheckPasswordStrengthResult> CheckPasswordStrength(string password)
+        public async Task<CheckPasswordStrengthResult> CheckPasswordStrength(string password, AuthingErrorBox authingErrorBox = null)
         {
             var param = new CheckPasswordStrengthParam(password);
+            authingErrorBox?.Clear();
+
             var res = await Request<CheckPasswordStrengthResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -359,12 +382,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// TODO: 破坏性更新
-        public async Task<CommonMessage> SendSmsCode(string phone)
+        public async Task<CommonMessage> SendSmsCode(string phone, AuthingErrorBox authingErrorBox = null)
         {
+            authingErrorBox?.Clear();
+
             var res = await RequestCustomDataWithOutToken<CommonMessage>("api/v2/sms/send", new Dictionary<string, object>
             {
                 {nameof(phone), phone }
             }.ConvertJson()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
 
             CommonMessage ms = new CommonMessage()
             {
@@ -403,7 +432,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>User</returns>
         public async Task<User> LoginByEmail(string email,
                                              string password,
-                                             RegisterAndLoginOptions registerAndLoginOptions = null)
+                                             RegisterAndLoginOptions registerAndLoginOptions = null,
+                                             AuthingErrorBox authingErrorBox = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -428,7 +458,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
+            authingErrorBox?.Clear();
+
             var res = await Request<LoginByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -471,7 +507,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>User</returns>
         public async Task<User> LoginByUsername(string username,
                                                 string password,
-                                                RegisterAndLoginOptions registerAndLoginOptions = null)
+                                                RegisterAndLoginOptions registerAndLoginOptions = null,
+                                                AuthingErrorBox authingErrorBox = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -496,10 +533,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
+            authingErrorBox?.Clear();
+
             var res = await Request<LoginByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
+
 
         /// <summary>
         /// 通过手机号验证码登录
@@ -536,7 +580,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>User</returns>
         public async Task<User> LoginByPhoneCode(string phone,
                                                  string code,
-                                                 RegisterAndLoginOptions registerAndLoginOptions = null)
+                                                 RegisterAndLoginOptions registerAndLoginOptions = null,
+                                                 AuthingErrorBox authingErrorBox = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -560,7 +605,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
+            authingErrorBox?.Clear();
+
             var res = await Request<LoginByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -599,11 +650,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="phone">手机号</param>
         /// <param name="password">密码</param>
         /// <param name="registerAndLoginOptions">登录信息</param>
+        /// <param name="authingErrorBox">错误信息</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
         public async Task<User> LoginByPhonePassword(string phone,
                                                      string password,
-                                                     RegisterAndLoginOptions registerAndLoginOptions = null)
+                                                     RegisterAndLoginOptions registerAndLoginOptions = null,
+                                                     AuthingErrorBox authingErrorBox = null)
         {
             // 序列化 registerAndLoginOptions.CustomData Params
             string ParamsString = null;
@@ -628,7 +681,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 }
             );
 
+            authingErrorBox?.Clear();
+
             var res = await Request<LoginByPhonePasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
+
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -643,7 +703,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>User</returns>
         public async Task<User> LoginBySubAccount(string account,
                                                   string password,
-                                                  RegisterAndLoginOptions registerAndLoginOptions = null)
+                                                  RegisterAndLoginOptions registerAndLoginOptions = null,
+                                                  AuthingErrorBox authingErrorBox = null)
         {
             var param = new LoginBySubAccountParam(account, EncryptHelper.RsaEncryptWithPublic(password, PublicKey))
             {
@@ -651,7 +712,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 ClientIp = registerAndLoginOptions?.ClientIp,
             };
 
+            authingErrorBox?.Clear();
+
             var res = await Request<LoginBySubAccountResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -662,13 +729,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="accessToken">用户的 access token</param>
         /// <param name="cancellationToken"></param>
         /// <returns>JWTTokenStatus</returns>
-        public async Task<JWTTokenStatus> CheckLoginStatus(string accessToken = null)
+        public async Task<JWTTokenStatus> CheckLoginStatus(string accessToken = null,
+                                                           AuthingErrorBox authingErrorBox = null)
         {
             var param = new CheckLoginStatusParam()
             {
                 Token = accessToken ?? AccessToken
             };
+
+            authingErrorBox?.Clear();
+
             var res = await Request<CheckLoginStatusResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -680,10 +755,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns>CommonMessage</returns>
         public async Task<CommonMessage> SendEmail(string email,
-                                                   EmailScene scene)
+                                                   EmailScene scene,
+                                                   AuthingErrorBox authingErrorBox = null)
         {
             var param = new SendEmailParam(email, scene);
+
+            authingErrorBox?.Clear();
+
             var res = await Request<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -697,13 +780,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>CommonMessage</returns>
         public async Task<CommonMessage> ResetPasswordByPhoneCode(string phone,
                                                                   string code,
-                                                                  string newPassword)
+                                                                  string newPassword,
+                                                                  AuthingErrorBox authingErrorBox = null)
         {
             var param = new ResetPasswordParam(code, EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey))
             {
                 Phone = phone,
             };
+
+            authingErrorBox?.Clear();
+
             var res = await Request<ResetPasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -717,13 +808,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>CommonMessage</returns>
         public async Task<CommonMessage> ResetPasswordByEmailCode(string email,
                                                                   string code,
-                                                                  string newPassword)
+                                                                  string newPassword,
+                                                                  AuthingErrorBox authingErrorBox = null)
         {
             var param = new ResetPasswordParam(code, EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey))
             {
                 Email = email,
             };
+
+            authingErrorBox?.Clear();
+
             var res = await Request<ResetPasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -733,11 +832,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="token">首次登录的Token</param>
         /// <param name="password">修改后的密码</param>
         /// <returns></returns>
-        public async Task<CommonMessage> ResetPasswordByFirstLoginToken(string token, string password)
+        public async Task<CommonMessage> ResetPasswordByFirstLoginToken(string token,
+                                                                        string password,
+                                                                        AuthingErrorBox authingErrorBox = null)
         {
             var param = new ResetPasswordByFirstLoginTokenParam(token, password);
 
+            authingErrorBox?.Clear();
+
             var result = await Request<ResetPasswordByFirstLoginTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
 
             return result.Data.Result;
         }
@@ -749,12 +856,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="oldPassword">旧密码</param>
         /// <param name="newPassword">新密码</param>
         /// <returns></returns>
-        public async Task<CommonMessage> ResetPasswordByForceResetToken(string token, string oldPassword, string newPassword)
+        public async Task<CommonMessage> ResetPasswordByForceResetToken(string token,
+                                                                        string oldPassword,
+                                                                        string newPassword,
+                                                                        AuthingErrorBox authingErrorBox = null)
         {
             var param = new ResetPasswordByForceResetTokenParam(token, oldPassword, newPassword);
 
-            var result = await Request<ResetPasswordByForceResetTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
 
+            var result = await Request<ResetPasswordByForceResetTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
             return result.Data.Result;
         }
 
@@ -764,10 +879,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="updates">更新项</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> UpdateProfile(UpdateUserInput updates)
+        public async Task<User> UpdateProfile(UpdateUserInput updates,
+                                              AuthingErrorBox authingErrorBox = null)
         {
             var param = new UpdateUserParam(updates);
+
+            authingErrorBox?.Clear();
             var res = await Request<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -779,14 +901,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="oldPassword">旧密码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> UpdatePassword(string newPassword, string oldPassword)
+        public async Task<User> UpdatePassword(string newPassword,
+                                               string oldPassword,
+                                               AuthingErrorBox authingErrorBox = null)
         {
             CheckLoggedIn();
             var param = new UpdatePasswordParam(EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey))
             {
                 OldPassword = EncryptHelper.RsaEncryptWithPublic(oldPassword, PublicKey),
             };
+            authingErrorBox?.Clear();
             var res = await Request<UpdatePasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -800,8 +929,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="oldPhoneCode">旧手机号的验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> UpdatePhone(string phone, string phoneCode, string oldPhone = null,
-                                            string oldPhoneCode = null)
+        public async Task<User> UpdatePhone(string phone,
+                                            string phoneCode,
+                                            string oldPhone = null,
+                                            string oldPhoneCode = null,
+                                            AuthingErrorBox authingErrorBox = null)
         {
             CheckLoggedIn();
             var param = new UpdatePhoneParam(phone, phoneCode)
@@ -809,7 +941,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 OldPhone = oldPhone,
                 OldPhoneCode = oldPhoneCode,
             };
+
+            authingErrorBox?.Clear();
             var res = await Request<UpdatePhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -823,8 +961,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="oldEmailCode">旧邮箱的验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> UpdateEmail(string email, string emailCode, string oldEmail = null,
-                                            string oldEmailCode = null)
+        public async Task<User> UpdateEmail(string email,
+                                            string emailCode,
+                                            string oldEmail = null,
+                                            string oldEmailCode = null,
+                                            AuthingErrorBox authingErrorBox = null)
         {
             CheckLoggedIn();
             var param = new UpdateEmailParam(email, emailCode)
@@ -832,7 +973,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 OldEmail = oldEmail,
                 OldEmailCode = oldEmailCode,
             };
+
+            authingErrorBox?.Clear();
             var res = await Request<UpdateEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -842,10 +989,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>RefreshToken</returns>
-        public async Task<RefreshToken> RefreshToken()
+        public async Task<RefreshToken> RefreshToken(AuthingErrorBox authingErrorBox = null)
         {
             var param = new RefreshTokenParam() { };
+
+            authingErrorBox?.Clear();
             var res = await Request<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             SetToken(res.Data.Result.Token);
             return res.Data.Result;
         }
@@ -857,13 +1010,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="secondaryUserToken">子账号</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
-        public async Task<CommonMessage> LinkAccount(string primaryUserToken, string secondaryUserToken)
+        public async Task<CommonMessage> LinkAccount(string primaryUserToken,
+                                                     string secondaryUserToken,
+                                                     AuthingErrorBox authingErrorBox = null)
         {
+            authingErrorBox?.Clear();
+
             var res = await Post<CommonMessage>("api/v2/users/link", new Dictionary<string, string>
             {
                 {nameof(primaryUserToken),primaryUserToken },
                 { nameof(secondaryUserToken),secondaryUserToken}
             }).ConfigureAwait(false);
+
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
 
             return res.Data;
         }
@@ -875,13 +1037,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="provider">提供者</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
-        public async Task<CommonMessage> UnLinkAccount(string primaryUserToken, ProviderType provider)
+        public async Task<CommonMessage> UnLinkAccount(string primaryUserToken,
+                                                       ProviderType provider,
+                                                       AuthingErrorBox authingErrorBox = null)
         {
+            authingErrorBox?.Clear();
+
             var res = await Post<CommonMessage>("api/v2/users/unlink", new Dictionary<string, string>
             {
                 {nameof(primaryUserToken),primaryUserToken },
                 { nameof(provider),JsonConvert.SerializeObject( provider)}
             }).ConfigureAwait(false);
+
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
 
             return res.Data;
         }
@@ -893,10 +1064,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="phoneCode">手机号验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> BindPhone(string phone, string phoneCode)
+        public async Task<User> BindPhone(string phone, string phoneCode, AuthingErrorBox authingErrorBox = null)
         {
             var param = new BindPhoneParam(phone, phoneCode);
+
+            authingErrorBox?.Clear();
+
             var res = await Request<BindPhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -906,10 +1084,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> UnbindPhone()
+        public async Task<User> UnbindPhone(AuthingErrorBox authingErrorBox = null)
         {
             var param = new UnbindPhoneParam();
+
+            authingErrorBox?.Clear();
             var res = await Request<UnbindPhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             User = res.Data.Result;
             return res.Data.Result;
         }
@@ -921,10 +1105,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="emailCode">邮箱验证码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> BindEmail(string email, string emailCode)
+        public async Task<User> BindEmail(string email, string emailCode, AuthingErrorBox authingErrorBox = null)
         {
             var param = new BindEmailParam(email, emailCode);
+
+            authingErrorBox?.Clear();
             var res = await Request<BindEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -933,10 +1123,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> UnbindEmail()
+        public async Task<User> UnbindEmail(AuthingErrorBox authingErrorBox = null)
         {
             var param = new UnbindEmailParam();
+
+            authingErrorBox?.Clear();
             var res = await Request<UnbindEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -945,10 +1141,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> GetCurrentUser()
+        public async Task<User> GetCurrentUser(AuthingErrorBox authingErrorBox = null)
         {
             var param = new UserParam();
             var res = await Request<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
+
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -957,10 +1159,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="accessToken">AccessToken</param>
         /// <returns></returns>
-        public async Task<User> GetCurrentUser(string accessToken)
+        public async Task<User> GetCurrentUser(string accessToken, AuthingErrorBox authingErrorBox = null)
         {
             var param = new UserParam();
+
             var res = await Request<UserResponse>(param.CreateRequest(), accessToken).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             user = res.Data.Result;
             return res.Data.Result;
         }
@@ -970,9 +1178,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<CommonMessage> Logout()
+        public async Task<CommonMessage> Logout(AuthingErrorBox authingErrorBox = null)
         {
             var res = await Get<CommonMessage>($"api/v2/logout/?app_id={Options.AppId}", null).ConfigureAwait(false);
+
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
 
             if (res.Code == 200)
             {
@@ -987,44 +1201,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             AccessToken = null;
         }
 
-        private object GetHeaders()
-        {
-            const string SDK_VERSION = "4.2.4.7";
-            // 如果用户需要则取得 headers 之后进行合并
-            var res = new
-            {
-                x_authing_sdk_version = $"csharp:{SDK_VERSION}",
-                x_authing_userpool_id = Options.UserPoolId ?? "",
-                x_authing_request_from = Options.RequestFrom ?? "sdk",
-                x_authing_app_id = Options.AppId ?? "",
-                x_authing_lang = Options.Lang.ToString().ToUpper(),
-                // Authorization = $"Bearer {AccessToken}",
-            };
-            if (String.IsNullOrEmpty(AccessToken))
-            {
-                return new
-                {
-                    x_authing_sdk_version = $"csharp:{SDK_VERSION}",
-                    x_authing_userpool_id = Options.UserPoolId ?? "",
-                    x_authing_request_from = Options.RequestFrom ?? "sdk",
-                    x_authing_app_id = Options.AppId ?? "",
-                    x_authing_lang = Options.Lang.ToString().ToUpper(),
-                    Authorization = $"Bearer {AccessToken}",
-                };
-            }
-            return res;
-        }
-
         /// <summary>
         /// 获取用户自定义字段的值列表
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>自定义字段列表</returns>
-        public async Task<IEnumerable<ResUdv>> ListUdv()
+        public async Task<IEnumerable<ResUdv>> ListUdv(AuthingErrorBox authingErrorBox = null)
         {
             CheckLoggedIn();
             var param = new UdvParam(UdfTargetType.USER, User.Id);
             var res = await Request<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
             return resUdv;
         }
@@ -1036,11 +1227,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="value">自定义字段的 value</param>
         /// <param name="cancellationToken"></param>
         /// <returns>用户自定义字段</returns>
-        public async Task<IEnumerable<ResUdv>> SetUdv(string key, object value)
+        public async Task<IEnumerable<ResUdv>> SetUdv(string key, object value, AuthingErrorBox authingErrorBox = null)
         {
             CheckLoggedIn();
             var param = new SetUdvParam(UdfTargetType.USER, User.Id, key, value.ConvertJson());
             var res = await Request<SetUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
             return resUdv;
         }
@@ -1051,7 +1247,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="key">自定义字段的 key </param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ResUdv>> RemoveUdv(string key)
+        public async Task<IEnumerable<ResUdv>> RemoveUdv(string key, AuthingErrorBox authingErrorBox = null)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -1061,6 +1257,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             CheckLoggedIn();
             var param = new RemoveUdvParam(UdfTargetType.USER, User.Id, key);
             var res = await Request<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
             return resUdv;
         }
@@ -1069,9 +1270,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// 用户是否进行登录，登录返回用户信息，没有登录则抛出错误
         /// </summary>
         /// <returns>用户 ID</returns>
-        public async Task<string> CheckLoggedIn(CancellationToken cancellationToken)
+        public async Task<string> CheckLoggedIn(CancellationToken cancellationToken, AuthingErrorBox authingErrorBox = null)
         {
-            var user = await GetCurrentUser().ConfigureAwait(false);
+            var user = await GetCurrentUser(authingErrorBox).ConfigureAwait(false);
             if (user == null)
             {
                 throw new AuthingException("请先登录");
@@ -1084,10 +1285,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// 组织列表
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <returns>HttpResponseMessage</returns>
-        public async Task<ListOrgsResult> ListOrgs()
+        /// <returns>组织列表</returns>
+        public async Task<ListOrgsResult> ListOrgs(AuthingErrorBox authingErrorBox = null)
         {
             var res = await Get<object>("api/v2/users/me/orgs", null).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             string resultString = res.Data.ToString();
 
             var orgs = JsonConvert.DeserializeObject<List<List<Model.Management.Orgs.Node>>>(resultString);
@@ -1097,11 +1303,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return listOrgsResult;
         }
 
-        public async Task<PaginatedDepartments> ListDepartment()
+        public async Task<PaginatedDepartments> ListDepartment(AuthingErrorBox authingErrorBox = null)
         {
             var userId = CheckLoggedIn();
             var param = new GetUserDepartmentsParam(userId);
             var res = await Request<GetUserDepartmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             var user = res.Data.Result;
             if (user == null)
             {
@@ -1140,7 +1351,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="password">AD 用户密码</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
-        public async Task<User> LoginByAd(string username, string password)
+        public async Task<User> LoginByAd(string username,
+                                          string password,
+                                          AuthingErrorBox authingErrorBox = null)
         {
             var firstLevelDomain = new Uri(Host).Host;
 
@@ -1149,7 +1362,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 {"username",username },
                 { "password",password}
             }).ConfigureAwait(false);
-
+            authingErrorBox?.Clear();
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
             SetCurrentUser(result.Data);
             return result.Data;
         }
@@ -1163,11 +1380,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>自定义字段列表</returns>
-        public async Task<List<KeyValuePair<string, object>>> GetUdfValue()
+        public async Task<List<KeyValuePair<string, object>>> GetUdfValue(AuthingErrorBox authingErrorBox = null)
         {
             var userId = CheckLoggedIn();
             var param = new UdvParam(UdfTargetType.USER, userId);
             var res = await Request<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             var list = res.Data.Result;
             var resUdvList = AuthingUtils.ConverUdvToKeyValuePair(list);
             return resUdvList;
@@ -1179,7 +1401,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="data">自定义字段相关数据</param>
         /// <param name="cancellationToken"></param>
         /// <returns>自定义字段列表</returns>
-        public async Task<List<KeyValuePair<string, object>>> SetUdfValue(KeyValueDictionary data)
+        public async Task<List<KeyValuePair<string, object>>> SetUdfValue(KeyValueDictionary data, AuthingErrorBox authingErrorBox = null)
         {
             if (data.Count == 0)
             {
@@ -1201,6 +1423,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 UdvList = input,
             };
             var res = await Request<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             var list = res.Data.Result;
             var resUdvList = AuthingUtils.ConverUdvToKeyValuePair(list);
             return resUdvList;
@@ -1212,12 +1439,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="key">自定义字段的 key</param>
         /// <param name="cancellationToken"></param>
         /// <returns>是否成功</returns>
-        public async Task<bool> RemoveUdfValue(string key)
+        public async Task<bool> RemoveUdfValue(string key, AuthingErrorBox authingErrorBox = null)
         {
             var userId = CheckLoggedIn();
             var param = new RemoveUdvParam(UdfTargetType.USER, userId, key);
             var res = await Request<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
-            return true;
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
+            return res.Data.Result != null || res.Data.Result.Count() > 0;
         }
 
         /// <summary>
@@ -1225,9 +1457,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>SecurityLevel</returns>
-        public async Task<SecurityLevel> GetSecurityLevel()
+        public async Task<SecurityLevel> GetSecurityLevel(AuthingErrorBox authingErrorBox = null)
         {
             var result = await Get<SecurityLevel>("api/v2/users/me/security-level", null).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
             return result.Data;
         }
 
@@ -1238,7 +1475,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="_resourceType">资源类型</param>
         /// <param name="cancellationToken"></param>
         /// <returns>PaginatedAuthorizedResources</returns>
-        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string nameSpace, ResourceType? _resourceType)
+        public async Task<PaginatedAuthorizedResources> ListAuthorizedResources(string nameSpace,
+                                                                                ResourceType? _resourceType,
+                                                                                AuthingErrorBox authingErrorBox = null)
         {
             var userId = CheckLoggedIn();
             var param = new ListUserAuthorizedResourcesParam(userId)
@@ -1247,6 +1486,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 ResourceType = _resourceType?.ToString()?.ToUpper(),
             };
             var res = await Request<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             var user = res.Data.Result;
             if (user == null)
             {
@@ -1292,11 +1536,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="cancellationToken"></param>
         /// <returns>RefreshToken</returns>
         // INFO: 这个 RefreshToken 与上面的 RefreshToken 是有区别的
-        public async Task<RefreshToken> RefreshToken(string accessToken)
+        public async Task<RefreshToken> RefreshToken(string accessToken, AuthingErrorBox authingErrorBox = null)
         {
             CheckLoggedIn();
             var param = new RefreshTokenParam();
             var res = await Request<RefreshTokenResponse>(param.CreateRequest(), accessToken).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             return res.Data.Result;
         }
 
@@ -1307,7 +1556,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="_namespace">命名空间</param>
         /// <param name="cancellationToken"></param>
         /// <returns>bool</returns>
-        public async Task<bool> HasRole(string roleCode, string _namespace = "")
+        public async Task<bool> HasRole(string roleCode, string _namespace = "", AuthingErrorBox authingErrorBox = null)
         {
             var userId = CheckLoggedIn();
             var param = new GetUserRolesParam(userId)
@@ -1315,10 +1564,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 Namespace = _namespace,
             };
             var res = await Request<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (res.Errors != null)
+            {
+                authingErrorBox?.Set(res.Errors);
+            }
             if (res.Data.Result == null)
             {
                 return false;
             }
+
             var user = res.Data.Result;
 
             var roleList = user.Roles?.List;
@@ -1337,11 +1592,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="_params">列表参数</param>
         /// <param name="cancellationToken"></param>
         /// <returns>HttpResponseMessage</returns>
-        public async Task<ListApplicationsResponse> ListApplications(ListParams _params = null)
+        public async Task<ListApplicationsResponse> ListApplications(ListParams _params = null, AuthingErrorBox authingErrorBox = null)
         {
             _params ??= new ListParams();
             var result = await Get<ListApplicationsResponse>($"api/v2/users/me/applications/allowed/?page={_params.Page}&limit={_params.Limit}", null).ConfigureAwait(false);
-
+            authingErrorBox?.Clear();
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
             return result.Data;
         }
 
@@ -1358,7 +1617,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="phone">电话号码</param>
         /// <param name="externalId">ExternalID</param>
         /// <returns></returns>
-        public async Task<bool?> IsUserExists(string userName = null, string email = null, string phone = null, string externalId = null)
+        public async Task<bool?> IsUserExists(string userName = null,
+                                              string email = null,
+                                              string phone = null,
+                                              string externalId = null,
+                                              AuthingErrorBox authingErrorBox = null)
         {
             IsUserExistsParam isUserExistsParam = new IsUserExistsParam()
             {
@@ -1369,7 +1632,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             };
 
             var result = await Request<IsUserExistsResponse>(isUserExistsParam.CreateRequest()).ConfigureAwait(false);
-
+            authingErrorBox?.Clear();
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
             return result.Data.Result;
         }
 
@@ -1378,9 +1645,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="password">需要检测的密码</param>
         /// <returns></returns>
-        public async Task<CommonMessage> isPasswordValid(string password)
+        public async Task<CommonMessage> isPasswordValid(string password, AuthingErrorBox authingErrorBox = null)
         {
             var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
+
             return result.Data;
         }
 
@@ -1392,7 +1665,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="lang"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        public async Task<User> LoginByWechat(string code, string country = null, string lang = null, string state = null)
+        public async Task<User> LoginByWechat(string code,
+                                              string country = null,
+                                              string lang = null,
+                                              string state = null,
+                                              AuthingErrorBox authingErrorBox = null)
         {
             string url = $"code={code}";
             if (!string.IsNullOrEmpty(country))
@@ -1413,6 +1690,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
 
             var result = await Get<User>($"connection/social/wechat:mobile/{UserPoolId}/callback?{url}", null).ConfigureAwait(false);
+            authingErrorBox?.Clear();
+            if (result.Errors != null)
+            {
+                authingErrorBox?.Set(result.Errors);
+            }
             return result.Data;
         }
 
@@ -1420,7 +1702,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// 获取Token
         /// </summary>
         /// <returns></returns>
-        public async Task<string> GetToken()
+        public async Task<string> GetToken(AuthingErrorBox authingErrorBox = null)
         {
             if (string.IsNullOrEmpty(AccessToken))
             {

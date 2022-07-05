@@ -35,7 +35,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 
             string oidcurl = authenticationClient.BuildAuthorizeUrl(new OidcOption()
             { RedirectUri = "https://www.baidu.com", Scope = "openid profile email phone address offline_access" });
-            var res = await authenticationClient.GetAccessTokenByCode("KIoMvME1MHDvKiM5u0ETvGvMptUDo6ywXbMoI5Zi4Bx");
+            var res = await authenticationClient.GetAccessTokenByCode("gBJEyRK68s2044gctV5scCUvC_M2GrnTeKUHkLAoBGK");
             string oidcout = authenticationClient.BuildLogoutUrl(new LogoutParams()
             { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken, Expert = true });
 
