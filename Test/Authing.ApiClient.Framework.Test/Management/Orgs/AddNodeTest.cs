@@ -1,6 +1,7 @@
 ﻿using Authing.ApiClient.Domain.Model.Management.Orgs;
 using Authing.Library.Domain.Model.Exceptions;
 using System.Linq;
+using Authing.Library.Domain.Model.V3Model;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
@@ -18,7 +19,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 
             AddNodeParam param = new AddNodeParam(org.Nodes.First().OrgId, org.Nodes.First().Id, "测试添加的子节点2");
 
-            var nodeResult = await client.Orgs.AddNode(org.Nodes.First().OrgId, param,authingErrorBox);
+            var nodeResult = await client.Orgs.AddNode(org.Nodes.First().OrgId, param, authingErrorBox);
 
             Assert.NotNull(nodeResult);
         }

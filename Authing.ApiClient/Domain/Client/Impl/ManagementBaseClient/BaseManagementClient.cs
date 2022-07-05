@@ -10,6 +10,7 @@ using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.V3Model;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -199,6 +200,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             ContentType contenttype = ContentType.DEFAULT)
         {
             return await RequestCustomData<TResponse>(url, serializedata, headers, method, contenttype).ConfigureAwait(false);
+        }
+
+        public async Task<CommonResponse<TResponse>> RequestCustomDataWithTokenV3<TResponse>(string url,
+            string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
+            ContentType contenttype = ContentType.DEFAULT)
+        {
+            headers ??= new Dictionary<string, string>();
+            var token = await GetAccessToken().ConfigureAwait(false);
+            headers["Authorization"] = token;
+            headers["x-authing-userpool-id"] = UserPoolId;
+            headers["x-authing-request-from"] = type;
+            headers["x-authing-sdk-version"] = version;
+            var result = await client.RequestCustomData<CommonResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            return result;
         }
 
         public object GetAuthHeaders()
