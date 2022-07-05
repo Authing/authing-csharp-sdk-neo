@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Authing.Library.Domain.Model.V3Model;
 
 namespace Authing.ApiClient.Interfaces.ManagementClient
 {
@@ -203,5 +204,14 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="resourceType">可选，资源类型，默认会返回所有有权限的资源</param>
         /// <returns></returns>
         Task<PaginatedAuthorizedResources> ListAuthorizedResourcesByNodeCode(string orgId,string code, string nameSpace, ResourceType resourceType = default,AuthingErrorBox authingErrorBox=null);
-     }
+
+        /// <summary>
+        /// 设置部门自定义字段值
+        /// </summary>
+        /// <param name="nodeid">部门 ID</param>
+        /// <param name="key">字段名</param>
+        /// <param name="value">字段值</param>
+        /// <returns></returns>
+        Task<CommonResponse<T>> SetPartMentCustomData<T>(string nodeid, string key, object value);
+    }
 }

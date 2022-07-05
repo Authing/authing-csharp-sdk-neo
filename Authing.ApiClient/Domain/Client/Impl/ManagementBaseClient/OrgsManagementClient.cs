@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Extensions;
 using Authing.Library.Domain.Model.Exceptions;
 using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.V3Model;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -291,6 +292,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.Post<UpdateNodeResponse>(updateNodeParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
+        }
+
+        public async Task<CommonResponse<T>> SetPartMentCustomData<T>(string nodeid, string key, object value)
+        {
+            var param = new SetCustomDataParam()
+            {
+                _namespace = "", list = new List<Dic>(){new Dic() { key = key, value = value }}, targetIdentifier = nodeid,
+                targetType = TargetType.DEPARTMENT
+            };
+            var res = await client.RequestCustomDataWithTokenV3<T>("api/v3/set-custom-data",
+                param.ConvertJson(), contenttype: ContentType.JSON);
+            return res;
         }
     }
 }
