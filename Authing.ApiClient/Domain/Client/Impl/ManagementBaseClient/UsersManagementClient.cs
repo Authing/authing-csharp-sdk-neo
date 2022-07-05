@@ -210,7 +210,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         /// <summary>
-        /// 通过手机号、游戏、用户名查找用户
+        /// 通过手机号、邮箱、用户名查找用户
         /// </summary>
         /// <param name="FindUserOption">选项</param>
         /// <returns></returns>
