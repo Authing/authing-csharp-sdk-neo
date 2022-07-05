@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Authing.Library.Domain.Model.Exceptions;
+using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
 {
@@ -11,7 +12,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             await client.SendSmsCode("13348926753");
 
-            var result = await client.ResetPasswordByPhoneCode("13348926753", "9438", "12345678");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.ResetPasswordByPhoneCode("13348926753", "9438", "12345678",authingErrorBox);
 
             Assert.True(result.Code == 200);
         }
@@ -21,9 +24,11 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            await client.SendEmail("635877990@qq.com", Types.EmailScene.RESET_PASSWORD);
+            AuthingErrorBox authingErrorBox=new AuthingErrorBox();
 
-            var result = await client.ResetPasswordByEmailCode("635877990@qq.com", "7956", "12345678");
+           var msg= await client.SendEmail("635877990qq.com", Types.EmailScene.RESET_PASSWORD,authingErrorBox);
+
+            var result = await client.ResetPasswordByEmailCode("635877990@qq.com", "7956", "12345678",authingErrorBox);
 
             Assert.True(result.Code == 200);
         }

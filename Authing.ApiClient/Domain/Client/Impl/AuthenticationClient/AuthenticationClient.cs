@@ -719,8 +719,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                User = res.Data.Result;
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -767,7 +772,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+            if (res.Data != null)
+            {
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -916,8 +925,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                User = res.Data.Result;
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -948,8 +962,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                User = res.Data.Result;
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -980,8 +999,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            if (res.Data != null)
+            {
+                User = res.Data.Result;
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1075,8 +1098,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            if (res.Data != null)
+            {
+                User = res.Data.Result;
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1094,8 +1121,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                User = res.Data.Result;
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1115,7 +1147,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1133,7 +1170,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1151,7 +1193,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+
+            if (res.Data != null)
+            {
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1169,8 +1216,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            user = res.Data.Result;
-            return res.Data.Result;
+
+            if (res != null)
+            {
+                user = res.Data.Result;
+                return res.Data.Result;
+            }
+            return null;
         }
 
         /// <summary>

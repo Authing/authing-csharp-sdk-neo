@@ -11,7 +11,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByEmail("qidong5566@outlook.com", "3866364", null);
+            AuthingErrorBox errorBox = new AuthingErrorBox();
+
+            var result = await client.LoginByEmail("qidong5566@outlook.com", "123132131", null,errorBox);
             Assert.NotNull(result);
         }
 
@@ -40,7 +42,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             var res = await client.SendSmsCode("13348926753");
 
-            var result = await client.LoginByPhoneCode("13348926753", "2421", null);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.LoginByPhoneCode("13348926753", "2421", null,authingErrorBox);
 
             Assert.NotNull(result);
         }
@@ -50,9 +54,11 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByUsername("qidong5566", "12345678", null);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var loginStatus = await client.CheckLoginStatus(client.AccessToken);
+            var result = await client.LoginByUsername("qidong5566", "12345678", null,authingErrorBox);
+
+            var loginStatus = await client.CheckLoginStatus(client.AccessToken,authingErrorBox);
 
             Assert.True(loginStatus.Status);
 
