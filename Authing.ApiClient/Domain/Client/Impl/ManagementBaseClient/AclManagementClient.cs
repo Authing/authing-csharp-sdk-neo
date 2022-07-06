@@ -39,7 +39,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="name">权限分组名</param>
         /// <param name="description">可选，权限分组描述</param>
         /// <returns></returns>
-        public async Task<NameSpace> CreateNamespace(string code, string name, string description,AuthingErrorBox authingErrorBox=null)
+        public async Task<NameSpace> CreateNamespace(string code, string name, string description, AuthingErrorBox authingErrorBox = null)
         {
             //var res = await client.Post<NameSpace>($"api/v2/resource-namespace/{client.UserPoolId}",
             //    new Dictionary<string, string>()
@@ -57,6 +57,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 }.ConvertJson()).ConfigureAwait(false);
 
             ErrorHelper.LoadError(res, authingErrorBox);
+
             return res.Data ?? null;
         }
 
@@ -66,7 +67,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="page">页码，默认为 1</param>
         /// <param name="limit">每页个数，默认为 10</param>
         /// <returns></returns>
-        public async Task<Namespaces> ListNamespaces(int page = 1, int limit = 10,AuthingErrorBox authingErrorBox=null)
+        public async Task<Namespaces> ListNamespaces(int page = 1, int limit = 10, AuthingErrorBox authingErrorBox = null)
         {
             var res = await client.RequestCustomDataWithToken<Namespaces>(
                 $"api/v2/resource-namespace/{client.UserPoolId}?limit={limit}&page={page}"
@@ -86,7 +87,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// updates.description<String> 可选，权限分组描述。
         /// </param>
         /// <returns></returns>
-        public async Task<NameSpace> UpdateNamespace(string nameSpaceId, UpdateNamespaceParam updateNamespaceParam,AuthingErrorBox authingErrorBox=null)
+        public async Task<NameSpace> UpdateNamespace(string nameSpaceId, UpdateNamespaceParam updateNamespaceParam, AuthingErrorBox authingErrorBox = null)
         {
             if (updateNamespaceParam == null) throw new ArgumentNullException(nameof(updateNamespaceParam));
 
@@ -115,7 +116,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="code">权限分组 ID</param>
         /// <returns></returns>
-        public async Task<int> DeleteNamespace(int code,AuthingErrorBox authingErrorBox=null)
+        public async Task<CommonMessage> DeleteNamespace(int code, AuthingErrorBox authingErrorBox = null)
         {
             //var res = await client.Delete<object>($"api/v2/resource-namespace/{client.UserPoolId}/{code}",
             //    new GraphQLRequest());
@@ -123,7 +124,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 $"api/v2/resource-namespace/{client.UserPoolId}/{code}", method: HttpMethod.Delete).ConfigureAwait(false);
 
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Code;
+
+            CommonMessage commonMessage = new CommonMessage()
+            {
+                Code = res.Code,
+                Message=res.Message
+            };
+
+            return commonMessage;
         }
 
         /// <summary>
@@ -137,7 +145,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// 分页，获取第几页，默认从 1 开始
         /// </param>
         /// <returns></returns>
-        public async Task<ListResourcesRes> ListResources(ResourceQueryFilter resourceQueryFilter,AuthingErrorBox authingErrorBox=null)
+        public async Task<ListResourcesRes> ListResources(ResourceQueryFilter resourceQueryFilter, AuthingErrorBox authingErrorBox = null)
         {
             if (resourceQueryFilter == null) throw new ArgumentNullException(nameof(resourceQueryFilter));
             string endPoint = $"api/v2/resources?";
@@ -158,7 +166,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="resourceQueryFilter">过滤参数类</param>
         /// <returns></returns>
-        public async Task<ListResourcesRes> GetResources(ResourceQueryFilter resourceQueryFilter,AuthingErrorBox authingErrorBox=null)
+        public async Task<ListResourcesRes> GetResources(ResourceQueryFilter resourceQueryFilter, AuthingErrorBox authingErrorBox = null)
         {
             if (resourceQueryFilter == null) throw new ArgumentNullException(nameof(resourceQueryFilter));
             string endPoint = $"api/v2/resources?";
@@ -185,7 +193,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// description 资源描述信息
         /// </param>
         /// <returns></returns>
-        public async Task<Resources> CreateResource(ResourceParam createResourceParam,AuthingErrorBox authingErrorBox=null)
+        public async Task<Resources> CreateResource(ResourceParam createResourceParam, AuthingErrorBox authingErrorBox = null)
         {
             if (createResourceParam == null) throw new ArgumentNullException(nameof(createResourceParam));
 
@@ -234,9 +242,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// 根据资源代码查询资源
         /// </summary>
         /// <param name="code">资源名称</param>
-        /// <param name="nameSpace">权限分组唯一标识符</param>
+        /// <param name="nameSpace">分组 Code</param>
         /// <returns></returns>
-        public async Task<Resources> FindResourceByCode(string code, string nameSpace = "",AuthingErrorBox authingErrorBox=null)
+        public async Task<Resources> FindResourceByCode(string code, string nameSpace = "", AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/resources/by-code/{code}";
             endPoint += string.IsNullOrWhiteSpace(nameSpace) ? "" : $"?namespace={nameSpace}";
@@ -250,7 +258,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="id">资源 ID</param>
         /// <returns></returns>
-        public async Task<Resources> GetResourceById(string id,AuthingErrorBox authingErrorBox=null)
+        public async Task<Resources> GetResourceById(string id, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/resources/detail?id={id}";
             var resut = await client.RequestCustomDataWithToken<Resources>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
@@ -272,7 +280,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///  ResourceAction : Description<String> 描述信息
         /// </param>
         /// <returns></returns>
-        public async Task<Resources> UpdateResource(string code, ResourceParam options,AuthingErrorBox authingErrorBox=null)
+        public async Task<Resources> UpdateResource(string code, ResourceParam options, AuthingErrorBox authingErrorBox = null)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (string.IsNullOrWhiteSpace(options.NameSpace)) throw new ArgumentException($"Parameter {nameof(options.NameSpace)} is request!");
@@ -307,7 +315,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="code">资源标识符</param>
         /// <param name="namespacecode">权限分组 ID</param>
         /// <returns></returns>
-        public async Task<bool> DeleteResource(string code, string namespacecode,AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> DeleteResource(string code, string namespacecode, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/resources/{code}?namespace={namespacecode}";
             //var result = await client.Delete<bool>(endPoint, new GraphQLRequest());
@@ -324,7 +332,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="resource">资源名称，必须为 <resourceType>:<resourceId> 格式或者为 _，如 _，books:123，books:*</param>
         /// <param name="nameSpace">权限分组唯一标识符</param>
         /// <returns></returns>
-        public async Task<CommonMessage> Allow(string userid, string nameSpace, string resource, string action,AuthingErrorBox authingErrorBox=null)
+        public async Task<CommonMessage> Allow(string userid, string nameSpace, string resource, string action, AuthingErrorBox authingErrorBox = null)
         {
             action.CheckParameter();
             resource.CheckParameter();
@@ -351,7 +359,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// options.opts.targetIdentifier. <String> 被授权主体唯一标识
         /// </param>
         /// <returns></returns>
-        public async Task<CommonMessage> RevokeResource(RevokeResourceParams options,AuthingErrorBox authingErrorBox=null)
+        public async Task<CommonMessage> RevokeResource(RevokeResourceParams options, AuthingErrorBox authingErrorBox = null)
         {
             options.Resource.CheckParameter();
             string endPoint = "api/v2/acl/revoke-resource";
@@ -370,7 +378,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="resource">资源名称，必须为 <resourceType>:<resourceId> 格式或者为 _，如 _，books:123，books:*</param>
         /// <param name="namespacecode">权限分组唯一标识符</param>
         /// <returns></returns>
-        public async Task<bool> IsAllowed(string userId, string resource, string action, string namespacecode = "",AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> IsAllowed(string userId, string resource, string action, string namespacecode = "", AuthingErrorBox authingErrorBox = null)
         {
             action.CheckParameter();
             resource.CheckParameter();
@@ -423,7 +431,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// options.targetType<PolicyAssignmentTargetType> 主体类型，可选值为 USER、ROLE、ORG、GROUP，含义为用户、角色、组织机构节点、用户分组
         /// </param>
         /// <returns></returns>
-        public async Task<PaginatedAuthorizedTargets> GetAuthorizedTargets(GetAuthorizedTargetsOptions getAuthorizedTargetsOptions,AuthingErrorBox authingErrorBox=null)
+        public async Task<PaginatedAuthorizedTargets> GetAuthorizedTargets(GetAuthorizedTargetsOptions getAuthorizedTargetsOptions, AuthingErrorBox authingErrorBox = null)
         {
             if (getAuthorizedTargetsOptions.NameSpace == null)
             {
@@ -459,7 +467,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// actions 资源操作对象的名称的集合
         /// </param>
         /// <returns></returns>
-        public async Task<CommonMessage> AuthorizeResource(string namespacecode, string resource, IEnumerable<AuthorizeResourceOpt> authorizeResourceOptions,AuthingErrorBox authingErrorBox=null)
+        public async Task<CommonMessage> AuthorizeResource(string namespacecode, string resource, IEnumerable<AuthorizeResourceOpt> authorizeResourceOptions, AuthingErrorBox authingErrorBox = null)
         {
             resource.CheckParameter();
             var param = new AuthorizeResourceParam()
@@ -473,7 +481,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data.Result ?? null;
         }
 
-        public async Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options,AuthingErrorBox authingErrorBox=null)
+        public async Task<Pagination<ProgrammaticAccessAccount>> ProgrammaticAccessAccountList(ProgrammaticAccessAccountListProps options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}/programmatic-access-accounts?limit=${options.Limit}&page=${options.Page}";
             var res = await client.RequestCustomDataWithToken<Pagination<ProgrammaticAccessAccount>>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
@@ -481,7 +489,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data ?? null;
         }
 
-        public async Task<ProgrammaticAccessAccount> CreateProgrammaticAccessAccount(string appId, CreateProgrammaticAccessAccountParam createProgrammaticAccessAccountParam,AuthingErrorBox authingErrorBox=null)
+        public async Task<ProgrammaticAccessAccount> CreateProgrammaticAccessAccount(string appId, CreateProgrammaticAccessAccountParam createProgrammaticAccessAccountParam, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{appId}/programmatic-access-accounts";
             //var res = await client.Post<ProgrammaticAccessAccount>(endPoint,
@@ -523,7 +531,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data ?? null;
         }
 
-        public async Task<bool> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId,AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> DeleteProgrammaticAccessAccount(string programmaticAccessAccountId, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint =
                 $"v2/applications/programmatic-access-accounts?id={programmaticAccessAccountId}";
@@ -535,7 +543,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Code == 200;
         }
 
-        public async Task<ProgrammaticAccessAccount> EnableProgrammaticAccessAccount(string programmaticAccessAccountId,AuthingErrorBox authingErrorBox=null)
+        public async Task<ProgrammaticAccessAccount> EnableProgrammaticAccessAccount(string programmaticAccessAccountId, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = "v2/applications/programmatic-access-accounts";
             //var result = await client.Patch<ProgrammaticAccessAccount>(endPoint,
@@ -555,7 +563,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data ?? null;
         }
 
-        public async Task<ProgrammaticAccessAccount> DisableProgrammaticAccessAccount(string programmaticAccessAccountId,AuthingErrorBox authingErrorBox=null)
+        public async Task<ProgrammaticAccessAccount> DisableProgrammaticAccessAccount(string programmaticAccessAccountId, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = "v2/applications/programmatic-access-accounts";
             //var result = await client.Post<ProgrammaticAccessAccount>(endPoint,
@@ -574,7 +582,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data ?? null;
         }
 
-        public async Task<ProgrammaticAccessAccount> RefreshProgrammaticAccessAccountSecret(ProgrammaticAccessAccountProps options,AuthingErrorBox authingErrorBox=null)
+        public async Task<ProgrammaticAccessAccount> RefreshProgrammaticAccessAccountSecret(ProgrammaticAccessAccountProps options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/programmatic-access-accounts";
             options.Secret ??= AuthingUtils.GenerateRandomString(32);
@@ -593,7 +601,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result.Data ?? null;
         }
 
-        public async Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options,AuthingErrorBox authingErrorBox=null)
+        public async Task<Pagination<ApplicationAccessPolicies>> GetApplicationAccessPolicies(AppAccessPolicyQueryFilter options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}/authorization/records?limit={options.Limit}&page={options.Page}";
             var result = await client.RequestCustomDataWithToken<Pagination<ApplicationAccessPolicies>>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
@@ -612,7 +620,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// InheritByChildren 是否内联子类
         /// </param>
         /// <returns></returns>
-        public async Task<bool> EnableApplicationAccessPolicy(AppAccessPolicy options,AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> EnableApplicationAccessPolicy(AppAccessPolicy options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}/authorization/enable-effect";
             //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
@@ -634,7 +642,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// InheritByChildren 是否内联子类
         /// </param>
         /// <returns></returns>
-        public async Task<bool> DisableApplicationAccessPolicy(AppAccessPolicy options,AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> DisableApplicationAccessPolicy(AppAccessPolicy options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}/authorization/disable-effect";
             //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
@@ -656,7 +664,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// InheritByChildren 是否内联子类
         /// </param>
         /// <returns></returns>
-        public async Task<bool> DeleteApplicationAccessPolicy(AppAccessPolicy options,AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> DeleteApplicationAccessPolicy(AppAccessPolicy options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}/authorization/revoke";
             //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
@@ -678,7 +686,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// InheritByChildren 是否内联子类
         /// </param>
         /// <returns></returns>
-        public async Task<bool> AllowAccessApplication(AppAccessPolicy options,AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> AllowAccessApplication(AppAccessPolicy options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}/authorization/allow";
             //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
@@ -700,7 +708,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// InheritByChildren 是否内联子类
         /// </param>
         /// <returns></returns>
-        public async Task<bool> DenyAccessApplication(AppAccessPolicy options,AuthingErrorBox authingErrorBox=null)
+        public async Task<bool> DenyAccessApplication(AppAccessPolicy options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}/authorization/deny";
             //var result = await client.PostRaw<RestfulResponse<bool>>(endPoint,options.ConvertJson());
@@ -719,7 +727,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// defaultStrategy 默认策略 取值范围 ALLOW_ALL,DENY_ALL
         /// </param>
         /// <returns></returns>
-        public async Task<Application> UpdateDefaultApplicationAccessPolicy(DefaultAppAccessPolicy options,AuthingErrorBox authingErrorBox=null)
+        public async Task<Application> UpdateDefaultApplicationAccessPolicy(DefaultAppAccessPolicy options, AuthingErrorBox authingErrorBox = null)
         {
             string endPoint = $"api/v2/applications/{options.AppId}";
             //var result = await client.Post<Application>(endPoint,

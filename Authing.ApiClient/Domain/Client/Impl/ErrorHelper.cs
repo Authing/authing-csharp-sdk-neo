@@ -22,6 +22,22 @@ namespace Authing.Library.Domain.Client.Impl
             {
                 authingErrorBox?.Set(response.Errors);
             }
+            else
+            {
+                if (response.Code != 200)
+                {
+                    authingErrorBox?.Set(new GraphQLError[]
+                    { new GraphQLError
+                        {
+                            Message=new GraphQLErrorMessage
+                            {
+                                Code=response.Code,
+                                Message=response.Message
+                            }
+                        }
+                    });
+                }
+            }
         }
     }
 }

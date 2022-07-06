@@ -1,5 +1,6 @@
 ﻿using Authing.ApiClient.Domain.Model.Management;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +13,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Groups
         [Fact]
         public async Task Groups_List()
         {
-            await managementClient.Groups.Create("testgroup", "testgroup");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            await managementClient.Groups.Create("testgroup", "testgroup",authingErrorBox:authingErrorBox);
             var list = await managementClient.Groups.List();
             Assert.NotEmpty(list.List);
             var result = await managementClient.Groups.Delete("testgroup");

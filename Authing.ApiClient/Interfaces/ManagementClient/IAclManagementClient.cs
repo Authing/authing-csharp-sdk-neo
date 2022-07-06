@@ -43,13 +43,13 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="code">权限分组 ID</param>
         /// <returns></returns>
-        Task<int> DeleteNamespace(int code, AuthingErrorBox authingErrorBox = null);
+        Task<CommonMessage> DeleteNamespace(int code, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取资源列表
         /// </summary>
         /// <param name="resourceQueryFilter">过滤参数类
-        /// namespace 权限分组唯一标识符
+        /// namespace 权限分组唯一标识符,分组 Code
         /// type 资源类型，可选值为 DATA、API、MENU、UI、BUTTON
         /// fetchAll 是否拉取全部，true：是 false：否
         /// 每页条目数量，默认是 10

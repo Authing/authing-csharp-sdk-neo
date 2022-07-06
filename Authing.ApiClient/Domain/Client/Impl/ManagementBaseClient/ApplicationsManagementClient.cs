@@ -78,7 +78,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/applications/{appId}", method: HttpMethod.Delete).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return true;
+            return res.Code == 200;
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/resources/{code}?namespace={appId}", method: HttpMethod.Delete).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return true;
+            return res.Code==200;
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -467,7 +467,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         [Obsolete("已过时, 不建议使用")]
@@ -481,7 +481,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -523,7 +523,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(_res, authingErrorBox);
-            return _res.Data.Result.Users;
+            return _res.Data?.Result.Users;
         }
 
         /// <summary>
@@ -546,7 +546,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -569,7 +569,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -595,7 +595,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 throw new Exception("角色不存在");
             }
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
