@@ -44,7 +44,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> Delete(string code,AuthingErrorBox authingErrorBox=null)
@@ -52,7 +52,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new DeleteRoleParam(code);
             var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> Delete(string code,
@@ -65,7 +65,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,AuthingErrorBox authingErrorBox=null)
@@ -73,7 +73,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new DeleteRolesParam(codeList);
             var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -84,7 +84,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Role> Update(string code,string description = null,string newCode = null,AuthingErrorBox authingErrorBox=null)
@@ -96,7 +96,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Role> Update(UpdateRoleOptions updateRoleOptions,AuthingErrorBox authingErrorBox=null)
@@ -109,7 +109,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Role> Detail(string code,AuthingErrorBox authingErrorBox=null)
@@ -117,7 +117,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new RoleParam(code);
             var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Role> Detail(string code,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -128,7 +128,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Role> FindByCode(string code,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -142,7 +142,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new RolesParam() { Page = page, Limit = limit };
             var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedRoles> List(string nameSpace,int page = 1,int limit = 10,AuthingErrorBox authingErrorBox=null)
@@ -155,7 +155,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
                  
@@ -164,7 +164,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new RoleWithUsersParam(code);
             var res = await client.Post<RoleWithUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result.Users;
+            return res.Data?.Result.Users;
         }
 
         public async Task<PaginatedUsers> ListUsers(string code,ListUsersOption listUsersOption,AuthingErrorBox authingErrorBox=null)
@@ -180,7 +180,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
                 var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 ErrorHelper.LoadError(_res, authingErrorBox);
-                return _res.Data.Result.Users;
+                return _res.Data?.Result.Users;
             }
             else
             {
@@ -193,7 +193,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
                 var _res = await client.Post<RoleWithUsersWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 ErrorHelper.LoadError(_res, authingErrorBox);
-                return _res.Data.Result.Users;
+                return _res.Data?.Result.Users;
             }
         }
 
@@ -206,7 +206,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> AddUsers(string code,IEnumerable<string> userIds,string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -219,7 +219,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
       
@@ -232,7 +232,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> RemoveUsers(string code,
@@ -247,7 +247,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace,
             };
             var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedPolicyAssignments> ListPolicies(string code,int page = 1,int limit = 10,AuthingErrorBox authingErrorBox=null)
@@ -261,7 +261,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> AddPolicies(string code,IEnumerable<string> policies,AuthingErrorBox authingErrorBox=null)
@@ -273,7 +273,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.Post<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> RemovePolicies(string code,IEnumerable<string> policies,AuthingErrorBox authingErrorBox=null)
@@ -284,7 +284,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Role> ListAuthorizedResources(string code, string nameSpace, ResourceType resourceType = default,AuthingErrorBox authingErrorBox=null)
@@ -300,7 +300,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 throw new Exception("角色不存在");
             }
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleCode,AuthingErrorBox authingErrorBox=null)
@@ -352,7 +352,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(IEnumerable<SetUdfValueParam> setUdfValueBatchParam,AuthingErrorBox authingErrorBox=null)
@@ -370,7 +370,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var _param = new SetUdfValueBatchParam(UdfTargetType.ROLE, param);
             var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<IEnumerable<UserDefinedData>> RemoveUdfValue(string roleId, string key,AuthingErrorBox authingErrorBox=null)
@@ -378,7 +378,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new RemoveUdvParam(UdfTargetType.ROLE, roleId, key);
             var res = await client.Post<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
     }

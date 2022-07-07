@@ -195,7 +195,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new ChildrenNodesParam(nodeId);
             var res = await client.Post<ChildrenNodesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam = default,AuthingErrorBox authingErrorBox=null)
@@ -203,7 +203,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             nodeByIdWithMembersParam.Id = nodeId;
             var res = await client.Post<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result.Users;
+            return res.Data?.Result.Users;
         }
 
         public async Task<CommonMessage> MoveMembers(string sourceNodeId, string targetNodeId, IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)
@@ -212,7 +212,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.Post<MoveMembersResponse>(moveMembersParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> MoveNode(string orgId, string nodeId, string targetParentId, AuthingErrorBox authingErrorBox=null)
@@ -220,7 +220,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new MoveNodeParam(orgId, nodeId, targetParentId);
             var res = await client.Post<MoveNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedUsers> RemoveMembers(string nodeId, IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)

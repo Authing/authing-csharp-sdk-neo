@@ -178,7 +178,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-userpool-id"] = UserPoolId;
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
-            return await PostRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
+            return await PutRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
         }
 
         public new async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,

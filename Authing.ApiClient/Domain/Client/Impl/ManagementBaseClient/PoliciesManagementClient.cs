@@ -32,7 +32,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result; ;
+            return result.Data?.Result; ;
         }
 
         public async Task<PaginatedPolicies> List(PoliciesParam param, AuthingErrorBox authingErrorBox = null)
@@ -52,7 +52,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<Policy> Create(string code, List<PolicyStatementInput> statements, string description = null, string nameSpace = null, AuthingErrorBox authingErrorBox=null)
@@ -65,7 +65,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<CreatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<Policy> Detail(string code, string nameSpace = null, AuthingErrorBox authingErrorBox = null)
@@ -77,7 +77,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<PolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<Policy> Update(string code, List<PolicyStatementInput> statements, string description = null, string newCode = null, string nameSpace = null, AuthingErrorBox authingErrorBox = null)
@@ -92,14 +92,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<Policy> Update(UpdatePolicyParam param,AuthingErrorBox authingErrorBox=null)
         {
             var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<CommonMessage> Delete(string code,AuthingErrorBox authingErrorBox=null)
@@ -108,7 +108,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<DeletePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<CommonMessage> DeleteMany(List<string> codeList,AuthingErrorBox authingErrorBox=null)
@@ -117,14 +117,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<DeletePoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<PaginatedPolicyAssignments> ListAssignments(PolicyAssignmentsParam param,AuthingErrorBox authingErrorBox=null)
         {
             var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<PaginatedPolicyAssignments> ListAssignments(string code, int page = 1, int limit = 10,AuthingErrorBox authingErrorBox=null)
@@ -138,7 +138,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<CommonMessage> AddAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -151,7 +151,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<CommonMessage> RemoveAssignments(List<string> policies, PolicyAssignmentTargetType targetType, List<string> targetIdentifiers, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -164,7 +164,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<CommonMessage> DisableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -177,7 +177,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<DisableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         public async Task<CommonMessage> EnableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
@@ -186,7 +186,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var result = await client.Request<EnableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
     }
 }

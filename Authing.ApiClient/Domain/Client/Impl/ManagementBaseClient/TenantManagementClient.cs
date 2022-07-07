@@ -348,7 +348,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     { "identifier", identifier }
                 }).ConfigureAwait(false);
                 ErrorHelper.LoadError(res, authingErrorBox);
-                return true;
+                return res.Code==200;
             } catch (Exception)
             {
                 return false;
@@ -371,7 +371,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     { "enabled", option.Enabled }
                 }).ConfigureAwait(false);
                 ErrorHelper.LoadError(res, authingErrorBox);
-                return true;
+                return res.Code==200;
             }
             catch (Exception)
             {
@@ -395,7 +395,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     { "enabled", option.Enabled }
                 }).ConfigureAwait(false);
                 ErrorHelper.LoadError(res, authingErrorBox);
-                return true;
+                return res.Code==200;
             }
             catch (Exception)
             {
