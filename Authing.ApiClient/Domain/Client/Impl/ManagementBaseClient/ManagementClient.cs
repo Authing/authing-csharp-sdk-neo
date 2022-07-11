@@ -113,21 +113,21 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         /// <summary>
-        /// ��������Ƿ�Ϸ�
+        /// 检测密码是否合法
         /// </summary>
-        /// <param name="password">��Ҫ��������</param>
+        /// <param name="password">需要检测的密码</param>
         /// <returns></returns>
         public async Task<CommonMessage> isPasswordValid(string password)
         {
             var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null).ConfigureAwait(false);
             return result.Data;
         }
-		
-		/// <summary>
-        /// �����ʼ�
+
+        /// <summary>
+        /// 发送邮件
         /// </summary>
-        /// <param name="email">�ʼ�</param>
-        /// <param name="scene">����</param>
+        /// <param name="email">邮件</param>
+        /// <param name="scene">场景</param>
         /// <param name="cancellationToken"></param>
         /// <returns>CommonMessage</returns>
         public async Task<CommonMessage> SendEmail(string email,
@@ -139,11 +139,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         /// <summary>
-        /// ��ѯ�û��ĵ�¼״̬
+        /// 查询用户的登录状态
         /// </summary>
-        /// <param name="userId">�û� ID</param>
-        /// <param name="appId">Ӧ�� ID</param>
-        /// <param name="devicdId">ѡ��</param>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="devicdId">选项</param>
         /// <returns></returns>
         public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null)
         {
