@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Authing.Library.Domain.Model.Exceptions;
+using System.Linq;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Roles
@@ -8,14 +9,18 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
         [Fact]
         public async void ListRole_Test()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var client = managementClient;
 
             for (int i = 0; i < 10; i++)
             {
                 string roleCode = i.ToString();
 
-                await client.Roles.Create(roleCode);
+                await client.Roles.Create(roleCode,authingErrorBox:authingErrorBox);
             }
+
+           
 
             var result = await client.Roles.List();
 
@@ -28,14 +33,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             var client = managementClient;
 
             string nameSpace = "613189b38b6c66cac1d211bd";
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             for (int i = 0; i < 10; i++)
             {
                 string roleCode = i.ToString();
 
-                await client.Roles.Create(roleCode, null, null, nameSpace);
+                await client.Roles.Create(roleCode, null, null, nameSpace,authingErrorBox);
             }
 
-            var result = await client.Roles.List(nameSpace);
+            var result = await client.Roles.List(nameSpace,authingErrorBox:authingErrorBox);
 
             Assert.True(result.List.Count() == 10);
         }

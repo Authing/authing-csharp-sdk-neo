@@ -231,7 +231,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RemoveMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result.Users;
+            return res.Data?.Result.Users;
         }
 
         public async Task<Node> RootNode(string orgId,AuthingErrorBox authingErrorBox=null)
@@ -239,7 +239,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new RootNodeParam(orgId);
             var res = await client.Post<RootNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<IEnumerable<Node>> SearchNodes(string keyword,AuthingErrorBox authingErrorBox=null)
@@ -247,7 +247,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new SearchNodesParam(keyword);
             var res = await client.Post<SearchNodesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> SetMainDepartment(string userId, string departmentId,AuthingErrorBox authingErrorBox=null)
@@ -258,7 +258,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<SetMainDepartmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<bool> StartSync(ProviderTypeEnum providerTypeEnum, string adConnectorId = null,AuthingErrorBox authingErrorBox=null)
@@ -290,7 +290,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var res = await client.Post<UpdateNodeResponse>(updateNodeParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
     }
 }

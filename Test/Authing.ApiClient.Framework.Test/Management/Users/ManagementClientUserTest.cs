@@ -1,5 +1,6 @@
 ﻿using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Users;
+using Authing.Library.Domain.Model.Exceptions;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -11,28 +12,32 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         [Fact]
         public async void Users_Create()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Users.Create(new CreateUserInput()
             {
                 Email = "qitaotest@authing.cn",
                 Password = "123456",
-            });
+            },null,authingErrorBox);
             Assert.Equal(result.Email, "qitaotest@authing.cn");
         }
 
         [Fact]
         public async void Users_Update()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
                 Email = "qitaotest@authing.cn"
-            });
+            },authingErrorBox:authingErrorBox);
             Console.WriteLine("user", user);
             Assert.NotNull(user);
             var result = await client.Users.Update(user.Id, new UpdateUserInput()
             {
                 Name = "qitao"
-            });
+            },authingErrorBox:authingErrorBox);
             Console.WriteLine("result", result);
             Assert.Equal(result.Name, "qitao");
         }
@@ -40,27 +45,31 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         [Fact]
         public async void Users_Detail()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
                 Email = "qitaotest@authing.cn"
             });
             Assert.Equal(user.Email, "qitaotest@authing.cn");
-            var result = await client.Users.Detail(user.Id, true);
+            var result = await client.Users.Detail(user.Id, true, authingErrorBox: authingErrorBox);
             Assert.Equal(result.Email, "qitaotest@authing.cn");
         }
 
         [Fact]
         public async void Users_Delete()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest2@authing.cn"
+                Email = "qitaotest@authing.cn"
             });
             Console.WriteLine("user", user);
-            Assert.Equal(user.Email, "qitaotest2@authing.cn");
-            var result = await client.Users.Delete(user.Id);
+            Assert.Equal(user.Email, "qitaotest@authing.cn");
+            var result = await client.Users.Delete(user.Id,authingErrorBox);
             Console.WriteLine("result", result);
             Assert.Equal(result.Code, 200);
         }
@@ -68,21 +77,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         [Fact]
         public async void Users_DeleteMany()
         {
-            var client = managementClient;
-            var user = await client.Users.Find(new FindUserOption()
-            {
-                Email = "qitaotest3@authing.cn"
-            });
-            Console.WriteLine("user", user);
-            Assert.Equal(user.Email, "qitaotest3@authing.cn");
-            var result = await client.Users.DeleteMany(new List<string>() { user.Id });
-            Console.WriteLine("result", result);
-            Assert.Equal(result.Code, 200);
-        }
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-        [Fact]
-        public async void Users_Batch()
-        {
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
@@ -90,7 +86,24 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             });
             Console.WriteLine("user", user);
             Assert.Equal(user.Email, "qitaotest@authing.cn");
-            var result = await client.Users.Batch(new List<string>() { user.Id });
+            var result = await client.Users.DeleteMany(new List<string>() { user.Id },authingErrorBox);
+            Console.WriteLine("result", result);
+            Assert.Equal(result.Code, 200);
+        }
+
+        [Fact]
+        public async void Users_Batch()
+        {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var client = managementClient;
+            var user = await client.Users.Find(new FindUserOption()
+            {
+                Email = "qitaotest@authing.cn"
+            });
+            Console.WriteLine("user", user);
+            Assert.Equal(user.Email, "qitaotest@authing.cn");
+            var result = await client.Users.Batch(new List<string>() { user.Id },authingErrorBox: authingErrorBox);
             Console.WriteLine("result", result);
             Assert.NotEmpty(result);
         }
@@ -107,8 +120,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         [Fact]
         public async void Users_ListArchivedUsers()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var client = managementClient;
-            var result = await client.Users.ListArchivedUsers(1, 10);
+            var result = await client.Users.ListArchivedUsers(1, 10,authingErrorBox);
             Console.WriteLine("result", result);
             Assert.NotEmpty(result.List);
         }
@@ -177,7 +192,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.AddGroup(user.Id, "testgroup_Add");
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.AddGroup(user.Id, "testgroup_Add",authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
@@ -189,7 +207,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.RemoveGroup(user.Id, "testgroup_Add");
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.RemoveGroup(user.Id, "testgroup_Add",authingErrorBox:authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
@@ -201,7 +222,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.ListRoles(user.Id);
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.ListRoles(user.Id,authingErrorBox:authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
@@ -213,7 +237,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.AddRoles(user.Id, new List<string>() { "test" });
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.AddRoles(user.Id, new List<string>() { "test" },authingErrorBox:authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
@@ -225,7 +252,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.RemoveRoles(user.Id, new List<string>() { "test" });
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.RemoveRoles(user.Id, new List<string>() { "test" },authingErrorBox:authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
@@ -237,7 +267,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.ListOrgs(user.Id);
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.ListOrgs(user.Id,authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
@@ -249,7 +282,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.ListDepartment(user.Id);
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.ListDepartment(user.Id,authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
@@ -261,7 +297,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.ListAuthorizedResources(user.Id, "");
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.ListAuthorizedResources(user.Id, "",authingErrorBox:authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
@@ -273,7 +312,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.GetUdfValue(user.Id);
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.GetUdfValue(user.Id,authingErrorBox);
             Assert.NotNull(result.Count);
         }
 
@@ -342,7 +384,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.hasRole(user.Id, "test");
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.hasRole(user.Id, "test",authingErrorBox:authingErrorBox);
             Assert.True(result);
         }
 
@@ -352,9 +397,12 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Phone = "17620671314"
+                Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.Kick(new string[] { user.Id });
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.Kick(new string[] { user.Id },authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
@@ -366,11 +414,14 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
+
+            AuthingErrorBox authingErrorBox=new AuthingErrorBox();
+
             var result = await client.Users.Logout(new LogoutParam()
             {
                 AppId = "6195ebcf5255f3d735ba9063",
                 UserId = user.Id
-            });
+            },authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
@@ -382,7 +433,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.CheckLoginStatus(user.Id);
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.CheckLoginStatus(user.Id,authingErrorBox:authingErrorBox);
             Assert.NotNull(result);
         }
 
@@ -394,7 +448,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.ListUserActions();
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.ListUserActions(authingErrorBox:authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
@@ -406,7 +463,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.SendFirstLoginVerifyEmail(new SendFirstLoginVerifyEmailParam(user.Id, "6195ebcf5255f3d735ba9063"));
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.SendFirstLoginVerifyEmail(new SendFirstLoginVerifyEmailParam(user.Id, "6195ebcf5255f3d735ba9063"),authingErrorBox);
             Assert.Equal(result.Result.Code, 200);
         }
 
@@ -426,7 +486,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         public async void Users_GetUserTenants()
         {
             var client = managementClient;
-            var result = await client.Users.GetUserTenants("61c560fc3e85f6d56bc6aa77");
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await client.Users.GetUserTenants("61c560fc3e85f6d56bc6aa77",authingErrorBox);
             Assert.NotEmpty(result.Tenants);
         }
 

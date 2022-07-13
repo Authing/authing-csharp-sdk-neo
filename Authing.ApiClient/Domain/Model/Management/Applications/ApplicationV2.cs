@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Authing.ApiClient.Domain.Model.Management.Applications;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Authing.Library.Domain.Model.Management.Applications
 {
@@ -48,7 +50,7 @@ namespace Authing.Library.Domain.Model.Management.Applications
         public string Websocket { get; set; }
         public int VerifyCodeLength { get; set; }
         public bool AgreementEnabled { get; set; }
-        public object[] Agreements { get; set; }
+        public List<Agreement> Agreements { get; set; }
         public int PasswordStrength { get; set; }
         public Custompasswordstrength CustomPasswordStrength { get; set; }
         public Api Api { get; set; }
@@ -278,4 +280,5 @@ namespace Authing.Library.Domain.Model.Management.Applications
         public string version { get; set; }
         public string cdnBase { get; set; }
     }
+
 }

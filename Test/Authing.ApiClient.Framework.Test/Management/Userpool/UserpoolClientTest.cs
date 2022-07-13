@@ -1,4 +1,5 @@
 ﻿using Authing.ApiClient.Domain.Model;
+using Authing.Library.Domain.Model.Exceptions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -25,7 +26,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         [Fact]
         public async Task Userpool_ListEnv()
         {
-            await managementClient.Userpool.AddEnv("123", "123");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            await managementClient.Userpool.AddEnv("123", "123",authingErrorBox);
             var result = await managementClient.Userpool.ListEnv();
             Assert.NotEmpty(result);
         }
@@ -40,7 +43,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         [Fact]
         public async Task Userpool_RemoveEnv()
         {
-            var result = await managementClient.Userpool.RemoveEnv("123");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await managementClient.Userpool.RemoveEnv("123",authingErrorBox);
             Assert.Equal(result, 200);
         }
     }
