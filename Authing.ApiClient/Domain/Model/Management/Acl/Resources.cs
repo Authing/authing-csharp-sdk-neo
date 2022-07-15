@@ -9,9 +9,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Acl
     public class Resources:ResourcesBase
     {
         [JsonProperty("actions")] 
-        private string ActionsTemp { get; set; } = "";
+        private List<Action> Actions { get; set; } 
 
-        [JsonIgnore]
-        public new IEnumerable<Action> Actions => JsonConvert.DeserializeObject<IEnumerable<Action>>(ActionsTemp);
     }
 }

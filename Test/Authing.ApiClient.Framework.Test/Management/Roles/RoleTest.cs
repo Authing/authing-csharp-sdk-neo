@@ -122,7 +122,11 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             await client.Roles.Create(roleCode, null, null, nameSpace);
             await client.Roles.Create(roleCode2, null, null, nameSpace);
 
-            var result = await client.Roles.DeleteMany(codeList, nameSpace);
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+             
+
+            var result = await client.Roles.DeleteMany(codeList, nameSpace,authingErrorBox);
 
             Assert.True(result.Code == 200);
         }

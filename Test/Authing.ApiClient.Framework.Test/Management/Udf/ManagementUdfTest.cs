@@ -1,5 +1,6 @@
 ﻿using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.Udf;
+using Authing.Library.Domain.Model.Exceptions;
 using System.Linq;
 using Xunit;
 
@@ -11,6 +12,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         public async void SetUserDefinedField_User()
         {
             var client = managementClient;
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             UserDefinedField result = await client.Udf.Set(UdfTargetType.USER, "asdad", UdfDataType.STRING, "1312312");
 

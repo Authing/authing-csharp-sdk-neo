@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Authing.ApiClient.Types;
 using Xunit;
+using Authing.Library.Domain.Model.Exceptions;
 
 namespace Authing.ApiClient.Framework.Test.Management.Applications
 {
@@ -13,33 +14,39 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_List()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var client = managementClient;
-            var result = await client.Applications.List();
+            var result = await client.Applications.List(authingErrorBox: authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
         [Fact]
         public async void Applications_Create()
         {
-            //TODO:域名被占用
-            var result = await managementClient.Applications.Create("测试3", "ceshi3", new string[] { "https://www.google.com" });
+
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await managementClient.Applications.Create("测试3", "ceshi3", new string[] { "https://www.google.com" },
+                authingErrorBox: authingErrorBox);
             Assert.Equal(result.Name, "测试3");
         }
 
         [Fact]
         public async void Applications_Delete()
         {
-            var result = await managementClient.Applications.Delete("62aacef788a9ca9093a1350b");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await managementClient.Applications.Delete("62c54e9063ecf47a61810298", authingErrorBox: authingErrorBox);
             Assert.True(result);
         }
 
         [Fact]
         public async void Applications_FindById()
         {
-            var result = await managementClient.Applications.FindById("6215dd9277d6ef55dfab41f8");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            //var ss= result.RegisterTabs.ToString();
-            var ss = result.RegisterTabs;
+            var result = await managementClient.Applications.FindById("6215dd9277d6ef55dfab41sss", authingErrorBox);
 
             Assert.Equal(result.Name, "测试3");
         }
@@ -47,7 +54,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_FindByIdV2()
         {
-            var result = await managementClient.Applications.FindByIdV2("62a9902a80f55c22346eb296");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+
+            var result = await managementClient.Applications.FindByIdV2("62a9902a80f55c22346eb296", authingErrorBox);
 
             //var ss= result.RegisterTabs.ToString();
             var ss = result.LoginTabs;
@@ -58,31 +68,36 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_ListResource()
         {
-            var result = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c", authingErrorBox: authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
         [Fact]
         public async void Applications_CreateResource()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Applications.CreateResource("62a99822ff635db21c2ec21c", new CreateResourceParam()
             {
                 Code = "orderTest",
                 Type = Types.ResourceType.DATA,
                 Actions = new List<ResourceAction>() { new ResourceAction() { Name = "orderTest:read" } }
-            });
+            }, authingErrorBox);
             Assert.NotEmpty(result.Actions);
         }
 
         [Fact]
         public async void Applications_UpdateResource()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             //var res = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c");
             var result = await managementClient.Applications.UpdateResource("62a99822ff635db21c2ec21c", "orderTest", new UpdateResourceParam()
             {
                 Type = Types.ResourceType.DATA,
                 Actions = new List<ResourceAction>() { new ResourceAction() { Name = "orderTest:write" } }
-            });
+            }, authingErrorBox);
 
             Assert.Equal(result.NameSpaceId, "6195ebcf5255f3d735ba9063");
         }
@@ -90,24 +105,30 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DeleteResource()
         {
-            var result = await managementClient.Applications.DeleteResource("62a99822ff635db21c2ec21c", "orderTest");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await managementClient.Applications.DeleteResource("62a99822ff635db21c2ec21c", "orderTest", authingErrorBox);
             Assert.True(result);
         }
 
         [Fact]
         public async void Applications_GetAccessPolicies()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Applications.GetAccessPolicies("62a99822ff635db21c2ec21c", new AppAccessPolicyQueryFilter()
             {
                 Page = 1,
                 Limit = 10
-            });
+            },authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
         [Fact]
         public async void Applications_EnableAccessPolicy()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Applications.EnableAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
@@ -120,48 +141,56 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_DisableAccessPolicy()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Applications.DisableAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
-            });
+            },authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_DeleteAccessPolicy()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Applications.DeleteAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
-            });
+            }, authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_AllowAccess()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Applications.AllowAccess("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
-            });
+            }, authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
         [Fact]
         public async void Applications_DenyAccess()
         {
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
             var result = await managementClient.Applications.DenyAccess("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
                 TargetIdentifiers = new string[] { "userList" },
                 InheritByChildren = true
-            });
+            },authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
@@ -179,14 +208,19 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_CreateRole()
         {
-            var result = await managementClient.Applications.CreateRole("62a99822ff635db21c2ec21c", "orderList");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await managementClient.Applications.CreateRole("62a99822ff635db21c2ec21c", "orderList",
+               authingErrorBox: authingErrorBox);
             Assert.Equal(result.Code, "orderList");
         }
 
         [Fact]
         public async void Applications_DeleteRole()
         {
-            var result = await managementClient.Applications.DeleteRole("62a99822ff635db21c2ec21c", "orderList");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            var result = await managementClient.Applications.DeleteRole("62a99822ff635db21c2ec21c", "orderList", authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 

@@ -196,7 +196,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new ChildrenNodesParam(nodeId);
             var res = await client.Post<ChildrenNodesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam = default,AuthingErrorBox authingErrorBox=null)
@@ -204,7 +204,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             nodeByIdWithMembersParam.Id = nodeId;
             var res = await client.Post<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result.Users;
+            return res.Data?.Result.Users;
         }
 
         public async Task<CommonMessage> MoveMembers(string sourceNodeId, string targetNodeId, IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)
@@ -213,7 +213,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.Post<MoveMembersResponse>(moveMembersParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> MoveNode(string orgId, string nodeId, string targetParentId, AuthingErrorBox authingErrorBox=null)
@@ -221,7 +221,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new MoveNodeParam(orgId, nodeId, targetParentId);
             var res = await client.Post<MoveNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedUsers> RemoveMembers(string nodeId, IEnumerable<string> userIds,AuthingErrorBox authingErrorBox=null)
@@ -232,7 +232,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<RemoveMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result.Users;
+            return res.Data?.Result.Users;
         }
 
         public async Task<Node> RootNode(string orgId,AuthingErrorBox authingErrorBox=null)
@@ -240,7 +240,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new RootNodeParam(orgId);
             var res = await client.Post<RootNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<IEnumerable<Node>> SearchNodes(string keyword,AuthingErrorBox authingErrorBox=null)
@@ -248,7 +248,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new SearchNodesParam(keyword);
             var res = await client.Post<SearchNodesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> SetMainDepartment(string userId, string departmentId,AuthingErrorBox authingErrorBox=null)
@@ -259,7 +259,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.Post<SetMainDepartmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<bool> StartSync(ProviderTypeEnum providerTypeEnum, string adConnectorId = null,AuthingErrorBox authingErrorBox=null)
@@ -291,7 +291,31 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var res = await client.Post<UpdateNodeResponse>(updateNodeParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
+        }
+
+        public async Task<CommonResponse<T>> SetPartMentCustomData<T>(string nodeid, string key, object value)
+        {
+            var param = new SetCustomDataParam()
+            {
+                _namespace = "", list = new List<Dic>(){new Dic() { key = key, value = value }}, targetIdentifier = nodeid,
+                targetType = TargetType.DEPARTMENT
+            };
+            var res = await client.RequestCustomDataWithTokenV3<T>("api/v3/set-custom-data",
+                param.ConvertJson(), contenttype: ContentType.JSON);
+            return res;
+        }
+
+        public async Task<CommonResponse<T>> SetPartMentCustomData<T>(string nodeid, string key, object value)
+        {
+            var param = new SetCustomDataParam()
+            {
+                _namespace = "", list = new List<Dic>(){new Dic() { key = key, value = value }}, targetIdentifier = nodeid,
+                targetType = TargetType.DEPARTMENT
+            };
+            var res = await client.RequestCustomDataWithTokenV3<T>("api/v3/set-custom-data",
+                param.ConvertJson(), contenttype: ContentType.JSON);
+            return res;
         }
 
         public async Task<CommonResponse<T>> SetPartMentCustomData<T>(string nodeid, string key, object value)

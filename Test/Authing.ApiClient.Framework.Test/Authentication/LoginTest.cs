@@ -24,7 +24,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             AuthingErrorBox error;
 
-            var result = await client.LoginByUsername("635877990@qq.com", "3866364", new RegisterAndLoginOptions { AutoRegister = false },authingErrorBox: error = new Library.Domain.Model.Exceptions.AuthingErrorBox { });
+            var result = await client.LoginByUsername("qidong6655", "12345678", new RegisterAndLoginOptions { AutoRegister = false },authingErrorBox: error = new Library.Domain.Model.Exceptions.AuthingErrorBox { });
 
             //client.SetCurrentUser(result);
 
