@@ -6,7 +6,6 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
 {
     public class SearchUserParam
     {
-
         /// <summary>
         /// Required
         /// </summary>
@@ -53,8 +52,9 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
         {
             this.Query = query;
         }
+
         /// <summary>
-        /// SearchUserParam.Request 
+        /// SearchUserParam.Request
         /// <para>Required variables:<br/> { query=(string) }</para>
         /// <para>Optional variables:<br/> { fields=(string[]), page=(int), limit=(int), departmentOpts=(SearchUserDepartmentOpt[]), groupOpts=(SearchUserGroupOpt[]), roleOpts=(SearchUserRoleOpt[]) }</para>
         /// </summary>
@@ -67,7 +67,6 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
                 Variables = this
             };
         }
-
 
         public static string SearchUserDocument = @"
         query searchUser($query: String!, $fields: [String], $page: Int, $limit: Int, $departmentOpts: [SearchUserDepartmentOpt], $groupOpts: [SearchUserGroupOpt], $roleOpts: [SearchUserRoleOpt]) {

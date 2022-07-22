@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.GraphQLParam;
+using Authing.ApiClient.Extensions;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -68,18 +70,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var param = new AccessTokenParam(UserPoolId, Secret);
             //  如果不加 WithAccessToken 會死循環
-            var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest()).ConfigureAwait(false);
-
+            var res = await RequestCustomDataWithOutToken<AccessTokenResponse>(GraphQLEndpoint, param.CreateRequest().ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
 
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
         }
 
-        protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(false);
-            return await Post<TResponse>(body, headers).ConfigureAwait(false);
-        }
+        //protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
+        //{
+        //    var headers = new Dictionary<string, string>();
+        //    headers = GetAuthHeaders(false);
+        //    return await Post<TResponse>(body, headers).ConfigureAwait(false);
+        //}
 
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, string accessToken = null)
         {
@@ -87,7 +88,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             headers = GetAuthHeaders(true);
             return await Request<TResponse>(body, headers).ConfigureAwait(false);
         }
-
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
         {
@@ -162,7 +162,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var dic = new Dictionary<string, string>
             {
-
                 { "x-authing-request-from",type},
                 { "x-authing-sdk-version",version}
             };
@@ -188,15 +187,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var dic = new Dictionary<string, string>
             {
-
                 { "request-from",type},
                 { "sdk-version",version},
                 { "userpool-id",UserPoolId},
                 { "app-id",AppId}
-
             };
             return dic;
         }
-
     }
 }

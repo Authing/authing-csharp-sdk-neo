@@ -65,7 +65,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new AccessTokenParam(UserPoolId, Secret);
             //  如果不加 WithAccessToken 會死循環
-            var res = await PostWithoutToken<GraphQLResponse<Model.AccessTokenResponse>>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<AccessTokenResponse>(GraphQLEndpoint,
+                param.CreateRequest().ConvertJson(),
+                contenttype: ContentType.JSON).ConfigureAwait(false);
 
             if (res.Errors?.Length > 0)
                 throw new AuthingException(res.Errors[0].Message.Message);
@@ -75,23 +77,20 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Request<TResponse>(body, headers).ConfigureAwait(false);
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
+                contenttype: ContentType.JSON).ConfigureAwait(false);
+            //return await Request<TResponse>(body, headers).ConfigureAwait(false);
         }
 
-        public async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Post<TResponse>(body, headers).ConfigureAwait(false);
-        }
+        // public async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
+        // {
+        //     var headers = new Dictionary<string, string>();
+        //     headers["x-authing-userpool-id"] = UserPoolId;
+        //     headers["x-authing-request-from"] = type;
+        //     headers["x-authing-sdk-version"] = version;
+        //     return await Post<TResponse>(body, headers).ConfigureAwait(false);
+        // }
 
         //public async Task<GraphQLResponse<TResponse>> Request<TResponse>(string api, GraphQLRequest body)
         //{
@@ -106,81 +105,57 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Request<TResponse>(body, headers).ConfigureAwait(false);
+            //var headers = new Dictionary<string, string>();
+            //var token = await GetAccessToken();
+            //headers["Authorization"] = token;
+            //headers["x-authing-userpool-id"] = UserPoolId;
+            //headers["x-authing-request-from"] = type;
+            //headers["x-authing-sdk-version"] = version;
+            //return await Request<TResponse>(body, headers).ConfigureAwait(false);
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
+                contenttype: ContentType.JSON).ConfigureAwait(false);
+
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, body.ConvertJson()).ConfigureAwait(false);
+            //return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Get<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Get,
+                contenttype: ContentType.JSON).ConfigureAwait(false);
+            //return await Get<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Delete<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Delete,
+                contenttype: ContentType.JSON).ConfigureAwait(false);
+            //return await Delete<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Put<TResponse>(string api, Dictionary<string, string> body)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await Put<TResponse>(api, body, headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson(), method: HttpMethod.Put).ConfigureAwait(false);
+            //return await Put<TResponse>(api, body, headers).ConfigureAwait(false);
         }
-
 
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, Dictionary<string, object> dic)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await PostRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(api, dic.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
+            //return await PostRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
         }
-
 
         public async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, Dictionary<string, object> dic)
         {
-            var headers = new Dictionary<string, string>();
-            var token = await GetAccessToken().ConfigureAwait(false);
-            headers["Authorization"] = token;
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await PutRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(api, dic.ConvertJson(), contenttype: ContentType.JSON, method: HttpMethod.Put).ConfigureAwait(false);
+            //return await PutRaw<TResponse>(api, dic.ConvertJson(), headers).ConfigureAwait(false);
         }
 
         public new async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
@@ -192,7 +167,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-userpool-id"] = UserPoolId;
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
-            var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            var result = await RequestCustomData<TResponse>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
         }
 
@@ -213,18 +188,18 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-userpool-id"] = UserPoolId;
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
-            var result = await client.RequestCustomData<CommonResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            var result = await RequestNoGraphQLResponse<CommonResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
         }
 
-        public object GetAuthHeaders()
-        {
-            return new
-            {
-                x_authing_userpool_id = UserPoolId,
-                x_authing_request_from = type,
-                x_authing_sdk_version = version,
-            };
-        }
+        // public object GetAuthHeaders()
+        // {
+        //     return new
+        //     {
+        //         x_authing_userpool_id = UserPoolId,
+        //         x_authing_request_from = type,
+        //         x_authing_sdk_version = version,
+        //     };
+        // }
     }
 }
