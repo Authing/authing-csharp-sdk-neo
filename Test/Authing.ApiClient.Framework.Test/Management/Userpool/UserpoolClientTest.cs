@@ -10,14 +10,16 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         [Fact]
         public async Task Userpool_Detail()
         {
-            var result = await managementClient.Userpool.Detail();
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+            var result = await managementClient.Userpool.Detail(authingErrorBox);
             Assert.Equal(result.Id, UserPoolId);
         }
 
         [Fact]
         public async Task Userpool_Update()
         {
-            var result = await managementClient.Userpool.Detail();
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+            var result = await managementClient.Userpool.Detail(authingErrorBox);
             result.Description = "测试描述";
             result = await managementClient.Userpool.Update(new UpdateUserpoolInput() { Description = "测试描述" });
             Assert.Equal(result.Description, "测试描述");
@@ -28,7 +30,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            await managementClient.Userpool.AddEnv("123", "123",authingErrorBox);
+            await managementClient.Userpool.AddEnv("123", "123", authingErrorBox);
             var result = await managementClient.Userpool.ListEnv();
             Assert.NotEmpty(result);
         }
@@ -36,7 +38,8 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         [Fact]
         public async Task Userpool_AddEnv()
         {
-            var result = await managementClient.Userpool.AddEnv("123", "123");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+            var result = await managementClient.Userpool.AddEnv("123", "123", authingErrorBox);
             Assert.Equal(result, 200);
         }
 
@@ -45,7 +48,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Userpool.RemoveEnv("123",authingErrorBox);
+            var result = await managementClient.Userpool.RemoveEnv("123", authingErrorBox);
             Assert.Equal(result, 200);
         }
     }

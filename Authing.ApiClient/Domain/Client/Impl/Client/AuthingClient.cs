@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Client.Impl.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -93,7 +94,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -167,7 +168,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -210,7 +211,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -253,7 +254,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -311,7 +312,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
