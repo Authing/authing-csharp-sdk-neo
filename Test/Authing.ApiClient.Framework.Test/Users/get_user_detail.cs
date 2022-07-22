@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Authing.Library.Domain.Model.Exceptions;
+using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Users
 {
@@ -8,9 +9,10 @@ namespace Authing.ApiClient.Framework.Test.Users
         public async void should_get_user_detail_correct()
         {
             var client = managementClient;
-            var user = await client.Users.Detail(TestUserId);
+            var error = new AuthingErrorBox();
+            var user = await client.Users.Detail(TestUserId, authingErrorBox: error);
             Assert.NotNull(user);
-            Assert.Equal("17620671314", user.Phone);
+            Assert.Equal("1800000000", user.Phone);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Authing.Library.Domain.Client.Impl
             }
             else
             {
-                if (response.Code != 200)
+                if (response.Code != 200 && response.Code != 0)
                 {
                     authingErrorBox?.Set(new GraphQLError[]
                     { new GraphQLError

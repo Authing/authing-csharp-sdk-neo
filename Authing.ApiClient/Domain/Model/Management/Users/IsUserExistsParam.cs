@@ -5,7 +5,6 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
 {
     public class IsUserExistsParam
     {
-
         /// <summary>
         /// Optional
         /// </summary>
@@ -32,10 +31,10 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
 
         public IsUserExistsParam()
         {
-
         }
+
         /// <summary>
-        /// IsUserExistsParam.Request 
+        /// IsUserExistsParam.Request
         /// <para>Required variables:<br/> {  }</para>
         /// <para>Optional variables:<br/> { email=(string), phone=(string), username=(string), externalId=(string) }</para>
         /// </summary>
@@ -48,7 +47,6 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
                 Variables = this
             };
         }
-
 
         public static string IsUserExistsDocument = @"
         query isUserExists($email: String, $phone: String, $username: String, $externalId: String) {

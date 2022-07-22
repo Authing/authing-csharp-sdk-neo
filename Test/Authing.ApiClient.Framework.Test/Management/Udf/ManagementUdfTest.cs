@@ -15,7 +15,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.USER, "asdad", UdfDataType.STRING, "1312312");
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.USER, "asdad", UdfDataType.STRING, "1312312", authingErrorBox);
 
             Assert.NotNull(result);
         }
@@ -25,7 +25,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.ROLE, "role", UdfDataType.STRING, "12313131");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.ROLE, "role", UdfDataType.STRING, "12313131", authingErrorBox);
 
             Assert.NotNull(result);
         }
@@ -35,7 +37,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.APPLICATION, "app", UdfDataType.STRING, "13123123");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.APPLICATION, "app", UdfDataType.STRING, "13123123", authingErrorBox);
 
             var key = await client.Udf.List(UdfTargetType.APPLICATION);
 
@@ -47,7 +51,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.NODE, "node", UdfDataType.STRING, "nodestring");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.NODE, "node", UdfDataType.STRING, "nodestring", authingErrorBox);
 
             var key = await client.Udf.List(UdfTargetType.NODE);
 
@@ -59,7 +65,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.ORG, "org", UdfDataType.STRING, "orgString");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.ORG, "org", UdfDataType.STRING, "orgString", authingErrorBox);
 
             var key = await client.Udf.List(UdfTargetType.ORG);
 
@@ -71,7 +79,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.PERMISSION, "org", UdfDataType.STRING, "orgString");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.PERMISSION, "org", UdfDataType.STRING, "orgString", authingErrorBox);
 
             var key = await client.Udf.List(UdfTargetType.ORG);
 
@@ -83,7 +93,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
         {
             var client = managementClient;
 
-            UserDefinedField result = await client.Udf.Set(UdfTargetType.USERPOOL, "userPool", UdfDataType.STRING, "userPoolString");
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+
+            UserDefinedField result = await client.Udf.Set(UdfTargetType.USERPOOL, "userPool", UdfDataType.STRING, "userPoolString", authingErrorBox);
 
             var key = await client.Udf.List(UdfTargetType.USERPOOL);
 
