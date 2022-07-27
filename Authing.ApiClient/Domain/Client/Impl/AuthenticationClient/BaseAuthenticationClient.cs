@@ -42,7 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             AppId = Options.AppId ?? AppId;
             UserPoolId = Options.UserPoolId ?? UserPoolId;
             Secret = Options.Secret;
-            PublicKey = Options.Public ?? PublicKey;
+            PublicKey = Options.PublicKey ?? PublicKey;
             if (AppId == string.Empty)
             {
                 throw new Exception("参数错误");

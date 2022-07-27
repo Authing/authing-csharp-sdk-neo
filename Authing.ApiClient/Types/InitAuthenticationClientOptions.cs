@@ -32,7 +32,7 @@ namespace Authing.ApiClient.Types
         /// <summary>
         /// 密码传输加密公钥
         /// </summary>
-        public string Public { get; set; }
+        public string PublicKey { get; set; }
 
         /// <summary>
         /// 应用身份协议

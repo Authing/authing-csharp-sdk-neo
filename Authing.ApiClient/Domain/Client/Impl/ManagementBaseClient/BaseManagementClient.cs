@@ -38,7 +38,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             UserPoolId = Options.UserPoolId;
             Secret = Options.Secret;
             Host = Options.Host ?? Host;
-            PublicKey = Options.Public ?? PublicKey;
+            PublicKey = Options.PublicKey ?? PublicKey;
             if (UserPoolId == string.Empty)
             {
                 throw new ArgumentException("UserPoolId 为空");
