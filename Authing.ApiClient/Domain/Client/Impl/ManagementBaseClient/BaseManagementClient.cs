@@ -112,6 +112,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             //headers["x-authing-request-from"] = type;
             //headers["x-authing-sdk-version"] = version;
             //return await Request<TResponse>(body, headers).ConfigureAwait(false);
+            body = body is null ? new GraphQLRequest() : body;
             var preprocessedRequest = new GraphQLHttpRequest(body);
             return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
                 contenttype: ContentType.JSON).ConfigureAwait(false);
@@ -126,6 +127,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
+            body = body is null ? new GraphQLRequest() : body;
             var preprocessedRequest = new GraphQLHttpRequest(body);
             return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Get,
                 contenttype: ContentType.JSON).ConfigureAwait(false);
@@ -134,6 +136,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
         {
+            body = body is null ? new GraphQLRequest() : body;
             var preprocessedRequest = new GraphQLHttpRequest(body);
             return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Delete,
                 contenttype: ContentType.JSON).ConfigureAwait(false);
@@ -188,7 +191,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-userpool-id"] = UserPoolId;
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
-            var result = await RequestNoGraphQLResponse<CommonResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            var result = await RequestNoGraphQLResponse<CommonResponse<TResponse>>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
         }
 
