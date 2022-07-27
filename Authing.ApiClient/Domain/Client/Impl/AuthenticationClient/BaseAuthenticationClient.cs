@@ -181,17 +181,5 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             return dic;
         }
-
-        public Dictionary<string, string> GetTestHeader()
-        {
-            var dic = new Dictionary<string, string>
-            {
-                { "request-from",type},
-                { "sdk-version",version},
-                { "userpool-id",UserPoolId},
-                { "app-id",AppId}
-            };
-            return dic;
-        }
     }
 }

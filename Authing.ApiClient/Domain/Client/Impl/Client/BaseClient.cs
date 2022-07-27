@@ -85,7 +85,7 @@ GKl64GDcIq3au+aqJQIDAQAB
         {
             var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Post, body,
                 headers ?? new Dictionary<string, string>()).ConfigureAwait(false);
-            CheckResult(result);
+            //CheckResult(result);
             return result;
         }
 
@@ -95,7 +95,7 @@ GKl64GDcIq3au+aqJQIDAQAB
             var bodyString = preprocessedRequest.ToHttpRequestBody();
             var result = await client.SendRequest<string, GraphQLResponse<TResponse>>($"{Host}/{GraphQLEndpoint}", HttpType.Post, bodyString,
                 headers ?? new Dictionary<string, string>()).ConfigureAwait(false);
-            CheckResult(result);
+            //CheckResult(result);
             return result;
         }
 
@@ -119,14 +119,14 @@ GKl64GDcIq3au+aqJQIDAQAB
         protected async Task<GraphQLResponse<TResponse>> Get<TRequest, TResponse>(string api, TRequest body, Dictionary<string, string> headers)
         {
             var result = await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Get, body, headers).ConfigureAwait(false);
-            CheckResult(result);
+            //CheckResult(result);
             return result;
         }
 
         protected async Task<GraphQLResponse<TResponse>> Delete<TRequest, TResponse>(string api, TRequest body, Dictionary<string, string> headers)
         {
             var result = await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Delete, body, headers).ConfigureAwait(false);
-            CheckResult(result);
+            //CheckResult(result);
             return result;
         }
 
@@ -158,7 +158,7 @@ GKl64GDcIq3au+aqJQIDAQAB
             Dictionary<string, string> headers = null)
         {
             var result = await client.PostRaw<GraphQLResponse<TResponse>>(Host + $"/{api}", rawjson, headers ?? new Dictionary<string, string>()).ConfigureAwait(false);
-            CheckResult(result);
+            //CheckResult(result);
             return result;
         }
 
@@ -166,8 +166,8 @@ GKl64GDcIq3au+aqJQIDAQAB
             ContentType contenttype = ContentType.DEFAULT)
         {
             var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
-            CheckResult(result);
-            return result ?? new GraphQLResponse<TResponse>() { Code = 200, Message = "请求成功，但服务器没有返回数据！" }; ;
+            //CheckResult(result);
+            return result;
         }
 
         protected async Task<TResponse> RequestNoGraphQLResponse<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
@@ -179,36 +179,30 @@ GKl64GDcIq3au+aqJQIDAQAB
 
         private static void CheckResult<T>(GraphQLResponse<T> result)
         {
-            //TODO errorcode = 0 的情况存在
-            //TODO errorcode = 404 Errors 为 NULL
-            //if (result.Code == 200)
+            if(result.Code == 0 && result.Message == null && result.Errors == null) return;
+            //if (result?.Errors != null && (bool)result?.Errors.Any() || (result?.Code != 200 && result?.Code != 0))
             //{
-            //    return;
+            //    var error = result?.Errors?[0].Message;
+            //    if (error is null)
+            //    {
+            //        if (result != null)
+            //            error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
+            //    }
+            //    else if (result.Errors != null && result.Errors.Any())
+            //    {
+            //        if (result.Errors[0].Message != null)
+            //        {
+            //            if (result.Errors[0].Message.Data != null || !string.IsNullOrWhiteSpace(result.Errors[0].Message.Message))
+            //            {
+            //                error = new GraphQLErrorMessage() { Message = error.Message, Code = error.Code };
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        throw new AuthingException(error.Message, error.Code);
+            //    }
             //}
-
-            if (result?.Errors != null && (bool)result?.Errors.Any() || (result?.Code != 200 && result?.Code != 0))
-            {
-                var error = result?.Errors?[0].Message;
-                if (error is null)
-                {
-                    if (result != null)
-                        error = new GraphQLErrorMessage() { Message = result.Message, Code = result.Code };
-                }
-                else if (result.Errors != null && result.Errors.Any())
-                {
-                    if (result.Errors[0].Message != null)
-                    {
-                        if (result.Errors[0].Message.Data != null || !string.IsNullOrWhiteSpace(result.Errors[0].Message.Message))
-                        {
-                            error = new GraphQLErrorMessage() { Message = error.Message, Code = error.Code };
-                        }
-                    }
-                }
-                else
-                {
-                    throw new AuthingException(error.Message, error.Code);
-                }
-            }
         }
     }
 }
