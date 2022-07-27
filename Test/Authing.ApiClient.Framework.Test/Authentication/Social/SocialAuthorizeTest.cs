@@ -20,7 +20,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.Social
                 Protocol="oidc",
             };
 
-            socialAuthenticationClient.Authorize("adsadadadasasdadaas", options);  
+            var ss=socialAuthenticationClient.Authorize("adsadadadasasdadaas", options);  
         }
     }
 }

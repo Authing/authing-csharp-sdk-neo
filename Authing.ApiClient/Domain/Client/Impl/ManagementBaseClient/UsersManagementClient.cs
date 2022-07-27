@@ -70,6 +70,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Input = updates
             };
 
+            if (!string.IsNullOrWhiteSpace(param.Input.Password))
+            {
+               param.Input.Password= EncryptHelper.RsaEncryptWithPublic(param.Input.Password, client.PublicKey);
+            }
+
             var res = await client.Post<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
