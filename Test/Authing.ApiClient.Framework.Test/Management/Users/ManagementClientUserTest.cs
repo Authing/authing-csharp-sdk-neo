@@ -3,12 +3,17 @@ using Authing.ApiClient.Domain.Model.Management.Users;
 using Authing.Library.Domain.Model.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using Authing.ApiClient.Domain.Utils;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Users
 {
     public class ManagementClientUserTest : BaseTest
     {
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Create()
         {
@@ -22,6 +27,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Email, "qitaotest@authing.cn");
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Update()
         {
@@ -36,12 +44,16 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotNull(user);
             var result = await client.Users.Update(user.Id, new UpdateUserInput()
             {
-                Name = "qitao"
+                Name = "qitao",
+                Password = EncryptHelper.RsaEncryptWithPublic("88886666", client.PublicKey)
             }, authingErrorBox: authingErrorBox);
             Console.WriteLine("result", result);
             Assert.Equal(result.Name, "qitao");
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Detail()
         {
@@ -57,6 +69,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result?.Email, "qitaotest@authing.cn");
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Delete()
         {
@@ -74,6 +89,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_DeleteMany()
         {
@@ -91,6 +109,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Batch()
         {
@@ -108,6 +129,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_List()
         {
@@ -118,6 +142,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_ListArchivedUsers()
         {
@@ -128,6 +155,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Exists()
         {
@@ -141,6 +171,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Find()
         {
