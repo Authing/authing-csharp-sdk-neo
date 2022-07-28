@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management.WhiteList;
+using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.Library.Domain.Model.Exceptions;
@@ -35,7 +36,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<IEnumerable<WhiteList>> List(WhitelistType type,AuthingErrorBox authingErrorBox=null)
         {
             var param = new WhitelistParam(type);
-            var result = await _client.Request<WhitelistResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await _client.RequestCustomDataWithToken<WhitelistResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result ?? null;
         }
@@ -49,7 +50,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<IEnumerable<WhiteList>> Add(WhitelistType type, IEnumerable<string> list,AuthingErrorBox authingErrorBox=null)
         {
             var param = new AddWhitelistParam(type, list);
-            var result = await _client.Request<AddWhitelistResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await _client.RequestCustomDataWithToken<AddWhitelistResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result ?? null;
         }
@@ -64,7 +65,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new RemoveWhitelistParam(type, list);
 
-            var res = await _client.Request<RemoveWhitelistResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await _client.RequestCustomDataWithToken<RemoveWhitelistResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
@@ -86,7 +87,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Whitelist = config,
             });
-            var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await _client.RequestCustomDataWithToken<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data ?? null;
         }
@@ -108,7 +109,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Whitelist = config,
             });
-            var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await _client.RequestCustomDataWithToken<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data ?? null;
         }

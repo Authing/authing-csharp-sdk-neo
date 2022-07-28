@@ -725,9 +725,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&end={listUserActionsParam.End}";
             }
-            var res = await client.Get<ListUserActionsResObject>("api/v2/analysis/user-action", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.Get<ListUserActionsRes>("api/v2/analysis/user-action", new GraphQLRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            if (res.Data.Data.TotalCount == 0)
+            if (res.Data.TotalCount == 0)
             {
                 var resEmpty = new ListUserActionsRealRes()
                 {
@@ -736,24 +736,24 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
                 return resEmpty;
             }
-            var list = res.Data.Data.List;
+            var list = res.Data.List;
             var resList = list.Select(log => new UserActionRes
             {
-                UserPoolId = log.UserPoolId,
-                Id = log.UserId,
-                UserName = log.UserName,
-                CityName = log.Geoip.CityName,
-                RegionName = log.Geoip.RegionName,
-                ClientIp = log.Geoip.Ip,
-                OperationDesc = log.OperationDesc,
-                OperationName = log.OperationName,
-                TimeStamp = log.Timestamp,
-                AppId = log.AppId,
-                AppName = log.AppName
+                UserPoolId = log.userPoolId,
+                Id = log.userId,
+                UserName = log.userName,
+                CityName = log.geoip.CityName,
+                RegionName = log.geoip.RegionName,
+                ClientIp = log.geoip.Ip,
+                OperationDesc = log.eventDetails,
+                OperationName = log.eventType,
+                TimeStamp = log.timestamp,
+                AppId = log.appId,
+                AppName = log.appName
             }).ToArray();
             var resReal = new ListUserActionsRealRes()
             {
-                TotalCount = res.Data.Data.TotalCount,
+                TotalCount = res.Data.TotalCount,
                 List = resList
             };
             return resReal;
@@ -794,11 +794,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     item.Gender = "U";
                 }
             }
-            var res = await client.PostRaw<CreateUsersRes>("api/v2/users/create/batch", new Dictionary<string, object>() {
+            var res = await client.PostRaw<CreateUserResult[]>("api/v2/users/create/batch", new Dictionary<string, object>() {
                 { "users", userInfos }
             }).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data;
+            return new CreateUsersRes()
+            {
+                Code = res.Code,
+                Message = res.Message,
+                Data = res.Data
+            };
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Client.Impl.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -93,7 +94,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -167,7 +168,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -210,7 +211,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -253,7 +254,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -311,7 +312,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 }
             }
             using (var httpResponseMessage =
-                await new HttpClient() { Timeout = _timeOut }.SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -338,100 +339,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             Dictionary<string, string> data;
             SortedDictionary<string, string> sortedParam;
             HttpRequestMessage message;
-
-            #region old
-
-            /*
-            switch (method.Method)
-            {
-                default:
-                    switch (contenttype)
-                    {
-                        case ContentType.DEFAULT:
-                            data = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedata) ??
-                                   new Dictionary<string, string>();
-                            sortedParam =
-                                new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key,
-                                    x => x.Value is null ? "" : x.Value.ToString()));
-                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-                            {
-                                Content = new FormUrlEncodedContent(sortedParam)
-                                //Content = new StringContent(serializedata, Encoding.UTF8, "application/x-www-form-urlencoded")
-                            };
-                            // message.Content.Headers.Clear();
-                            // message.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-                            break;
-
-                        case ContentType.JSON:
-                            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-                            {
-                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
-                                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
-                            };
-                            break;
-
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
-                    }
-                    break;
-
-                case "PATCH":
-                    switch (contenttype)
-                    {
-                        case ContentType.DEFAULT:
-                            data = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedata) ??
-                                   new Dictionary<string, string>();
-                            sortedParam =
-                                new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key,
-                                    x => x.Value is null ? "" : x.Value.ToString()));
-                            message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
-                            {
-                                Content = new FormUrlEncodedContent(sortedParam)
-                            };
-                            break;
-
-                        case ContentType.JSON:
-                            message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
-                            {
-                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
-                            };
-                            break;
-
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
-                    }
-                    break;
-
-                case "PUT":
-                    switch (contenttype)
-                    {
-                        case ContentType.DEFAULT:
-                            data = JsonConvert.DeserializeObject<Dictionary<string, string>>(serializedata) ??
-                                   new Dictionary<string, string>();
-                            sortedParam =
-                                new SortedDictionary<string, string>(data?.ToDictionary(x => x.Key,
-                                    x => x.Value is null ? "" : x.Value.ToString()));
-                            message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
-                            {
-                                Content = new FormUrlEncodedContent(sortedParam)
-                            };
-                            break;
-
-                        case ContentType.JSON:
-                            message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
-                            {
-                                Content = new StringContent(serializedata, Encoding.UTF8, contenttype.ToDescription())
-                            };
-                            break;
-
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(contenttype), contenttype, null);
-                    }
-                    break;
-            }
-            */
-
-            #endregion old
 
             switch (contenttype)
             {

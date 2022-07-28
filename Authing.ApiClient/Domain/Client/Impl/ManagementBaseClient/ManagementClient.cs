@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Authentication;
@@ -7,6 +8,7 @@ using Authing.ApiClient.Domain.Utils;
 using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.V3Model;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
@@ -108,8 +110,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<string> RequestToken()
         {
-            var result = await Get<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId=${UserPoolId}&secret=${Secret}", null).ConfigureAwait(false);
-            return result.Data.AccessToken;
+            var result = await RequestNoGraphQLResponse<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId={UserPoolId}&secret={Secret}", method: HttpMethod.Get).ConfigureAwait(false);
+            return result.AccessToken;
         }
 
         /// <summary>
@@ -117,10 +119,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="password">需要检测的密码</param>
         /// <returns></returns>
-        public async Task<CommonMessage> isPasswordValid(string password)
+        public async Task<CommonResponse<object>> IsPasswordValid(string password)
         {
-            var result = await Get<CommonMessage>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", null).ConfigureAwait(false);
-            return result.Data;
+            var result = await RequestCustomDataWithTokenV3<object>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", method: HttpMethod.Get).ConfigureAwait(false);
+            return result;
         }
 
         /// <summary>
@@ -130,8 +132,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="scene">场景</param>
         /// <param name="cancellationToken"></param>
         /// <returns>CommonMessage</returns>
-        public async Task<CommonMessage> SendEmail(string email,
-                                                   EmailScene scene)
+        public async Task<CommonMessage> SendEmail(string email, EmailScene scene)
         {
             var param = new SendEmailParam(email, scene);
             var res = await Request<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);

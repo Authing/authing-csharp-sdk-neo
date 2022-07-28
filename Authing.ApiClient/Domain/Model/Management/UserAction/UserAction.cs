@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Authing.ApiClient.Domain.Model.Management.UserAction
 {
-    public class UserAction
+    public class UserActionOld
     {
         [JsonProperty("operatorArn")]
         public string OperatorArn { get; set; }
@@ -67,5 +67,46 @@ namespace Authing.ApiClient.Domain.Model.Management.UserAction
 
         [JsonProperty("appName")]
         public string AppName { get; set; }
+    }
+
+
+    public class UserAction
+    {
+        public string roleName { get; set; }
+        public string timestamp { get; set; }
+        public string eventResultMsg { get; set; }
+        public string userId { get; set; }
+        public string version { get; set; }
+        public string roleCode { get; set; }
+        public string appId { get; set; }
+        public string requestId { get; set; }
+        public string roleId { get; set; }
+        public string targetValue { get; set; }
+        public string operationParam { get; set; }
+        public string userName { get; set; }
+        public string userPoolId { get; set; }
+        public string eventType { get; set; }
+        public string targetId { get; set; }
+        public Ua ua { get; set; }
+        public string host { get; set; }
+        public string originValue { get; set; }
+        public string resourceDetails { get; set; }
+        public string operationType { get; set; }
+        public string eventDetails { get; set; }
+        public string eventResultCode { get; set; }
+        public string[] tags { get; set; }
+        public string message { get; set; }
+        public string path { get; set; }
+        public string clientIp { get; set; }
+        public Geoip geoip { get; set; }
+        public string filedate { get; set; }
+        public string userAgent { get; set; }
+        public string operationMode { get; set; }
+        public string logId { get; set; }
+        public string appLogo { get; set; }
+        public string photoUrl { get; set; }
+        public string userPoolName { get; set; }
+        public string appName { get; set; }
+        public int loginCounts { get; set; }
     }
 }

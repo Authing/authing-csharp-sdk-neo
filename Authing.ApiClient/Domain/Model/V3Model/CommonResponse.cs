@@ -12,5 +12,4 @@ namespace Authing.Library.Domain.Model.V3Model
         public int apiCode { get; set; }
         public T data { get; set; }
     }
-
 }

@@ -8,6 +8,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
 {
     public class WhitelistClienTtest : BaseTest
     {
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void enable_whitelist_Func()
         {
@@ -19,6 +22,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
             Assert.True(res.Result.Whitelist.EmailEnabled & res.Result.Whitelist.PhoneEnabled & res.Result.Whitelist.UsernameEnabled);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void disable_whitelist_Func()
         {
@@ -30,6 +36,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
             Assert.False(res.Result.Whitelist.EmailEnabled & res.Result.Whitelist.PhoneEnabled & res.Result.Whitelist.UsernameEnabled);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void add_whitelist_Func()
         {
@@ -47,6 +56,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
             await client.Whitelist.Remove(WhitelistType.PHONE, phones);
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void remove_whitelist_Func()
         {
@@ -65,6 +77,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Whitelist
             }
         }
 
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void get_whitelist_Func()
         {
