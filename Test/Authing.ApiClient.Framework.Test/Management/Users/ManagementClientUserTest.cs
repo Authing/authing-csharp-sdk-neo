@@ -187,6 +187,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Email, "qitaotest@authing.cn");
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Search()
         {
@@ -196,6 +199,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_RefreshToken()
         {
@@ -209,6 +215,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_ListGroups()
         {
@@ -222,6 +231,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_AddGroup()
         {
@@ -237,6 +249,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_RemoveGroup()
         {
@@ -252,6 +267,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_ListRoles()
         {
@@ -267,6 +285,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_AddRoles()
         {
@@ -282,6 +303,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_RemoveRoles()
         {
@@ -293,10 +317,13 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             //TODO:未传递参数 namespace 结果报错了，但是还是把用户从角色中删除了
-            var result = await client.Users.RemoveRoles(user.Id, new List<string>() { "test" }, authingErrorBox: authingErrorBox);
+            var result = await client.Users.RemoveRoles(user.Id, new List<string>() { "test" },"default", authingErrorBox: authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-7-28 测试通过
+        /// </summary>
         [Fact]
         public async void Users_listOrgs()
         {
@@ -311,6 +338,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var result = await client.Users.ListOrgs(user.Id, authingErrorBox);
             Assert.NotEmpty(result.List);
         }
+
 
         [Fact]
         public async void Users_listDepartment()
