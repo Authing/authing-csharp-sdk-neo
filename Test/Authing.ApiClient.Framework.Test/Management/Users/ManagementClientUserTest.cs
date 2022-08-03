@@ -339,7 +339,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
-
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_listDepartment()
         {
@@ -354,7 +356,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var result = await client.Users.ListDepartment(user.Id, authingErrorBox);
             Assert.NotEmpty(result.List);
         }
-
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_listAuthorizedResources()
         {
@@ -370,6 +374,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_getUdfValue()
         {
@@ -385,10 +392,12 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotNull(result.Count);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_getUdfValueBatch()
         {
-            //TODO:没有任何设置过的数据
             var client = managementClient;
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var user = await client.Users.Find(new FindUserOption()
@@ -399,10 +408,13 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_SetUdfValue()
         {
-            //TODO:调用没报错，但是返回的内容很奇怪
+            //TODO:调用没报错，但是返回的内容为空
             //{"data":{"setUdvBatch":[]}}
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
@@ -416,6 +428,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_SetUdfValueBatch()
         {
@@ -437,6 +452,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.True(true);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_RemoveUdfValue()
         {
@@ -451,6 +469,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.True(true);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试通过
+        /// </summary>
         [Fact]
         public async void Users_hasRole()
         {
@@ -466,6 +487,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Kick()
         {
@@ -481,6 +505,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Logout()
         {
@@ -500,6 +527,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试通过
+        /// </summary>
         [Fact]
         public async void Users_CheckLoginStatus()
         {
@@ -516,6 +546,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_ListUserActions()
         {
@@ -531,6 +564,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_SendFirstLoginVerifyEmail()
         {
@@ -546,9 +582,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_CreateUsers()
         {
+            //TODO:{"code":200,"message":"导入任务完成，请查看导入结果",
+            //"data":[
+            //{"success":false,"errMsg":"null value in column \"logins_count\" violates not-null constraint"},
+            //{"success":false,"errMsg":"null value in column \"logins_count\" violates not-null constraint"}
+            //]}
             var client = managementClient;
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var userList = new List<CreateUserInput>() {
