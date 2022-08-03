@@ -78,13 +78,6 @@
 		<PackageReference Include="Polly.Net40Async" Version="5.9.0" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-		<Reference Include="System.Net.Http"></Reference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-		<Reference Include="System.Net.Http"></Reference>
-	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net45'">
 		<AssemblyTitle>Json.NET</AssemblyTitle>
