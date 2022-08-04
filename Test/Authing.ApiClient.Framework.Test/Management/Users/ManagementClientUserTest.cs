@@ -603,6 +603,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_GetUserTenants()
         {
@@ -614,6 +617,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.Tenants);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_LinkIdentity()
         {
@@ -621,14 +627,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var result = await client.Users.LinkIdentity(new LinkIdentityOption()
             {
-                UserId = "61c560fc3e85f6d56bc6aa77",
-                UserIdInIdp = "12345",
+                UserId = "62e0e94f01e1f4f09bc7e6ef",
+                UserIdInIdp = "6257e58bcf40cbf1b49a229b",
                 Identifier = "github",
                 IsSocial = true,
             }, authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_UnlinkIdentity()
         {
@@ -636,7 +645,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var result = await client.Users.UnlinkIdentity(new UnlinkIdentityOption()
             {
-                UserId = "61c560fc3e85f6d56bc6aa77",
+                UserId = "62e0e94f01e1f4f09bc7e6ef",
                 Identifier = "github",
                 IsSocial = true,
             }, authingErrorBox);
