@@ -47,7 +47,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new UpdateUserpoolParam(updates);
 
-            var res = await _client.Request<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await _client.RequestCustomDataWithToken<UpdateUserpoolResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result ?? null;
         }
