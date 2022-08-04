@@ -794,6 +794,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {
                     item.Gender = "U";
                 }
+
+                if (string.IsNullOrWhiteSpace(item.Password))
+                {
+                    item.Password = EncryptHelper.RsaEncryptWithPublic(item.Password, client.PublicKey);
+                }
             }
             var res = await client.RequestCustomDataWithToken<CreateUserResult[]>("api/v2/users/create/batch", new Dictionary<string, object>() {
                 { "users", userInfos }
