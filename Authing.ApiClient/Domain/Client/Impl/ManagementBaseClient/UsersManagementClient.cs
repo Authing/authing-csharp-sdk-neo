@@ -819,7 +819,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<User> GetUserTenants(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<User>($"api/v2/users/{userId}/tenants",method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -841,7 +841,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/identity/link", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -862,7 +862,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/identity/unlink", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
