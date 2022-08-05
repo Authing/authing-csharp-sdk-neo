@@ -1,113 +1,50 @@
-# Authing  - C#
+<div align=center>
+  <img width="250" src="https://files.authing.co/authing-console/authing-logo-new-20210924.svg" />
+</div>
+<div align="center">
+  <a href="javascript:;"><img src="https://img.shields.io/badge/test-passing-brightgreen" /></a>
+  <a href="https://forum.authing.cn/" target="_blank"><img src="https://img.shields.io/badge/chat-forum-blue" /></a>
+  <a href="https://docs.authing.cn/v2/reference/ui-components/" target="_blank"><img src="https://img.shields.io/badge/docs-passing-brightgreen" /></a>
+  <a href="javascript:;"><img src="https://img.shields.io/badge/License-MIT-success" alt="License"></a>
+</div>
+ English| [简体中文](./README-zh_CN.md) |
 
-Authing C# SDK 由两部分组成：`ManagementClient` 和 `AuthenticationClient`。
-
-`AuthenticationClient` 以终端用户（End User）的身份进行请求，提供了登录、注册、登出、管理用户资料、获取授权资源等所有管理用户身份的方法；此模块还提供了各种身份协议的 SDK，如 [OpenID Connect](/guides/federation/oidc.md), [OAuth 2.0](/guides/federation/oauth.md), [SAML](/guides/federation/saml.md) 和 [CAS](/guides/federation/cas.md)。此模块适合用于非受信任的浏览器环境和纯后端交互的服务器环境。
-
-`ManagementClient` 以管理员（Administrator）的身份进行请求，用于管理用户池资源和执行管理任务，提供了管理用户、角色、应用、资源等方法；一般来说，你在 [Authing 控制台](https://console.authing.cn/console/userpool) 中能做的所有操作，都能用此模块完成。此模块适合在后端或者**可信任**的前端环境下使用。
+The Authing CSharp SDK is comprised of two parts: `ManagementClient` and `AuthenticationClient`. All operations in `ManagementClient` are performed as an administrator, including managing users, managing roles, managing authority policies, and managing user pool configuration. 
 
 
-## GitHub 下载地址
 
-| 条目     | 说明                                                         |
-| -------- | ------------------------------------------------------------ |
-| 支持版本 | 所有版本                                                     |
-| 仓库地址 | [https://github.com/Authing/authing-csharp-sdk-neo](https://github.com/Authing/authing-csharp-sdk-neo) |
+## 🌍 Ecosystem
 
-## 安装
+| Project         | Status                                                       | Description |
+| --------------- | ------------------------------------------------------------ | ----------- |
+| Authing.Library | [![NuGet version (Authing.Library)](https://img.shields.io/nuget/v/Authing.Library.svg?style=flat-square)](https://https://www.nuget.org/packages/Authing.Library/) | csharp sdk  |
 
-安装 [Authing.Library](https://www.nuget.org/packages/Authing.Library)：
+## 👀 Online preview
 
-```sh
-# 包管理器
-Install-Package Authing.Library
-# .Net Cli
-dotnet add package Authing.Library
-# packagereference 
-<PackageReference Include="Authing.Library" Version="0.0.22" />
-```
+Click to [docs](https://docs.authing.cn/v2/en/reference/sdk-for-csharp/)
 
-如果您想要获取最新版本，请查阅 [Authing.Library](https://www.nuget.org/packages/Authing.Library)
+## 📚 Documentation
 
-## 使用管理模块
+To check out live examples and docs, [docs](https://docs.authing.cn/v2/en/reference/sdk-for-csharp/)
 
-初始化 `ManagementClient` 需要 `userPoolId`（用户池 ID） 和 `secret`（用户池密钥）:
+## ❓ Questions
 
-> 你可以在此[了解如何获取 UserPoolId 和 Secret](/guides/faqs/get-userpool-id-and-secret.md) .
+For questions and support please use the [official forum](https://forum.authing.cn/). The issue list of this repo is exclusively for bug reports and feature requests.  
 
-```csharp
-using Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient;
+## 🤝 Contribution
 
-var managementClient = new ManagementClient("AUTHING_USERPOOL_ID", "AUTHING_USERPOOL_SECRET");
-```
+- Fork it
+- Create your feature branch (git checkout -b my-new-feature)
+- Commit your changes (git commit -am 'Add some feature')
+- Push to the branch (git push -u origin my-new-feature)
+- Create new Pull Request
 
-现在 `ManagementClient()` 实例就可以使用了。例如可以获取用户池中的用户列表：
+Thank you to all the people who already contributed to CSharp SDK !
 
-```csharp
-var managementClient = new ManagementClient("AUTHING_USERPOOL_ID", "AUTHING_USERPOOL_SECRET");
-var data = await managementClient.Users.List();
-```
+- https://forum.authing.cn/)
 
-## 使用认证模块
+## 🎁 License
 
-初始化 `ManagementClient` 需要 `AppId` （应用 ID）：
+[MIT](https://opensource.org/licenses/MIT)
 
-> 你可以在控制台的 **应用** 中查看自己的应用列表。
-
-```csharp
-using Authing.ApiClient.Domain.Client.Impl.AuthenticationClient;
-
-var authenticationClient = new AuthenticationClient(opt =>
-            {
-                opt.AppId = "AUTHING_APP_ID";
-            });
-```
-
-接下来可以进行注册登录等操作：
-
-```csharp
-var username = GetRandomString(10);
-var password = GetRandomString(10);
-var user = await authenticationClient.LoginByUsername(
-    username,
-    password,
-)
-```
-
-完成登录之后，`update_profile` 等要求用户登录的方法就可用了：
-
-```csharp
-await authenticationClient.UpdateProfile(new UpdateUserInput() {
-  Nickname = "Nick",
-})
-```
-
-你也可以在初始化后设置 `Token` 参数, 不需要每次都调用 `LoginByXXX` 方法:
-
-```csharp
-using Authing.ApiClient.Domain.Client.Impl.AuthenticationClient;
-
-var authenticationClient = new AuthenticationClient(
-  opt =>
-        {
-            opt.AppId = "AUTHING_APP_ID";
-        }
-);
-authenticationClient.Token = "ID_TOKEN";
-```
-
-再次执行 `UpdateProfile` 方法，发现也成功了:
-
-```csharp
-await authenticationClient.UpdateProfile(new UpdateUserInput() {
-  Nickname = "Nick",
-})
-```
-
-## 私有化部署
-
-**私有化部署**场景需要指定你私有化的 Authing 服务的 GraphQL 端点（**不带协议头和 Path**）以及密码加密公钥，如果你不清楚可以联系 Authing IDaaS 服务管理员。
-
-## 获取帮助
-
-Join us on forum: [#authing-chat](https://forum.authing.cn/)
+Copyright (c) 2019 Authing
