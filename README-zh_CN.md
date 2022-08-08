@@ -42,7 +42,7 @@
 - 将修改内容推送到远程分支 (git push -u origin my-new-feature)
 - 创建一个 Pull Request
 
-[开源规范]([https://forum.authing.cn/](https://github.com/Authing/.github/blob/main/CONTRIBUTING.md#%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87))
+[开源规范](https://github.com/Authing/.github/blob/main/CONTRIBUTING.md#%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
 
 感谢所有为 CSharp SDK 做出贡献的人！
 
