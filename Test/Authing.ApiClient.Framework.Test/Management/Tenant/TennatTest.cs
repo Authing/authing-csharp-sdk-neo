@@ -111,46 +111,61 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_AddMembers()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.AddMembers("61c963adcc6da58494a3ef43", new string[] { "61b1c0794929eb12c163305d" },authingErrorBox:authingErrorBox);
+            var result = await client.Tennat.AddMembers("62f0dae6f44905bf6d4d435a", new string[] { TestUserId },authingErrorBox:authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_RemoveMembers()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.RemoveMembers("61c963adcc6da58494a3ef43", "61b1c0794929eb12c163305d",authingErrorBox);
+            var result = await client.Tennat.RemoveMembers("62f0dae6f44905bf6d4d435a", TestUserId,authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_ListExtIdp()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.ListExtIdp("61c963adcc6da58494a3ef43",authingErrorBox);
+            var result = await client.Tennat.ListExtIdp("62f0dae6f44905bf6d4d435a",authingErrorBox);
             Assert.NotEmpty(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_ExtIdpDetail()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.ExtIdpDetail("tennat",authingErrorBox);
+            var result = await client.Tennat.ExtIdpDetail("6257e58bcf40cbf1b49a229b",authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Tenant_CreateExtIdp()
         {
@@ -159,9 +174,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             var client = managementClient;
             var result = await client.Tennat.CreateExtIdp(new CreateExtIdpOption()
             {
-                Name = "wechat",
+                Name = "123456",
                 Type = Types.ExtIdpType.WECHAT,
-                TenantId = "61c963adcc6da58494a3ef43",
+                TenantId = "62f0dae6f44905bf6d4d435a",
                 Connections = new ExtIdpConnDetailInput[] { new ExtIdpConnDetailInput() {
                     DisplayName = "weixin2",
                     Type = Types.ExtIdpConnType.WECHATPC,
@@ -175,19 +190,25 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_UpdateExtIdp()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.UpdateExtIdp("tennat", new UpdateExtIdpOption()
+            var result = await client.Tennat.UpdateExtIdp("6257e58bcf40cbf1b49a229b", new UpdateExtIdpOption()
             {
-                Name = "gitlab"
+                Name = "GitHubHub"
             }, authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_DeleteExtIdp()
         {
@@ -198,6 +219,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Tenant_CreateExtIdpConnection()
         {
@@ -218,6 +242,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Tenant_UpdateExtIdpConnection()
         {
@@ -235,6 +262,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Tenant_DeleteExtIdpConnection()
         {
@@ -245,6 +275,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_CheckExtIdpConnectionIdentifierUnique()
         {
@@ -255,25 +288,35 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Tenant_ChangeExtIdpConnectionState()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.ChangeExtIdpConnectionState("61cbca29206969bf63d38da9", new ChangeExtIdpConnectionStateOption()
+            var result = await client.Tennat.ChangeExtIdpConnectionState("62f0dae6f44905bf6d4d435a", new ChangeExtIdpConnectionStateOption()
             {
+                AppId = "61c2d04b36324259776af784",
+                TenantId = "62f0dae6f44905bf6d4d435a",
                 Enabled = false
             },authingErrorBox);
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Tenant_BatchChangeExtIdpConnectionState()
         {
             var client = managementClient;
-            var result = await client.Tennat.BatchChangeExtIdpConnectionState("61c963adcc6da58494a3ef43", new ChangeExtIdpConnectionStateOption()
+            var result = await client.Tennat.BatchChangeExtIdpConnectionState("62f0dae6f44905bf6d4d435a", new ChangeExtIdpConnectionStateOption()
             {
+                AppId = "61c2d04b36324259776af784",
+                TenantId = "62f0dae6f44905bf6d4d435a",
                 Enabled = false
             });
             Assert.True(result);
