@@ -8,6 +8,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 {
     public class ManagementUdfTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void SetUserDefinedField_User()
         {
@@ -20,6 +23,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void SetUserDefinedField_Role()
         {
@@ -32,6 +38,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void SetUserDefineField_Application()
         {
