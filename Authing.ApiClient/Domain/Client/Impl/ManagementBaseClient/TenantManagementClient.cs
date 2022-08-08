@@ -16,6 +16,7 @@ using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
 using System.Linq;
+using System.Net.Http;
 using Authing.ApiClient.Extensions;
 using Authing.Library.Domain.Model.Exceptions;
 using Authing.Library.Domain.Client.Impl;
@@ -40,7 +41,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                                                        int limit = 10,
                                                        AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.Get<Pagination<TenantInfo>>($"api/v2/tenants?page={page}&limit={limit}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<Pagination<TenantInfo>>($"api/v2/tenants?page={page}&limit={limit}",method:HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -52,7 +53,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<TenantDetails> Details(string tenantId,AuthingErrorBox authingErrorBox=null)
         {
-            var res = await client.Get<TenantDetails>($"api/v2/tenant/{tenantId}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<TenantDetails>($"api/v2/tenant/{tenantId}",method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -74,7 +75,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             if (option.Description != null) {
                 body.Add("description", option.Description);
             }
-            var res = await client.Post<TenantDetails>("api/v2/tenant", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<TenantDetails>("api/v2/tenant", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -104,7 +105,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("description", option.Description);
             }
-            var res = await client.Post<bool>($"api/v2/tenant/{tenantId}", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<bool>($"api/v2/tenant/{tenantId}",body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -116,7 +117,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> Delete(string tenantId,AuthingErrorBox authingErrorBox=null)
         {
-            var res = await client.Delete<CommonMessage>($"api/v2/tenant/{tenantId}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/tenant/{tenantId}",method:HttpMethod.Delete).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -138,7 +139,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("ssoPageCustomizationSettings", option.SsoPageCustomizationSettings);
             }
-            var res = await client.PostRaw<bool>($"api/v2/tenant/{tenantId}", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<bool>($"api/v2/tenant/{tenantId}", body.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -151,7 +152,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Pagination<TenantMembers>> Members(string tenantId, TenantMembersOption option,AuthingErrorBox authingErrorBox=null)
         {
-            var res = await client.Get<Pagination<TenantMembers>>($"api/v2/tenant/{tenantId}/users?page={option.Page}&limit={option.Limit}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<Pagination<TenantMembers>>($"api/v2/tenant/{tenantId}/users?page={option.Page}&limit={option.Limit}",method:HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }

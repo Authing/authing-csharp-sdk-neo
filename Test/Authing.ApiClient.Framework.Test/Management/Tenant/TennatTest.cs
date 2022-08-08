@@ -7,6 +7,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
 {
     public class TennatTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_List()
         {
@@ -17,16 +20,22 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_Details()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.Details("61c963adcc6da58494a3ef43",authingErrorBox:authingErrorBox);
+            var result = await client.Tennat.Details("62f0dae6f44905bf6d4d435a",authingErrorBox:authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_Create()
         {
@@ -36,57 +45,69 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             var result = await client.Tennat.Create(new CreateTenantOption()
             {
                 Name = "测试10-2",
-                AppIds = "61c963a1631c60a9a8979bff"
+                AppIds = "61c2d04b36324259776af784"
             },authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_Update()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.Update("61c963adcc6da58494a3ef43", new CreateTenantOption()
+            var result = await client.Tennat.Update("62f0db981be55e0d24559829", new CreateTenantOption()
             {
                 Name = "测试10-1",
             },authingErrorBox);
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_Delete()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.Delete("61c41429d9c21e1218a9bb93",authingErrorBox);
+            var result = await client.Tennat.Delete("62f0db981be55e0d24559829",authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_Config()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.Config("61c963adcc6da58494a3ef43", new ConfigTenantOption()
+            var result = await client.Tennat.Config("62f0dae6f44905bf6d4d435a", new ConfigTenantOption()
             {
                 SsoPageCustomizationSettings = new SsoPageCustomizationSettings()
                 {
-                    AutoRegisterThenLogin = false
+                    AutoRegisterThenLogin = true
                 }
             },authingErrorBox);
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Tenant_Members()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.Members("61c963adcc6da58494a3ef43", new TenantMembersOption() { },authingErrorBox);
+            var result = await client.Tennat.Members("62f0dae6f44905bf6d4d435a", new TenantMembersOption() { },authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
