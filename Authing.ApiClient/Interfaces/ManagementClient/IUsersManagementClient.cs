@@ -205,7 +205,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// </summary>
         /// <param name="setUdfValueBatchInput"></param>
         /// <returns></returns>
-        Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null);
+        Task<CommonMessage> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 清除用户的自定义数据

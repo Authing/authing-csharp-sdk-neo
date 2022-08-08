@@ -545,7 +545,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="setUdfValueBatchInput"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null)
+        public async Task<CommonMessage> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null)
         {
             if (setUdfValueBatchInput.Length < 1)
             {
@@ -565,7 +565,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     )
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.USER, param);
-            var res = await client.RequestCustomDataWithToken<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetUdfValueBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }

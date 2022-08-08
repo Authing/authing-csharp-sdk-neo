@@ -375,7 +375,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         }
 
         /// <summary>
-        /// 2022-8-1 测试不通过
+        /// 2022-8-8 测试通过
         /// </summary>
         [Fact]
         public async void Users_getUdfValue()
@@ -393,7 +393,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         }
 
         /// <summary>
-        /// 2022-8-1 测试不通过
+        /// 2022-8-8 测试通过
         /// </summary>
         [Fact]
         public async void Users_getUdfValueBatch()
@@ -409,13 +409,11 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         }
 
         /// <summary>
-        /// 2022-8-1 测试不通过
+        /// 2022-8-8 测试通过
         /// </summary>
         [Fact]
         public async void Users_SetUdfValue()
         {
-            //TODO:调用没报错，但是返回的内容为空
-            //{"data":{"setUdvBatch":[]}}
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
@@ -423,25 +421,24 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             });
             var udf = new Types.KeyValueDictionary();
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
-            udf.Add("asdad", "val1");
+            udf.Add("ObjectSid", "000");
             var result = await client.Users.SetUdfValue(user.Id, udf, authingErrorBox);
             Assert.NotEmpty(result);
         }
 
         /// <summary>
-        /// 2022-8-1 测试不通过
+        /// 2022-8-8 测试通过
         /// </summary>
         [Fact]
         public async void Users_SetUdfValueBatch()
         {
-            //TODO:设置成功后用上面的方法去查询没有结果
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
                 Email = "qitaotest@authing.cn"
             });
             var udf = new Types.KeyValueDictionary();
-            udf.Add("asdad", "val1");
+            udf.Add("ObjectSid", "000");
             var udfBatch = new Domain.Model.Management.Udf.SetUserUdfValueBatchParam()
             {
                 UserId = user.Id,
@@ -449,23 +446,22 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             };
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var result = await client.Users.SetUdfValueBatch(new Domain.Model.Management.Udf.SetUserUdfValueBatchParam[] { udfBatch });
-            Assert.True(true);
+            Assert.True(result.Code == 200);
         }
 
         /// <summary>
-        /// 2022-8-1 测试不通过
+        /// 2022-8-8 测试通过
         /// </summary>
         [Fact]
         public async void Users_RemoveUdfValue()
         {
-            //TODO:查找不到 asdad 即使上面调用成功
             var client = managementClient;
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var user = await client.Users.Find(new FindUserOption()
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.RemoveUdfValue(user.Id, "asdad", authingErrorBox);
+            var result = await client.Users.RemoveUdfValue(user.Id, "ObjectSid", authingErrorBox);
             Assert.True(true);
         }
 
@@ -528,7 +524,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         }
 
         /// <summary>
-        /// 2022-8-1 测试通过
+        /// 2022-8-8 测试不通过
         /// </summary>
         [Fact]
         public async void Users_CheckLoginStatus()
@@ -583,7 +579,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         }
 
         /// <summary>
-        /// 2022-8-3 测试不通过
+        /// 2022-8-8 测试不通过
         /// </summary>
         [Fact]
         public async void Users_CreateUsers()
