@@ -8,7 +8,7 @@
   <a href="javascript:;"><img src="https://img.shields.io/badge/License-MIT-success" alt="License"></a>
 </div>
 
-[English](./README.md) | 简体中文 |
+[English](./README.md) | 简体中文 
 
 [Authing](https://authing.cn) 身份云 `CSharp` 语言客户端 SDK。
 
@@ -41,6 +41,8 @@
 - 提交你的修改 (git commit -am 'Add some feature')
 - 将修改内容推送到远程分支 (git push -u origin my-new-feature)
 - 创建一个 Pull Request
+
+[开源规范]([https://forum.authing.cn/](https://github.com/Authing/.github/blob/main/CONTRIBUTING.md#%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87))
 
 感谢所有为 CSharp SDK 做出贡献的人！
 
