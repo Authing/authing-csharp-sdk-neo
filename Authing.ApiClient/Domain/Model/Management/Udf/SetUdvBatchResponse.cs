@@ -12,4 +12,6 @@ namespace Authing.ApiClient.Domain.Model.Management.Udf
         [JsonProperty("setUdvBatch")]
         public IEnumerable<UserDefinedData> Result { get; set; }
     }
+
+
 }

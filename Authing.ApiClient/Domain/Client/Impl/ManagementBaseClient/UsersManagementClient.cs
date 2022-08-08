@@ -545,7 +545,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="setUdfValueBatchInput"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null)
+        public async Task<CommonMessage> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null)
         {
             if (setUdfValueBatchInput.Length < 1)
             {
@@ -565,7 +565,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     )
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.USER, param);
-            var res = await client.RequestCustomDataWithToken<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetUdfValueBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
@@ -819,7 +819,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<User> GetUserTenants(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<User>($"api/v2/users/{userId}/tenants",method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -841,7 +841,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/identity/link", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -862,7 +862,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/identity/unlink", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
