@@ -1,41 +1,28 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Authing.ApiClient.Extensions;
+using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
     public class ImportJsonTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-9 测试不通过
+        /// </summary>
         [Fact]
         public async void ImprotJson_Test()
         {
+            //TODO:{"uniqueId":"4725f6cc-2f08-4aa6-9f62-a4f6688ab6d2","code":500,"statusCode":499,"apiCode":500,"message":"不支持的导入类型"}
             var client = managementClient;
 
-            var ss = await client.Orgs.List();
-
-            Root root = new Root();
+            TestNode root = new TestNode();
             root.name = "根节点";
             root.code = "9527";
-            //root.children = new Node[1];
+            root.order = "10";
+            root.description = "test";
+            root.children = new List<TestNode>();
 
-            //root.children[0] = new Node();
-
-            //root.children[0].name = "运营";
-            //root.children[0].children = new Node[1];
-
-            //root.children[0].children[0] = new Node();
-
-            //root.children[0].children[0].name = "后端";
-
-            await client.Userpool.RemoveEnv("1");
-
-            string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(root);
-
-            JsontObj ob = new JsontObj();
-            ob.filetype = "json";
-            ob.file = root;
-
-            string js = Newtonsoft.Json.JsonConvert.SerializeObject(ob);
-
-            var result = await client.Orgs.ImportByJson(js);
+            var result = await client.Orgs.ImportByJson(root.ConvertJson());
 
             Assert.NotNull(result);
         }
