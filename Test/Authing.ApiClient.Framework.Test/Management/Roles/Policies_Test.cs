@@ -2,6 +2,9 @@
 
 namespace Authing.ApiClient.Framework.Test.Management.Roles
 {
+    /// <summary>
+    /// 2022-8-9 测试通过
+    /// </summary>
     public class Policies_Test : BaseTest
     {
         [Fact]
@@ -9,13 +12,13 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
         {
             var client = managementClient;
 
-            string roleCode = "admin";
+            string roleCode = "test";
 
-            string nameSpace = "613189b38b6c66cac1d211bd";
+            string nameSpace = "default";
 
             var result = await client.Roles.ListPolicies(roleCode);
 
-            Assert.True(result.TotalCount == 0);
+            Assert.True(result.TotalCount > 0);
         }
 
         [Fact]
