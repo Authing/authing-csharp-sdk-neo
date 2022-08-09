@@ -46,13 +46,12 @@ namespace Authing.ApiClient.Domain.Model.Management.Policies
         }
 
         private string DisableAssignmentDocument = @"
-    mutation disbalePolicyAssignment(${'$'}policy: String!, ${'$'}targetType: PolicyAssignmentTargetType!, ${'$'}targetIdentifier: String!, ${'$'}namespace: String) {
-  disbalePolicyAssignment(policy: ${'$'}policy, targetType: ${'$'}targetType, targetIdentifier: ${'$'}targetIdentifier, namespace: ${'$'}namespace) {
+    mutation disbalePolicyAssignment($policy: String!, $targetType: PolicyAssignmentTargetType!, $targetIdentifier: String!, $namespace: String) {
+  disbalePolicyAssignment(policy: $policy, targetType: $targetType, targetIdentifier: $targetIdentifier, namespace: $namespace) {
     message
     code
   }
-}
-    ";
+}";
 
     }
 }
