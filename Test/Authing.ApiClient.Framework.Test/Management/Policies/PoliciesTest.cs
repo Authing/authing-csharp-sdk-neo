@@ -2,62 +2,62 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Authing.ApiClient.Domain.Model.Management.Acl;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Policies
 {
     public class PoliciesTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
-        public async void Create_Test()
+        public async Task Create_Test()
         {
             var client = managementClient;
 
-            string code = new Random().Next(1, 5000).ToString();
+            string code = "Book:*";
 
             List<PolicyStatementInput> inputList = new List<PolicyStatementInput>();
-            List<string> actions = new List<string>();
-            for (int i = 0; i < 1; i++)
-            {
-                List<string> action = new List<string>();
-                if (i == 0)
-                {
-                    action.Add($"{code}:read");
-                }
-                else
-                {
-                    action.Add($"{code}:write");
-                }
 
-                PolicyStatementInput input = new PolicyStatementInput($"{code}:delete", action);
-                input.Effect = Types.PolicyEffect.ALLOW.ToString();
-                List<PolicyStatementConditionInput> listCondtions = new List<PolicyStatementConditionInput>();
+            List<string> action = new List<string>(){"Book:read"};
 
-                PolicyStatementConditionInput condition = new PolicyStatementConditionInput("int", "+", new object());
-                listCondtions.Add(condition);
-                input.Condition = listCondtions;
-                inputList.Add(input);
-            }
+            PolicyStatementInput input = new PolicyStatementInput(code, action);
+            input.Effect = Types.PolicyEffect.ALLOW.ToString();
 
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(inputList);
+            List<PolicyStatementConditionInput> listCondtions = new List<PolicyStatementConditionInput>();
 
-            var result = await client.Policies.Create(code, inputList, "diescadsada");
+            //PolicyStatementConditionInput condition = new PolicyStatementConditionInput("int", "+", new object());
+            //listCondtions.Add(condition);
+
+            input.Condition = listCondtions;
+            inputList.Add(input);
+
+            var result = await client.Policies.Create(code, inputList, "testdesc", nameSpace: "default");
 
             var list = await client.Policies.List(1, 10);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void List_Test()
         {
             var client = managementClient;
 
-            var result = await client.Policies.List(1, 10);
+            var result = await client.Policies.List(1, 10,nameSpace:"system");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void ListWithParam_Test()
         {
@@ -68,15 +68,21 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void Detail_Test()
         {
             var client = managementClient;
-            var result = await client.Policies.Detail("order");
+            var result = await client.Policies.Detail("Book:*");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void Update_Test()
         {
@@ -84,30 +90,47 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
 
             var list = await client.Policies.List();
 
-            var po = list.List.Where(p => p.Code == "order").FirstOrDefault();
+            var po = list.List.FirstOrDefault(p => p.Code == "Book:*");
 
             foreach (var item in po.Statements)
             {
-                item.Effect = Domain.Model.Management.Acl.PolicyEffect.ALLOW;
+                item.Effect = Domain.Model.Management.Acl.PolicyEffect.DENY;
             }
 
-            // var result = await client.Policies.Update("order",);
+            UpdatePolicyParam py = new UpdatePolicyParam(po.Code);
+
+            py.Statements = new List<PolicyStatementInput>()
+            {
+                new PolicyStatementInput(po.Code,po.Statements.First().Actions)
+                {
+                    Effect = Domain.Model.Management.Acl.PolicyEffect.DENY.ToString()
+                }
+            };
+
+            var result = await client.Policies.Update(py);
+            Assert.True(result.Statements.First().Effect == PolicyEffect.DENY);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
-        public async void Delete_Test()
+        public async Task Delete_Test()
         {
             var client = managementClient;
 
-            string code = "test_Code";
-
-            CreatePolicy(code);
-
+            string code = "Book:*"; 
+            
+            //await Create_Test();
+            
             var result = await client.Policies.Delete(code);
 
-            Assert.NotNull(result);
+            Assert.True(result.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void DeleteMany_Test()
         {
@@ -117,86 +140,79 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
 
             var list = await client.Policies.List();
 
-            for (int i = 0; i < 5; i++)
+            foreach (var i in list.List)
             {
-                CreatePolicy(i.ToString());
-
-                codeList.Add(i.ToString());
+                codeList.Add(i.Code);
             }
 
             var result = await client.Policies.DeleteMany(codeList);
             Assert.True(result.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void AddAssignments_Test()
         {
             var client = managementClient;
 
-            for (int i = 0; i < 10; i++)
-            {
-                CreatePolicy(i.ToString(), "613189b38b6c66cac1d211bd");
-            }
-
-            var result = await client.Policies.List(1, 100, "613189b38b6c66cac1d211bd");
+            var result = await client.Policies.List(1, 100, "default");
 
             List<string> poList = result.List.Select(p => p.Code).ToList();
-            poList.Add("order");
 
             List<string> targetIden = new List<string>();
-            targetIden.Add("qidong5566");
+            
+            targetIden.Add(TestUserId);
 
-            var commonMessage = await client.Policies.AddAssignments(poList, Types.PolicyAssignmentTargetType.USER, targetIden, "613189b38b6c66cac1d211bd");
+            var commonMessage = await client.Policies.AddAssignments(poList, Types.PolicyAssignmentTargetType.USER, targetIden, "default");
+           
             Assert.True(commonMessage.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveAssignments_Test()
         {
             var client = managementClient;
 
-            //var poList = await client.Policies.List();
-
             List<string> poList = new List<string>();
-            poList.Add("order");
+            poList.Add("Book:*");
 
             List<string> targetIden = new List<string>();
-            targetIden.Add("qidong5566");
+            targetIden.Add(TestUserId);
 
             var commonMessage = await client.Policies.RemoveAssignments(poList, Types.PolicyAssignmentTargetType.USER, targetIden);
             Assert.True(commonMessage.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void DisableAssignments_Test()
         {
             var client = managementClient;
-
-            List<string> poList = new List<string>();
-            poList.Add("order");
-
-            List<string> targetIden = new List<string>();
-            targetIden.Add("qidong5566");
-
-            var commonMessage = await client.Policies.DisableAssignment("1", Types.PolicyAssignmentTargetType.USER, "qidong5566", "613189b38b6c66cac1d211bd");
+            var commonMessage = await client.Policies.DisableAssignment("Book:*", Types.PolicyAssignmentTargetType.USER, TestUserId, "default");
             Assert.True(commonMessage.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void EnableAssignments_Test()
         {
             var client = managementClient;
-
-            List<string> poList = new List<string>();
-            poList.Add("order");
-
-            List<string> targetIden = new List<string>();
-            targetIden.Add("qidong5566");
-
-            var commonMessage = await client.Policies.EnableAssignment("1", Types.PolicyAssignmentTargetType.USER, "qidong5566", "613189b38b6c66cac1d211bd");
+            var commonMessage = await client.Policies.EnableAssignment("Book:*", Types.PolicyAssignmentTargetType.USER, TestUserId, "default");
             Assert.True(commonMessage.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void ListAssignments_Test()
         {
@@ -208,39 +224,6 @@ namespace Authing.ApiClient.Framework.Test.Management.Policies
 
             var result = await client.Policies.ListAssignments(code);
             Assert.NotNull(result);
-        }
-
-        private async void CreatePolicy(string createCode, string nameSpace = null)
-        {
-            var client = managementClient;
-
-            string code = createCode;
-
-            List<PolicyStatementInput> inputList = new List<PolicyStatementInput>();
-            List<string> actions = new List<string>();
-            for (int i = 0; i < 1; i++)
-            {
-                List<string> action = new List<string>();
-                if (i == 0)
-                {
-                    action.Add($"{code}:read");
-                }
-                else
-                {
-                    action.Add($"{code}:write");
-                }
-
-                PolicyStatementInput input = new PolicyStatementInput($"{code}:delete", action);
-                input.Effect = Types.PolicyEffect.ALLOW.ToString();
-                List<PolicyStatementConditionInput> listCondtions = new List<PolicyStatementConditionInput>();
-
-                PolicyStatementConditionInput condition = new PolicyStatementConditionInput("int", "+", new object());
-                listCondtions.Add(condition);
-                input.Condition = listCondtions;
-                inputList.Add(input);
-            }
-
-            await client.Policies.Create(code, inputList, "diescadsada", nameSpace);
         }
     }
 }
