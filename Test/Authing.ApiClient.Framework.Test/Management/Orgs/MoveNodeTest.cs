@@ -6,6 +6,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
     public class MoveNodeTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void MoveNode_Test()
         {
