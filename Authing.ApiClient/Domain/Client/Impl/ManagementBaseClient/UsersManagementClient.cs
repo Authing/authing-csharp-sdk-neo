@@ -49,7 +49,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UserInfo = userInfo,
             };
 
-            var res = await client.Post<CreateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CreateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -76,7 +76,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 param.Input.Password = EncryptHelper.RsaEncryptWithPublic(param.Input.Password, client.PublicKey);
             }
 
-            var res = await client.Post<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -97,13 +97,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {
                     Id = userId
                 };
-                var _res = await client.Post<UserWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                var _res = await client.RequestCustomDataWithToken<UserWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data.Result;
             }
             var param = new UserParam() { Id = userId };
             await client.GetAccessToken().ConfigureAwait(false);
-            var res = await client.Post<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -117,7 +117,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                                                 AuthingErrorBox authingErrorBox = null)
         {
             var param = new DeleteUserParam(userId);
-            var res = await client.Post<DeleteUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -132,7 +132,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new DeleteUsersParam(userIds);
 
-            var res = await client.Post<DeleteUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -150,7 +150,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Type = batchFetchUserType.ToString()
             };
-            var res = await client.Post<UserBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UserBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -171,7 +171,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
             };
 
-            var res = await client.Post<UsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -191,7 +191,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Page = page,
                 Limit = limit,
             };
-            var res = await client.Post<ArchivedUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ArchivedUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -210,7 +210,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Phone = options.Phone,
                 ExternalId = options.ExternalId
             };
-            var res = await client.Post<IsUserExistsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<IsUserExistsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -230,7 +230,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ExternalId = options.ExternalId,
             };
 
-            var res = await client.Post<FindUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<FindUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -259,7 +259,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleOpts = option.RoleOpts,
             };
             await client.GetAccessToken().ConfigureAwait(false);
-            var res = await client.Post<SearchUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SearchUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -273,7 +273,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new RefreshTokenParam() { Id = userId };
 
-            var res = await client.Post<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -287,7 +287,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new GetUserGroupsParam(userId);
 
-            var res = await client.Post<GetUserGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<GetUserGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result.Groups;
         }
@@ -307,7 +307,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = group
             };
 
-            var res = await client.Post<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -327,7 +327,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = group
             };
 
-            var res = await client.Post<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -374,7 +374,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = _namespace,
             };
 
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -397,7 +397,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = _namespace,
             };
             await client.GetAccessToken().ConfigureAwait(false);
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }

@@ -79,14 +79,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 contenttype: ContentType.JSON).ConfigureAwait(false);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
-        {
-            body = body ?? new GraphQLRequest();
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
         public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
