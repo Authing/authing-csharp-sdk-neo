@@ -8,6 +8,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 {
     public class ManagementClientUdfListUdvTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void ListUserDefinedField_User()
         {

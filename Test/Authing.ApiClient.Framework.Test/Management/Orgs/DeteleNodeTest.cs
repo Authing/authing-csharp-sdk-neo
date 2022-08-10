@@ -7,6 +7,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
     public class DeteleNodeTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void DeleteNode_Test()
         {

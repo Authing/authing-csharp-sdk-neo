@@ -87,24 +87,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 contenttype: ContentType.JSON).ConfigureAwait(false);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
-        {
-            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, body.ConvertJson()).ConfigureAwait(false);
-        }
-
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
             body = body ?? new GraphQLRequest();
             var preprocessedRequest = new GraphQLHttpRequest(body);
             return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Get,
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
-        {
-            body = body ?? new GraphQLRequest();
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Delete,
                 contenttype: ContentType.JSON).ConfigureAwait(false);
         }
 
@@ -116,11 +103,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, Dictionary<string, object> dic)
         {
             return await RequestCustomDataWithToken<TResponse>(api, dic.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, Dictionary<string, object> dic)
-        {
-            return await RequestCustomDataWithToken<TResponse>(api, dic.ConvertJson(), contenttype: ContentType.JSON, method: HttpMethod.Put).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,

@@ -42,7 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Parent = parentCode,
                 Namespace=nameSpace
             };
-            var res = await client.Post<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -50,7 +50,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<CommonMessage> Delete(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new DeleteRoleParam(code);
-            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -63,7 +63,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = nameSpace
             };
-            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -71,7 +71,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<CommonMessage> DeleteMany(IEnumerable<string> codeList,AuthingErrorBox authingErrorBox=null)
         {
             var param = new DeleteRolesParam(codeList);
-            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -140,7 +140,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<PaginatedRoles> List(int page = 1,int limit = 10,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RolesParam() { Page = page, Limit = limit };
-            var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -153,7 +153,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
                 Namespace = nameSpace
             };
-            var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -259,7 +259,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Page = page,
                 Limit = limit,
             };
-            var res = await client.Post<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -294,7 +294,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ResourceType = resourceType.ToString().ToUpper(),
                 Namespace = nameSpace,
             };
-            var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             if (res.Data.Result == null)
             {

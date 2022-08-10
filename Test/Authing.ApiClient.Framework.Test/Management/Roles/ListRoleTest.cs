@@ -6,64 +6,51 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 {
     public class ListRoleTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void ListRole_Test()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-
-            for (int i = 0; i < 10; i++)
-            {
-                string roleCode = i.ToString();
-
-                await client.Roles.Create(roleCode,authingErrorBox:authingErrorBox);
-            }
-
-           
-
+            await client.Roles.Create("createTest", nameSpace: "default", authingErrorBox: authingErrorBox);
             var result = await client.Roles.List();
 
-            Assert.True(result.List.Count() == 10);
+            Assert.True(result.List.Any());
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void ListRoleWithNameSpace_Test()
         {
             var client = managementClient;
 
-            string nameSpace = "613189b38b6c66cac1d211bd";
+            string nameSpace = "default";
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            for (int i = 0; i < 10; i++)
-            {
-                string roleCode = i.ToString();
+            var result = await client.Roles.List(nameSpace, authingErrorBox: authingErrorBox);
 
-                await client.Roles.Create(roleCode, null, null, nameSpace,authingErrorBox);
-            }
-
-            var result = await client.Roles.List(nameSpace,authingErrorBox:authingErrorBox);
-
-            Assert.True(result.List.Count() == 10);
+            Assert.True(result.List.Any());
         }
 
+        /// <summary>
+        /// 2022-8-9 测试通过
+        /// </summary>
         [Fact]
         public async void ListRoleWithNameSpaceAndPage_Test()
         {
             var client = managementClient;
 
-            string nameSpace = "613189b38b6c66cac1d211bd";
-            for (int i = 0; i < 10; i++)
-            {
-                string roleCode = i.ToString();
-
-                await client.Roles.Create(roleCode, null, null, nameSpace);
-            }
+            string nameSpace = "default";
 
             var result = await client.Roles.List(nameSpace, 1, 5);
 
-            Assert.True(result.List.Count() == 5);
+            Assert.True(result.List.Any());
         }
     }
 }

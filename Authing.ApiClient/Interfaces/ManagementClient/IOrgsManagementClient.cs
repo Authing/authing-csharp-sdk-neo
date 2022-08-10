@@ -2,10 +2,7 @@
 using Authing.ApiClient.Domain.Model.Management.Orgs;
 using Authing.ApiClient.Types;
 using Authing.Library.Domain.Model.Exceptions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Authing.Library.Domain.Model.V3Model;
 
@@ -20,7 +17,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="description">根节点描述 </param>
         /// <param name="code">根节点唯一标志，必须为合法的英文字符。</param>
         /// <returns></returns>
-        Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> Create(string name,string description=null,string code=null,AuthingErrorBox authingErrorBox=null);
+        Task<Org> Create(string name,string description=null,string code=null,AuthingErrorBox authingErrorBox=null);
 
         /// <summary>
         /// 删除组织机构
@@ -51,7 +48,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <param name="orgId">组织机构 ID</param>
         /// <param name="addNodeParam">节点信息</param>
         /// <returns></returns>
-        Task<Authing.ApiClient.Domain.Model.Management.Orgs.Org> AddNode(string orgId,AddNodeParam addNodeParam,AuthingErrorBox authingErrorBox=null);
+        Task<Org> AddNode(string orgId,AddNodeParam addNodeParam,AuthingErrorBox authingErrorBox=null);
 
 
         /// <summary>
