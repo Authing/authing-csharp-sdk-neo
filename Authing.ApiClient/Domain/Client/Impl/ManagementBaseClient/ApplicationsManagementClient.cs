@@ -59,6 +59,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> Create(string name, string identifier, string[] redirectUris, string logo = null,AuthingErrorBox authingErrorBox=null)
         {
+            logo ??= "https://files.authing.co/authing-console/default-app-logo.png";
             var res = await client.RequestCustomDataWithToken<Application>($"api/v2/applications", new Dictionary<string, object>() {
                 { nameof(name), name },
                 { nameof(identifier), identifier },
@@ -88,7 +89,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Application> FindById(string id,AuthingErrorBox authingErrorBox=null)
         {
-            var res = await client.Get<Application>($"api/v2/applications/{id}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<Application>($"api/v2/applications/{id}",method:HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -127,7 +128,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
             if (listResourceOption != null && listResourceOption.Type != null)
             {
-                query += $"&type={listResourceOption.Type}";
+                query += $"&type={listResourceOption.Type.ToString()}";
             }
             var res = await client.RequestCustomDataWithToken<PaginatedResources>($"api/v2/resources{query}", method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
@@ -380,7 +381,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var permissionStrategy = new
             {
-                defaultStrategy = updateDefaultApplicationAccessPolicyParam.DefaultStrategy
+                defaultStrategy = updateDefaultApplicationAccessPolicyParam.DefaultStrategy.ToString()
             };
             var res = await client.RequestCustomDataWithToken<PublicApplication>($"api/v2/applications/{appId}", new Dictionary<string, object>() {
                 { "permissionStrategy", permissionStrategy }
@@ -406,7 +407,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = description,
                 Namespace = appId
             };
-            var res = await client.Post<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CreateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -425,7 +426,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = appId
             };
-            var res = await client.Post<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -444,7 +445,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = appId
             };
-            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
@@ -465,7 +466,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = updateRoleOptions.Description,
                 NewCode = updateRoleOptions.NewCode,
             };
-            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -479,7 +480,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = appId
             };
-            var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -521,7 +522,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = code,
                 Namespace = appId
             };
-            var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
+            var _res = await client.RequestCustomDataWithToken<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(_res, authingErrorBox);
             return _res.Data?.Result.Users;
         }
@@ -544,7 +545,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = appId
             };
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -589,7 +590,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ResourceType = resourceType.ToString().ToUpper(),
                 Namespace = appId,
             };
-            var res = await client.Post<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             if (res.Data.Result == null)
             {
@@ -606,11 +607,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Agreement> createAgreement(string appId, AgreementInput agreement,AuthingErrorBox authingErrorBox=null)
         {
-            var res = await client.PostRaw<Agreement>($"api/v2/applications/{appId}/agreements", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<Agreement>($"api/v2/applications/{appId}/agreements", new Dictionary<string, object>() {
                 { "title", agreement.Title},
                 { "required", agreement.Required},
-                { "lang ", agreement.Lang.GetEnumMemberValue()},
-            }).ConfigureAwait(false);
+                { "lang", agreement.Lang.GetEnumMemberValue()},
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -637,11 +638,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Agreement> modifyAgreement(string appId, int agreementId, AgreementInput agreement,AuthingErrorBox authingErrorBox=null)
         {
-            var res = await client.Put<Agreement>($"api/v2/applications/{appId}/agreements/{agreementId}", new Dictionary<string, string>() {
+            var res = await client.RequestCustomDataWithToken<Agreement>($"api/v2/applications/{appId}/agreements/{agreementId}", new Dictionary<string, object>() {
                 { "title", agreement.Title},
-                { "required", agreement.Required.ConvertJson()},
-                { "lang ", agreement.Lang.ConvertJson()},
-            }).ConfigureAwait(false);
+                { "required", agreement.Required},
+                { "lang", agreement.Lang.GetEnumMemberValue()},
+            }.ConvertJson(),method: HttpMethod.Put, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
