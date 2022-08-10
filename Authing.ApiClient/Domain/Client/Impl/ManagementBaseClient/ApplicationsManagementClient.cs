@@ -502,7 +502,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
                 Namespace = appId
             };
-            var res = await client.Post<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -568,7 +568,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = appId,
             };
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
