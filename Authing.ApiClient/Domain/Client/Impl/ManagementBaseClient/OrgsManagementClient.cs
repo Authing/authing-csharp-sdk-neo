@@ -282,7 +282,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             //var res = await client.Host.AppendPathSegment(path).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(body).ReceiveJson<bool>().ConfigureAwait(false);
 
-            var result = await client.Get<bool>(path, null).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<bool>(path,method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
