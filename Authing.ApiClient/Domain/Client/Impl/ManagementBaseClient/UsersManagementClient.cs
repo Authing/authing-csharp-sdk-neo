@@ -819,7 +819,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<User> GetUserTenants(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.RequestCustomDataWithToken<User>($"api/v2/users/{userId}/tenants",method: HttpMethod.Get).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<User>($"api/v2/users/{userId}/tenants", method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }

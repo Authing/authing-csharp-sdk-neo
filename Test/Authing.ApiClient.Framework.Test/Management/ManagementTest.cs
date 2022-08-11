@@ -27,7 +27,41 @@ namespace Authing.ApiClient.Framework.Test.Management
 
             var result = await client.IsPasswordValid("386664");
 
-            Assert.True(result.statusCode == 200);
+            Assert.True(result.StatusCode == 200);
+        }
+
+        [Fact]
+        public void InitTest()
+        {
+            managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient("613189b2eed393affbbf396e", "ccf4951a33e5d54d64e145782a65f0a7");
+
+           var result= managementClient.Users.List().Result;
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void InitTest2()
+        {
+            managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(init =>
+            {
+                init.UserPoolId = "613189b2eed393affbbf396e";
+                init.Secret = "ccf4951a33e5d54d64e145782a65f0a7";
+            });
+
+            var result = managementClient.Users.List().Result;
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void InitTest3()
+        {
+            managementClient =await Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient.ManagementClient.InitManagementClient("613189b2eed393affbbf396e", "ccf4951a33e5d54d64e145782a65f0a7");
+
+            var result = managementClient.Users.List().Result;
+
+            Assert.NotNull(result);
         }
     }
 }

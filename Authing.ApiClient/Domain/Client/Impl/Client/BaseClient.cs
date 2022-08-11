@@ -55,6 +55,9 @@ GKl64GDcIq3au+aqJQIDAQAB
         protected BaseClient()
         {
             this.client = AuthingClient.CreateAhtingClient(Timeout);
+
+            var currentversion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            version = $"c-sharp:{currentversion.Major}:{currentversion.Minor}:{currentversion.Build}:{currentversion.Revision}";
         }
 
         protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body, Dictionary<string, string> headers)

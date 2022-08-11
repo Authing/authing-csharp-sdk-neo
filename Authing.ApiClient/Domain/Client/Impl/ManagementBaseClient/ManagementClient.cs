@@ -9,6 +9,7 @@ using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.Library.Domain.Model.V3Model;
+using Authing.Library.Domain.Utils;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
@@ -44,12 +45,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public Action<InitAuthenticationClientOptions> Init { get; }
 
+        public MapperService MapperService;
+
+        public IJsonService JsonService;
+
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {
-
+            InitClient();
         }
 
         public ManagementClient(Action<InitAuthenticationClientOptions> init) : base(init)
+        {
+            InitClient();
+            Init = init ?? throw new ArgumentNullException(nameof(init));
+        }
+
+        private void InitClient()
         {
             Users = new UsersManagementClient(this);
             Applications = new ApplicationsManagementClient(this);
@@ -64,26 +75,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Acl = new AclManagementClient(this);
             Policies = new PoliciesManagementClient(this);
             Mfa = new MFAManagementClient(this);
-            Init = init ?? throw new ArgumentNullException(nameof(init));
+
+            JsonService = new JsonService();
         }
 
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)
         {
-            var manageClient = new ManagementClient(userPoolId, secret);
+            var manageClient = new ManagementClient(init=> { init.UserPoolId = userPoolId;init.Secret = secret; });
             await manageClient.GetAccessToken().ConfigureAwait(false);
-            manageClient.Users = new UsersManagementClient(manageClient);
-            manageClient.Applications = new ApplicationsManagementClient(manageClient);
-            manageClient.Tennat = new TenantManagementClient(manageClient);
-            manageClient.Udf = new UdfManagementClient(manageClient);
-            manageClient.Orgs = new OrgsManagementClient(manageClient);
-            manageClient.Roles = new RolesManagementClient(manageClient);
-            manageClient.Whitelist = new WhitelistManagementClient(manageClient);
-            manageClient.Groups = new GroupsManagementClient(manageClient);
-            manageClient.Acl = new AclManagementClient(manageClient);
-            manageClient.Userpool = new UserpoolManagement(manageClient);
-            manageClient.Statistics = new StatisticsManagement(manageClient);
-            manageClient.Policies = new PoliciesManagementClient(manageClient);
-            manageClient.Mfa = new MFAManagementClient(manageClient);
             return manageClient;
         }
 
