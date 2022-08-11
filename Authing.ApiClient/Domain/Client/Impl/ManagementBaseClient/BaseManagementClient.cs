@@ -128,7 +128,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             throw new NotImplementedException();
         }
 
-        public async Task<string> Request<T>(string method, string apiPath, T dto, bool withToken = true)
+        public async Task<string> Request<T>(string method,string apiPath,T dto,bool withToken=true)
         {
             throw new NotImplementedException();
         }
