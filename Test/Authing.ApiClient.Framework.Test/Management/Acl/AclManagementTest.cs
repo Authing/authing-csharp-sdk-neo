@@ -11,24 +11,33 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
 {
     public class AclManagementTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_CreateNamespace()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Acl.CreateNamespace("testNameSpac22", "testNameSpac22e", "testNameSpace",authingErrorBox);
-            Assert.True(result.Code== "testNameSpace");
+            var result = await managementClient.Acl.CreateNamespace("testNameSpace", "testNameSpace", "testNameSpace", authingErrorBox);
+            Assert.True(result.Code == "testNameSpace");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_ListNamespaces()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Acl.ListNamespaces(5,10,authingErrorBox: authingErrorBox);
+            var result = await managementClient.Acl.ListNamespaces(1, 10, authingErrorBox: authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_UpdateNamespace()
         {
@@ -36,12 +45,15 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Acl.UpdateNamespace(data.Id.ToString(), 
+            var result = await managementClient.Acl.UpdateNamespace(data.Id.ToString(),
                 new UpdateNamespaceParam() { Code = "testNameSpace2", Name = "testNameSpace2", Description = "测试描述" }
-                ,authingErrorBox);
-            Assert.True(result.Description== "测试描述");
+                , authingErrorBox);
+            Assert.True(result.Description == "测试描述");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_DeleteNamespace()
         {
@@ -51,27 +63,26 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Acl.DeleteNamespace(code,authingErrorBox);
-            Assert.True(result.Code==200);
+            var result = await managementClient.Acl.DeleteNamespace(code, authingErrorBox);
+            Assert.True(result.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_ListResources()
         {
-            try
-            {
-                AuthingErrorBox authingErrorBox = new AuthingErrorBox();
+            AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-                var list = await managementClient.Acl.ListResources(new ResourceQueryFilter()
-                { NameSpaceCode = "62a9902a80f55c22346eb296", Type = ResourceType.API }, authingErrorBox);
-                Assert.NotEmpty(list.List);
-            }
-            catch (Exception exp)
-            { 
-            
-            }
+            var list = await managementClient.Acl.ListResources(new ResourceQueryFilter()
+            { NameSpaceCode = "default", Type = ResourceType.DATA }, authingErrorBox);
+            Assert.NotEmpty(list.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// </summary
         [Fact]
         public async Task Acl_CreateResource()
         {
@@ -88,38 +99,50 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 Code = code = new Random().Next().ToString(),
                 NameSpace = id,
                 Type = ResourceType.DATA,
-                //NameSpace = "6172807001258f603126a78a",
-                Actions = new List<ResourceAction>() { new ResourceAction() { Name = "123", Description = "123" } },
-            },authingErrorBox);
+                Description = "test",
+                Actions = new List<ResourceAction>() { new ResourceAction() { Name = "read", Description = "test" } },
+            }, authingErrorBox);
             Assert.Equal(result.Code, code);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_GetResourceById()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Acl.GetResourceById("default",authingErrorBox);
+            var result = await managementClient.Acl.GetResourceById("62f382a265b63c23f6b79f8b", authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_FindResourceByCode()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Acl.FindResourceByCode("113213", "62a9902a80f55c22346eb296", authingErrorBox);
+            var result = await managementClient.Acl.FindResourceByCode("1221892758", "test", authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_UpdateResource()
         {
             //var r = await managementClient.acl.FindResourceByCode("Book", "test");
-            var result = await managementClient.Acl.UpdateResource("ecs", new ResourceParam() { Code = "Book", NameSpace = "test", Description = "HelloWord", Type = ResourceType.API });
+            var result = await managementClient.Acl.UpdateResource("1221892758", new ResourceParam() { Code = "Book", NameSpace = "test", Description = "HelloWord", Type = ResourceType.API });
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_DeleteResource()
         {
@@ -140,13 +163,19 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
             Assert.True(await managementClient.Acl.DeleteResource(code, id.ToString()));
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_Allow()
         {
-            var result = await managementClient.Acl.Allow(TestUserId, "test", "Cat:*", "Cat:Read");
+            var result = await managementClient.Acl.Allow(TestUserId, "test", "Cat:*", "Cat:read");
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_RevokeResource()
         {
@@ -161,13 +190,19 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
                 });
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_IsAllowed()
         {
-            var result = await managementClient.Acl.IsAllowed(TestUserId, "Cat:*", "Cat:Read", "test");
+            var result = await managementClient.Acl.IsAllowed(TestUserId, "Cat:*", "Cat:read", "test");
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_ListAuthorizedResources()
         {
@@ -178,28 +213,33 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// </summary
         [Fact]
         public async Task Acl_GetAuthorizedTargets()
         {
             var result = await managementClient.Acl.GetAuthorizedTargets(new GetAuthorizedTargetsOptions()
             {
                 NameSpace = "test",
-                Resource = "Cat",
+                Resource = "Cat:*",
                 ResourceType = ResourceType.DATA,
-                Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "Read" }),
+                Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "read" }),
                 TargetType = PolicyAssignmentTargetType.USER,
             });
 
             Assert.NotEmpty(result.List);
         }
-
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary
         [Fact]
         public async Task Acl_AuthorizeResource()
         {
             var result = await managementClient.Acl.AuthorizeResource("test", "Cat:*"
                 , new List<AuthorizeResourceOpt>()
                 {
-                    new AuthorizeResourceOpt(PolicyAssignmentTargetType.USER,"61a5c55fc89ff91083293e45",new List<string>(){"Cat:Read"})
+                    new AuthorizeResourceOpt(PolicyAssignmentTargetType.USER,TestUserId,new List<string>(){"Cat:read"})
                 });
             Assert.Equal(result.Code, 200);
         }

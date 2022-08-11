@@ -11,6 +11,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
 {
     public class ApplicationsTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_List()
         {
@@ -18,46 +21,63 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
 
             var client = managementClient;
             var result = await client.Applications.List(authingErrorBox: authingErrorBox);
-            Assert.NotEmpty(result.List);
+            Assert.NotEmpty(result.List); 
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_Create()
         {
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Applications.Create("测试3", "ceshi3", new string[] { "https://www.google.com" },
+
+            var result = await managementClient.Applications.Create("testbytmgg", "testbytmgg", new string[] { "https://www.baidu.com" },
                 authingErrorBox: authingErrorBox);
-            Assert.Equal(result.Name, "测试3");
+            Assert.Equal(result.Name, "testbytmgg");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_Delete()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Applications.Delete("62c54e9063ecf47a61810298", authingErrorBox: authingErrorBox);
+            var lists = await managementClient.Applications.List(authingErrorBox: authingErrorBox);
+
+            var res = lists.List.First(i => i.Name == "testbytmgg");
+
+            var result = await managementClient.Applications.Delete(res.Id, authingErrorBox: authingErrorBox);
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_FindById()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Applications.FindById("6215dd9277d6ef55dfab41sss", authingErrorBox);
+            var result = await managementClient.Applications.FindById("62a99822ff635db21c2ec21c", authingErrorBox);
 
-            Assert.Equal(result.Name, "测试3");
+            Assert.Equal(result.Name, "testresource");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_FindByIdV2()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
 
-            var result = await managementClient.Applications.FindByIdV2("62a9902a80f55c22346eb296", authingErrorBox);
+            var result = await managementClient.Applications.FindByIdV2("62a99822ff635db21c2ec21c", authingErrorBox);
 
             //var ss= result.RegisterTabs.ToString();
             var ss = result.LoginTabs;
@@ -65,15 +85,21 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotNull(ss);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_ListResource()
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Applications.ListResource("62a99822ff635db21c2ec21c", authingErrorBox: authingErrorBox);
+            var result = await managementClient.Applications.ListResource("61c2d04b36324259776af784",new ListResourceOption(){Type = ResourceType.DATA}, authingErrorBox: authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_CreateResource()
         {
@@ -88,6 +114,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotEmpty(result.Actions);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_UpdateResource()
         {
@@ -99,9 +128,12 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
                 Actions = new List<ResourceAction>() { new ResourceAction() { Name = "orderTest:write" } }
             }, authingErrorBox);
 
-            Assert.Equal(result.NameSpaceId, "6195ebcf5255f3d735ba9063");
+            Assert.Equal(result.Actions.First().Name, "orderTest:write");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_DeleteResource()
         {
@@ -111,6 +143,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_GetAccessPolicies()
         {
@@ -124,6 +159,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// TargetIdentifiers 传递的是 ID 非 CODE
+        /// </summary>
         [Fact]
         public async void Applications_EnableAccessPolicy()
         {
@@ -132,12 +171,16 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             var result = await managementClient.Applications.EnableAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TargetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "62aae37aa44bbb0427991d33" },
                 InheritByChildren = true
             });
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// TargetIdentifiers 传递的是 ID 非 CODE
+        /// </summary>
         [Fact]
         public async void Applications_DisableAccessPolicy()
         {
@@ -146,12 +189,16 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             var result = await managementClient.Applications.DisableAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TargetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "62aae37aa44bbb0427991d33" },
                 InheritByChildren = true
             },authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// TargetIdentifiers 传递的是 ID 非 CODE
+        /// </summary>
         [Fact]
         public async void Applications_DeleteAccessPolicy()
         {
@@ -160,40 +207,53 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             var result = await managementClient.Applications.DeleteAccessPolicy("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TargetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "62aae37aa44bbb0427991d33" },
                 InheritByChildren = true
             }, authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// TargetIdentifiers 传递的是 ID 非 CODE
+        /// </summary>
         [Fact]
         public async void Applications_AllowAccess()
         {
+            //TODO:无法在控制台应用访问控制中看到数据
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var result = await managementClient.Applications.AllowAccess("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TargetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "62aae37aa44bbb0427991d33" },
                 InheritByChildren = true
             }, authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// TargetIdentifiers 传递的是 ID 非 CODE
+        /// </summary>
         [Fact]
         public async void Applications_DenyAccess()
         {
+            //TODO:无法在控制台应用访问控制中看到数据
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var result = await managementClient.Applications.DenyAccess("62a99822ff635db21c2ec21c", new AppAccessPolicy()
             {
                 TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TargetIdentifiers = new string[] { "userList" },
+                TargetIdentifiers = new string[] { "62aae37aa44bbb0427991d33" },
                 InheritByChildren = true
             },authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_UpdateDefaultAccessPolicy()
         {
@@ -205,6 +265,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_CreateRole()
         {
@@ -215,6 +278,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Code, "orderList");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_DeleteRole()
         {
@@ -224,6 +290,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_DeleteRoles()
         {
@@ -231,6 +300,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_UpdateRole()
         {
@@ -238,11 +310,14 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             {
                 Code = "orderList",
                 NewCode = "orderList2",
-                NameSpace = "6195ebcf5255f3d735ba9063"
+                NameSpace = "62a99822ff635db21c2ec21c"
             });
             Assert.Equal(result.Code, "orderList2");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_FindRole()
         {
@@ -250,6 +325,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Code, "orderList2");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_GetRoles()
         {
@@ -257,6 +335,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_GetUsersByRoleCode()
         {
@@ -264,40 +345,42 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_AddUsersToRole()
         {
-            var result = await managementClient.Applications.AddUsersToRole("62a99822ff635db21c2ec21c", "userList", new List<string>() { "62147e6b5e21c7b1c402e144" });
+            var result = await managementClient.Applications.AddUsersToRole("62a99822ff635db21c2ec21c", "userList", new List<string>() { TestUserId });
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_RemoveUsersFromRole()
         {
-            var result = await managementClient.Applications.RemoveUsersFromRole("62a99822ff635db21c2ec21c", "userList", new List<string>() { "62147e6b5e21c7b1c402e144" });
+            var result = await managementClient.Applications.RemoveUsersFromRole("62a99822ff635db21c2ec21c", "userList", new List<string>() { TestUserId });
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_ListAuthorizedResourcesByRole()
         {
             var result = await managementClient.Applications.ListAuthorizedResourcesByRole("62a99822ff635db21c2ec21c", "userList");
-            Assert.Equal(result.Code, "userList");
+            Assert.Equal(result.AuthorizedResources.List.First().Code, "book:*");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// </summary>
         [Fact]
         public async void Applications_createAgreement()
         {
-            /*
-             {
-               "code": 400,
-               "statusCode": 400,
-               "message": "参数格式错误",
-               "data": {
-               "detailedMessage": "An instance of AgreementDto has failed the validation:\n - property lang has failed the following constraints: isNotEmpty, isEnum \n"
-               }
-             }
-             */
             var result = await managementClient.Applications.createAgreement("62a99822ff635db21c2ec21c", new AgreementInput()
             {
                 Title = "userAgreement",
@@ -307,6 +390,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Title, "userAgreement");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// </summary>
         [Fact]
         public async void Applications_deleteAgreement()
         {
@@ -314,19 +400,12 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// </summary>
         [Fact]
         public async void Applications_modifyAgreement()
         {
-            /*
-             {
-               "code": 400,
-               "statusCode": 400,
-               "message": "参数格式错误",
-               "data": {
-               "detailedMessage": "An instance of AgreementDto has failed the validation:\n - property lang has failed the following constraints: isNotEmpty, isEnum \n"
-               }
-             }
-             */
             var result = await managementClient.Applications.modifyAgreement("62a99822ff635db21c2ec21c", 0, new AgreementInput()
             {
                 Title = "userAgreement2",
@@ -334,6 +413,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Title, "userAgreement2");
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_listAgreement()
         {
@@ -341,6 +423,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_sortAgreement()
         {
@@ -348,6 +433,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_ActiveUsers()
         {
@@ -355,24 +443,33 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_RefreshApplicationSecret()
         {
-            var result = await managementClient.Applications.RefreshApplicationSecret("6172807001258f603126a78a");
+            var result = await managementClient.Applications.RefreshApplicationSecret("62a99822ff635db21c2ec21c");
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_ChangeApplicationType()
         {
-            var result = await managementClient.Applications.ChangeApplicationType("6195ebcf5255f3d735ba9063", Types.ApplicationType.TENANT);
+            var result = await managementClient.Applications.ChangeApplicationType("62a99822ff635db21c2ec21c", Types.ApplicationType.BOTH);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void Applications_ApplicationTenants()
         {
-            var result = await managementClient.Applications.ApplicationTenants("6195ebcf5255f3d735ba9063");
+            var result = await managementClient.Applications.ApplicationTenants("62a99822ff635db21c2ec21c");
             Assert.NotNull(result);
         }
     }

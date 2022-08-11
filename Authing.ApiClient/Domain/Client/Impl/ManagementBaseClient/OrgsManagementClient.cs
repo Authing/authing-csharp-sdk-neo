@@ -29,7 +29,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 NodeId = nodeId
             };
-            var res = await client.Post<AddMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AddMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
@@ -71,7 +71,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<CommonMessage> DeleteById(string id, AuthingErrorBox authingErrorBox = null)
         {
             var param = new DeleteOrgParam(id);
-            var res = await client.Post<DeleteOrgResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteOrgResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
@@ -113,7 +113,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Node> FindNodeById(string nodeId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new NodeByIdParam(nodeId);
-            var res = await client.Post<NodeByIdResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<NodeByIdResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
@@ -164,7 +164,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace,
                 ResourceType = resourceType.ToString().ToUpper()
             };
-            var res = await client.Post<ListNodeByCodeAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ListNodeByCodeAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             var node = res.Data.Result;
             if (node == null)
@@ -202,7 +202,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<PaginatedUsers> ListMembers(string nodeId, NodeByIdWithMembersParam nodeByIdWithMembersParam = default, AuthingErrorBox authingErrorBox = null)
         {
             nodeByIdWithMembersParam.Id = nodeId;
-            var res = await client.Post<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<NodeByIdWithMembersResponse>(nodeByIdWithMembersParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result.Users;
         }
@@ -211,7 +211,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var moveMembersParam = new MoveMembersParam(userIds, sourceNodeId, targetNodeId);
 
-            var res = await client.Post<MoveMembersResponse>(moveMembersParam.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<MoveMembersResponse>(moveMembersParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -219,7 +219,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Org> MoveNode(string orgId, string nodeId, string targetParentId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new MoveNodeParam(orgId, nodeId, targetParentId);
-            var res = await client.Post<MoveNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<MoveNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -230,7 +230,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 NodeId = nodeId
             };
-            var res = await client.Post<RemoveMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RemoveMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result.Users;
         }
@@ -238,7 +238,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Node> RootNode(string orgId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new RootNodeParam(orgId);
-            var res = await client.Post<RootNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RootNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -257,7 +257,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 DepartmentId = departmentId
             };
-            var res = await client.Post<SetMainDepartmentResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetMainDepartmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -282,14 +282,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             //var res = await client.Host.AppendPathSegment(path).WithOAuthBearerToken(client.AccessToken).PostJsonAsync(body).ReceiveJson<bool>().ConfigureAwait(false);
 
-            var result = await client.Get<bool>(path, null).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<bool>(path,method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
 
         public async Task<Node> UpdateNode(string orgId, UpdateNodeParam updateNodeParam, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.Post<UpdateNodeResponse>(updateNodeParam.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UpdateNodeResponse>(updateNodeParam.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }

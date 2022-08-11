@@ -212,27 +212,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 throw new ArgumentException("请传入权限分组标识符");
             }
 
-
-            //var res = await client.Post<Resources>("api/v2/resources",
-            //    new Dictionary<string, string>()
-            //    {
-            //        {nameof(createResourceParam.Code).ToLower(),createResourceParam.Code},
-            //        {nameof(createResourceParam.Actions).ToLower(),createResourceParam.Actions.ConvertJson()},
-            //        {nameof(createResourceParam.ApiIdentifier).ToLower(),createResourceParam.ApiIdentifier ?? ""},
-            //        {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
-            //        {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
-            //        {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
-            //    });
             var res = await client.RequestCustomDataWithToken<Resources>("api/v2/resources",
-                new Dictionary<string, string>()
+                new Dictionary<string, object>()
                 {
                         {nameof(createResourceParam.Code).ToLower(),createResourceParam.Code},
-                        {nameof(createResourceParam.Actions).ToLower(),createResourceParam.Actions.ConvertJson()},
+                        {nameof(createResourceParam.Actions).ToLower(),createResourceParam.Actions},
                         {nameof(createResourceParam.ApiIdentifier).ToLower(),createResourceParam.ApiIdentifier ?? ""},
                         {nameof(createResourceParam.NameSpace).ToLower(),createResourceParam.NameSpace},
                         {nameof(createResourceParam.Type).ToLower(),createResourceParam.Type.ToString()},
                         {nameof(createResourceParam.Description).ToLower(),createResourceParam.Description},
-                }.ConvertJson()).ConfigureAwait(false);
+                }.ConvertJson(),contenttype: ContentType.JSON).ConfigureAwait(false);
 
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data ?? null;
@@ -285,26 +274,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (string.IsNullOrWhiteSpace(options.NameSpace)) throw new ArgumentException($"Parameter {nameof(options.NameSpace)} is request!");
             string endPoint = $"api/v2/resources/{code}";
-            //var result = await client.Post<Resources>(endPoint,
-            //    new Dictionary<string, string>()
-            //    {
-            //        {nameof(options.Code).ToLower(),code},
-            //        {nameof(options.Actions).ToLower(),options.Actions.ConvertJson()},
-            //        {nameof(options.ApiIdentifier).ToLower(),options.ApiIdentifier ?? ""},
-            //        {nameof(options.NameSpace).ToLower(),options.NameSpace},
-            //        {nameof(options.Type).ToLower(),options.Type.ToString()},
-            //        {nameof(options.Description).ToLower(),options.Description},
-            //    });
             var result = await client.RequestCustomDataWithToken<Resources>(endPoint,
-                new Dictionary<string, string>()
+                new Dictionary<string, object>()
                 {
                         {nameof(options.Code).ToLower(),code},
-                        {nameof(options.Actions).ToLower(),options.Actions.ConvertJson()},
+                        {nameof(options.Actions).ToLower(),options.Actions},
                         {nameof(options.ApiIdentifier).ToLower(),options.ApiIdentifier ?? ""},
                         {nameof(options.NameSpace).ToLower(),options.NameSpace},
                         {nameof(options.Type).ToLower(),options.Type.ToString()},
                         {nameof(options.Description).ToLower(),options.Description},
-                }.ConvertJson()).ConfigureAwait(false);
+                }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data ?? null;
         }
@@ -334,7 +313,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<CommonMessage> Allow(string userid, string nameSpace, string resource, string action, AuthingErrorBox authingErrorBox = null)
         {
-            action.CheckParameter();
+            //action.CheckParameter();
             resource.CheckParameter();
             var param = new AllowParam(resource, action)
             {
@@ -342,7 +321,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Resource = resource,
                 Namespace = nameSpace
             };
-            var res = await client.Request<AllowResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AllowResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result ?? null;
         }
@@ -382,7 +361,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             action.CheckParameter();
             resource.CheckParameter();
-            var result = await client.Request<IsActionAllowedResponse>(new IsActionAllowedParam(resource, action, userId, namespacecode).CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<IsActionAllowedResponse>(new IsActionAllowedParam(resource, action, userId, namespacecode).CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
@@ -409,7 +388,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new ListAuthorizedResourcesParam(targetType, targetIdentifier, namespacecode,
                 options.ResourceType);
-            var result = await client.Request<ListAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<ListAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.AuthorizedResources ?? null;
         }
@@ -450,7 +429,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Actions = getAuthorizedTargetsOptions.Actions,
                 TargetType = getAuthorizedTargetsOptions.TargetType
             };
-            var res = await client.Request<AuthorizedTargetsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AuthorizedTargetsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result ?? null;
         }
@@ -476,7 +455,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Resource = resource,
                 Opts = authorizeResourceOptions
             };
-            var res = await client.Request<AuthorizeResourceResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AuthorizeResourceResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result ?? null;
         }
