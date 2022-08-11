@@ -47,6 +47,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public MapperService MapperService;
 
+        public IJsonService JsonService;
+
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {
             InitClient();
@@ -73,6 +75,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Acl = new AclManagementClient(this);
             Policies = new PoliciesManagementClient(this);
             Mfa = new MFAManagementClient(this);
+
+            JsonService = new JsonService();
         }
 
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)

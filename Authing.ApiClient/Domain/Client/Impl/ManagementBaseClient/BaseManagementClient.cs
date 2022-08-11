@@ -122,5 +122,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-sdk-version"] = version;
             return headers;
         }
+
+        public async Task<string> Request(string method, string apiPath, Dictionary<string, object> pairs, bool withToken = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<string> Request<T>(string method, string apiPath, T dto, bool withToken = true)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

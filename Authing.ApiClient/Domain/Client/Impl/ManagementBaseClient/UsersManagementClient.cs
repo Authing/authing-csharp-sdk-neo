@@ -21,6 +21,7 @@ using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Extensions;
 using Authing.Library.Domain.Model.Exceptions;
 using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.V3Model.Management.Models;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -865,6 +866,409 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/identity/unlink", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
+        }
+
+        ///<summary>
+        /// 获取用户信息
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        /// <param name="withCustomData">是否获取自定义数据</param>
+        /// <param name="withIdentities">是否获取 identities</param>
+        /// <param name="withDepartmentIds">是否获取部门 ID 列表</param>
+        ///<returns>UserSingleRespDto</returns>
+        public async Task<UserSingleRespDto> GetUser(string userId, string userIdType = "user_id", bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user", new Dictionary<string, object> {
+            {"userId",userId },
+            {"userIdType",userIdType },
+            {"withCustomData",withCustomData },
+            {"withIdentities",withIdentities },
+            {"withDepartmentIds",withDepartmentIds },
+        }).ConfigureAwait(false);
+            UserSingleRespDto result = client.JsonService.DeserializeObject<UserSingleRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 批量获取用户信息
+        ///</summary>
+        /// <param name="userIds">用户 ID 数组</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        /// <param name="withCustomData">是否获取自定义数据</param>
+        /// <param name="withIdentities">是否获取 identities</param>
+        /// <param name="withDepartmentIds">是否获取部门 ID 列表</param>
+        ///<returns>UserListRespDto</returns>
+        public async Task<UserListRespDto> GetUserBatch(string userIds, string userIdType = "user_id", bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-batch", new Dictionary<string, object> {
+            {"userIds",userIds },
+            {"userIdType",userIdType },
+            {"withCustomData",withCustomData },
+            {"withIdentities",withIdentities },
+            {"withDepartmentIds",withDepartmentIds },
+        }).ConfigureAwait(false);
+            UserListRespDto result = client.JsonService.DeserializeObject<UserListRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户列表
+        ///</summary>
+        /// <param name="page">当前页数，从 1 开始</param>
+        /// <param name="limit">每页数目，最大不能超过 50，默认为 10</param>
+        /// <param name="status">账户当前状态，如 已停用、已离职、正常状态、已归档</param>
+        /// <param name="updatedAtStart">用户创建、修改开始时间，为精确到秒的 UNIX 时间戳；支持获取从某一段时间之后的增量数据</param>
+        /// <param name="updatedAtEnd">用户创建、修改终止时间，为精确到秒的 UNIX 时间戳；支持获取某一段时间内的增量数据。默认为当前时间</param>
+        /// <param name="withCustomData">是否获取自定义数据</param>
+        /// <param name="withIdentities">是否获取 identities</param>
+        /// <param name="withDepartmentIds">是否获取部门 ID 列表</param>
+        ///<returns>UserPaginatedRespDto</returns>
+        public async Task<UserPaginatedRespDto> ListUsers(long page = 1, long limit = 10, string status = null, long updatedAtStart = 0, long updatedAtEnd = 0, bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/list-users", new Dictionary<string, object> {
+            {"page",page },
+            {"limit",limit },
+            {"status",status },
+            {"updatedAtStart",updatedAtStart },
+            {"updatedAtEnd",updatedAtEnd },
+            {"withCustomData",withCustomData },
+            {"withIdentities",withIdentities },
+            {"withDepartmentIds",withDepartmentIds },
+        }).ConfigureAwait(false);
+            UserPaginatedRespDto result = client.JsonService.DeserializeObject<UserPaginatedRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户的外部身份源
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>IdentityListRespDto</returns>
+        public async Task<IdentityListRespDto> GetUserIdentities(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-identities", new Dictionary<string, object> {
+            {"userId",userId },
+            {"userIdType",userIdType },
+        }).ConfigureAwait(false);
+            IdentityListRespDto result = client.JsonService.DeserializeObject<IdentityListRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户角色列表
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        /// <param name="nameSpace">所属权限分组的 code</param>
+        ///<returns>RolePaginatedRespDto</returns>
+        public async Task<RolePaginatedRespDto> GetUserRoles(string userId, string userIdType = "user_id", string nameSpace = null)
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-roles", new Dictionary<string, object> {
+            {"userId",userId },
+            {"userIdType",userIdType },
+            {"namespace",nameSpace },
+        }).ConfigureAwait(false);
+            RolePaginatedRespDto result = client.JsonService.DeserializeObject<RolePaginatedRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户实名认证信息
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>PrincipalAuthenticationInfoPaginatedRespDto</returns>
+        public async Task<PrincipalAuthenticationInfoPaginatedRespDto> GetUserPrincipalAuthenticationInfo(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-principal-authentication-info", new Dictionary<string, object> {
+            {"userId",userId },
+            {"userIdType",userIdType },
+        }).ConfigureAwait(false);
+            PrincipalAuthenticationInfoPaginatedRespDto result = client.JsonService.DeserializeObject<PrincipalAuthenticationInfoPaginatedRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 删除用户实名认证信息
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>IsSuccessRespDto</returns>
+        public async Task<IsSuccessRespDto> ResetUserPrincipalAuthenticationInfo(ResetUserPrincipalAuthenticationInfoDto requestBody
+    )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/reset-user-principal-authentication-info", requestBody).ConfigureAwait(false);
+            IsSuccessRespDto result = client.JsonService.DeserializeObject<IsSuccessRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户部门列表
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        /// <param name="page">当前页数，从 1 开始</param>
+        /// <param name="limit">每页数目，最大不能超过 50，默认为 10</param>
+        /// <param name="withCustomData">是否获取自定义数据</param>
+        /// <param name="sortBy">排序依据，如 部门创建时间、加入部门时间、部门名称、部门标志符</param>
+        /// <param name="orderBy">增序或降序</param>
+        ///<returns>UserDepartmentPaginatedRespDto</returns>
+        public async Task<UserDepartmentPaginatedRespDto> GetUserDepartments(string userId, string userIdType = "user_id", long page = 1, long limit = 10, bool withCustomData = false, string sortBy = "JoinDepartmentAt", string orderBy = "Desc")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-departments", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+        {"page",page },
+        {"limit",limit },
+        {"withCustomData",withCustomData },
+        {"sortBy",sortBy },
+        {"orderBy",orderBy },
+    }).ConfigureAwait(false);
+            UserDepartmentPaginatedRespDto result = client.JsonService.DeserializeObject<UserDepartmentPaginatedRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 设置用户所在部门
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>IsSuccessRespDto</returns>
+        public async Task<IsSuccessRespDto> SetUserDepartments(SetUserDepartmentsDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/set-user-departments", requestBody).ConfigureAwait(false);
+            IsSuccessRespDto result = client.JsonService.DeserializeObject<IsSuccessRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户分组列表
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>GroupPaginatedRespDto</returns>
+        public async Task<GroupPaginatedRespDto> GetUserGroups(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-groups", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+    }).ConfigureAwait(false);
+            GroupPaginatedRespDto result = client.JsonService.DeserializeObject<GroupPaginatedRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 删除用户
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>IsSuccessRespDto</returns>
+        public async Task<IsSuccessRespDto> DeleteUsersBatch(DeleteUsersBatchDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/delete-users-batch", requestBody).ConfigureAwait(false);
+            IsSuccessRespDto result = client.JsonService.DeserializeObject<IsSuccessRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户 MFA 绑定信息
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>UserMfaSingleRespDto</returns>
+        public async Task<UserMfaSingleRespDto> GetUserMfaInfo(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-mfa-info", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+    }).ConfigureAwait(false);
+            UserMfaSingleRespDto result = client.JsonService.DeserializeObject<UserMfaSingleRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取已归档的用户列表
+        ///</summary>
+        /// <param name="page">当前页数，从 1 开始</param>
+        /// <param name="limit">每页数目，最大不能超过 50，默认为 10</param>
+        /// <param name="startAt">开始时间，为精确到秒的 UNIX 时间戳，默认不指定</param>
+        ///<returns>ListArchivedUsersSingleRespDto</returns>
+        public async Task<ListArchivedUsersSingleRespDto> ListArchivedUsers(long page = 1, long limit = 10, long startAt = 0)
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/list-archived-users", new Dictionary<string, object> {
+        {"page",page },
+        {"limit",limit },
+        {"startAt",startAt },
+    }).ConfigureAwait(false);
+            ListArchivedUsersSingleRespDto result = client.JsonService.DeserializeObject<ListArchivedUsersSingleRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 强制下线用户
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>IsSuccessRespDto</returns>
+        public async Task<IsSuccessRespDto> KickUsers(KickUsersDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/kick-users", requestBody).ConfigureAwait(false);
+            IsSuccessRespDto result = client.JsonService.DeserializeObject<IsSuccessRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 判断用户是否存在
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>IsUserExistsRespDto</returns>
+        public async Task<IsUserExistsRespDto> IsUserExists(IsUserExistsReqDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/is-user-exists", requestBody).ConfigureAwait(false);
+            IsUserExistsRespDto result = client.JsonService.DeserializeObject<IsUserExistsRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 创建用户
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>UserSingleRespDto</returns>
+        public async Task<UserSingleRespDto> CreateUser(CreateUserReqDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/create-user", requestBody).ConfigureAwait(false);
+            UserSingleRespDto result = client.JsonService.DeserializeObject<UserSingleRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 批量创建用户
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>UserListRespDto</returns>
+        public async Task<UserListRespDto> CreateUsersBatch(CreateUserBatchReqDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/create-users-batch", requestBody).ConfigureAwait(false);
+            UserListRespDto result = client.JsonService.DeserializeObject<UserListRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 修改用户资料
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>UserSingleRespDto</returns>
+        public async Task<UserSingleRespDto> UpdateUser(UpdateUserReqDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/update-user", requestBody).ConfigureAwait(false);
+            UserSingleRespDto result = client.JsonService.DeserializeObject<UserSingleRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户可访问的应用
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>AppListRespDto</returns>
+        public async Task<AppListRespDto> GetUserAccessibleApps(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-accessible-apps", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+    }).ConfigureAwait(false);
+            AppListRespDto result = client.JsonService.DeserializeObject<AppListRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户授权的应用
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>AppListRespDto</returns>
+        public async Task<AppListRespDto> GetUserAuthorizedApps(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-authorized-apps", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+    }).ConfigureAwait(false);
+            AppListRespDto result = client.JsonService.DeserializeObject<AppListRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 判断用户是否有某个角色
+        ///</summary>
+        /// <param name="requestBody"></param>
+        ///<returns>HasAnyRoleRespDto</returns>
+        public async Task<HasAnyRoleRespDto> HasAnyRole(HasAnyRoleReqDto requestBody
+        )
+        {
+            string httpResponse = await client.Request("POST", "/api/v3/has-any-role", requestBody).ConfigureAwait(false);
+            HasAnyRoleRespDto result = client.JsonService.DeserializeObject<HasAnyRoleRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户的登录历史记录
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        /// <param name="appId">应用 ID</param>
+        /// <param name="clientIp">客户端 IP</param>
+        /// <param name="start">开始时间戳（毫秒）</param>
+        /// <param name="end">结束时间戳（毫秒）</param>
+        /// <param name="page">当前页数，从 1 开始</param>
+        /// <param name="limit">每页数目，最大不能超过 50，默认为 10</param>
+        ///<returns>UserLoginHistoryPaginatedRespDto</returns>
+        public async Task<UserLoginHistoryPaginatedRespDto> GetUserLoginHistory(string userId, string userIdType = "user_id", string appId = null, string clientIp = null, long start = 0, long end = 0, long page = 1, long limit = 10)
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-login-history", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+        {"appId",appId },
+        {"clientIp",clientIp },
+        {"start",start },
+        {"end",end },
+        {"page",page },
+        {"limit",limit },
+    }).ConfigureAwait(false);
+            UserLoginHistoryPaginatedRespDto result = client.JsonService.DeserializeObject<UserLoginHistoryPaginatedRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 通过用户 ID，获取用户曾经登录过的应用，可以选择指定用户 ID 类型等。
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>UserLoggedInAppsListRespDto</returns>
+        public async Task<UserLoggedInAppsListRespDto> GetUserLoggedinApps(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-loggedin-apps", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+    }).ConfigureAwait(false);
+            UserLoggedInAppsListRespDto result = client.JsonService.DeserializeObject<UserLoggedInAppsListRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 通过用户 ID，获取用户曾经登录过的身份源，可以选择指定用户 ID 类型等。
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        ///<returns>UserLoggedInIdentitiesRespDto</returns>
+        public async Task<UserLoggedInIdentitiesRespDto> GetUserLoggedinIdentities(string userId, string userIdType = "user_id")
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-logged-in-identities", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+    }).ConfigureAwait(false);
+            UserLoggedInIdentitiesRespDto result = client.JsonService.DeserializeObject<UserLoggedInIdentitiesRespDto>(httpResponse);
+            return result;
+        }
+        ///<summary>
+        /// 获取用户被授权的所有资源
+        ///</summary>
+        /// <param name="userId">用户 ID</param>
+        /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
+        /// <param name="nameSpace">所属权限分组的 code</param>
+        /// <param name="resourceType">资源类型，如 数据、API、菜单、按钮</param>
+        ///<returns>AuthorizedResourcePaginatedRespDto</returns>
+        public async Task<AuthorizedResourcePaginatedRespDto> GetUserAuthorizedResources(string userId, string userIdType = "user_id", string nameSpace = null, string resourceType = null)
+        {
+            string httpResponse = await client.Request("GET", "/api/v3/get-user-authorized-resources", new Dictionary<string, object> {
+        {"userId",userId },
+        {"userIdType",userIdType },
+        {"namespace",nameSpace },
+        {"resourceType",resourceType },
+    }).ConfigureAwait(false);
+            AuthorizedResourcePaginatedRespDto result = client.JsonService.DeserializeObject<AuthorizedResourcePaginatedRespDto>(httpResponse);
+            return result;
         }
     }
 }
