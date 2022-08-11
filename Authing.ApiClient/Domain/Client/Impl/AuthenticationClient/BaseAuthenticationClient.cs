@@ -84,50 +84,68 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, string accessToken = null)
         {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await Request<TResponse>(body, headers).ConfigureAwait(false);
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
+                contenttype: ContentType.JSON).ConfigureAwait(false);
+            //var headers = new Dictionary<string, string>();
+            //headers = GetAuthHeaders(true);
+            //return await Request<TResponse>(body, headers).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Post<TResponse>(api, body, headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson()).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Get<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson(), method: HttpMethod.Get).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();
             headers = GetAuthHeaders(true);
-            return await Delete<GraphQLRequest, TResponse>(api, body, headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson(), method: HttpMethod.Delete).ConfigureAwait(false);
         }
 
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson, string accessToken = null)
         {
-            var headers = new Dictionary<string, string>();
+            //var headers = new Dictionary<string, string>();
 
-            if (!string.IsNullOrEmpty(accessToken))
-            {
-                headers["Authorization"] = "bearer " + accessToken;
-            }
-            else
-            {
-                var token = await GetAccessToken().ConfigureAwait(false);
-                headers["Authorization"] = "bearer " + token;
-            }
+            //if (!string.IsNullOrEmpty(accessToken))
+            //{
+            //    headers["Authorization"] = "bearer " + accessToken;
+            //}
+            //else
+            //{
+            //    var token = await GetAccessToken().ConfigureAwait(false);
+            //    headers["Authorization"] = "bearer " + token;
+            //}
 
-            headers["x-authing-userpool-id"] = UserPoolId;
-            headers["x-authing-request-from"] = type;
-            headers["x-authing-sdk-version"] = version;
-            return await PostRaw<TResponse>(api, rawjson, headers).ConfigureAwait(false);
+            //headers["x-authing-userpool-id"] = UserPoolId;
+            //headers["x-authing-request-from"] = type;
+            //headers["x-authing-sdk-version"] = version;
+            //return await PostRaw<TResponse>(api, rawjson, headers).ConfigureAwait(false);
+            return await RequestCustomDataWithToken<TResponse>(api, rawjson, contenttype: ContentType.JSON);
+        }
+
+        public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithOutToken<TResponse>(GraphQLRequest body)
+        {
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            return await RequestCustomDataWithOutToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
+                contenttype: ContentType.JSON).ConfigureAwait(false);
+        }
+
+        public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(GraphQLRequest body)
+        {
+            var preprocessedRequest = new GraphQLHttpRequest(body);
+            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
+                contenttype: ContentType.JSON).ConfigureAwait(false);
         }
 
         protected async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url,

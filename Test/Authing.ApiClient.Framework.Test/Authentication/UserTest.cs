@@ -6,33 +6,42 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 {
     public class UserTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void GetCurrentUser_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
             var user = await client.GetCurrentUser();
 
             Assert.NotNull(user);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void User_GetCurrentUserWithToken()
         {
             var client = authenticationClient;
-            await client.LoginByUsername("13348926753", "3866364", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
             var user = await client.GetCurrentUser(client.AccessToken);
 
             Assert.NotNull(user);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void Logout_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
             client.CheckLoggedIn();
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
@@ -42,46 +51,55 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.True(msg.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void SetUdfValue_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var kic = new Types.KeyValueDictionary { };
 
-            kic.Add("key1", "value1");
+            kic.Add("testprop", "123456");
 
             var result = await client.SetUdfValue(kic);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void SetUdv_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dics = await client.ListUdv();
 
-            var result = await client.SetUdv("UserInfo", "value11");
+            var result = await client.SetUdv("testprop", "00000000");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void GetUdfValue_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dic = new Types.KeyValueDictionary { };
 
-            dic.Add("22222", "222");
+            dic.Add("testprop", "12345678");
 
             await client.SetUdfValue(dic);
 
@@ -90,50 +108,59 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveUdfValue_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dic = new Types.KeyValueDictionary { };
 
-            dic.Add("22222", "222");
+            dic.Add("testprop", "12345678");
 
             await client.SetUdfValue(dic);
 
-            var result = await client.RemoveUdfValue("UserInfo");
+            var result = await client.RemoveUdfValue("testprop");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveUdv_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dics = await client.ListUdv();
 
             var kic = new Types.KeyValueDictionary { };
 
-            kic.Add("key1", "value1");
+            kic.Add("testprop", "99999999");
 
             await client.SetUdfValue(kic);
 
-            var result = await client.RemoveUdv("key1");
+            var result = await client.RemoveUdv("testprop");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void ListOrg_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong9999", "3866364", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var result = await client.ListOrgs();
 
