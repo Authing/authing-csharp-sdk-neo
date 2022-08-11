@@ -62,6 +62,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         private void InitClient()
         {
+            JsonService = new JsonService();
+            MapperService = new MapperService();
+
             Users = new UsersManagementClient(this);
             Applications = new ApplicationsManagementClient(this);
             Tennat = new TenantManagementClient(this);
@@ -75,8 +78,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Acl = new AclManagementClient(this);
             Policies = new PoliciesManagementClient(this);
             Mfa = new MFAManagementClient(this);
-
-            JsonService = new JsonService();
         }
 
         public static async Task<ManagementClient> InitManagementClient(string userPoolId, string secret)

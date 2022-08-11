@@ -21,6 +21,7 @@ using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Extensions;
 using Authing.Library.Domain.Model.Exceptions;
 using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.V3Model.Management.Models;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -501,6 +502,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds, AuthingErrorBox authingErrorBox = null)
         {
+            string httpResponse = await client.Request("GET", "/api/v3/get-custom-data", new Dictionary<string, object>
+            {
+                 {"targetType","USER" },
+                 {"targetIdentifier","userId" },
+                 }).ConfigureAwait(false);
+            GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
+           
+
             if (userIds.Length < 1)
             {
                 throw new Exception("empty user id list");

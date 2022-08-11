@@ -113,7 +113,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         }
 
         private async Task<Dictionary<string, string>> GetHeaderWithToken(Dictionary<string, string> headers)
-        { 
+        {
             headers ??= new Dictionary<string, string>();
             var token = await GetAccessToken().ConfigureAwait(false);
             headers["Authorization"] = token;
@@ -125,12 +125,53 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<string> Request(string method, string apiPath, Dictionary<string, object> pairs, bool withToken = true)
         {
-            throw new NotImplementedException();
+
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers = await GetHeaderWithToken(headers);
+
+            if (!withToken)
+            {
+                if (headers.ContainsKey("Authorization"))
+                {
+                    headers.Remove("Authorization");
+                }
+            }
+
+            Dictionary<string, string> dic = pairs.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value == null ? "" : valueItem.Value.ToString());
+
+            string json = await RequestNoGraphQLResponse<string>(Host + apiPath, dic.Convert2QueryParams(), headers, HttpMethod.Get, ContentType.JSON);
+
+            return json;
         }
 
-        public async Task<string> Request<T>(string method,string apiPath,T dto,bool withToken=true)
+        public async Task<string> Request<T>(string method, string apiPath, T dto, bool withToken = true)
         {
-            throw new NotImplementedException();
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers = await GetHeaderWithToken(headers);
+
+            if (!withToken)
+            {
+                if (headers.ContainsKey("Authorization"))
+                {
+                    headers.Remove("Authorization");
+                }
+            }
+
+            string dtoJson = dto.ConvertJson();
+
+            string json = await RequestNoGraphQLResponse<string>(Host + apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
+            return json;
+        }
+
+        private bool IfTokenValid(long? accessTokenExpirAt)
+        {
+            long dateTime = DateTimeOffset.Now.Second;
+
+            if (accessTokenExpirAt.HasValue && accessTokenExpirAt.Value > dateTime + 3600)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
