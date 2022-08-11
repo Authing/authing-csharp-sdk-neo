@@ -7,21 +7,24 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 {
     public class UserTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void ListUser_Test()
         {
             var client = managementClient;
 
-            string roleCode = "ListUserRole";
+            string roleCode = "test";
 
             await client.Roles.Create(roleCode);
 
             List<string> userIds = new List<string>();
-            userIds.Add("61a7274c582843df40616620");
+            userIds.Add(TestUserId);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var message = await client.Roles.AddUsers(roleCode, userIds,authingErrorBox);
+            var message = await client.Roles.AddUsers(roleCode, userIds,"default",authingErrorBox);
 
             Assert.True(message.Code == 200);
 
@@ -30,19 +33,22 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             Assert.True(userList.TotalCount == 1 && userList.List.Count() == 1);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void ListUseWithNameSpacer_Test()
         {
             var client = managementClient;
 
-            string roleCode = "ListUserRole";
+            string roleCode = "test";
 
-            string nameSpace = "613189b38b6c66cac1d211bd";
+            string nameSpace = "default";
 
             await client.Roles.Create(roleCode, null, null, nameSpace);
 
             List<string> userIds = new List<string>();
-            userIds.Add("61a7274c582843df40616620");
+            userIds.Add(TestUserId);
 
             var message = await client.Roles.AddUsers(roleCode, userIds, nameSpace);
 
@@ -53,14 +59,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
             Assert.True(userList.TotalCount == 1 && userList.List.Count() == 1);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveUser_Test()
         {
             var client = managementClient;
 
-            string roleCode = "ListUserRole";
+            string roleCode = "test";
 
-            string nameSpace = "613189b38b6c66cac1d211bd";
+            string nameSpace = "default";
 
             await client.Roles.Create(roleCode);
 
@@ -70,19 +79,22 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var msg = await client.Roles.Delete(roleCode,authingErrorBox);
+            var msg = await client.Roles.Delete(roleCode,"default",authingErrorBox);
 
             Assert.True(msg.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveUserWithNameSpace_Test()
         {
             var client = managementClient;
 
-            string roleCode = "ListUserRole";
+            string roleCode = "test";
 
-            string nameSpace = "613189b38b6c66cac1d211bd";
+            string nameSpace = "default";
 
             await client.Roles.Create(roleCode, null, null, nameSpace);
 

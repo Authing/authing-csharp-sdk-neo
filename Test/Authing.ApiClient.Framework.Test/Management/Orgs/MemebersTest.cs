@@ -1,78 +1,100 @@
 ﻿using Authing.Library.Domain.Model.Exceptions;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
     public class MemebersTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void AddMemebers_Test()
         {
             var client = managementClient;
 
-            string userId = "62c3e974562f434f6fb66bb3 ";
-
             List<string> userList = new List<string>();
-            userList.Add("62c3e974562f434f6fb66bb3");
+            userList.Add(TestUserId);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await client.Orgs.AddMembers("629872091ab96fdcc3904085", userList,authingErrorBox);
+            var res = await client.Orgs.SearchNodes("Tommy");
+
+            var result = await client.Orgs.AddMembers(res.First().Id, userList,authingErrorBox);
 
             Assert.NotNull(result.Users);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void MoveMembers_Test()
         {
             var client = managementClient;
 
             List<string> userList = new List<string>();
-            userList.Add("61a7274c582843df40616620");
+            userList.Add(TestUserId);
+
+            var res = await client.Orgs.SearchNodes("Tommy");
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await client.Orgs.MoveMembers("629872091ab96fdcc3904085", "61af013de6c68c3f1369d8", userList,authingErrorBox);
+            var result = await client.Orgs.MoveMembers(res.First().Id, "62a95f2be36aead9f9b0e002", userList,authingErrorBox);
 
             Assert.True(result.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void SetMainDepartment_Test()
         {
             var client = managementClient;
 
-            string userId = "61a7274c582843df40616620 ";
+            string userId = TestUserId;
 
-            string departmentId = "61af013de626c68c3f1369d8";
+            var res = await client.Orgs.SearchNodes("Tommy");
 
-            var result = await client.Orgs.SetMainDepartment(userId, departmentId);
+            var result = await client.Orgs.SetMainDepartment(userId, res.First().Id);
 
             Assert.True(result.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void ListMemeber_Test()
         {
             var client = managementClient;
 
-            string departmentId = "61af013d691c6cd83c4a8ac4";
+            var res = await client.Orgs.SearchNodes("Tommy");
+
+            string departmentId = res.First().Id;
 
             var result = await client.Orgs.ListMembers(departmentId, new Domain.Model.Management.Orgs.NodeByIdWithMembersParam(departmentId) { });
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveMemebers_Test()
         {
             var client = managementClient;
 
             List<string> userList = new List<string>();
-            userList.Add("61a7274c582843df40616620");
+            userList.Add(TestUserId);
 
-            string departmentId = "61af013d691c6cd83c4a8ac4";
+            var res = await client.Orgs.SearchNodes("Tommy");
+
+            string departmentId = res.First().Id;
 
             var result = await client.Orgs.RemoveMembers(departmentId, userList);
 

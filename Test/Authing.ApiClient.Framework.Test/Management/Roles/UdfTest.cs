@@ -7,14 +7,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
 {
     public class UdfTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-10 测试不通过
+        /// </summary>
         [Fact]
         public async void GetUdfValue_Test()
         {
             var client = managementClient;
 
-            string roleCode = "admin";
+            string roleCode = "test";
 
-            string nameSpace = "613189b38b6c66cac1d211bd";
+            string nameSpace = "default";
 
             var role = await client.Roles.FindByCode(roleCode, nameSpace);
 
