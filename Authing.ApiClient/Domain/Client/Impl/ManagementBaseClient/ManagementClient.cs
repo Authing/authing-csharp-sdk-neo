@@ -9,6 +9,7 @@ using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.Library.Domain.Model.V3Model;
+using Authing.Library.Domain.Utils;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
@@ -43,6 +44,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public IPrincipalManagementClient Principal { get; private set; }
 
         public Action<InitAuthenticationClientOptions> Init { get; }
+
+        public MapperService MapperService;
 
         public ManagementClient(string userPoolId, string secret) : base(userPoolId, secret)
         {

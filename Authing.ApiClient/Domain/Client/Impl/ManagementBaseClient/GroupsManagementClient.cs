@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Management;
 using Authing.ApiClient.Domain.Model.Management.Groups;
+using Authing.ApiClient.Extensions;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.Library.Domain.Client.Impl;
 using Authing.Library.Domain.Model.Exceptions;
+using Authing.Library.Domain.Model.V3Model.Management.Group;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -25,6 +27,19 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public GroupsManagementClient(ManagementClient client)
         {
             this.client = client;
+
+            ConfigMapper();
+
+        }
+
+        private void ConfigMapper()
+        {
+            client.MapperService.CreateMap<GroupDto,Group >().AfterMapping((GroupDto src,Group des) => 
+            {
+                //des.Code = src.Code;
+                //des.Name=src.
+
+            });
         }
 
         /// <summary>
@@ -86,6 +101,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Group> Detail(string code,AuthingErrorBox authingErrorBox=null)
         {
+           var json= await client.RequestCustomDataWithTokenV3<GroupDto>(url:$"api/v3/get-group?code={code}", method: System.Net.Http.HttpMethod.Get);
+
             var param = new GroupParam(code);
 
             var res = await client.Request<GroupResponse>(param.CreateRequest()).ConfigureAwait(false);

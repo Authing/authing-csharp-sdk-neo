@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Authing.Library.Domain.Utils
 {
-    internal class MapperService
+    public class MapperService
     {
         private readonly TypeAdapterConfig m_typeAdapterConfig;
 
@@ -26,7 +26,7 @@ namespace Authing.Library.Domain.Utils
         }
     }
 
-    internal class MapperConfig<TSource, TDestination> : IMapperConfig<TSource, TDestination>
+    public class MapperConfig<TSource, TDestination> : IMapperConfig<TSource, TDestination>
     {
         private readonly TypeAdapterSetter<TSource, TDestination> m_ExternalConfigInstance;
 
@@ -48,7 +48,7 @@ namespace Authing.Library.Domain.Utils
         }
     }
 
-    interface IMapperConfig<TSource,TDestination>
+   public interface IMapperConfig<TSource,TDestination>
     {
         IMapperConfig<TSource, TDestination> AfterMapping(Action<TSource,TDestination> action);
 

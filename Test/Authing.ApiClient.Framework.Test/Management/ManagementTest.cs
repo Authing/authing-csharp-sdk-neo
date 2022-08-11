@@ -27,7 +27,7 @@ namespace Authing.ApiClient.Framework.Test.Management
 
             var result = await client.IsPasswordValid("386664");
 
-            Assert.True(result.statusCode == 200);
+            Assert.True(result.StatusCode == 200);
         }
 
         [Fact]

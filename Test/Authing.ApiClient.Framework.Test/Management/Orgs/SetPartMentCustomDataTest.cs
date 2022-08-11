@@ -20,7 +20,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 
             var result = await client.Orgs.SetPartMentCustomData<SetCustomDataResponse>(res.First().Id, "isSecurity", "123");
             //result = await client.Orgs.SetPartMentCustomData<SetCustomDataResponse>(res.First().Id, "isDistribution", "123");
-            Assert.NotNull(result.statusCode == 200);
+            Assert.NotNull(result.StatusCode == 200);
         }
 
     }
