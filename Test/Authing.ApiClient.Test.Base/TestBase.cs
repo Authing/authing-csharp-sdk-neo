@@ -11,8 +11,8 @@
 
         protected static string UserPoolId { get; set; } = "617280674680a6ca2b1f6317";
         protected static string UserPoolSecret { get; set; } = "6671136fa932eb692735a6f82af3b67b";
-        protected static string AppSecret { get; set; } = "879fdbe5408cfe09d6f69755b77df2fd";
-        protected static string AppId { get; set; } = "61c2d04b36324259776af784";
+        protected static string AppSecret { get; set; } = "e1497fad2404fcef1065c4b386cbc5fc";
+        protected static string AppId { get; set; } = "62a99822ff635db21c2ec21c";
 
         protected static string TestUserId = "61a82941979c96c04ed9e920";
 

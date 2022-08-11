@@ -16,6 +16,7 @@ using Authing.ApiClient.Domain.Model.Management.Department;
 using System.Text.RegularExpressions;
 using Authing.ApiClient.Domain.Model.Management.Users;
 using System.Linq;
+using System.Net.Http;
 using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Domain.Model.GraphQLResponse;
 using Authing.ApiClient.Interfaces.AuthenticationClient;
@@ -191,7 +192,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<RegisterByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<RegisterByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -261,7 +262,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             authingErrorBox?.Clear();
-            var res = await Request<RegisterByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<RegisterByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -347,7 +348,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             authingErrorBox?.Clear();
-            var res = await Request<RegisterByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<RegisterByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -367,7 +368,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var param = new CheckPasswordStrengthParam(password);
             authingErrorBox?.Clear();
 
-            var res = await Request<CheckPasswordStrengthResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<CheckPasswordStrengthResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -390,6 +391,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 {nameof(phone), phone }
             }.ConvertJson()).ConfigureAwait(false);
+
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -460,7 +462,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<LoginByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<LoginByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -535,7 +537,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<LoginByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<LoginByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -607,7 +609,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<LoginByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<LoginByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -683,7 +685,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<LoginByPhonePasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<LoginByPhonePasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
 
             if (res.Errors != null)
             {
@@ -744,7 +746,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<CheckLoginStatusResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<CheckLoginStatusResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -767,7 +769,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -827,7 +829,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<ResetPasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<ResetPasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -894,7 +896,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var param = new UpdateUserParam(updates);
 
             authingErrorBox?.Clear();
-            var res = await Request<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -920,7 +922,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 OldPassword = EncryptHelper.RsaEncryptWithPublic(oldPassword, PublicKey),
             };
             authingErrorBox?.Clear();
-            var res = await Request<UpdatePasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithOutToken<UpdatePasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -957,7 +959,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             };
 
             authingErrorBox?.Clear();
-            var res = await Request<UpdatePhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UpdatePhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -994,7 +996,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             };
 
             authingErrorBox?.Clear();
-            var res = await Request<UpdateEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UpdateEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -1017,7 +1019,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var param = new RefreshTokenParam() { };
 
             authingErrorBox?.Clear();
-            var res = await Request<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -1093,7 +1095,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<BindPhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<BindPhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -1116,7 +1118,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var param = new UnbindPhoneParam();
 
             authingErrorBox?.Clear();
-            var res = await Request<UnbindPhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UnbindPhoneResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -1142,7 +1144,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var param = new BindEmailParam(email, emailCode);
 
             authingErrorBox?.Clear();
-            var res = await Request<BindEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<BindEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -1165,7 +1167,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var param = new UnbindEmailParam();
 
             authingErrorBox?.Clear();
-            var res = await Request<UnbindEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UnbindEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -1186,7 +1188,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<User> GetCurrentUser(AuthingErrorBox authingErrorBox = null)
         {
             var param = new UserParam();
-            var res = await Request<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
 
             authingErrorBox?.Clear();
             if (res.Errors != null)
@@ -1209,8 +1211,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<User> GetCurrentUser(string accessToken, AuthingErrorBox authingErrorBox = null)
         {
             var param = new UserParam();
-
-            var res = await Request<UserResponse>(param.CreateRequest(), accessToken).ConfigureAwait(false);
+            var preprocessedRequest = new GraphQLHttpRequest(param.CreateRequest());
+            var header = new Dictionary<string, string>() { { "Authorization", "Bearer " + accessToken } };
+            var res = await RequestCustomDataWithOutToken<UserResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(), 
+                header, contenttype: ContentType.JSON).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1232,7 +1236,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<CommonMessage> Logout(AuthingErrorBox authingErrorBox = null)
         {
-            var res = await Get<CommonMessage>($"api/v2/logout/?app_id={Options.AppId}", null).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<CommonMessage>($"api/v2/logout/?app_id={Options.AppId}",method: HttpMethod.Get).ConfigureAwait(false);
 
             authingErrorBox?.Clear();
             if (res.Errors != null)
@@ -1262,7 +1266,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             CheckLoggedIn();
             var param = new UdvParam(UdfTargetType.USER, User.Id);
-            var res = await Request<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1283,7 +1287,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             CheckLoggedIn();
             var param = new SetUdvParam(UdfTargetType.USER, User.Id, key, value.ConvertJson());
-            var res = await Request<SetUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<SetUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1308,7 +1312,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             CheckLoggedIn();
             var param = new RemoveUdvParam(UdfTargetType.USER, User.Id, key);
-            var res = await Request<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1340,7 +1344,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>组织列表</returns>
         public async Task<ListOrgsResult> ListOrgs(AuthingErrorBox authingErrorBox = null)
         {
-            var res = await Get<object>("api/v2/users/me/orgs", null).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<object>("api/v2/users/me/orgs", method: HttpMethod.Get).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1394,8 +1398,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return res.Data;
         }
 
-        // TODO: 缺少 loginByLdap 重载方法
-
         /// <summary>
         /// 通过 AD 登录
         /// </summary>
@@ -1409,11 +1411,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var firstLevelDomain = new Uri(Host).Host;
 
-            var result = await Post<User>("api/v2/ad/verify-user", new Dictionary<string, string>
+            var result = await RequestCustomDataWithOutToken<User>("api/v2/ad/verify-user", new Dictionary<string, string>
             {
                 {"username",username },
                 { "password",password}
-            }).ConfigureAwait(false);
+            }.ConvertJson()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (result.Errors != null)
             {
@@ -1436,7 +1438,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var userId = CheckLoggedIn();
             var param = new UdvParam(UdfTargetType.USER, userId);
-            var res = await Request<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1466,7 +1468,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 input.Add(new UserDefinedDataInput(item.Key)
                 {
                     Key = item.Key,
-                    Value = item.Value.ConvertJson(),
+                    Value = item.Value.ConvertJson()
                 });
             }
             var userId = CheckLoggedIn();
@@ -1474,7 +1476,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 UdvList = input,
             };
-            var res = await Request<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1495,7 +1497,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             var userId = CheckLoggedIn();
             var param = new RemoveUdvParam(UdfTargetType.USER, userId, key);
-            var res = await Request<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
