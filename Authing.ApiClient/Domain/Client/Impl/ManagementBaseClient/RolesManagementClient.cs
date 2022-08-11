@@ -82,7 +82,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = nameSpace
             };
-            var res = await client.Post<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -94,7 +94,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = description,
                 NewCode = newCode,
             };
-            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -107,7 +107,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Description = updateRoleOptions.Description,
                 NewCode = updateRoleOptions.NewCode,
             };
-            var res = await client.Post<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UpdateRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -115,7 +115,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Role> Detail(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RoleParam(code);
-            var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -126,7 +126,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Namespace = nameSpace
             };
-            var res = await client.Post<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -162,7 +162,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<PaginatedUsers> ListUsers(string code,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RoleWithUsersParam(code);
-            var res = await client.Post<RoleWithUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RoleWithUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result.Users;
         }
@@ -178,7 +178,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Page = listUsersOption.Page,
                     Namespace = listUsersOption.NameSpace
                 };
-                var _res = await client.Post<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                var _res = await client.RequestCustomDataWithToken<RoleWithUsersResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data?.Result.Users;
             }
@@ -191,7 +191,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Page = listUsersOption.Page,
                     Limit = listUsersOption.Limit
                 };
-                var _res = await client.Post<RoleWithUsersWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                var _res = await client.RequestCustomDataWithToken<RoleWithUsersWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data?.Result.Users;
             }
@@ -204,7 +204,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UserIds = userIds,
                 RoleCode = code
             };
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -217,7 +217,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = nameSpace
             };
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -230,7 +230,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UserIds = userIds,
                 RoleCode = code
             };
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -246,7 +246,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleCode = code,
                 Namespace = nameSpace,
             };
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data?.Result;
         }
 
@@ -271,7 +271,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 TargetIdentifiers = new string[] { code },
             };
 
-            var res = await client.Post<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -282,7 +282,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 TargetIdentifiers = new string[] { code },
             };
-            var res = await client.Post<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -306,7 +306,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleCode,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdvParam(UdfTargetType.ROLE, roleCode);
-            var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
         }
@@ -314,7 +314,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<KeyValuePair<string, object>> GetSpecificUdfValue(string roleId, string udfKey,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdvParam(UdfTargetType.ROLE, roleId);
-            var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             var udfList = AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
             var keyValuePair = udfList.Where(item => item.Key == udfKey).ToList();
@@ -324,7 +324,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(IEnumerable<string> roleIds,AuthingErrorBox authingErrorBox=null)
         {
             var param = new UdfValueBatchParam(UdfTargetType.ROLE, roleIds);
-            var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
             res.Data.Result.ToList().ForEach(
@@ -350,7 +350,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 UdvList = _udvList
             };
-            var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -368,7 +368,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     param.Add(new SetUdfValueBatchInput(setUdfValueBatch.RoleId, udf.Key, udf.Value))
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.ROLE, param);
-            var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -376,7 +376,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<IEnumerable<UserDefinedData>> RemoveUdfValue(string roleId, string key,AuthingErrorBox authingErrorBox=null)
         {
             var param = new RemoveUdvParam(UdfTargetType.ROLE, roleId, key);
-            var res = await client.Post<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RemoveUdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
