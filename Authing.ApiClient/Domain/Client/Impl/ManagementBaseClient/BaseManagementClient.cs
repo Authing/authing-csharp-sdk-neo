@@ -139,9 +139,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             Dictionary<string, string> dic = pairs.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value == null ? "" : valueItem.Value.ToString());
 
-            string json = await RequestNoGraphQLResponse<string>(Host + apiPath, dic.Convert2QueryParams(), headers, HttpMethod.Get, ContentType.JSON);
+            object json = await RequestNoGraphQLResponse<object>(UrlCombine(apiPath,dic), dic.ConvertJson(), headers, HttpMethod.Get, ContentType.JSON);
 
-            return json;
+            string result = json.ConvertJsonNoCamel();
+
+            return result;
         }
 
         public async Task<string> Request<T>(string method, string apiPath, T dto, bool withToken = true)
@@ -159,7 +161,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             string dtoJson = dto.ConvertJson();
 
-            string json = await RequestNoGraphQLResponse<string>(Host + apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
+            string json = await RequestNoGraphQLResponse<string>( apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
             return json;
         }
 
@@ -172,6 +174,35 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 return true;
             }
             return false;
+        }
+
+        private string UrlCombine(  string apiUrl, Dictionary<string, string> param)
+        {
+            if (string.IsNullOrWhiteSpace(apiUrl))
+            {
+                apiUrl = string.Empty;
+            }
+
+            apiUrl = apiUrl.TrimStart('/');
+            string result =   apiUrl;
+
+            if (param is null || param.Count == 0)
+            {
+                return result;
+            }
+
+            string connector = "?";
+            foreach (var x in param)
+            {
+                if (string.IsNullOrWhiteSpace(x.Value))
+                {
+                    continue;
+                }
+
+                result += $"{connector}{x.Key}={x.Value}";
+                connector = "&";
+            }
+            return result;
         }
     }
 }

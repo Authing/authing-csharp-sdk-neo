@@ -502,26 +502,34 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds, AuthingErrorBox authingErrorBox = null)
         {
-            string httpResponse = await client.Request("GET", "/api/v3/get-custom-data", new Dictionary<string, object>
-            {
-                 {"targetType","USER" },
-                 {"targetIdentifier","userId" },
-                 }).ConfigureAwait(false);
-            GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
-           
-
-            if (userIds.Length < 1)
-            {
-                throw new Exception("empty user id list");
-            }
-            var param = new UdfValueBatchParam(UdfTargetType.USER, userIds);
-            var res = await client.RequestCustomDataWithToken<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
-            ErrorHelper.LoadError(res, authingErrorBox);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
-            foreach (var item in res.Data.Result)
+
+            foreach (var item in userIds)
             {
-                dic.Add(item.TargetId, AuthingUtils.ConverUdvToKeyValuePair(item.Data));
+
+                string httpResponse = await client.Request("GET", "api/v3/get-custom-data", new Dictionary<string, object>
+                {
+                 {"targetType","USER" },
+                 {"targetIdentifier",userIds.FirstOrDefault() },
+                 }).ConfigureAwait(false);
+                GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
+
+                dic.Add(item,client.JsonService.DeserializeObject<Dictionary<string, object>>(result.Data.ConvertJsonNoCamel()).ToList());
             }
+
+
+            //if (userIds.Length < 1)
+            //{
+            //    throw new Exception("empty user id list");
+            //}
+            //var param = new UdfValueBatchParam(UdfTargetType.USER, userIds);
+            //var res = await client.RequestCustomDataWithToken<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            //ErrorHelper.LoadError(res, authingErrorBox);
+            //var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
+            //foreach (var item in res.Data.Result)
+            //{
+            //    dic.Add(item.TargetId, AuthingUtils.ConverUdvToKeyValuePair(item.Data));
+            //}
             return dic;
         }
 
