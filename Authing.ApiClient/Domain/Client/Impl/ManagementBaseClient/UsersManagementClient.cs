@@ -820,7 +820,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<User> GetUserTenants(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.RequestCustomDataWithToken<User>($"api/v2/users/{userId}/tenants",method: HttpMethod.Get).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<User>($"api/v2/users/{userId}/tenants", method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -868,6 +868,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res;
         }
 
+        #region V3 接口
+
         ///<summary>
         /// 获取用户信息
         ///</summary>
@@ -877,7 +879,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="withIdentities">是否获取 identities</param>
         /// <param name="withDepartmentIds">是否获取部门 ID 列表</param>
         ///<returns>UserSingleRespDto</returns>
-        public async Task<UserSingleRespDto> GetUser(string userId, string userIdType = "user_id", bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
+        public async Task<UserSingleRespDto> GetUserV3(string userId, string userIdType = "user_id", bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user", new Dictionary<string, object> {
             {"userId",userId },
@@ -898,7 +900,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="withIdentities">是否获取 identities</param>
         /// <param name="withDepartmentIds">是否获取部门 ID 列表</param>
         ///<returns>UserListRespDto</returns>
-        public async Task<UserListRespDto> GetUserBatch(string userIds, string userIdType = "user_id", bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
+        public async Task<UserListRespDto> GetUserBatchV3(string userIds, string userIdType = "user_id", bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-batch", new Dictionary<string, object> {
             {"userIds",userIds },
@@ -922,7 +924,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="withIdentities">是否获取 identities</param>
         /// <param name="withDepartmentIds">是否获取部门 ID 列表</param>
         ///<returns>UserPaginatedRespDto</returns>
-        public async Task<UserPaginatedRespDto> ListUsers(long page = 1, long limit = 10, string status = null, long updatedAtStart = 0, long updatedAtEnd = 0, bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
+        public async Task<UserPaginatedRespDto> ListUsersV3(long page = 1, long limit = 10, string status = null, long updatedAtStart = 0, long updatedAtEnd = 0, bool withCustomData = false, bool withIdentities = false, bool withDepartmentIds = false)
         {
             string httpResponse = await client.Request("GET", "/api/v3/list-users", new Dictionary<string, object> {
             {"page",page },
@@ -943,7 +945,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>IdentityListRespDto</returns>
-        public async Task<IdentityListRespDto> GetUserIdentities(string userId, string userIdType = "user_id")
+        public async Task<IdentityListRespDto> GetUserIdentitiesV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-identities", new Dictionary<string, object> {
             {"userId",userId },
@@ -959,7 +961,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         /// <param name="nameSpace">所属权限分组的 code</param>
         ///<returns>RolePaginatedRespDto</returns>
-        public async Task<RolePaginatedRespDto> GetUserRoles(string userId, string userIdType = "user_id", string nameSpace = null)
+        public async Task<RolePaginatedRespDto> GetUserRolesV3(string userId, string userIdType = "user_id", string nameSpace = null)
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-roles", new Dictionary<string, object> {
             {"userId",userId },
@@ -975,7 +977,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>PrincipalAuthenticationInfoPaginatedRespDto</returns>
-        public async Task<PrincipalAuthenticationInfoPaginatedRespDto> GetUserPrincipalAuthenticationInfo(string userId, string userIdType = "user_id")
+        public async Task<PrincipalAuthenticationInfoPaginatedRespDto> GetUserPrincipalAuthenticationInfoV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-principal-authentication-info", new Dictionary<string, object> {
             {"userId",userId },
@@ -989,7 +991,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>IsSuccessRespDto</returns>
-        public async Task<IsSuccessRespDto> ResetUserPrincipalAuthenticationInfo(ResetUserPrincipalAuthenticationInfoDto requestBody
+        public async Task<IsSuccessRespDto> ResetUserPrincipalAuthenticationInfoV3(ResetUserPrincipalAuthenticationInfoDto requestBody
     )
         {
             string httpResponse = await client.Request("POST", "/api/v3/reset-user-principal-authentication-info", requestBody).ConfigureAwait(false);
@@ -1007,7 +1009,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="sortBy">排序依据，如 部门创建时间、加入部门时间、部门名称、部门标志符</param>
         /// <param name="orderBy">增序或降序</param>
         ///<returns>UserDepartmentPaginatedRespDto</returns>
-        public async Task<UserDepartmentPaginatedRespDto> GetUserDepartments(string userId, string userIdType = "user_id", long page = 1, long limit = 10, bool withCustomData = false, string sortBy = "JoinDepartmentAt", string orderBy = "Desc")
+        public async Task<UserDepartmentPaginatedRespDto> GetUserDepartmentsV3(string userId, string userIdType = "user_id", long page = 1, long limit = 10, bool withCustomData = false, string sortBy = "JoinDepartmentAt", string orderBy = "Desc")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-departments", new Dictionary<string, object> {
         {"userId",userId },
@@ -1026,7 +1028,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>IsSuccessRespDto</returns>
-        public async Task<IsSuccessRespDto> SetUserDepartments(SetUserDepartmentsDto requestBody
+        public async Task<IsSuccessRespDto> SetUserDepartmentsV3(SetUserDepartmentsDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/set-user-departments", requestBody).ConfigureAwait(false);
@@ -1039,7 +1041,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>GroupPaginatedRespDto</returns>
-        public async Task<GroupPaginatedRespDto> GetUserGroups(string userId, string userIdType = "user_id")
+        public async Task<GroupPaginatedRespDto> GetUserGroupsV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-groups", new Dictionary<string, object> {
         {"userId",userId },
@@ -1053,7 +1055,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>IsSuccessRespDto</returns>
-        public async Task<IsSuccessRespDto> DeleteUsersBatch(DeleteUsersBatchDto requestBody
+        public async Task<IsSuccessRespDto> DeleteUsersBatchV3(DeleteUsersBatchDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/delete-users-batch", requestBody).ConfigureAwait(false);
@@ -1066,7 +1068,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>UserMfaSingleRespDto</returns>
-        public async Task<UserMfaSingleRespDto> GetUserMfaInfo(string userId, string userIdType = "user_id")
+        public async Task<UserMfaSingleRespDto> GetUserMfaInfoV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-mfa-info", new Dictionary<string, object> {
         {"userId",userId },
@@ -1082,7 +1084,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="limit">每页数目，最大不能超过 50，默认为 10</param>
         /// <param name="startAt">开始时间，为精确到秒的 UNIX 时间戳，默认不指定</param>
         ///<returns>ListArchivedUsersSingleRespDto</returns>
-        public async Task<ListArchivedUsersSingleRespDto> ListArchivedUsers(long page = 1, long limit = 10, long startAt = 0)
+        public async Task<ListArchivedUsersSingleRespDto> ListArchivedUsersV3(long page = 1, long limit = 10, long startAt = 0)
         {
             string httpResponse = await client.Request("GET", "/api/v3/list-archived-users", new Dictionary<string, object> {
         {"page",page },
@@ -1097,7 +1099,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>IsSuccessRespDto</returns>
-        public async Task<IsSuccessRespDto> KickUsers(KickUsersDto requestBody
+        public async Task<IsSuccessRespDto> KickUsersV3(KickUsersDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/kick-users", requestBody).ConfigureAwait(false);
@@ -1109,7 +1111,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>IsUserExistsRespDto</returns>
-        public async Task<IsUserExistsRespDto> IsUserExists(IsUserExistsReqDto requestBody
+        public async Task<IsUserExistsRespDto> IsUserExistsV3(IsUserExistsReqDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/is-user-exists", requestBody).ConfigureAwait(false);
@@ -1121,7 +1123,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>UserSingleRespDto</returns>
-        public async Task<UserSingleRespDto> CreateUser(CreateUserReqDto requestBody
+        public async Task<UserSingleRespDto> CreateUserV3(CreateUserReqDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/create-user", requestBody).ConfigureAwait(false);
@@ -1133,7 +1135,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>UserListRespDto</returns>
-        public async Task<UserListRespDto> CreateUsersBatch(CreateUserBatchReqDto requestBody
+        public async Task<UserListRespDto> CreateUsersBatchV3(CreateUserBatchReqDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/create-users-batch", requestBody).ConfigureAwait(false);
@@ -1145,7 +1147,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>UserSingleRespDto</returns>
-        public async Task<UserSingleRespDto> UpdateUser(UpdateUserReqDto requestBody
+        public async Task<UserSingleRespDto> UpdateUserV3(UpdateUserReqDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/update-user", requestBody).ConfigureAwait(false);
@@ -1158,7 +1160,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>AppListRespDto</returns>
-        public async Task<AppListRespDto> GetUserAccessibleApps(string userId, string userIdType = "user_id")
+        public async Task<AppListRespDto> GetUserAccessibleAppsV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-accessible-apps", new Dictionary<string, object> {
         {"userId",userId },
@@ -1173,7 +1175,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>AppListRespDto</returns>
-        public async Task<AppListRespDto> GetUserAuthorizedApps(string userId, string userIdType = "user_id")
+        public async Task<AppListRespDto> GetUserAuthorizedAppsV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-authorized-apps", new Dictionary<string, object> {
         {"userId",userId },
@@ -1187,7 +1189,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         ///</summary>
         /// <param name="requestBody"></param>
         ///<returns>HasAnyRoleRespDto</returns>
-        public async Task<HasAnyRoleRespDto> HasAnyRole(HasAnyRoleReqDto requestBody
+        public async Task<HasAnyRoleRespDto> HasAnyRoleV3(HasAnyRoleReqDto requestBody
         )
         {
             string httpResponse = await client.Request("POST", "/api/v3/has-any-role", requestBody).ConfigureAwait(false);
@@ -1206,7 +1208,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="page">当前页数，从 1 开始</param>
         /// <param name="limit">每页数目，最大不能超过 50，默认为 10</param>
         ///<returns>UserLoginHistoryPaginatedRespDto</returns>
-        public async Task<UserLoginHistoryPaginatedRespDto> GetUserLoginHistory(string userId, string userIdType = "user_id", string appId = null, string clientIp = null, long start = 0, long end = 0, long page = 1, long limit = 10)
+        public async Task<UserLoginHistoryPaginatedRespDto> GetUserLoginHistoryV3(string userId, string userIdType = "user_id", string appId = null, string clientIp = null, long start = 0, long end = 0, long page = 1, long limit = 10)
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-login-history", new Dictionary<string, object> {
         {"userId",userId },
@@ -1227,7 +1229,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>UserLoggedInAppsListRespDto</returns>
-        public async Task<UserLoggedInAppsListRespDto> GetUserLoggedinApps(string userId, string userIdType = "user_id")
+        public async Task<UserLoggedInAppsListRespDto> GetUserLoggedinAppsV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-loggedin-apps", new Dictionary<string, object> {
         {"userId",userId },
@@ -1242,7 +1244,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="userId">用户 ID</param>
         /// <param name="userIdType">用户 ID 类型，可以指定为用户 ID、手机号、邮箱、用户名和 externalId。</param>
         ///<returns>UserLoggedInIdentitiesRespDto</returns>
-        public async Task<UserLoggedInIdentitiesRespDto> GetUserLoggedinIdentities(string userId, string userIdType = "user_id")
+        public async Task<UserLoggedInIdentitiesRespDto> GetUserLoggedinIdentitiesV3(string userId, string userIdType = "user_id")
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-logged-in-identities", new Dictionary<string, object> {
         {"userId",userId },
@@ -1259,7 +1261,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="nameSpace">所属权限分组的 code</param>
         /// <param name="resourceType">资源类型，如 数据、API、菜单、按钮</param>
         ///<returns>AuthorizedResourcePaginatedRespDto</returns>
-        public async Task<AuthorizedResourcePaginatedRespDto> GetUserAuthorizedResources(string userId, string userIdType = "user_id", string nameSpace = null, string resourceType = null)
+        public async Task<AuthorizedResourcePaginatedRespDto> GetUserAuthorizedResourcesV3(string userId, string userIdType = "user_id", string nameSpace = null, string resourceType = null)
         {
             string httpResponse = await client.Request("GET", "/api/v3/get-user-authorized-resources", new Dictionary<string, object> {
         {"userId",userId },
@@ -1270,5 +1272,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             AuthorizedResourcePaginatedRespDto result = client.JsonService.DeserializeObject<AuthorizedResourcePaginatedRespDto>(httpResponse);
             return result;
         }
+
+        #endregion
     }
 }
