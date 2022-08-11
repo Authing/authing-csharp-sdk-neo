@@ -167,12 +167,15 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void GetSecurityLevel_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
@@ -181,12 +184,15 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.True(result.Password);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void listAuthorizedResources_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
@@ -195,6 +201,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public void computedPasswordSecurityLevel_Test()
         {
@@ -205,12 +214,15 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(result == Types.PasswordSecurityLevel.HIGH);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void HasRole_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
@@ -219,6 +231,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.False(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void LoginSubAccount_Test()
         {
@@ -226,23 +241,30 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await client.LoginBySubAccount("qidong6655", "qd3866364", null, authingErrorBox);
+            var result = await client.LoginBySubAccount("tmgg", "88886666", null, authingErrorBox);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void LinkAccount_Test()
         {
             var client = authenticationClient;
 
-            var user = await client.LoginByUsername("qidong5566", "12345678", null);
+            var user = await client.LoginByUsername("tmgg", "88886666", null);
+            var user2 = await client.LoginByUsername("test", "88886666", null);
 
-            var result = await client.LinkAccount(user.Token, "11233");
+            var result = await client.LinkAccount(user.Token, user2.Token);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void UnLinkAccount_Test()
         {
@@ -252,12 +274,15 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var result = await client.UnLinkAccount("qidong5566", Types.ProviderType.ALIPAY);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void ListApplications_Text()
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByUsername("qidong6655", "12345678", null);
+            var result = await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 

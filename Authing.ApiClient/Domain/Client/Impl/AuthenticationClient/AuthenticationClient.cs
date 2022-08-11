@@ -716,7 +716,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             authingErrorBox?.Clear();
 
-            var res = await Request<LoginBySubAccountResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<LoginBySubAccountResponse>(param.CreateRequest()).ConfigureAwait(false);
             if (res.Errors != null)
             {
                 authingErrorBox?.Set(res.Errors);
@@ -1041,11 +1041,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             authingErrorBox?.Clear();
 
-            var res = await Post<CommonMessage>("api/v2/users/link", new Dictionary<string, string>
+            var res = await RequestCustomDataWithToken<CommonMessage>("api/v2/users/link", new Dictionary<string, string>
             {
                 {nameof(primaryUserToken),primaryUserToken },
                 { nameof(secondaryUserToken),secondaryUserToken}
-            }).ConfigureAwait(false);
+            }.ConvertJson()).ConfigureAwait(false);
 
             if (res.Errors != null)
             {
@@ -1068,11 +1068,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         {
             authingErrorBox?.Clear();
 
-            var res = await Post<CommonMessage>("api/v2/users/unlink", new Dictionary<string, string>
+            var res = await RequestCustomDataWithToken<CommonMessage>("api/v2/users/unlink", new Dictionary<string, string>
             {
                 {nameof(primaryUserToken),primaryUserToken },
                 { nameof(provider),JsonConvert.SerializeObject( provider)}
-            }).ConfigureAwait(false);
+            }.ConvertJson()).ConfigureAwait(false);
 
             if (res.Errors != null)
             {
@@ -1513,7 +1513,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns>SecurityLevel</returns>
         public async Task<SecurityLevel> GetSecurityLevel(AuthingErrorBox authingErrorBox = null)
         {
-            var result = await Get<SecurityLevel>("api/v2/users/me/security-level", null).ConfigureAwait(false);
+            var result = await RequestCustomDataWithToken<SecurityLevel>("api/v2/users/me/security-level",method:HttpMethod.Get).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (result.Errors != null)
             {
@@ -1539,7 +1539,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 Namespace = nameSpace,
                 ResourceType = _resourceType?.ToString()?.ToUpper(),
             };
-            var res = await Request<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1617,7 +1617,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 Namespace = _namespace,
             };
-            var res = await Request<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (res.Errors != null)
             {
@@ -1649,7 +1649,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         public async Task<ListApplicationsResponse> ListApplications(ListParams _params = null, AuthingErrorBox authingErrorBox = null)
         {
             _params ??= new ListParams();
-            var result = await Get<ListApplicationsResponse>($"api/v2/users/me/applications/allowed/?page={_params.Page}&limit={_params.Limit}", null).ConfigureAwait(false);
+            var result = await RequestCustomDataWithToken<ListApplicationsResponse>($"api/v2/users/me/applications/allowed/?page={_params.Page}&limit={_params.Limit}",method: HttpMethod.Get).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (result.Errors != null)
             {
