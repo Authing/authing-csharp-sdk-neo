@@ -402,7 +402,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Email = "qidong5566@outlook.com"
             });
             var result = await client.Users.GetUdfValueBatch(new string[] { user.Id }, authingErrorBox);
             Assert.NotNull(result);
