@@ -146,7 +146,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return result;
         }
 
-        public async Task<string> Request<T>(string method, string apiPath, T dto, bool withToken = true)
+        public async Task<Result> Request<Result, T>(string method, string apiPath, T dto, bool withToken = true)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers = await GetHeaderWithToken(headers);
@@ -161,8 +161,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             string dtoJson = dto.ConvertJson();
 
-            string json = await RequestNoGraphQLResponse<string>( apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
-            return json;
+            Result result = await RequestNoGraphQLResponse<Result>( apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
+
+            return result;
         }
 
         private bool IfTokenValid(long? accessTokenExpirAt)
