@@ -2,6 +2,7 @@
 {
     public abstract class TestBase
     {
+
         protected static string UserPoolId { get; set; } = "617280674680a6ca2b1f6317";
         protected static string UserPoolSecret { get; set; } = "6671136fa932eb692735a6f82af3b67b";
         protected static string AppSecret { get; set; } = "e1497fad2404fcef1065c4b386cbc5fc";
