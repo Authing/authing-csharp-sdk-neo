@@ -75,30 +75,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
         }
 
-        //protected async Task<TResponse> PostWithoutToken<TResponse>(GraphQLRequest body)
-        //{
-        //    var headers = new Dictionary<string, string>();
-        //    headers = GetAuthHeaders(false);
-        //    return await Post<TResponse>(body, headers).ConfigureAwait(false);
-        //}
-
-        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, string accessToken = null)
-        {
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-            //var headers = new Dictionary<string, string>();
-            //headers = GetAuthHeaders(true);
-            //return await Request<TResponse>(body, headers).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson()).ConfigureAwait(false);
-        }
-
         public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
         {
             var headers = new Dictionary<string, string>();

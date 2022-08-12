@@ -135,7 +135,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<CommonMessage> SendEmail(string email, EmailScene scene)
         {
             var param = new SendEmailParam(email, scene);
-            var res = await Request<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await RequestCustomDataWithToken<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             return res.Data.Result;
         }
 
