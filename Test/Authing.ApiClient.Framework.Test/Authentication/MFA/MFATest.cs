@@ -1,5 +1,7 @@
-﻿using Authing.ApiClient.Domain.Exceptions;
+﻿using System.Linq;
+using Authing.ApiClient.Domain.Exceptions;
 using Authing.ApiClient.Domain.Model.Authentication;
+using Authing.Library.Domain.Model.Exceptions;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication.MFA
@@ -12,21 +14,17 @@ namespace Authing.ApiClient.Framework.Test.Authentication.MFA
             MFALoginResponse ss = null;
             var loginClient = authenticationClient;
             var client = mfaAuthenticationClient;
-            try
+            AuthingErrorBox box = new AuthingErrorBox();
+            var result = await loginClient.LoginByUsername("tmgg", "88886666", null,box);
+            if (box.Value.Any())
             {
-                var result = await loginClient.LoginByUsername("qidong5566", "12345678", null);
-            }
-            catch (AuthingException exp)
-            {
-                if (exp is AuthingException)
-                {
-                    ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>((exp as AuthingException).ResultData.ToString());
-
-                    await loginClient.SendEmail("2481452007@qq.com", Types.EmailScene.MFA_VERIFY);
-                }
+                ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>(box.Value.First().Message.Data.ToString());
             }
 
-            var mfaResult = await client.VerifyAppEmailMfa(new Domain.Model.Authentication.VerifyAppEmailMfaParam { Code = "7335", Email = "2481452007@qq.com", MfaToken = ss.MfaToken });
+
+            await loginClient.SendEmail("574378328@qq.com", Types.EmailScene.MFA_VERIFY);
+
+            var mfaResult = await client.VerifyAppEmailMfa(new Domain.Model.Authentication.VerifyAppEmailMfaParam { Code = "3482", Email = "574378328@qq.com", MfaToken = ss.MfaToken });
         }
 
         [Fact]

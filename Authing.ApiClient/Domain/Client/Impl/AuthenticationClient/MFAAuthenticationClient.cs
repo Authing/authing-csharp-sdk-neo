@@ -28,7 +28,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<List<IMfaAuthenticator>> GetMfaAuthenticators(GetMfaAuthenticatorsParam getMfaAuthenticatorsParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await Get<GetMfaAuthenticatorsResponse>($"api/v2/mfa/authenticator/?type={getMfaAuthenticatorsParam.Type}&source={getMfaAuthenticatorsParam.TotpSource}", null).ConfigureAwait(false);
+            var result = await RequestCustomDataWithOutToken<GetMfaAuthenticatorsResponse>($"api/v2/mfa/authenticator/?type={getMfaAuthenticatorsParam.Type}" +
+                $"&source={getMfaAuthenticatorsParam.TotpSource}", method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
@@ -52,7 +53,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<CommonMessage> DeleteMfaAuthenticator(AuthingErrorBox authingErrorBox = null)
         {
-            var result = await Delete<CommonMessage>("api/v2/mfa/totp/associate", null).ConfigureAwait(false);
+            var result = await RequestCustomDataWithToken<CommonMessage>("api/v2/mfa/totp/associate", method: HttpMethod.Delete).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
@@ -100,7 +101,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<User> VerifyAppEmailMfa(VerifyAppEmailMfaParam verifyAppEmailMfaParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<User>("api/v2/applications/mfa/email/verify", verifyAppEmailMfaParam.ConvertJson(), verifyAppEmailMfaParam.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + verifyAppEmailMfaParam.MfaToken } };
+            var result = await RequestCustomDataWithToken<User>("api/v2/applications/mfa/email/verify", verifyAppEmailMfaParam.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
