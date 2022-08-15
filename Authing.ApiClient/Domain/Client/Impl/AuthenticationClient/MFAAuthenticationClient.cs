@@ -28,7 +28,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<List<IMfaAuthenticator>> GetMfaAuthenticators(GetMfaAuthenticatorsParam getMfaAuthenticatorsParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await Get<GetMfaAuthenticatorsResponse>($"api/v2/mfa/authenticator/?type={getMfaAuthenticatorsParam.Type}&source={getMfaAuthenticatorsParam.TotpSource}", null).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + getMfaAuthenticatorsParam.MfaToken } };
+            var result = await RequestCustomDataWithOutToken<GetMfaAuthenticatorsResponse>($"api/v2/mfa/authenticator/?type={getMfaAuthenticatorsParam.Type}" +
+                $"&source={getMfaAuthenticatorsParam.TotpSource}", headers: headers, method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
@@ -40,7 +42,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<IMfaAssociation> AssosicateMfaAuthenticator(AssosicateMfaAuthenticatorParam parameter, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<IMfaAssociation>("api/v2/mfa/totp/associate", parameter.ConvertJson(), parameter.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + parameter.MfaToken } };
+            var result = await RequestCustomDataWithToken<IMfaAssociation>("api/v2/mfa/totp/associate", parameter.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
 
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
@@ -52,7 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<CommonMessage> DeleteMfaAuthenticator(AuthingErrorBox authingErrorBox = null)
         {
-            var result = await Delete<CommonMessage>("api/v2/mfa/totp/associate", null).ConfigureAwait(false);
+            var result = await RequestCustomDataWithToken<CommonMessage>("api/v2/mfa/totp/associate", method: HttpMethod.Delete).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
@@ -64,7 +67,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<CommonMessage> ConfirmAssosicateMfaAuthenticator(ConfirmAssosicateMfaAuthenticatorParam parameter, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<ConfirmAssosicateMfaAuthenticatorResponse>("api/v2/mfa/totp/associate/confirm", parameter.ConvertJson(), parameter.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + parameter.MfaToken } };
+            var result = await RequestCustomDataWithToken<ConfirmAssosicateMfaAuthenticatorResponse>("api/v2/mfa/totp/associate/confirm", parameter.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
@@ -76,7 +80,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<User> VerifyTotpMfa(VerifyTotpMfaParam verifyTotpMfaParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<User>("api/v2/mfa/totp/verify", verifyTotpMfaParam.ConvertJson(), verifyTotpMfaParam.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + verifyTotpMfaParam.MfaToken } };
+            var result = await RequestCustomDataWithToken<User>("api/v2/mfa/totp/verify", verifyTotpMfaParam.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
@@ -88,7 +93,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<User> VerifyAppSmsMfa(VerifyAppSmsMfaParam verifyAppSmsMfaParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<User>("api/v2/applications/mfa/sms/verify", verifyAppSmsMfaParam.ConvertJson(), verifyAppSmsMfaParam.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + verifyAppSmsMfaParam.MfaToken } };
+            var result = await RequestCustomDataWithToken<User>("api/v2/applications/mfa/sms/verify", verifyAppSmsMfaParam.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
@@ -100,7 +106,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<User> VerifyAppEmailMfa(VerifyAppEmailMfaParam verifyAppEmailMfaParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<User>("api/v2/applications/mfa/email/verify", verifyAppEmailMfaParam.ConvertJson(), verifyAppEmailMfaParam.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + verifyAppEmailMfaParam.MfaToken } };
+            var result = await RequestCustomDataWithToken<User>("api/v2/applications/mfa/email/verify", verifyAppEmailMfaParam.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }
@@ -112,7 +119,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<bool> PhoneOrEmailBindable(PhoneOrEmailBindableParam phoneOrEmailBindableParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<PhoneOrEmailBindableResponse>("api/v2/applications/mfa/check", phoneOrEmailBindableParam.ConvertJson(), phoneOrEmailBindableParam.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + phoneOrEmailBindableParam.MfaToken } };
+            var result = await RequestCustomDataWithToken<PhoneOrEmailBindableResponse>("api/v2/applications/mfa/check", phoneOrEmailBindableParam.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data.Result;
         }
@@ -124,7 +132,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<User> VerifyTotpRecoveryCode(VerifyTotpRecoveryCodeParam verifyTotpRecoveryCodeParam, AuthingErrorBox authingErrorBox = null)
         {
-            var result = await PostRaw<User>("api/v2/mfa/totp/recovery", verifyTotpRecoveryCodeParam.ConvertJson(), verifyTotpRecoveryCodeParam.MfaToken).ConfigureAwait(false);
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + verifyTotpRecoveryCodeParam.MfaToken } };
+            var result = await RequestCustomDataWithToken<User>("api/v2/mfa/totp/recovery", verifyTotpRecoveryCodeParam.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data;
         }

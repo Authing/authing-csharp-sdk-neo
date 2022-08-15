@@ -75,19 +75,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson(), method: HttpMethod.Get).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
-        {
-            var headers = new Dictionary<string, string>();
-            headers = GetAuthHeaders(true);
-            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson(), method: HttpMethod.Delete).ConfigureAwait(false);
-        }
 
         public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson, string accessToken = null)
         {
