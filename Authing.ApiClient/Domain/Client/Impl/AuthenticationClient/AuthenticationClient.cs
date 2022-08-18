@@ -89,7 +89,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     var payLoadDic = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.UTF8.GetString(Base64Url.Decode(header[1])));
                     if (payLoadDic.ContainsKey("iss"))
                     {
-                        jwks = client.SendRequest<string, JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json", HttpType.Get, "", null).Result;
+                        //jwks = client.SendRequest<string, JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json", HttpType.Get, "", null).Result;
+                        jwks = RequestNoGraphQlResponse<JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json",
+                            method: HttpMethod.Get).Result;
                     }
                 }
             }

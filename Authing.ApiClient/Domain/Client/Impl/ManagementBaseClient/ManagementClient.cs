@@ -110,7 +110,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public async Task<string> RequestToken()
         {
-            var result = await RequestNoGraphQLResponse<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId={UserPoolId}&secret={Secret}", method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<AccessTokenRes>($"api/v2/userpools/accessToken?userPoolId={UserPoolId}&secret={Secret}", method: HttpMethod.Get).ConfigureAwait(false);
             return result.AccessToken;
         }
 

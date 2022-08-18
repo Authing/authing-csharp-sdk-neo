@@ -29,6 +29,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             return new AuthingClient(timeout);
         }
 
+/*
         public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, TRequest body,
             Dictionary<string, string> headers)
         {
@@ -109,6 +110,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                 throw new Exception(content);
             }
         }
+
+*/
 
         public async Task<TResponse> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null, HttpMethod method = null,
             ContentType contenttype = ContentType.DEFAULT)

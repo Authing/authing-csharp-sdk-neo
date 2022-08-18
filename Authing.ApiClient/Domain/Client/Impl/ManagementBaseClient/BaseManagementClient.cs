@@ -101,7 +101,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             ContentType contenttype = ContentType.DEFAULT)
         {
             headers ??= await GetHeaderWithToken(headers);
-            var result = await RequestNoGraphQLResponse<CommonResponse<TResponse>>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<CommonResponse<TResponse>>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
         }
 
@@ -132,7 +132,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             Dictionary<string, string> dic = pairs.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value == null ? "" : valueItem.Value.ToString());
 
-            string json = await RequestNoGraphQLResponse<string>(Host + apiPath, dic.Convert2QueryParams(), headers, HttpMethod.Get, ContentType.JSON);
+            string json = await RequestNoGraphQlResponse<string>(Host + apiPath, dic.Convert2QueryParams(), headers, HttpMethod.Get, ContentType.JSON);
 
             return json;
         }
@@ -152,7 +152,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             string dtoJson = dto.ConvertJson();
 
-            string json = await RequestNoGraphQLResponse<string>(Host + apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
+            string json = await RequestNoGraphQlResponse<string>(Host + apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
             return json;
         }
 
