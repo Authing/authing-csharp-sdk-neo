@@ -75,28 +75,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
         }
 
-
-        public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson, string accessToken = null)
-        {
-            //var headers = new Dictionary<string, string>();
-
-            //if (!string.IsNullOrEmpty(accessToken))
-            //{
-            //    headers["Authorization"] = "bearer " + accessToken;
-            //}
-            //else
-            //{
-            //    var token = await GetAccessToken().ConfigureAwait(false);
-            //    headers["Authorization"] = "bearer " + token;
-            //}
-
-            //headers["x-authing-userpool-id"] = UserPoolId;
-            //headers["x-authing-request-from"] = type;
-            //headers["x-authing-sdk-version"] = version;
-            //return await PostRaw<TResponse>(api, rawjson, headers).ConfigureAwait(false);
-            return await RequestCustomDataWithToken<TResponse>(api, rawjson, contenttype: ContentType.JSON);
-        }
-
         public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithOutToken<TResponse>(GraphQLRequest body)
         {
             var preprocessedRequest = new GraphQLHttpRequest(body);
