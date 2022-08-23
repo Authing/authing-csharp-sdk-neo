@@ -221,9 +221,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         {
             var result = await managementClient.Acl.GetAuthorizedTargets(new GetAuthorizedTargetsOptions()
             {
-                NameSpace = "test",
-                Resource = "Cat:*",
-                ResourceType = ResourceType.DATA,
+                NameSpace = "default",
+                Resource = "ecs",
+                ResourceType = ResourceType.API,
                 Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "read" }),
                 TargetType = PolicyAssignmentTargetType.USER,
             });
