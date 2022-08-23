@@ -489,10 +489,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var param = new UdvParam(UdfTargetType.USER, userId);
-            var res = await client.RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
-            ErrorHelper.LoadError(res, authingErrorBox);
-            return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
+            var list = new List<KeyValuePair<string, object>>();
+            string httpResponse = await client.Request("GET", "api/v3/get-custom-data", new Dictionary<string, object>
+                {
+                 {"targetType","USER" },
+                 {"targetIdentifier",userId },
+                 }).ConfigureAwait(false);
+            GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
+
+            list = client.JsonService.DeserializeObject<Dictionary<string, object>>(result.Data.ConvertJsonNoCamel()).ToList();
+
+            if (result.StatusCode != 200)
+            {
+                ErrorHelper.LoadError(result.StatusCode, result.Message, result.ApiCode, authingErrorBox);
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -502,25 +514,24 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds, AuthingErrorBox authingErrorBox = null)
         {
-            string httpResponse = await client.Request("GET", "/api/v3/get-custom-data", new Dictionary<string, object>
-            {
-                 {"targetType","USER" },
-                 {"targetIdentifier","userId" },
-                 }).ConfigureAwait(false);
-            GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
-           
-
-            if (userIds.Length < 1)
-            {
-                throw new Exception("empty user id list");
-            }
-            var param = new UdfValueBatchParam(UdfTargetType.USER, userIds);
-            var res = await client.RequestCustomDataWithToken<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
-            ErrorHelper.LoadError(res, authingErrorBox);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
-            foreach (var item in res.Data.Result)
+
+            foreach (var item in userIds)
             {
-                dic.Add(item.TargetId, AuthingUtils.ConverUdvToKeyValuePair(item.Data));
+
+                string httpResponse = await client.Request("GET", "api/v3/get-custom-data", new Dictionary<string, object>
+                {
+                 {"targetType","USER" },
+                 {"targetIdentifier",userIds.FirstOrDefault() },
+                 }).ConfigureAwait(false);
+                GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
+
+                dic.Add(item, client.JsonService.DeserializeObject<Dictionary<string, object>>(result.Data.ConvertJsonNoCamel()).ToList());
+
+                if (result.StatusCode != 200)
+                {
+                    ErrorHelper.LoadError(result.StatusCode, result.Message, result.ApiCode, authingErrorBox);
+                }
             }
             return dic;
         }
@@ -682,7 +693,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&devicdId={devicdId}";
             }
-            var res = await client.RequestCustomDataWithToken<CheckLoginStatusRes>($"api/v2/users/login-status{query}").ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CheckLoginStatusRes>($"api/v2/users/login-status{query}","",null,HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
