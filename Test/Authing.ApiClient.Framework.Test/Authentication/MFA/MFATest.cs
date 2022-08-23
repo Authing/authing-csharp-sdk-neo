@@ -1,104 +1,87 @@
-﻿using Authing.ApiClient.Domain.Exceptions;
+﻿using System.Linq;
+using Authing.ApiClient.Domain.Exceptions;
 using Authing.ApiClient.Domain.Model.Authentication;
+using Authing.Library.Domain.Model.Exceptions;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication.MFA
 {
     public class MFATest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-15 测试通过
+        /// </summary>
         [Fact]
         public async void VerifyEmailCode_Test()
         {
             MFALoginResponse ss = null;
             var loginClient = authenticationClient;
             var client = mfaAuthenticationClient;
-            try
+            AuthingErrorBox box = new AuthingErrorBox();
+            var result = await loginClient.LoginByUsername("tmgg", "88886666", null, box);
+            if (box.Value.Any())
             {
-                var result = await loginClient.LoginByUsername("qidong5566", "12345678", null);
-            }
-            catch (AuthingException exp)
-            {
-                if (exp is AuthingException)
-                {
-                    ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>((exp as AuthingException).ResultData.ToString());
-
-                    await loginClient.SendEmail("2481452007@qq.com", Types.EmailScene.MFA_VERIFY);
-                }
+                ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>(box.Value.First().Message.Data.ToString());
             }
 
-            var mfaResult = await client.VerifyAppEmailMfa(new Domain.Model.Authentication.VerifyAppEmailMfaParam { Code = "7335", Email = "2481452007@qq.com", MfaToken = ss.MfaToken });
+
+            await loginClient.SendEmail("574378328@qq.com", Types.EmailScene.MFA_VERIFY);
+
+            var mfaResult = await client.VerifyAppEmailMfa(new Domain.Model.Authentication.VerifyAppEmailMfaParam { Code = "9144", Email = "574378328@qq.com", MfaToken = ss.MfaToken });
         }
 
+        /// <summary>
+        /// 2022-8-15 测试不通过
+        /// </summary>
         [Fact]
         public async void Assoaticate_Test()
         {
             MFALoginResponse ss = null;
             var loginClient = authenticationClient;
             var client = mfaAuthenticationClient;
-            try
-            {
-                var result = await loginClient.LoginByUsername("qidong5566", "12345678", null);
-            }
-            catch (AuthingException exp)
-            {
-                if (exp is AuthingException)
-                {
-                    ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>((exp as AuthingException).ResultData.ToString());
+            AuthingErrorBox box = new AuthingErrorBox();
 
-                    //await loginClient.SendEmail("2481452007@qq.com", Types.EmailScene.MFA_VERIFY);
-                }
-            }
+            var result = await loginClient.LoginByUsername("tmgg", "88886666", null, box);
+            ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>(box.Value.First().Message.Data.ToString());
 
             var totpResult = await client.AssosicateMfaAuthenticator(new AssosicateMfaAuthenticatorParam { MfaToken = ss.MfaToken });
 
             var comfirmTotpResult = await client.ConfirmAssosicateMfaAuthenticator(new ConfirmAssosicateMfaAuthenticatorParam { Totp = "707610", MfaToken = ss.MfaToken });
         }
 
+        /// <summary>
+        /// 2022-8-15 测试通过
+        /// </summary>
         [Fact]
         public async void AsssicateMfaConfirm_Test()
         {
             MFALoginResponse ss = null;
             var loginClient = authenticationClient;
             var client = mfaAuthenticationClient;
-            try
-            {
-                var result = await loginClient.LoginByUsername("qidong5566", "12345678", null);
-            }
-            catch (AuthingException exp)
-            {
-                if (exp is AuthingException)
-                {
-                    ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>((exp as AuthingException).ResultData.ToString());
+            AuthingErrorBox box = new AuthingErrorBox();
 
-                    //await loginClient.SendEmail("2481452007@qq.com", Types.EmailScene.MFA_VERIFY);
-                }
-            }
+            var result = await loginClient.LoginByUsername("tmgg", "88886666", null, box);
 
-            var totpResult = await client.VerifyTotpMfa(new VerifyTotpMfaParam { Totp = "061448", MfaToken = ss.MfaToken });
+            ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>(box.Value.First().Message.Data.ToString());
+
+            var totpResult = await client.VerifyTotpMfa(new VerifyTotpMfaParam { Totp = "517842", MfaToken = ss.MfaToken });
         }
 
+        /// <summary>
+        /// 2022-8-15 测试通过
+        /// </summary>
         [Fact]
         public async void VerifyAppSmsMfa_Test()
         {
             MFALoginResponse ss = null;
             var loginClient = authenticationClient;
             var client = mfaAuthenticationClient;
-            try
-            {
-                var result = await loginClient.LoginByUsername("qidong5566", "12345678", null);
-            }
-            catch (AuthingException exp)
-            {
-                if (exp is AuthingException)
-                {
-                    ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>((exp as AuthingException).ResultData.ToString());
+            AuthingErrorBox box = new AuthingErrorBox();
+            var result = await loginClient.LoginByUsername("tmgg", "88886666", null,box);
+            ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>(box.Value.First().Message.Data.ToString());
+            await loginClient.SendSmsCode("17665662048");
 
-                    //await loginClient.SendEmail("2481452007@qq.com", Types.EmailScene.MFA_VERIFY);
-                    await loginClient.SendSmsCode("13348926753");
-                }
-            }
-
-            var totpResult = await client.VerifyAppSmsMfa(new VerifyAppSmsMfaParam { Code = "3365", Phone = "13348926753", MfaToken = ss.MfaToken });
+            var totpResult = await client.VerifyAppSmsMfa(new VerifyAppSmsMfaParam { Code = "1452", Phone = "17665662048", MfaToken = ss.MfaToken });
         }
     }
 }

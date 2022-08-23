@@ -60,55 +60,14 @@ GKl64GDcIq3au+aqJQIDAQAB
             version = $"c-sharp:{currentversion.Major}:{currentversion.Minor}:{currentversion.Build}:{currentversion.Revision}";
         }
 
-        protected async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body, Dictionary<string, string> headers)
-        {
-            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Post, body,
-                headers ?? new Dictionary<string, string>()).ConfigureAwait(false);
-            //CheckResult(result);
-            return result;
-        }
-
-        protected async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body, Dictionary<string, string> headers)
-        {
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            var bodyString = preprocessedRequest.ToHttpRequestBody();
-            var result = await client.SendRequest<string, GraphQLResponse<TResponse>>($"{Host}/{GraphQLEndpoint}", HttpType.Post, bodyString,
-                headers ?? new Dictionary<string, string>()).ConfigureAwait(false);
-            //CheckResult(result);
-            return result;
-        }
-
-        protected async Task<GraphQLResponse<TResponse>> Get<TRequest, TResponse>(string api, TRequest body, Dictionary<string, string> headers)
-        {
-            var result = await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Get, body, headers).ConfigureAwait(false);
-            //CheckResult(result);
-            return result;
-        }
-
-        protected async Task<GraphQLResponse<TResponse>> Delete<TRequest, TResponse>(string api, TRequest body, Dictionary<string, string> headers)
-        {
-            var result = await client.SendRequest<TRequest, GraphQLResponse<TResponse>>(Host + $"/{api}", HttpType.Delete, body, headers).ConfigureAwait(false);
-            //CheckResult(result);
-            return result;
-        }
-
-        protected async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, string rawjson,
-            Dictionary<string, string> headers = null)
-        {
-            var result = await client.PostRaw<GraphQLResponse<TResponse>>(Host + $"/{api}", rawjson, headers ?? new Dictionary<string, string>()).ConfigureAwait(false);
-            //CheckResult(result);
-            return result;
-        }
-
         protected async Task<GraphQLResponse<TResponse>> RequestCustomData<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
             var result = await client.RequestCustomData<GraphQLResponse<TResponse>>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
-            //CheckResult(result);
             return result;
         }
 
-        protected async Task<TResponse> RequestNoGraphQLResponse<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
+        protected async Task<TResponse> RequestNoGraphQlResponse<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
             var result = await client.RequestCustomData<TResponse>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);

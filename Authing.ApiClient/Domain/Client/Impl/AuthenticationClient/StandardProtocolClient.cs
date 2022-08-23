@@ -135,7 +135,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             switch (Options.TokenEndPointAuthMethod)
             {
                 case TokenEndPointAuthMethod.CLIENT_SECRET_POST:
-                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQlResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
                     {
                         { "client_id", Options.AppId },
                         { "client_secret", Options.Secret },
@@ -148,7 +148,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     var headers = GetAuthHeaders();
                     headers.Add("Authorization",
                         $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}");
-                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQlResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
                         {
                             { "grant_type", "authorization_code" },
                             { "code", code },
@@ -165,7 +165,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                             ).ConfigureAwait(false);
                     return result;
                 case TokenEndPointAuthMethod.NONE:
-                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQlResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
                     {
                         { "client_id", Options.AppId },
                         //{ "client_secret", Options.Secret },
@@ -193,12 +193,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             switch (Options.Protocol)
             {
                 case Protocol.OAUTH:
-                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint).ConfigureAwait(false);
+                    res = await RequestNoGraphQlResponse<UserInfo>(endPoint).ConfigureAwait(false);
                     break;
                 case Protocol.OIDC:
                 case Protocol.SAML:
                 case Protocol.CAS:
-                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
+                    res = await RequestNoGraphQlResponse<UserInfo>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -261,7 +261,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken }
             };
 
-            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
 
             return result;
         }
@@ -280,7 +280,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "grant_type", "refresh_token" },
                 { "refresh_token", refreshToken }
             };
-            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
 
             return result;
         }
@@ -302,7 +302,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken },
 
             };
-            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
             return result;
         }
 
@@ -346,7 +346,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<IntrospectTokenRes> IntrospectTokenWithClientSecretPost(string url, string token)
         {
-            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQlResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
             {
                 { "client_id", Options.AppId },
                 { "client_secret", Options.Secret },
@@ -357,7 +357,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<IntrospectTokenRes> IntrospectTokenWithClientSecretBasic(string url, string token)
         {
-            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQlResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
                 {
                     { "token", token },
                 }.ConvertJson(),
@@ -373,7 +373,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<IntrospectTokenRes> IntrospectTokenWithNone(string url, string token)
         {
-            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQlResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
             {
                 { "client_id", Options.AppId },
                 { "token", token },
@@ -396,7 +396,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var url = $"api/v2/oidc/validate_token";
             url += !string.IsNullOrWhiteSpace(param.AccessToken) ? $"?access_token={param.AccessToken}" : $"?id_token={param.IdToken}";
 
-            var result = await RequestNoGraphQLResponse<ValidateTokenRes>(url, "", null, HttpMethod.Get, ContentType.JSON).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<ValidateTokenRes>(url, "", null, HttpMethod.Get, ContentType.JSON).ConfigureAwait(false);
             return result;
         }
 

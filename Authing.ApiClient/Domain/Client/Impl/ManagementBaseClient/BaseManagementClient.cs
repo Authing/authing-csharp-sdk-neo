@@ -72,13 +72,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return Tuple.Create(res.Data?.Result.AccessToken, res.Data?.Result.Exp);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
-        {
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
         public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
@@ -108,7 +101,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             ContentType contenttype = ContentType.DEFAULT)
         {
             headers ??= await GetHeaderWithToken(headers);
-            var result = await RequestNoGraphQLResponse<CommonResponse<TResponse>>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<CommonResponse<TResponse>>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
         }
 
@@ -140,6 +133,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             Dictionary<string, string> dic = pairs.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value == null ? "" : valueItem.Value.ToString());
 
             object json = await RequestNoGraphQLResponse<object>(UrlCombine(apiPath,dic), dic.ConvertJson(), headers, HttpMethod.Get, ContentType.JSON);
+
 
             string result = json.ConvertJsonNoCamel();
 
