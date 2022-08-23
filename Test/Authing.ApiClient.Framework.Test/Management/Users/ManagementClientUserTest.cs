@@ -383,13 +383,13 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Username = "qidongasfasf0900"
             });
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var result = await client.Users.GetUdfValue(user.Id, authingErrorBox);
-            Assert.NotNull(result.Count);
+            Assert.NotNull(result);
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qidong5566@outlook.com"
+                Username= "qidongasfasf0900"
             });
             var result = await client.Users.GetUdfValueBatch(new string[] { user.Id }, authingErrorBox);
             Assert.NotNull(result);
@@ -417,12 +417,16 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Username = "qidong11233"
             });
             var udf = new Types.KeyValueDictionary();
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             udf.Add("ObjectSid", "000");
             var result = await client.Users.SetUdfValue(user.Id, udf, authingErrorBox);
+
+
+            var udv = await client.Users.GetUdfValue(user.Id);
+
             Assert.NotEmpty(result);
         }
 
@@ -435,10 +439,10 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Email = "qidong5566@outlook.com"
             });
             var udf = new Types.KeyValueDictionary();
-            udf.Add("ObjectSid", "000");
+            udf.Add("ObjectSid2222", "000");
             var udfBatch = new Domain.Model.Management.Udf.SetUserUdfValueBatchParam()
             {
                 UserId = user.Id,
@@ -533,7 +537,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Email = "qidong5566@outlook.com"
             });
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();

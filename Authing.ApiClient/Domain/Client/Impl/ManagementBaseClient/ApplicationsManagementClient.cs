@@ -611,6 +611,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "title", agreement.Title},
                 { "required", agreement.Required},
                 { "lang", agreement.Lang.GetEnumMemberValue()},
+                { "availableAt",(int)agreement.AvailableAt}
             }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
@@ -642,6 +643,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "title", agreement.Title},
                 { "required", agreement.Required},
                 { "lang", agreement.Lang.GetEnumMemberValue()},
+                { "availableAt",(int)agreement.AvailableAt}
             }.ConvertJson(),method: HttpMethod.Put, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
