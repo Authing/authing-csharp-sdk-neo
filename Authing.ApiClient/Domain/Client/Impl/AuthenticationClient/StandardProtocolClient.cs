@@ -443,8 +443,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         private string BuildCasLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/cas-idp/logout"
-                : $"{Host}/cas-idp/logout?url={options.RedirectUri}";
+                ? $"{Host}/cas-idp/{AppId}/logout"
+                : $"{Host}/cas-idp/{AppId}/logout?url={options.RedirectUri}";
         }
 
         /// <summary>

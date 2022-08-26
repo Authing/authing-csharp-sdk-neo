@@ -35,7 +35,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 
             string oidcurl = authenticationClient.BuildAuthorizeUrl(new OidcOption()
             { RedirectUri = "https://www.baidu.com", Scope = "openid profile email phone address offline_access" });
-            var res = await authenticationClient.GetAccessTokenByCode("gBJEyRK68s2044gctV5scCUvC_M2GrnTeKUHkLAoBGK");
+            var res = await authenticationClient.GetAccessTokenByCode("xL6gw2EVqD3WF_CE7qby7H7SMFScAAay1WZuU6TxbsJ");
             string oidcout = authenticationClient.BuildLogoutUrl(new LogoutParams()
             { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken, Expert = true });
 
@@ -67,7 +67,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             #region OIDC 登陆测试
 
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "password username openid profile email phone address offline_access" });
-            var res = await authenticationClient.GetAccessTokenByCode("dNuBtlzSn4KpZdHXK1afWubf1w_79BeewsiXbuqyBeY");
+            var res = await authenticationClient.GetAccessTokenByCode("QLVfaoA0XA98a0UUEUEq_bIipUbQq6BAhM_3ofYMMOH");
             authenticationClient.SetToken(res.AccessToken);
             var ress = await authenticationClient.GetUdfValue();
             var temp = await authenticationClient.GetUserInfoByAccessToken(res.AccessToken);
@@ -238,6 +238,26 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 
 #endif
             Assert.NotNull(check);
+        }
+
+        [Fact]
+        public async Task CAS_BuildAuthorizeUrl_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+        }
+
+        [Fact]
+        public async Task CAS_CheckTicket_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+
+            var result = authenticationClient.ValidateTicketV1("", "https://www.baidu.com");
+
+            Assert.NotNull(result);
         }
     }
 }

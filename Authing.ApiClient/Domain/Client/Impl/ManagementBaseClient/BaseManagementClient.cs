@@ -132,7 +132,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             Dictionary<string, string> dic = pairs.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value == null ? "" : valueItem.Value.ToString());
 
-            object json = await RequestNoGraphQLResponse<object>(UrlCombine(apiPath,dic), dic.ConvertJson(), headers, HttpMethod.Get, ContentType.JSON);
+            object json = await RequestNoGraphQlResponse<object>(UrlCombine(apiPath,dic), dic.ConvertJson(), headers, HttpMethod.Get, ContentType.JSON);
 
 
             string result = json.ConvertJsonNoCamel();
@@ -155,7 +155,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             string dtoJson = dto.ConvertJson();
 
-            Result result = await RequestNoGraphQLResponse<Result>( apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
+            Result result = await RequestNoGraphQlResponse<Result>( apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
 
             return result;
         }

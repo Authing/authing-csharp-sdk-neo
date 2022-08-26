@@ -7,6 +7,6 @@ namespace Authing.Library.Domain.Model.Management.Users
 {
     public class SetUdvDto
     {
-        public UdfTargetType
+        //public UdfTargetType
     }
 }
