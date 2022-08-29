@@ -30,7 +30,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
 
-            var result = await client.Request<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result; ;
         }
@@ -50,7 +50,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 param.Limit = 10;
             }
 
-            var result = await client.Request<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<PoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -63,7 +63,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
 
-            var result = await client.Request<CreatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<CreatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -75,7 +75,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
 
-            var result = await client.Request<PolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<PolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -90,14 +90,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
 
-            var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
 
         public async Task<Policy> Update(UpdatePolicyParam param,AuthingErrorBox authingErrorBox=null)
         {
-            var result = await client.Request<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<UpdatePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -106,7 +106,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             DeletePolicyParam param = new DeletePolicyParam(code);
 
-            var result = await client.Request<DeletePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<DeletePolicyResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -115,14 +115,14 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             DeletePoliciesParam param = new DeletePoliciesParam(codeList);
 
-            var result = await client.Request<DeletePoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<DeletePoliciesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
 
         public async Task<PaginatedPolicyAssignments> ListAssignments(PolicyAssignmentsParam param,AuthingErrorBox authingErrorBox=null)
         {
-            var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -136,7 +136,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit
             };
 
-            var result = await client.Request<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<PolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -149,7 +149,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
 
-            var result = await client.Request<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<AddPolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -162,7 +162,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = nameSpace
             };
 
-            var result = await client.Request<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<RemovePolicyAssignmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
@@ -175,16 +175,16 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 NameSpace = nameSpace
             };
 
-            var result = await client.Request<DisableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<DisableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }
 
         public async Task<CommonMessage> EnableAssignment(string policy, PolicyAssignmentTargetType targetType, string targetIdentifier, string nameSpace = null,AuthingErrorBox authingErrorBox=null)
         {
-            EnableAssignmentParam param = new EnableAssignmentParam(policy, targetType, targetIdentifier);
+            EnableAssignmentParam param = new EnableAssignmentParam(policy, targetType, targetIdentifier,nameSpace);
 
-            var result = await client.Request<EnableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<EnableAssignmentResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return result.Data?.Result;
         }

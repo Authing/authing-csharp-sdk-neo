@@ -8,6 +8,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
     public class AddNodeTest : BaseTest
     {
+        /// <summary>
+        /// 2022-7-27 测试通过
+        /// </summary>
         [Fact]
         public async void Add_Node_Test()
         {

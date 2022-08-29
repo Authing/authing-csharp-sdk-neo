@@ -6,33 +6,42 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 {
     public class UserTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void GetCurrentUser_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
             var user = await client.GetCurrentUser();
 
             Assert.NotNull(user);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void User_GetCurrentUserWithToken()
         {
             var client = authenticationClient;
-            await client.LoginByUsername("13348926753", "3866364", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
             var user = await client.GetCurrentUser(client.AccessToken);
 
             Assert.NotNull(user);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void Logout_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
             client.CheckLoggedIn();
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
@@ -42,46 +51,55 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.True(msg.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void SetUdfValue_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var kic = new Types.KeyValueDictionary { };
 
-            kic.Add("key1", "value1");
+            kic.Add("testprop", "123456");
 
             var result = await client.SetUdfValue(kic);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void SetUdv_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dics = await client.ListUdv();
 
-            var result = await client.SetUdv("UserInfo", "value11");
+            var result = await client.SetUdv("testprop", "00000000");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void GetUdfValue_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dic = new Types.KeyValueDictionary { };
 
-            dic.Add("22222", "222");
+            dic.Add("testprop", "12345678");
 
             await client.SetUdfValue(dic);
 
@@ -90,62 +108,74 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveUdfValue_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dic = new Types.KeyValueDictionary { };
 
-            dic.Add("22222", "222");
+            dic.Add("testprop", "12345678");
 
             await client.SetUdfValue(dic);
 
-            var result = await client.RemoveUdfValue("UserInfo");
+            var result = await client.RemoveUdfValue("testprop");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveUdv_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var dics = await client.ListUdv();
 
             var kic = new Types.KeyValueDictionary { };
 
-            kic.Add("key1", "value1");
+            kic.Add("testprop", "99999999");
 
             await client.SetUdfValue(kic);
 
-            var result = await client.RemoveUdv("key1");
+            var result = await client.RemoveUdv("testprop");
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void ListOrg_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong9999", "3866364", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var result = await client.ListOrgs();
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void GetSecurityLevel_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
@@ -154,20 +184,26 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.True(result.Password);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void listAuthorizedResources_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await client.ListAuthorizedResources("default", Types.ResourceType.DATA,authingErrorBox);
+            var result = await client.ListAuthorizedResources("default", Types.ResourceType.DATA, authingErrorBox);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public void computedPasswordSecurityLevel_Test()
         {
@@ -178,12 +214,15 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(result == Types.PasswordSecurityLevel.HIGH);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void HasRole_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
@@ -192,6 +231,9 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.False(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void LoginSubAccount_Test()
         {
@@ -199,23 +241,30 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await client.LoginBySubAccount("qidong6655", "qd3866364", null, authingErrorBox);
+            var result = await client.LoginBySubAccount("tmgg", "88886666", null, authingErrorBox);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void LinkAccount_Test()
         {
             var client = authenticationClient;
 
-            var user = await client.LoginByUsername("qidong5566", "12345678", null);
+            var user = await client.LoginByUsername("tmgg", "88886666", null);
+            var user2 = await client.LoginByUsername("test", "88886666", null);
 
-            var result = await client.LinkAccount(user.Token, "11233");
+            var result = await client.LinkAccount(user.Token, user2.Token);
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void UnLinkAccount_Test()
         {
@@ -225,12 +274,15 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             var result = await client.UnLinkAccount("qidong5566", Types.ProviderType.ALIPAY);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void ListApplications_Text()
         {
             var client = authenticationClient;
 
-            var result = await client.LoginByUsername("qidong6655", "12345678", null);
+            var result = await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
@@ -239,94 +291,118 @@ namespace Authing.ApiClient.Framework.Test.Authentication
             Assert.NotNull(apps);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
-        public async void ResetPasswordByFirstLoginToken_Test()
+        public async void ListUserDepartment_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginBySubAccount("qidong6655", "qd3866364", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var result = await client.ListDepartment();
 
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void IsUserExist_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
-            var result = await client.IsUserExists("qidong556", null, null, null);
+            var result = await client.IsUserExists("tmgg", null, null, null);
 
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void isUserExitFalse_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var result = await client.IsUserExists("1231231", null, null, null);
 
             Assert.False(result);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void IsPasswordValid_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await client.isPasswordValid("1",authingErrorBox);
+            var result = await client.isPasswordValid("1", authingErrorBox);
 
             Assert.False(result.Message == "");
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void ResetPasswordByFirstLoginToken()
         {
             var client = authenticationClient;
-            var result = await client.LoginByUsername("qidong5566", "12345678", null);
+            var result = await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var message = await client.ResetPasswordByFirstLoginToken(client.AccessToken, "3866364",authingErrorBox);
+            var message = await client.ResetPasswordByFirstLoginToken(client.AccessToken, "88886666", authingErrorBox);
 
             Assert.True(message.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试不通过
+        /// </summary>
         [Fact]
         public async void ResetPasswordByForceResetToken()
         {
             var client = authenticationClient;
-            var result = await client.LoginByUsername("qidong5566", "12345678", null);
+            var result = await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "12345678", "3866364", authingErrorBox);
+            var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "88886666", "88886666", authingErrorBox);
 
             Assert.True(message.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void GetToken_Test()
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong5566", "12345678", null);
+            await client.LoginByUsername("tmgg", "88886666", null);
 
             var result = await client.GetToken();
 
             Assert.True(!string.IsNullOrEmpty(result));
         }
 
+        /// <summary>
+        /// 2022-8-11 测试通过
+        /// </summary>
         [Fact]
         public async void ClearUser_Test()
         {
@@ -342,7 +418,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         [Fact]
         public void EncryptTest()
         {
-            string PublicKey  = @"-----BEGIN PUBLIC KEY-----
+            string PublicKey = @"-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4xKeUgQ+Aoz7TLfAfs9+paePb
 5KIofVthEopwrXFkp8OCeocaTHt9ICjTT2QeJh6cZaDaArfZ873GPUn00eOIZ7Ae
 +TiA2BKHbCvloW3w5Lnqm70iSsUi5Fmu9/2+68GZRH9L7Mlh8cFksCicW2Y2W2uM

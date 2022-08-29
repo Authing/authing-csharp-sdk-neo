@@ -339,7 +339,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
-
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_listDepartment()
         {
@@ -354,7 +356,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var result = await client.Users.ListDepartment(user.Id, authingErrorBox);
             Assert.NotEmpty(result.List);
         }
-
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_listAuthorizedResources()
         {
@@ -370,63 +374,75 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Users_getUdfValue()
         {
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Username = "qidongasfasf0900"
             });
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var result = await client.Users.GetUdfValue(user.Id, authingErrorBox);
-            Assert.NotNull(result.Count);
+            Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Users_getUdfValueBatch()
         {
-            //TODO:没有任何设置过的数据
             var client = managementClient;
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Username= "qidongasfasf0900"
             });
             var result = await client.Users.GetUdfValueBatch(new string[] { user.Id }, authingErrorBox);
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Users_SetUdfValue()
         {
-            //TODO:调用没报错，但是返回的内容很奇怪
-            //{"data":{"setUdvBatch":[]}}
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Username = "qidong11233"
             });
             var udf = new Types.KeyValueDictionary();
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
-            udf.Add("asdad", "val1");
+            udf.Add("ObjectSid", "000");
             var result = await client.Users.SetUdfValue(user.Id, udf, authingErrorBox);
+
+
+            var udv = await client.Users.GetUdfValue(user.Id);
+
             Assert.NotEmpty(result);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Users_SetUdfValueBatch()
         {
-            //TODO:设置成功后用上面的方法去查询没有结果
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Email = "qidong5566@outlook.com"
             });
             var udf = new Types.KeyValueDictionary();
-            udf.Add("asdad", "val1");
+            udf.Add("ObjectSid2222", "000");
             var udfBatch = new Domain.Model.Management.Udf.SetUserUdfValueBatchParam()
             {
                 UserId = user.Id,
@@ -434,23 +450,28 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             };
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var result = await client.Users.SetUdfValueBatch(new Domain.Model.Management.Udf.SetUserUdfValueBatchParam[] { udfBatch });
-            Assert.True(true);
+            Assert.True(result.Code == 200);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void Users_RemoveUdfValue()
         {
-            //TODO:查找不到 asdad 即使上面调用成功
             var client = managementClient;
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var user = await client.Users.Find(new FindUserOption()
             {
                 Email = "qitaotest@authing.cn"
             });
-            var result = await client.Users.RemoveUdfValue(user.Id, "asdad", authingErrorBox);
+            var result = await client.Users.RemoveUdfValue(user.Id, "ObjectSid", authingErrorBox);
             Assert.True(true);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试通过
+        /// </summary>
         [Fact]
         public async void Users_hasRole()
         {
@@ -466,6 +487,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.True(result);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Kick()
         {
@@ -481,6 +505,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-1 测试通过
+        /// </summary>
         [Fact]
         public async void Users_Logout()
         {
@@ -500,6 +527,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_CheckLoginStatus()
         {
@@ -507,7 +537,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qitaotest@authing.cn"
+                Email = "qidong5566@outlook.com"
             });
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
@@ -516,6 +546,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_ListUserActions()
         {
@@ -531,6 +564,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.List);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_SendFirstLoginVerifyEmail()
         {
@@ -546,9 +582,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-8 测试不通过
+        /// </summary>
         [Fact]
         public async void Users_CreateUsers()
         {
+            //TODO:{"code":200,"message":"导入任务完成，请查看导入结果",
+            //"data":[
+            //{"success":false,"errMsg":"null value in column \"logins_count\" violates not-null constraint"},
+            //{"success":false,"errMsg":"null value in column \"logins_count\" violates not-null constraint"}
+            //]}
             var client = managementClient;
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var userList = new List<CreateUserInput>() {
@@ -559,6 +603,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_GetUserTenants()
         {
@@ -570,6 +617,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             Assert.NotEmpty(result.Tenants);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_LinkIdentity()
         {
@@ -577,14 +627,17 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var result = await client.Users.LinkIdentity(new LinkIdentityOption()
             {
-                UserId = "61c560fc3e85f6d56bc6aa77",
-                UserIdInIdp = "12345",
+                UserId = "62e0e94f01e1f4f09bc7e6ef",
+                UserIdInIdp = "6257e58bcf40cbf1b49a229b",
                 Identifier = "github",
                 IsSocial = true,
             }, authingErrorBox);
             Assert.Equal(result.Code, 200);
         }
 
+        /// <summary>
+        /// 2022-8-3 测试通过
+        /// </summary>
         [Fact]
         public async void Users_UnlinkIdentity()
         {
@@ -592,7 +645,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var result = await client.Users.UnlinkIdentity(new UnlinkIdentityOption()
             {
-                UserId = "61c560fc3e85f6d56bc6aa77",
+                UserId = "62e0e94f01e1f4f09bc7e6ef",
                 Identifier = "github",
                 IsSocial = true,
             }, authingErrorBox);

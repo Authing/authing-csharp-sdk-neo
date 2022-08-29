@@ -11,7 +11,7 @@ namespace Authing.ApiClient.Infrastructure.GraphQL
         /// The code of the error
         /// </summary>
         [DataMember(Name = "code")]
-        public int Code { get; set; }
+        public long Code { get; set; }
 
         /// <summary>
         /// The message of the error
@@ -21,5 +21,7 @@ namespace Authing.ApiClient.Infrastructure.GraphQL
 
         [DataMember(Name ="data")]
         public object Data { get; set; }
+
+        public long ApiCode { get; set; }
     }
 }

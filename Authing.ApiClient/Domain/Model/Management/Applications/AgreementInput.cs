@@ -13,5 +13,8 @@ namespace Authing.ApiClient.Domain.Model.Management.Applications
 
         [JsonProperty("lang")]
         public LangEnum Lang { get; set; }
+
+        [JsonProperty("availableAt")]
+        public AvailableAt AvailableAt { get; set; }
     }
 }

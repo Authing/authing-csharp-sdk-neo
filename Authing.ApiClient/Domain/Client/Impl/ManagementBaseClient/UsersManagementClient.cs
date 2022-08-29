@@ -16,10 +16,12 @@ using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
 using Authing.ApiClient.Domain.Utils;
 using System.Linq;
+using System.Net.Http;
 using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Extensions;
 using Authing.Library.Domain.Model.Exceptions;
 using Authing.Library.Domain.Client.Impl;
+using Authing.Library.Domain.Model.V3Model.Management.Models;
 
 namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 {
@@ -48,7 +50,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 UserInfo = userInfo,
             };
 
-            var res = await client.Post<CreateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CreateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -72,10 +74,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             if (!string.IsNullOrWhiteSpace(param.Input.Password))
             {
-               param.Input.Password= EncryptHelper.RsaEncryptWithPublic(param.Input.Password, client.PublicKey);
+                param.Input.Password = EncryptHelper.RsaEncryptWithPublic(param.Input.Password, client.PublicKey);
             }
 
-            var res = await client.Post<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UpdateUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -96,13 +98,13 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {
                     Id = userId
                 };
-                var _res = await client.Post<UserWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
+                var _res = await client.RequestCustomDataWithToken<UserWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 ErrorHelper.LoadError(_res, authingErrorBox);
                 return _res.Data.Result;
             }
             var param = new UserParam() { Id = userId };
             await client.GetAccessToken().ConfigureAwait(false);
-            var res = await client.Post<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -116,7 +118,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                                                 AuthingErrorBox authingErrorBox = null)
         {
             var param = new DeleteUserParam(userId);
-            var res = await client.Post<DeleteUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -131,7 +133,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new DeleteUsersParam(userIds);
 
-            var res = await client.Post<DeleteUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<DeleteUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -149,7 +151,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 Type = batchFetchUserType.ToString()
             };
-            var res = await client.Post<UserBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UserBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -170,7 +172,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Limit = limit,
             };
 
-            var res = await client.Post<UsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<UsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -190,7 +192,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Page = page,
                 Limit = limit,
             };
-            var res = await client.Post<ArchivedUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ArchivedUsersResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -209,7 +211,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Phone = options.Phone,
                 ExternalId = options.ExternalId
             };
-            var res = await client.Post<IsUserExistsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<IsUserExistsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -229,7 +231,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 ExternalId = options.ExternalId,
             };
 
-            var res = await client.Post<FindUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<FindUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -258,7 +260,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 RoleOpts = option.RoleOpts,
             };
             await client.GetAccessToken().ConfigureAwait(false);
-            var res = await client.Post<SearchUserResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SearchUserResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -272,7 +274,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new RefreshTokenParam() { Id = userId };
 
-            var res = await client.Post<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RefreshTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -286,7 +288,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new GetUserGroupsParam(userId);
 
-            var res = await client.Post<GetUserGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<GetUserGroupsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result.Groups;
         }
@@ -306,7 +308,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = group
             };
 
-            var res = await client.Post<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AddUserToGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -326,7 +328,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Code = group
             };
 
-            var res = await client.Post<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RemoveUserFromGroupResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -345,7 +347,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = _namespace
             };
             await client.GetAccessToken().ConfigureAwait(false);
-            var res = await client.Post<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             var user = res.Data.Result;
             if (user == null)
@@ -373,7 +375,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = _namespace,
             };
 
-            var res = await client.Post<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<AssignRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -396,7 +398,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 Namespace = _namespace,
             };
             await client.GetAccessToken().ConfigureAwait(false);
-            var res = await client.Post<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<RevokeRoleResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -439,7 +441,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<PaginatedDepartments> ListDepartment(string userId, AuthingErrorBox authingErrorBox = null)
         {
             var param = new GetUserDepartmentsParam(userId);
-            var res = await client.Post<GetUserDepartmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<GetUserDepartmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             var user = res.Data.Result;
             if (user == null)
@@ -469,7 +471,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 param.ResourceType = option.ResourceType.ToString().ToUpper();
             }
-            var res = await client.Post<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             var user = res.Data.Result;
             if (user == null)
@@ -487,10 +489,22 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<List<KeyValuePair<string, object>>> GetUdfValue(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var param = new UdvParam(UdfTargetType.USER, userId);
-            var res = await client.Post<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
-            ErrorHelper.LoadError(res, authingErrorBox);
-            return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
+            var list = new List<KeyValuePair<string, object>>();
+            string httpResponse = await client.Request("GET", "api/v3/get-custom-data", new Dictionary<string, object>
+                {
+                 {"targetType","USER" },
+                 {"targetIdentifier",userId },
+                 }).ConfigureAwait(false);
+            GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
+
+            list = client.JsonService.DeserializeObject<Dictionary<string, object>>(result.Data.ConvertJsonNoCamel()).ToList();
+
+            if (result.StatusCode != 200)
+            {
+                ErrorHelper.LoadError(result.StatusCode, result.Message, result.ApiCode, authingErrorBox);
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -500,17 +514,24 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<Dictionary<string, List<KeyValuePair<string, object>>>> GetUdfValueBatch(string[] userIds, AuthingErrorBox authingErrorBox = null)
         {
-            if (userIds.Length < 1)
-            {
-                throw new Exception("empty user id list");
-            }
-            var param = new UdfValueBatchParam(UdfTargetType.USER, userIds);
-            var res = await client.Post<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
-            ErrorHelper.LoadError(res, authingErrorBox);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
-            foreach (var item in res.Data.Result)
+
+            foreach (var item in userIds)
             {
-                dic.Add(item.TargetId, AuthingUtils.ConverUdvToKeyValuePair(item.Data));
+
+                string httpResponse = await client.Request("GET", "api/v3/get-custom-data", new Dictionary<string, object>
+                {
+                 {"targetType","USER" },
+                 {"targetIdentifier",userIds.FirstOrDefault() },
+                 }).ConfigureAwait(false);
+                GetCustomDataRespDto result = client.JsonService.DeserializeObject<GetCustomDataRespDto>(httpResponse);
+
+                dic.Add(item, client.JsonService.DeserializeObject<Dictionary<string, object>>(result.Data.ConvertJsonNoCamel()).ToList());
+
+                if (result.StatusCode != 200)
+                {
+                    ErrorHelper.LoadError(result.StatusCode, result.Message, result.ApiCode, authingErrorBox);
+                }
             }
             return dic;
         }
@@ -534,7 +555,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     Value = item.Value.ConvertJson()
                 }),
             };
-            var res = await client.Post<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
@@ -544,7 +565,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="setUdfValueBatchInput"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<UserDefinedData>> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null)
+        public async Task<CommonMessage> SetUdfValueBatch(SetUserUdfValueBatchParam[] setUdfValueBatchInput, AuthingErrorBox authingErrorBox = null)
         {
             if (setUdfValueBatchInput.Length < 1)
             {
@@ -564,7 +585,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     )
             ));
             var _param = new SetUdfValueBatchParam(UdfTargetType.USER, param);
-            var res = await client.Post<SetUdvBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetUdfValueBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data.Result;
         }
@@ -578,7 +599,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         public async Task<CommonMessage> RemoveUdfValue(string userId, string key, AuthingErrorBox authingErrorBox = null)
         {
             var param = new RemoveUdvParam(UdfTargetType.USER, userId, key);
-            var res = await client.Post<SetUdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SetUdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data?.Result;
         }
@@ -645,7 +666,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 throw new Exception("请传入 options.userId，内容为要下线的用户 ID");
             }
 
-            var result = await client.Get<CommonMessage>("logout", new ExpnadAllRequest().CreateRequest()).ConfigureAwait(false);
+            var result = await client.RequestCustomDataWithToken<CommonMessage>("logout", method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
             return new CommonMessage
             {
@@ -661,7 +682,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <param name="appId">应用 ID</param>
         /// <param name="devicdId">选项</param>
         /// <returns></returns>
-        public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null,AuthingErrorBox authingErrorBox=null)
+        public async Task<CheckLoginStatusRes> CheckLoginStatus(string userId, string appId = null, string devicdId = null, AuthingErrorBox authingErrorBox = null)
         {
             var query = $"?userId={userId}";
             if (appId != null)
@@ -672,7 +693,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&devicdId={devicdId}";
             }
-            var res = await client.Get<CheckLoginStatusRes>($"api/v2/users/login-status{query}", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CheckLoginStatusRes>($"api/v2/users/login-status{query}","",null,HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -682,7 +703,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="listUserActionsParam">选项</param>
         /// <returns></returns>
-        public async Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null,AuthingErrorBox authingErrorBox=null)
+        public async Task<ListUserActionsRealRes> ListUserActions(ListUserActionsParam listUserActionsParam = null, AuthingErrorBox authingErrorBox = null)
         {
             var query = "";
             if (listUserActionsParam != null && listUserActionsParam.GetType().GetProperty("ExcludeNonAppRecords") != null)
@@ -725,7 +746,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&end={listUserActionsParam.End}";
             }
-            var res = await client.Get<ListUserActionsRes>("api/v2/analysis/user-action", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ListUserActionsRes>("api/v2/analysis/user-action", method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             if (res.Data.TotalCount == 0)
             {
@@ -764,10 +785,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="sendFirstLoginVerifyEmailParam">选项</param>
         /// <returns></returns>
-        public async Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam,AuthingErrorBox authingErrorBox=null)
+        public async Task<SendFirstLoginVerifyEmailResponse> SendFirstLoginVerifyEmail(SendFirstLoginVerifyEmailParam sendFirstLoginVerifyEmailParam, AuthingErrorBox authingErrorBox = null)
         {
             var param = sendFirstLoginVerifyEmailParam;
-            var res = await client.Post<SendFirstLoginVerifyEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<SendFirstLoginVerifyEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -777,7 +798,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userInfos">用户信息列表</param>
         /// <returns></returns>
-        public async Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos,AuthingErrorBox authingErrorBox=null)
+        public async Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos, AuthingErrorBox authingErrorBox = null)
         {
             if (userInfos.Count() > 100)
             {
@@ -793,10 +814,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 {
                     item.Gender = "U";
                 }
+
+                if (string.IsNullOrWhiteSpace(item.Password))
+                {
+                    item.Password = EncryptHelper.RsaEncryptWithPublic(item.Password, client.PublicKey);
+                }
             }
-            var res = await client.PostRaw<CreateUserResult[]>("api/v2/users/create/batch", new Dictionary<string, object>() {
+            var res = await client.RequestCustomDataWithToken<CreateUserResult[]>("api/v2/users/create/batch", new Dictionary<string, object>() {
                 { "users", userInfos }
-            }).ConfigureAwait(false);
+            }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return new CreateUsersRes()
             {
@@ -811,9 +837,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userId">用户 ID</param>
         /// <returns></returns>
-        public async Task<User> GetUserTenants(string userId,AuthingErrorBox authingErrorBox=null)
+        public async Task<User> GetUserTenants(string userId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.Get<User>($"api/v2/users/{userId}/tenants", new GraphQLRequest()).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<User>($"api/v2/users/{userId}/tenants", method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -823,7 +849,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        public async Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option,AuthingErrorBox authingErrorBox=null)
+        public async Task<GraphQLResponse<CommonMessage>> LinkIdentity(LinkIdentityOption option, AuthingErrorBox authingErrorBox = null)
         {
             var body = new Dictionary<string, object>() {
                 { "userId", option.UserId },
@@ -835,7 +861,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/link", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/identity/link", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -845,7 +871,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="option">选项</param>
         /// <returns></returns>
-        public async Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option,AuthingErrorBox authingErrorBox=null)
+        public async Task<GraphQLResponse<CommonMessage>> UnlinkIdentity(UnlinkIdentityOption option, AuthingErrorBox authingErrorBox = null)
         {
             var body = new Dictionary<string, object>() {
                 { "userId", option.UserId },
@@ -856,7 +882,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("type", option.Type);
             }
-            var res = await client.PostRaw<CommonMessage>("api/v2/users/identity/unlink", body).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>("api/v2/users/identity/unlink", body.ConvertJson()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }

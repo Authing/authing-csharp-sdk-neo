@@ -11,6 +11,7 @@ using Authing.ApiClient.Domain.Utils;
 using Authing.ApiClient.Interfaces.AuthenticationClient;
 using Authing.ApiClient.Domain.Model;
 using System.Linq;
+using Authing.Library.Domain.Model.Authentication;
 
 namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 {
@@ -23,9 +24,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public string BuildAuthorizeUrl(IProtocolInterface option)
         {
-            if (Host == null)
+            if (string.IsNullOrWhiteSpace(AppHost))
             {
-                throw new ArgumentException("请在初始化 AuthenticationClient 时传入应用域名 Host 参数，形如：https://app1.authing.cn");
+                throw new ArgumentException("请在初始化 AuthenticationClient 时传入应用域名 AppHost 参数，形如：https://app1.authing.cn");
             }
 
             if (option as OidcOption != null)
@@ -54,7 +55,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         public string BuildSamlAuthorizeUrl()
         {
-            return $"{Host}/api/v2/saml-idp/{AppId}";
+            return $"{AppHost}/api/v2/saml-idp/{AppId}";
         }
 
         /// <summary>
@@ -65,8 +66,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         private string BuildCasAuthorizeUrl(CasOption option)
         {
             return option.Service is null
-                ? $"{Host}/cas-idp/{AppId}"
-                : $"{Host}/cas-idp/{AppId}?service={option.Service}";
+                ? $"{AppHost}/cas-idp/{AppId}/login"
+                : $"{AppHost}/cas-idp/{AppId}/login/?service={option.Service}";
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 redirect_uri = option.RedirectUri ?? Options.RedirectUri,
                 response_type = !(option.ResponseType is null) ? option.ResponseType.ToString().ToLower() : "code",
             }.Convert2QueryParams();
-            return $"{Host}/oauth/auth{param}";
+            return $"{AppHost}/oauth/auth{param}";
         }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 //code_challenge_method = option.CodeChallengeMethod?.ToString().ToLower(),
                 //code_challenge = option.CodeChallenge,
             }.Convert2QueryParams();
-            return $"{Options.Host ?? Host}/oidc/auth{res}";
+            return $"{Options.AppHost ?? Host}/oidc/auth{res}";
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             switch (Options.TokenEndPointAuthMethod)
             {
                 case TokenEndPointAuthMethod.CLIENT_SECRET_POST:
-                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQlResponseWithHost<CodeToTokenRes>(AppHost,url, new Dictionary<string, string>()
                     {
                         { "client_id", Options.AppId },
                         { "client_secret", Options.Secret },
@@ -148,7 +149,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     var headers = GetAuthHeaders();
                     headers.Add("Authorization",
                         $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Options.AppId}:{Options.Secret}"))}");
-                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQlResponseWithHost<CodeToTokenRes>(AppHost,url, new Dictionary<string, string>()
                         {
                             { "grant_type", "authorization_code" },
                             { "code", code },
@@ -165,7 +166,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                             ).ConfigureAwait(false);
                     return result;
                 case TokenEndPointAuthMethod.NONE:
-                    result = await RequestNoGraphQLResponse<CodeToTokenRes>(url, new Dictionary<string, string>()
+                    result = await RequestNoGraphQlResponseWithHost<CodeToTokenRes>(AppHost,url, new Dictionary<string, string>()
                     {
                         { "client_id", Options.AppId },
                         //{ "client_secret", Options.Secret },
@@ -193,12 +194,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             switch (Options.Protocol)
             {
                 case Protocol.OAUTH:
-                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint).ConfigureAwait(false);
+                    res = await RequestNoGraphQlResponseWithHost<UserInfo>(AppHost,endPoint).ConfigureAwait(false);
                     break;
                 case Protocol.OIDC:
                 case Protocol.SAML:
                 case Protocol.CAS:
-                    res = await RequestNoGraphQLResponse<UserInfo>(endPoint, method: HttpMethod.Get).ConfigureAwait(false);
+                    res = await RequestNoGraphQlResponseWithHost<UserInfo>(AppHost,endPoint, method: HttpMethod.Get).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -261,7 +262,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken }
             };
 
-            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponseWithHost<RefreshTokenRes>(AppHost,api, param.ConvertJson()).ConfigureAwait(false);
 
             return result;
         }
@@ -280,7 +281,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "grant_type", "refresh_token" },
                 { "refresh_token", refreshToken }
             };
-            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponseWithHost<RefreshTokenRes>(AppHost,api, param.ConvertJson()).ConfigureAwait(false);
 
             return result;
         }
@@ -302,7 +303,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "refresh_token", refreshToken },
 
             };
-            var result = await RequestNoGraphQLResponse<RefreshTokenRes>(api, param.ConvertJson()).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponseWithHost<RefreshTokenRes>(AppHost,api, param.ConvertJson()).ConfigureAwait(false);
             return result;
         }
 
@@ -346,7 +347,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<IntrospectTokenRes> IntrospectTokenWithClientSecretPost(string url, string token)
         {
-            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQlResponseWithHost<IntrospectTokenRes>(AppHost,url, new Dictionary<string, string>()
             {
                 { "client_id", Options.AppId },
                 { "client_secret", Options.Secret },
@@ -357,7 +358,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<IntrospectTokenRes> IntrospectTokenWithClientSecretBasic(string url, string token)
         {
-            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQlResponseWithHost<IntrospectTokenRes>(AppHost,url, new Dictionary<string, string>()
                 {
                     { "token", token },
                 }.ConvertJson(),
@@ -373,7 +374,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         private async Task<IntrospectTokenRes> IntrospectTokenWithNone(string url, string token)
         {
-            var result = await RequestNoGraphQLResponse<IntrospectTokenRes>(url, new Dictionary<string, string>()
+            var result = await RequestNoGraphQlResponseWithHost<IntrospectTokenRes>(AppHost,url, new Dictionary<string, string>()
             {
                 { "client_id", Options.AppId },
                 { "token", token },
@@ -396,7 +397,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var url = $"api/v2/oidc/validate_token";
             url += !string.IsNullOrWhiteSpace(param.AccessToken) ? $"?access_token={param.AccessToken}" : $"?id_token={param.IdToken}";
 
-            var result = await RequestNoGraphQLResponse<ValidateTokenRes>(url, "", null, HttpMethod.Get, ContentType.JSON).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponseWithHost<ValidateTokenRes>(AppHost,url, "", null, HttpMethod.Get, ContentType.JSON).ConfigureAwait(false);
             return result;
         }
 
@@ -426,8 +427,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         private string BuildEasyLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/login/profile/logout"
-                : $"{Host}/login/profile/logout?redirect_uri={options.RedirectUri}";
+                ? $"{AppHost}/login/profile/logout"
+                : $"{AppHost}/login/profile/logout?redirect_uri={options.RedirectUri}";
         }
 
         private string BuildOidcLogoutUrl(LogoutParams options)
@@ -436,15 +437,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 string.IsNullOrWhiteSpace(options.RedirectUri) || string.IsNullOrWhiteSpace(options.IdToken))
                 throw new ArgumentException("必须同时传入 idToken 和 redirectUri 参数，或者同时都不传入");
             return string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/oidc/session/end"
-                : $"{Host}/oidc/session/end?id_token_hint={options.IdToken}&post_logout_redirect_uri={options.RedirectUri}";
+                ? $"{AppHost}/oidc/session/end"
+                : $"{AppHost}/oidc/session/end?id_token_hint={options.IdToken}&post_logout_redirect_uri={options.RedirectUri}";
         }
 
         private string BuildCasLogoutUrl(LogoutParams options)
         {
             return string.IsNullOrWhiteSpace(options.RedirectUri)
-                ? $"{Host}/cas-idp/logout"
-                : $"{Host}/cas-idp/logout?url={options.RedirectUri}";
+                ? $"{AppHost}/cas-idp/{AppId}/logout"
+                : $"{AppHost}/cas-idp/{AppId}/logout?url={options.RedirectUri}";
         }
 
         /// <summary>
@@ -453,7 +454,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="scope"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> GetAccessTokenByClientCredentials(string scope, GetAccessTokenByClientCredentialsOption options = null)
+        public async Task<CredentialsResponse> GetAccessTokenByClientCredentials(string scope, GetAccessTokenByClientCredentialsOption options = null)
         {
             if (string.IsNullOrWhiteSpace(scope))
                 throw new ArgumentException(
@@ -461,7 +462,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             if (options is null)
                 throw new ArgumentException(
                     "请在调用本方法时传入 { accessKey: string, accessSecret: string }，请看文档：https://docs.authing.cn/v2/guides/authorization/m2m-authz.html");
-            var result = await RequestCustomDataWithOutToken<HttpResponseMessage>(
+
+            var url = this.Options.Protocol == Protocol.OIDC ? "oidc/token" : "oauth/token";
+
+            var result = await RequestNoGraphQlResponseWithHost<CredentialsResponse>(Options.AppHost,
                 "oidc/token",
                 new Dictionary<string, string>()
                 {
@@ -470,7 +474,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     {"grant_type","client_credentials"},
                     {"scope",scope}
                 }.ConvertJson()).ConfigureAwait(false);
-            return result.Data;
+            return result;
         }
 
         /// <summary>
@@ -478,7 +482,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         /// <param name="token">用户的 Access token 或 Refresh token</param>
         /// <returns></returns>
-        public async Task<GraphQLResponse<string>> RevokeToken(string token)
+        public async Task<string> RevokeToken(string token)
         {
             if (Options.Protocol != Protocol.OAUTH && Options.Protocol != Protocol.OIDC)
                 throw new ArgumentException(
@@ -502,9 +506,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
         }
 
-        private async Task<GraphQLResponse<string>> RevokeTokenWithClientSecretPost(string url, string token)
+        private async Task<string> RevokeTokenWithClientSecretPost(string url, string token)
         {
-            var result = await RequestCustomDataWithOutToken<string>(
+            var result = await RequestNoGraphQlResponseWithHost<string>(Options.AppHost,
                 url,
                 new Dictionary<string, string>()
                 {
@@ -515,11 +519,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result;
         }
 
-        private async Task<GraphQLResponse<string>> RevokeTokenWithClientSecretBasic(string url, string token)
+        private async Task<string> RevokeTokenWithClientSecretBasic(string url, string token)
         {
             if (Options.Protocol == Protocol.OAUTH)
                 throw new ArgumentException("OAuth 2.0 暂不支持用 client_secret_basic 模式身份验证撤回 Token");
-            var result = await RequestCustomDataWithOutToken<string>(
+            var result = await RequestNoGraphQlResponseWithHost<string>(Options.AppHost,
                 "oidc/token/revocation",
                 new Dictionary<string, string>()
                 {
@@ -534,9 +538,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             return result;
         }
 
-        private async Task<GraphQLResponse<string>> RevokeTokenWithNone(string url, string token)
+        private async Task<string> RevokeTokenWithNone(string url, string token)
         {
-            var result = await RequestCustomDataWithOutToken<string>(
+            var result = await RequestNoGraphQlResponseWithHost<string>(Options.AppHost,
                 url,
                 new Dictionary<string, string>()
                 {
@@ -554,9 +558,9 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<ValidateTicketV1Res> ValidateTicketV1(string ticket, string service)
         {
-            var result = await RequestCustomDataWithOutToken<ValidateTicketV1Response>($"cas-idp/${AppId}/validate/?ticket={ticket}&service={service}", method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponseWithHost<string>(Options.AppHost, $"cas-idp/{AppId}/validate/?ticket={ticket}&service={service}", method: HttpMethod.Get).ConfigureAwait(false);
 
-            if (result.Data.Result.Split('\n').Contains("yes"))
+            if (result.ToString().Split('\n').Contains("yes"))
             {
                 return new ValidateTicketV1Res() { Valid = true };
             }
@@ -608,15 +612,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <returns></returns>
         public async Task<string> ValidateTicketV2(string ticket, string service, ValidateTicketFormat validateTicketFormat)
         {
-            var result = await RequestCustomDataWithOutToken<ValidateTicketV2Response>($"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponseWithHost<string>(Options.AppHost, $"cas-idp/{AppId}/serviceValidate/?ticket={ticket}&service={service}&format={validateTicketFormat}", method: HttpMethod.Get).ConfigureAwait(false);
 
-            return result.Data.Result;
+            return result;
         }
 
         public async Task<User> TrackSession()
         {
-            var result = await RequestCustomDataWithOutToken<User>("cas/session", method: HttpMethod.Get).ConfigureAwait(false);
-            return result.Data;
+            var result = await RequestNoGraphQlResponseWithHost<User>(Options.AppHost, "cas/session", method: HttpMethod.Get).ConfigureAwait(false);
+            return result;
         }
     }
 }

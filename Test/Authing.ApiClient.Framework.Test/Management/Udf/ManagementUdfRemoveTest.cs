@@ -6,12 +6,15 @@ namespace Authing.ApiClient.Framework.Test.Management.Udf
 {
     public class ManagementUdfRemoveTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-8 测试通过
+        /// </summary>
         [Fact]
         public async void RemoveUserDefinedField_User()
         {
             var client = managementClient;
 
-            CommonMessage result = await client.Udf.Remove(UdfTargetType.USER, "asdad");
+            CommonMessage result = await client.Udf.Remove(UdfTargetType.USER, "user");
 
             Assert.NotNull(result.Code == 200);
         }

@@ -3,6 +3,11 @@ namespace Authing.ApiClient.Types
     public class InitAuthenticationClientOptions
     {
         /// <summary>
+        /// 应用的认证地址
+        /// </summary>
+        public string AppHost { get; set; }
+
+        /// <summary>
         /// 应用 ID 
         /// </summary>
         public string AppId { get; set; }

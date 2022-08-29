@@ -72,57 +72,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return Tuple.Create(res.Data?.Result.AccessToken, res.Data?.Result.Exp);
         }
 
-        public async Task<GraphQLResponse<TResponse>> Request<TResponse>(GraphQLRequest body)
-        {
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(GraphQLRequest body)
-        {
-            body = body ?? new GraphQLRequest();
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, preprocessedRequest.ToHttpRequestBody(),
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Post<TResponse>(string api, Dictionary<string, string> body)
-        {
-            return await RequestCustomDataWithToken<TResponse>(GraphQLEndpoint, body.ConvertJson()).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Get<TResponse>(string api, GraphQLRequest body)
-        {
-            body = body ?? new GraphQLRequest();
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Get,
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Delete<TResponse>(string api, GraphQLRequest body)
-        {
-            body = body ?? new GraphQLRequest();
-            var preprocessedRequest = new GraphQLHttpRequest(body);
-            return await RequestCustomDataWithToken<TResponse>(api, preprocessedRequest.ToHttpRequestBody(), method: HttpMethod.Delete,
-                contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> Put<TResponse>(string api, Dictionary<string, string> body)
-        {
-            return await RequestCustomDataWithToken<TResponse>(api, body.ConvertJson(), method: HttpMethod.Put).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> PostRaw<TResponse>(string api, Dictionary<string, object> dic)
-        {
-            return await RequestCustomDataWithToken<TResponse>(api, dic.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
-        }
-
-        public async Task<GraphQLResponse<TResponse>> PutRaw<TResponse>(string api, Dictionary<string, object> dic)
-        {
-            return await RequestCustomDataWithToken<TResponse>(api, dic.ConvertJson(), contenttype: ContentType.JSON, method: HttpMethod.Put).ConfigureAwait(false);
-        }
-
         public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithToken<TResponse>(string url, string serializedata = "", Dictionary<string, string> headers = null!, HttpMethod method = null!,
             ContentType contenttype = ContentType.DEFAULT)
         {
@@ -152,12 +101,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             ContentType contenttype = ContentType.DEFAULT)
         {
             headers ??= await GetHeaderWithToken(headers);
-            var result = await RequestNoGraphQLResponse<CommonResponse<TResponse>>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            var result = await RequestNoGraphQlResponse<CommonResponse<TResponse>>(url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
         }
 
         private async Task<Dictionary<string, string>> GetHeaderWithToken(Dictionary<string, string> headers)
-        { 
+        {
             headers ??= new Dictionary<string, string>();
             var token = await GetAccessToken().ConfigureAwait(false);
             headers["Authorization"] = token;
@@ -165,6 +114,90 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             headers["x-authing-request-from"] = type;
             headers["x-authing-sdk-version"] = version;
             return headers;
+        }
+
+        public async Task<string> Request(string method, string apiPath, Dictionary<string, object> pairs, bool withToken = true)
+        {
+
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers = await GetHeaderWithToken(headers);
+
+            if (!withToken)
+            {
+                if (headers.ContainsKey("Authorization"))
+                {
+                    headers.Remove("Authorization");
+                }
+            }
+
+            Dictionary<string, string> dic = pairs.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value == null ? "" : valueItem.Value.ToString());
+
+            object json = await RequestNoGraphQlResponse<object>(UrlCombine(apiPath,dic), dic.ConvertJson(), headers, HttpMethod.Get, ContentType.JSON);
+
+
+            string result = json.ConvertJsonNoCamel();
+
+            return result;
+        }
+
+        public async Task<Result> Request<Result, T>(string method, string apiPath, T dto, bool withToken = true)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers = await GetHeaderWithToken(headers);
+
+            if (!withToken)
+            {
+                if (headers.ContainsKey("Authorization"))
+                {
+                    headers.Remove("Authorization");
+                }
+            }
+
+            string dtoJson = dto.ConvertJson();
+
+            Result result = await RequestNoGraphQlResponse<Result>( apiPath, dtoJson, headers, HttpMethod.Post, ContentType.JSON);
+
+            return result;
+        }
+
+        private bool IfTokenValid(long? accessTokenExpirAt)
+        {
+            long dateTime = DateTimeOffset.Now.Second;
+
+            if (accessTokenExpirAt.HasValue && accessTokenExpirAt.Value > dateTime + 3600)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private string UrlCombine(  string apiUrl, Dictionary<string, string> param)
+        {
+            if (string.IsNullOrWhiteSpace(apiUrl))
+            {
+                apiUrl = string.Empty;
+            }
+
+            apiUrl = apiUrl.TrimStart('/');
+            string result =   apiUrl;
+
+            if (param is null || param.Count == 0)
+            {
+                return result;
+            }
+
+            string connector = "?";
+            foreach (var x in param)
+            {
+                if (string.IsNullOrWhiteSpace(x.Value))
+                {
+                    continue;
+                }
+
+                result += $"{connector}{x.Key}={x.Value}";
+                connector = "&";
+            }
+            return result;
         }
     }
 }

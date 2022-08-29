@@ -7,6 +7,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
 {
     public class UserpoolClientTest : BaseTest
     {
+        /// <summary>
+        /// 2022-8-4 测试通过
+        /// </summary>
         [Fact]
         public async Task Userpool_Detail()
         {
@@ -15,6 +18,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
             Assert.Equal(result.Id, UserPoolId);
         }
 
+        /// <summary>
+        /// 2022-8-4 测试通过
+        /// </summary>
         [Fact]
         public async Task Userpool_Update()
         {
@@ -25,6 +31,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
             Assert.Equal(result.Description, "测试描述");
         }
 
+        /// <summary>
+        /// 2022-8-4 测试通过
+        /// </summary>
         [Fact]
         public async Task Userpool_ListEnv()
         {
@@ -35,6 +44,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
             Assert.NotEmpty(result);
         }
 
+        /// <summary>
+        /// 2022-8-4 测试通过
+        /// </summary>
         [Fact]
         public async Task Userpool_AddEnv()
         {
@@ -43,6 +55,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Userpool
             Assert.Equal(result, 200);
         }
 
+        /// <summary>
+        /// 2022-8-4 测试通过
+        /// </summary>
         [Fact]
         public async Task Userpool_RemoveEnv()
         {

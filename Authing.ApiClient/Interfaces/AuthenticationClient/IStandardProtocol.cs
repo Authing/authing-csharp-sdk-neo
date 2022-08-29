@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.Authentication;
 
 namespace Authing.ApiClient.Interfaces.AuthenticationClient
 {
@@ -63,13 +64,13 @@ namespace Authing.ApiClient.Interfaces.AuthenticationClient
         /// <param name="scope"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> GetAccessTokenByClientCredentials(string scope, GetAccessTokenByClientCredentialsOption options = null);
+        Task<CredentialsResponse> GetAccessTokenByClientCredentials(string scope, GetAccessTokenByClientCredentialsOption options = null);
 
         /// <summary>
         /// 撤回 Access token 或 Refresh token
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<GraphQLResponse<string>> RevokeToken(string token);
+        Task<string> RevokeToken(string token);
     }
 }

@@ -10,7 +10,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 {
     public class SetPartMentCustomDataTest : BaseTest
     {
-
+        /// <summary>
+        /// 2022-8-10 测试通过
+        /// </summary>
         [Fact]
         public async void SetPartMentCustomData_Test()
         {
@@ -20,7 +22,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
 
             var result = await client.Orgs.SetPartMentCustomData<SetCustomDataResponse>(res.First().Id, "isSecurity", "123");
             //result = await client.Orgs.SetPartMentCustomData<SetCustomDataResponse>(res.First().Id, "isDistribution", "123");
-            Assert.NotNull(result.statusCode == 200);
+            Assert.NotNull(result.StatusCode == 200);
         }
 
     }

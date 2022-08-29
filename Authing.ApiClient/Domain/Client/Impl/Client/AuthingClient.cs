@@ -29,6 +29,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             return new AuthingClient(timeout);
         }
 
+/*
         public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, TRequest body,
             Dictionary<string, string> headers)
         {
@@ -47,12 +48,6 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     });
                 return await SendRequest<TResponse>(url, bodyStr, headers, httpType).ConfigureAwait(false);
             }
-        }
-
-        public async Task<TResponse> SendRequest<TRequest, TResponse>(string url, HttpType httpType, Dictionary<string, string> body,
-            Dictionary<string, string> headers)
-        {
-            return await SendRequest<TResponse>(url, body, headers, httpType).ConfigureAwait(false);
         }
 
         private async Task<TResponse> SendRequest<TResponse>(string url, string strContent,
@@ -116,164 +111,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
             }
         }
 
-        private async Task<TResponse> SendRequest<TResponse>(string url, Dictionary<string, string> body,
-
-           Dictionary<string, string> headers, HttpType httpType = HttpType.Post)
-        {
-            ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
-
-            HttpRequestMessage message = null;
-
-            if (httpType == HttpType.Get)
-            {
-                message = new HttpRequestMessage(HttpMethod.Get, new Uri(url));
-            }
-            else if (httpType == HttpType.Delete)
-            {
-                message = new HttpRequestMessage(HttpMethod.Delete, new Uri(url));
-            }
-            else if (httpType == HttpType.Patch)
-            {
-                SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
-                message = new HttpRequestMessage(new HttpMethod("PATCH"), new Uri(url))
-
-                {
-                    Content = new FormUrlEncodedContent(sortedParam)
-                };
-            }
-            else if (httpType == HttpType.Put)
-            {
-                SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
-                message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
-
-                {
-                    Content = new FormUrlEncodedContent(sortedParam)
-                };
-            }
-            else
-            {
-                SortedDictionary<string, string> sortedParam = new SortedDictionary<string, string>(body.ToDictionary(x => x.Key, x => x.Value.ToString()));
-                message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-
-                {
-                    Content = new FormUrlEncodedContent(sortedParam)
-                };
-            }
-            if (headers != null)
-            {
-                foreach (var keyValuePair in headers)
-                {
-                    message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-            using (var httpResponseMessage =
-                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
-            {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    using (var reader = new StreamReader(contentStream))
-                    {
-                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
-                        return JsonConvert.DeserializeObject<TResponse>(resString);
-                    }
-                }
-                // error handling
-                string content = null;
-                if (contentStream != null)
-                    using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
-                throw new Exception(content);
-            }
-        }
-
-        public async Task<TResponse> PutRaw<TResponse>(string url, string serializedata, Dictionary<string, string> headers)
-        {
-            ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
-
-            HttpRequestMessage message = null;
-
-            message = new HttpRequestMessage(HttpMethod.Put, new Uri(url))
-            {
-                Content = new StringContent(serializedata, Encoding.UTF8, "application/json")
-                //TODO:JAVA SDK中存在 application/x-www-form-urlencoded
-                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
-            };
-
-            if (headers != null)
-            {
-                foreach (var keyValuePair in headers)
-                {
-                    message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-            using (var httpResponseMessage =
-                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
-            {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    using (var reader = new StreamReader(contentStream))
-                    {
-                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
-                        return JsonConvert.DeserializeObject<TResponse>(resString);
-                    }
-                }
-                // error handling
-                string content = null;
-                if (contentStream != null)
-                    using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
-                throw new Exception(content);
-            }
-        }
-
-        public async Task<TResponse> PostRaw<TResponse>(string url, string serializedata, Dictionary<string, string> headers)
-        {
-            ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)(0xc0 | 0x300 | 0xc00);
-
-            HttpRequestMessage message = null;
-
-            message = new HttpRequestMessage(HttpMethod.Post, new Uri(url))
-            {
-                Content = new StringContent(serializedata, Encoding.UTF8, "application/json")
-                //TODO:JAVA SDK中存在 application/x-www-form-urlencoded
-                //Content = new StringContent(rawjson, Encoding.UTF8, "application/x-www-form-urlencoded");
-            };
-
-            if (headers != null)
-            {
-                foreach (var keyValuePair in headers)
-                {
-                    message.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-            using (var httpResponseMessage =
-                await HttpClientUtils.GetHttpClient().SendAsync(message, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
-            {
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    using (var reader = new StreamReader(contentStream))
-                    {
-                        var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
-                        return JsonConvert.DeserializeObject<TResponse>(resString);
-                    }
-                }
-                // error handling
-                string content = null;
-                if (contentStream != null)
-                    using (var sr = new StreamReader(contentStream))
-                        content = await sr.ReadToEndAsync().ConfigureAwait(false);
-                throw new Exception(content);
-            }
-        }
+*/
 
         public async Task<TResponse> RequestCustomData<TResponse>(string url, string serializedata, Dictionary<string, string> headers = null, HttpMethod method = null,
             ContentType contenttype = ContentType.DEFAULT)
@@ -321,6 +159,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     using (var reader = new StreamReader(contentStream))
                     {
                         var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                        if (typeof(TResponse) == typeof(string))
+                        {
+                            return (TResponse)(object)(resString);
+                        }
 
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
