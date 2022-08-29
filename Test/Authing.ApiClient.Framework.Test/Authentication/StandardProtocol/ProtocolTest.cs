@@ -1,5 +1,6 @@
 ﻿using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Types;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Xunit;
@@ -240,14 +241,22 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             Assert.NotNull(check);
         }
 
+        /// <summary>
+        /// 2022-08-29 测试通过
+        /// </summary>
         [Fact]
-        public async Task CAS_BuildAuthorizeUrl_Test()
+        public void CAS_BuildAuthorizeUrl_Test()
         {
             string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
 
             Assert.NotNull(casUrl);
         }
 
+        /// <summary>
+        /// 验证 CAS 协议登录的 Ticket
+        /// 2022-08-29 测试通过
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task CAS_CheckTicket_Test()
         {
@@ -255,7 +264,55 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 
             Assert.NotNull(casUrl);
 
-            var result = authenticationClient.ValidateTicketV1("", "https://www.baidu.com");
+            var result = await authenticationClient.ValidateTicketV1("ST-cd05453d-acb1-4f3f-a783-ef3f98ee4375", "https://www.baidu.com");
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// 2022-08-29 测试通过
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CAS_CheckTicketV2__JSON_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+
+            var result = await authenticationClient.ValidateTicketV2("ST-d3dedbc5-d29d-4330-b265-6cb376e5b8a0", "https://www.baidu.com", ValidateTicketFormat.JSON);
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// 2022-08-29 测试失败
+        /// 500 错误
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CAS_CheckTicketV2__XML_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+
+            var result = await authenticationClient.ValidateTicketV2("ST-d3dedbc5-d29d-4330-b265-6cb376e5b8a0", "https://www.baidu.com", ValidateTicketFormat.XML);
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// 测试 SSO 登录状态
+        /// 2022-08-29 测试失败 返回为空
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CAS_TrackSession_Test()
+        {
+            //2022-08-29 通过网页登录后，返回字符串 session:null
+
+            var result = await authenticationClient.TrackSession();
 
             Assert.NotNull(result);
         }

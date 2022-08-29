@@ -73,5 +73,12 @@ GKl64GDcIq3au+aqJQIDAQAB
             var result = await client.RequestCustomData<TResponse>(Host + $"/{url}", serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
             return result;
         }
+
+        protected async Task<TResponse> RequestNoGraphQlResponseWithHost<TResponse>(string host, string url, string serializedata = "", Dictionary<string, string> headers = null,
+            HttpMethod method = null!, ContentType contenttype = ContentType.DEFAULT)
+        {
+            var result = await client.RequestCustomData<TResponse>(host + "/" + url, serializedata, headers, method ?? HttpMethod.Post, contenttype).ConfigureAwait(false);
+            return result;
+        }
     }
 }

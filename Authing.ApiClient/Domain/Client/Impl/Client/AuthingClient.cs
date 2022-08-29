@@ -160,6 +160,11 @@ namespace Authing.ApiClient.Domain.Client.Impl.Client
                     {
                         var resString = await reader.ReadToEndAsync().ConfigureAwait(false);
 
+                        if (typeof(TResponse) == typeof(string))
+                        {
+                            return (TResponse)(object)(resString);
+                        }
+
                         return JsonConvert.DeserializeObject<TResponse>(resString);
                     }
                 }

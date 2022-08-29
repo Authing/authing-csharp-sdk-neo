@@ -25,6 +25,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// </summary>
         protected string AppId { get; private set; }
 
+        protected string AppHost { get; private set; }
+
         public InitAuthenticationClientOptions Options { get; protected set; } = new();
 
         public BaseAuthenticationClient(string appId)
@@ -40,6 +42,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
 
             init(Options);
+            AppHost = Options.AppHost;
             Host = Options.Host ?? Host;
             AppId = Options.AppId ?? AppId;
             UserPoolId = Options.UserPoolId ?? UserPoolId;

@@ -25,6 +25,7 @@ namespace Authing.ApiClient.Framework.Test
                     opt.Host = Host;
                     opt.Secret = AppSecret;
                     opt.UserPoolId = UserPoolId;
+                    opt.AppHost = AppHost;
                 }
             );
             managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(init: opt =>
