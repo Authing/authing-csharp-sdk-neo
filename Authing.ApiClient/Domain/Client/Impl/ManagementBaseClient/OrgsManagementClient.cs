@@ -31,7 +31,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<AddMemberResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Org> AddNode(string orgId, AddNodeParam addNodeParam, AuthingErrorBox authingErrorBox = null)
@@ -107,7 +107,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new OrgParam(orgId);
             var res = await client.RequestCustomDataWithToken<OrgResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Node> FindNodeById(string nodeId, AuthingErrorBox authingErrorBox = null)
