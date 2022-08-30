@@ -34,12 +34,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         private void ConfigMapper()
         {
-            client.MapperService.CreateMap<GroupDto,Group >().AfterMapping((GroupDto src,Group des) => 
-            {
-                //des.Code = src.Code;
-                //des.Name=src.
+            //client.MapperService.CreateMap<GroupDto,Group >().AfterMapping((GroupDto src,Group des) => 
+            //{
+            //    //des.Code = src.Code;
+            //    //des.Name=src.
 
-            });
+            //});
         }
 
         /// <summary>

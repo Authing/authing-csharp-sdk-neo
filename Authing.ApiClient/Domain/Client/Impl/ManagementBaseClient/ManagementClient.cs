@@ -45,7 +45,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public Action<InitAuthenticationClientOptions> Init { get; }
 
-        public MapperService MapperService;
+        //public MapperService MapperService;
 
         public IJsonService JsonService;
 
@@ -63,7 +63,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         private void InitClient()
         {
             JsonService = new JsonService();
-            MapperService = new MapperService();
+            //MapperService = new MapperService();
 
             Users = new UsersManagementClient(this);
             Applications = new ApplicationsManagementClient(this);
