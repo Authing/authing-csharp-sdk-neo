@@ -32,7 +32,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             var result = await RequestCustomDataWithOutToken<GetMfaAuthenticatorsResponse>($"api/v2/mfa/authenticator/?type={getMfaAuthenticatorsParam.Type}" +
                 $"&source={getMfaAuthenticatorsParam.TotpSource}", headers: headers, method: HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             Dictionary<string, string> headers = new Dictionary<string, string>() { { "Authorization", "bearer " + parameter.MfaToken } };
             var result = await RequestCustomDataWithToken<ConfirmAssosicateMfaAuthenticatorResponse>("api/v2/mfa/totp/associate/confirm", parameter.ConvertJson(), headers, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(result, authingErrorBox);
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         /// <summary>

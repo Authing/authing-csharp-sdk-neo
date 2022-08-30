@@ -45,7 +45,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.RequestCustomDataWithToken<SetUdfResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.RequestCustomDataWithToken<RemoveUdfResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.RequestCustomDataWithToken<UdfResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return AuthingUtils.ConvertUdv(res.Data.Result);
+            return AuthingUtils.ConvertUdv(res.Data?.Result);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.RequestCustomDataWithToken<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return AuthingUtils.ConvertUdv(res.Data.Result);
+            return AuthingUtils.ConvertUdv(res.Data?.Result);
         }
     }
 

@@ -136,7 +136,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new SendEmailParam(email, scene);
             var res = await RequestCustomDataWithToken<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>

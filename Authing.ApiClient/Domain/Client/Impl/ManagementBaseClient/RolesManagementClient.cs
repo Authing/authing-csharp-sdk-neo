@@ -296,7 +296,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            if (res.Data.Result == null)
+            if (res.Data?.Result == null)
             {
                 throw new Exception("角色不存在");
             }
@@ -308,7 +308,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new UdvParam(UdfTargetType.ROLE, roleCode);
             var res = await client.RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
+            return AuthingUtils.ConverUdvToKeyValuePair(res.Data?.Result);
         }
 
         public async Task<KeyValuePair<string, object>> GetSpecificUdfValue(string roleId, string udfKey,AuthingErrorBox authingErrorBox=null)
@@ -316,7 +316,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new UdvParam(UdfTargetType.ROLE, roleId);
             var res = await client.RequestCustomDataWithToken<UdvResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            var udfList = AuthingUtils.ConverUdvToKeyValuePair(res.Data.Result);
+            var udfList = AuthingUtils.ConverUdvToKeyValuePair(res.Data?.Result);
             var keyValuePair = udfList.Where(item => item.Key == udfKey).ToList();
             return keyValuePair[0];
         }
@@ -327,7 +327,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var res = await client.RequestCustomDataWithToken<UdfValueBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             var dic = new Dictionary<string, List<KeyValuePair<string, object>>>();
-            res.Data.Result.ToList().ForEach(
+            res.Data?.Result.ToList().ForEach(
                 item =>
                     dic.Add(item.TargetId, AuthingUtils.ConverUdvToKeyValuePair(item.Data))
             );

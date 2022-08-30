@@ -100,7 +100,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 };
                 var _res = await client.RequestCustomDataWithToken<UserWithCustomDataResponse>(_param.CreateRequest()).ConfigureAwait(false);
                 ErrorHelper.LoadError(_res, authingErrorBox);
-                return _res.Data.Result;
+                return _res.Data?.Result;
             }
             var param = new UserParam() { Id = userId };
             await client.GetAccessToken().ConfigureAwait(false);
@@ -349,7 +349,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             await client.GetAccessToken().ConfigureAwait(false);
             var res = await client.RequestCustomDataWithToken<GetUserRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            var user = res.Data.Result;
+            var user = res.Data?.Result;
             if (user == null)
             {
                 throw new Exception("用户不存在！");
@@ -443,7 +443,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new GetUserDepartmentsParam(userId);
             var res = await client.RequestCustomDataWithToken<GetUserDepartmentsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            var user = res.Data.Result;
+            var user = res.Data?.Result;
             if (user == null)
             {
                 throw new Exception("用户不存在！");
@@ -473,7 +473,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             }
             var res = await client.RequestCustomDataWithToken<ListUserAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            var user = res.Data.Result;
+            var user = res.Data?.Result;
             if (user == null)
             {
                 throw new Exception("用户不存在！");
@@ -557,7 +557,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<SetUdvBatchResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -587,7 +587,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var _param = new SetUdfValueBatchParam(UdfTargetType.USER, param);
             var res = await client.RequestCustomDataWithToken<SetUdfValueBatchResponse>(_param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>

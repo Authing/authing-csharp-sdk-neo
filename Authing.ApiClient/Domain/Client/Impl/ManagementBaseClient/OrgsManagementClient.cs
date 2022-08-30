@@ -50,7 +50,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             if (res.Data != null)
             {
-                return res.Data.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -65,7 +65,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.RequestCustomDataWithToken<CreateOrgResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> DeleteById(string id, AuthingErrorBox authingErrorBox = null)
@@ -73,7 +73,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new DeleteOrgParam(id);
             var res = await client.RequestCustomDataWithToken<DeleteOrgResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<CommonMessage> DeleteNode(string orgId, string nodeId, AuthingErrorBox authingErrorBox = null)
@@ -81,7 +81,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new DeleteNodeParam(orgId, nodeId);
             var res = await client.RequestCustomDataWithToken<DeleteNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<IEnumerable<Org>> ExportAll(AuthingErrorBox authingErrorBox = null)
@@ -115,7 +115,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new NodeByIdParam(nodeId);
             var res = await client.RequestCustomDataWithToken<NodeByIdResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<Org> ImportByJson(string json, AuthingErrorBox authingErrorBox = null)
@@ -137,7 +137,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var param = new IsRootNodeParam(nodeId, orgId);
             var res = await client.RequestCustomDataWithToken<IsRootNodeResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedOrgs> List(int page = 1, int limit = 10, SortByEnum sortByEnum = SortByEnum.CREATEDAT_DESC, AuthingErrorBox authingErrorBox = null)
@@ -150,7 +150,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
             var res = await client.RequestCustomDataWithToken<OrgsResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         public async Task<PaginatedAuthorizedResources> ListAuthorizedResourcesByNodeCode(string orgId,
@@ -166,7 +166,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<ListNodeByCodeAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            var node = res.Data.Result;
+            var node = res.Data?.Result;
             if (node == null)
             {
                 throw new Exception("组织机构节点不存在");
@@ -183,7 +183,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<ListNodeByIdAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            var node = res.Data.Result;
+            var node = res.Data?.Result;
             if (node == null)
             {
                 throw new Exception("组织机构节点不存在");

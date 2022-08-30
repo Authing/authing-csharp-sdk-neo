@@ -75,7 +75,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             //  如果不加 WithAccessToken 會死循環
             var res = await RequestCustomDataWithOutToken<AccessTokenResponse>(GraphQLEndpoint, param.CreateRequest().ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
 
-            return Tuple.Create(res.Data.Result.AccessToken, res.Data.Result.Exp);
+            return Tuple.Create(res.Data?.Result.AccessToken, res.Data?.Result.Exp);
         }
 
         public async Task<GraphQLResponse<TResponse>> RequestCustomDataWithOutToken<TResponse>(GraphQLRequest body)

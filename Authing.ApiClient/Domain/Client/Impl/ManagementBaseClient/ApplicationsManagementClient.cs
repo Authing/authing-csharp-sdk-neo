@@ -447,7 +447,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -592,7 +592,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            if (res.Data.Result == null)
+            if (res.Data?.Result == null)
             {
                 throw new Exception("角色不存在");
             }
