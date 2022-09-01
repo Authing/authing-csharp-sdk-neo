@@ -15,24 +15,22 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
         {
             var client = managementClient;
 
-            string roleCode = "test";
+            string roleCode = "userList";
 
-            string nameSpace = "default";
+            string nameSpace = "62a99822ff635db21c2ec21c";
 
             var role = await client.Roles.FindByCode(roleCode, nameSpace);
 
             KeyValueDictionary dic = new KeyValueDictionary();
-            dic.Add("adminKey", "adminValue");
+            dic.Add("testrole", "testrole");
 
             var param = new SetUdfValueParam { RoleId = role.Id, UdvList = dic };
 
             var result = await client.Roles.SetUdfValue(param);
 
-            var udfValues = await client.Roles.GetUdfValue(roleCode);
+            var udfValues = await client.Roles.GetUdfValue("62aae37aa44bbb0427991d33");
 
             Assert.True(udfValues.Count() == 1);
-
-            //TODO: 添加拓展字段失败
         }
     }
 }
