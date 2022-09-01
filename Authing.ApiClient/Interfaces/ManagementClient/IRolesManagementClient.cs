@@ -219,7 +219,7 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// <summary>
         /// 获取某个角色扩展字段列表
         /// </summary>
-        /// <param name="roleCode">角色 Code</param>
+        /// <param name="roleCode">角色 ID</param>
         /// <returns></returns>
         Task<List<KeyValuePair<string, object>>> GetUdfValue(string roleCode, AuthingErrorBox authingErrorBox = null);
 
