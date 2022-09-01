@@ -237,7 +237,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             if (option.TenantId != null)
             {
                 body.Add("tenantId", option.TenantId);
-            }       
+            }
             if (option.Name != null)
             {
                 body.Add("name", option.Name);
@@ -258,7 +258,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             var body = new Dictionary<string, string>() {
                 { "name", option.Name }
             };
-            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdp/{extIdpId}", body.ConvertJson(),method: HttpMethod.Put).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdp/{extIdpId}", body.ConvertJson(), method: HttpMethod.Put).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -270,7 +270,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> DeleteExtIdp(string extIdpId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdp/{extIdpId}",method: HttpMethod.Delete).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdp/{extIdpId}", method: HttpMethod.Delete).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -297,7 +297,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("logo", option.Logo);
             }
-            var res = await client.RequestCustomDataWithToken<ExtIdpConnDetailOutput>("api/v2/extIdpConn", body.ConvertJson(),contenttype: ContentType.JSON).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<ExtIdpConnDetailOutput>("api/v2/extIdpConn", body.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -327,7 +327,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 body.Add("logo", option.Logo);
             }
-            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}", body.ConvertJson(),method: HttpMethod.Put,contenttype: ContentType.JSON).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}", body.ConvertJson(), method: HttpMethod.Put, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -339,7 +339,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// <returns></returns>
         public async Task<GraphQLResponse<CommonMessage>> DeleteExtIdpConnection(string extIdpConnectionId, AuthingErrorBox authingErrorBox = null)
         {
-            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}",method: HttpMethod.Delete).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}", method: HttpMethod.Delete).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res;
         }
@@ -379,8 +379,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 var res = await client.RequestCustomDataWithToken<CommonMessage>($"api/v2/extIdpConn/{extIdpConnectionId}/state", new Dictionary<string, object>() {
                     { "appId", option.AppId },
                     { "tenantId", option.TenantId },
-                    { "enabled", option.Enabled }
-                }.ConvertJson(),method:HttpMethod.Put).ConfigureAwait(false);
+                    { "enabled", option.Enabled}
+                }.ConvertJson(), method: HttpMethod.Put, contenttype: ContentType.JSON).ConfigureAwait(false);
                 ErrorHelper.LoadError(res, authingErrorBox);
                 return res.Code == 200;
             }
@@ -404,7 +404,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                     { "appId", option.AppId },
                     { "tenantId", option.TenantId },
                     { "enabled", option.Enabled }
-                }.ConvertJson(),method: HttpMethod.Put).ConfigureAwait(false);
+                }.ConvertJson(), method: HttpMethod.Put).ConfigureAwait(false);
                 ErrorHelper.LoadError(res, authingErrorBox);
                 return res.Code == 200;
             }
