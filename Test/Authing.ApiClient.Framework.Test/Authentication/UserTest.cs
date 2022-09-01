@@ -1,5 +1,8 @@
 ﻿using Authing.ApiClient.Domain.Utils;
+using Authing.Library.Domain.Model.Authentication;
 using Authing.Library.Domain.Model.Exceptions;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace Authing.ApiClient.Framework.Test.Authentication
@@ -344,45 +347,66 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("tmgg", "88886666", null);
+            await client.LoginByUsername("qidong11233", "3866364", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await client.isPasswordValid("1", authingErrorBox);
+            var result = await client.isPasswordValid("3866364", authingErrorBox);
 
             Assert.False(result.Message == "");
         }
 
         /// <summary>
         /// 2022-8-11 测试不通过
+        /// 
+        /// 2022-09-01 测试通过
+        /// 传入的 token 为登录失败后获取到的 token
         /// </summary>
         [Fact]
         public async void ResetPasswordByFirstLoginToken()
         {
             var client = authenticationClient;
-            var result = await client.LoginByUsername("tmgg", "88886666", null);
-
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var message = await client.ResetPasswordByFirstLoginToken(client.AccessToken, "88886666", authingErrorBox);
+            var result = await client.LoginByUsername("qidong11233", "3866364", null,authingErrorBox);
 
-            Assert.True(message.Code == 200);
+
+
+            if (!string.IsNullOrWhiteSpace(authingErrorBox.Value.First().Message.Data.ToString()))
+            {
+                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<ForceLoginResponse>(authingErrorBox.Value.First().Message.Data.ToString());
+
+                var message = await client.ResetPasswordByFirstLoginToken(res.Token, "88886666", authingErrorBox);
+
+                Assert.True(message.Code == 200);
+            }
         }
 
         /// <summary>
         /// 2022-8-11 测试不通过
+        /// 
+        /// 2022-09-01 测试通过
+        /// 传入的 token 为登录失败后获取到的 token
         /// </summary>
         [Fact]
         public async void ResetPasswordByForceResetToken()
         {
             var client = authenticationClient;
-            var result = await client.LoginByUsername("tmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var message = await client.ResetPasswordByForceResetToken(client.AccessToken, "88886666", "88886666", authingErrorBox);
+            string oldPassword = "88886666";
 
-            Assert.True(message.Code == 200);
+            var result = await client.LoginByUsername("qidong11233", oldPassword, null, authingErrorBox);
+
+            if (!string.IsNullOrWhiteSpace(authingErrorBox.Value.First().Message.Data.ToString()))
+            {
+                var res = Newtonsoft.Json.JsonConvert.DeserializeObject<ForceLoginResponse>(authingErrorBox.Value.First().Message.Data.ToString());
+
+                var message = await client.ResetPasswordByForceResetToken(res.Token, oldPassword, "88886666", authingErrorBox);
+
+                Assert.True(message.Code == 200);
+            }
         }
 
         /// <summary>

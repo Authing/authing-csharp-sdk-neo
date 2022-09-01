@@ -63,7 +63,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Applications.FindById("62a99822ff635db21c2ec21c", authingErrorBox);
+            var result = await managementClient.Applications.FindById("62a9902a80f55c22346eb296", authingErrorBox);
 
             Assert.Equal(result.Name, "testresource");
         }

@@ -1,9 +1,11 @@
 ﻿using Authing.Library.Domain.Model;
 using Authing.Library.Domain.Utils;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Authing.ApiClient.Domain.Utils
@@ -14,7 +16,7 @@ namespace Authing.ApiClient.Domain.Utils
         /// RAS加密
         /// </summary>
         /// <param name="clearText">要加密的信息</param>
-        /// <param name="xmlPublicKey">XML 格式的公钥</param>
+        /// <param name="xmlPublicKey">Public 格式的公钥</param>
         /// <returns></returns>
         public static string RsaEncryptWithPublic(string clearText, string xmlPublicKey)
         {
@@ -23,6 +25,25 @@ namespace Authing.ApiClient.Domain.Utils
             using (RSACryptoServiceProvider rsa = DecodeX509PublicKey(bytes))
             {
                 var result = rsa.Encrypt(Encoding.UTF8.GetBytes(clearText), false);
+
+                var enStr = Convert.ToBase64String(result);
+                return enStr;
+            }
+        }
+
+        /// <summary>
+        /// RSA 加密
+        /// </summary>
+        /// <param name="clearTest">要加密的信息</param>
+        /// <param name="jwksString">JWKS 格式的公钥</param>
+        /// <returns></returns>
+        public static string RsaEncryptWithJWKs(string clearTest, string jwksString)
+        {
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(jwksString);
+
+                var result = rsa.Encrypt(Encoding.UTF8.GetBytes(clearTest), false);
 
                 var enStr = Convert.ToBase64String(result);
                 return enStr;

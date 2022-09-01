@@ -850,6 +850,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         /// <summary>
         /// 通过首次登录的 Token 重置密码
+        /// 需要在控制台的用户侧配置登录后强制修改密码，在通过获取用户错误信息里面返回的 Token 来修改密码
         /// </summary>
         /// <param name="token">首次登录的Token</param>
         /// <param name="password">修改后的密码</param>
@@ -858,7 +859,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                                                                         string password,
                                                                         AuthingErrorBox authingErrorBox = null)
         {
-            var param = new ResetPasswordByFirstLoginTokenParam(token, password);
+            var param = new ResetPasswordByFirstLoginTokenParam(token, EncryptHelper.RsaEncryptWithPublic( password,PublicKey));
 
             authingErrorBox?.Clear();
 
@@ -873,6 +874,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
         /// <summary>
         /// 通过密码强制跟临时 Token 修改密码
+        /// 需要在控制台的用户侧配置登录后强制修改密码，在通过获取用户错误信息里面返回的 Token 来修改密码
         /// </summary>
         /// <param name="token">登录的Token</param>
         /// <param name="oldPassword">旧密码</param>
@@ -883,11 +885,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                                                                         string newPassword,
                                                                         AuthingErrorBox authingErrorBox = null)
         {
-            var param = new ResetPasswordByForceResetTokenParam(token, oldPassword, newPassword);
+            var param = new ResetPasswordByForceResetTokenParam(token, EncryptHelper.RsaEncryptWithPublic(oldPassword, PublicKey), EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey));
 
             authingErrorBox?.Clear();
 
             var result = await RequestCustomDataWithToken<ResetPasswordByForceResetTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+
             if (result.Errors != null)
             {
                 authingErrorBox?.Set(result.Errors);
@@ -1757,7 +1760,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 url += $"app_id={AppId}";
             }
 
-            var result = await RequestCustomDataWithOutToken<User>($"connection/social/wechat:mobile/{UserPoolId}/callback?{url}",method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestCustomDataWithOutToken<User>($"connection/social/wechat:mobile/{UserPoolId}/callback?{url}", method: HttpMethod.Get).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (result.Errors != null)
             {
