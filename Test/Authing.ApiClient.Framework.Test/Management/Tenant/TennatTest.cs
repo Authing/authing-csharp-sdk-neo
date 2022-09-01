@@ -180,7 +180,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
                 Connections = new ExtIdpConnDetailInput[] { new ExtIdpConnDetailInput() {
                     DisplayName = "weixin2",
                     Type = Types.ExtIdpConnType.WECHATPC,
-                    Identifier = "weixin2",
+                    Identifier = "0123456789az",
                     Fields = new Dictionary<string, object>(){
                         { "clientID", "1234567890" },
                         { "clientSecret", "qwertyuiop" }
