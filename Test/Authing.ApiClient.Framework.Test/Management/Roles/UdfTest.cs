@@ -8,7 +8,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Roles
     public class UdfTest : BaseTest
     {
         /// <summary>
-        /// 2022-8-10 测试不通过
+        /// 2022-9-1 测试通过
         /// </summary>
         [Fact]
         public async void GetUdfValue_Test()

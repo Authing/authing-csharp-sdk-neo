@@ -174,19 +174,20 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         }
 
         /// <summary>
-        /// 2022-8-10 测试通过
+        /// 2022-9-1 测试不通过
         /// </summary
         [Fact]
         public async Task Acl_RevokeResource()
         {
+            var list = await managementClient.Acl.ListNamespaces();
             //TODO:权限组不存在
             var result = await managementClient.Acl.RevokeResource(
                 new RevokeResourceParams()
                 {
-                    NameSpace = "test",
+                    NameSpace = "62a99822ff635db21c2ec21c",
                     Opts = new List<RevokeResourceOpt>()
                         {new RevokeResourceOpt(){TargetIdentifier = TestUserId,TargetType = PolicyAssignmentTargetType.USER}},
-                    Resource = "Cat:*"
+                    Resource = "Book:*"
                 });
         }
 
@@ -214,7 +215,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
         }
 
         /// <summary>
-        /// 2022-8-10 测试不通过
+        /// 2022-9-1 测试通过
         /// </summary
         [Fact]
         public async Task Acl_GetAuthorizedTargets()
@@ -222,9 +223,9 @@ namespace Authing.ApiClient.Framework.Test.Management.Acl
             var result = await managementClient.Acl.GetAuthorizedTargets(new GetAuthorizedTargetsOptions()
             {
                 NameSpace = "default",
-                Resource = "ecs",
-                ResourceType = ResourceType.API,
-                Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "read" }),
+                Resource = "Book",
+                ResourceType = ResourceType.DATA,
+                Actions = new AuthorizedTargetsActionsInput(Operator.OR, new List<string>() { "*" }),
                 TargetType = PolicyAssignmentTargetType.USER,
             });
 

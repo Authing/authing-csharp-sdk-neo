@@ -583,16 +583,11 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
         }
 
         /// <summary>
-        /// 2022-8-8 测试不通过
+        /// 2022-9-1 测试通过
         /// </summary>
         [Fact]
         public async void Users_CreateUsers()
         {
-            //TODO:{"code":200,"message":"导入任务完成，请查看导入结果",
-            //"data":[
-            //{"success":false,"errMsg":"null value in column \"logins_count\" violates not-null constraint"},
-            //{"success":false,"errMsg":"null value in column \"logins_count\" violates not-null constraint"}
-            //]}
             var client = managementClient;
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
             var userList = new List<CreateUserInput>() {

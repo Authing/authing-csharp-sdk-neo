@@ -220,7 +220,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         }
 
         /// <summary>
-        /// 2022-8-8 测试不通过
+        /// 2022-9-1 测试通过
         /// </summary>
         [Fact]
         public async void Tenant_CreateExtIdpConnection()
@@ -289,7 +289,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         }
 
         /// <summary>
-        /// 2022-8-8 测试不通过
+        /// 2022-9-1 测试通过
         /// </summary>
         [Fact]
         public async void Tenant_ChangeExtIdpConnectionState()
