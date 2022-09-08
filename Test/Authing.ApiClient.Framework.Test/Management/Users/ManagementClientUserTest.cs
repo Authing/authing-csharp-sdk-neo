@@ -45,7 +45,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var result = await client.Users.Update(user.Id, new UpdateUserInput()
             {
                 Name = "qitao",
-                Password = EncryptHelper.RsaEncryptWithPublic("88886666", client.PublicKey)
+                Password = "12345678"
             }, authingErrorBox: authingErrorBox);
             Console.WriteLine("result", result);
             Assert.Equal(result.Name, "qitao");
