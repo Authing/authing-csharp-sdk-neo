@@ -119,6 +119,9 @@ namespace Authing.ApiClient.Domain.Model
         [JsonProperty("website")]
         public string Website { get; set; }
 
+        /// <summary>
+        /// 性别, M（Man） 表示男性、F（Female） 表示女性、未知表示 U（Unknown）
+        /// </summary>
         [JsonProperty("gender")]
         public string Gender { get; set; }
 
