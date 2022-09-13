@@ -13,11 +13,23 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            var user = await client.LoginByUsername("tmgg", "88886666", null);
+            var user = await client.LoginByUsername("testtmgg", "88886666", null);
 
             AuthingErrorBox authingErrorBox=new AuthingErrorBox();
 
-            var result = await client.UpdateProfile(new Domain.Model.UpdateUserInput { Name = "tommy" },authingErrorBox);
+            var result = await client.UpdateProfile(new Domain.Model.UpdateUserInput
+            {
+                Name = "测试1",
+                Username = "testtmgg",
+                Nickname = "tommy",
+                Gender = "M",
+                Birthdate = "1995/06/29",
+                Country = "China",
+                Company = "Authing",
+                City = "Chengdu",
+                Province = "Sichuan",
+                PostalCode = "610000"
+            },authingErrorBox);
 
             Assert.True(result.Name == "tommy");
         }
