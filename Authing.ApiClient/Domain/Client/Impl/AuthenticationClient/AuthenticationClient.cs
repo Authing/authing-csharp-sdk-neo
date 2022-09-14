@@ -21,6 +21,7 @@ using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Domain.Model.GraphQLResponse;
 using Authing.ApiClient.Interfaces.AuthenticationClient;
 using System.Text;
+using Authing.Library.Domain.Client.Impl;
 using Authing.Library.Domain.Utils;
 using Authing.Library.Domain.Model;
 using Authing.Library.Domain.Model.Exceptions;
@@ -1431,10 +1432,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "password",password}
             }.ConvertJson()).ConfigureAwait(false);
             authingErrorBox?.Clear();
-            if (result.Errors != null)
-            {
-                authingErrorBox?.Set(result.Errors);
-            }
+            if (authingErrorBox != null) ErrorHelper.LoadError(result, authingErrorBox);
             SetCurrentUser(result.Data);
             return result.Data;
         }
