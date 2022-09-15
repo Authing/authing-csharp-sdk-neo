@@ -41,12 +41,12 @@ namespace Authing.ApiClient.Framework.Test.Authentication.MFA
             var client = mfaAuthenticationClient;
             AuthingErrorBox box = new AuthingErrorBox();
 
-            var result = await loginClient.LoginByUsername("tmgg", "88886666", null, box);
+            var result = await loginClient.LoginByUsername("qidong11233", "3866364", null, box);
             ss = Newtonsoft.Json.JsonConvert.DeserializeObject<MFALoginResponse>(box.Value.First().Message.Data.ToString());
 
             var totpResult = await client.AssosicateMfaAuthenticator(new AssosicateMfaAuthenticatorParam { MfaToken = ss.MfaToken });
 
-            var comfirmTotpResult = await client.ConfirmAssosicateMfaAuthenticator(new ConfirmAssosicateMfaAuthenticatorParam { Totp = "707610", MfaToken = ss.MfaToken });
+            var comfirmTotpResult = await client.ConfirmAssosicateMfaAuthenticator(new ConfirmAssosicateMfaAuthenticatorParam { Totp = "151557", MfaToken = ss.MfaToken });
         }
 
         /// <summary>

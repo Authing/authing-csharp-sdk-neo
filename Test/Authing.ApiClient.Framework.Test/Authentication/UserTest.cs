@@ -392,6 +392,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         public async void ResetPasswordByForceResetToken()
         {
             var client = authenticationClient;
+            var result = await client.LoginByUsername("qidong11233", "3866364", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 

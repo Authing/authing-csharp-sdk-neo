@@ -537,7 +537,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Users
             var client = managementClient;
             var user = await client.Users.Find(new FindUserOption()
             {
-                Email = "qidong5566@outlook.com"
+                Username = "qidong11233"
             });
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();

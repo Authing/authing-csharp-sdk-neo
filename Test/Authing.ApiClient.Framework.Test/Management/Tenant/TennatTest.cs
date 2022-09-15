@@ -107,7 +107,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.Members("62f0dae6f44905bf6d4d435a", new TenantMembersOption() { },authingErrorBox);
+            var result = await client.Tennat.Members("630f01369902322dc6a6e840", new TenantMembersOption() { },authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
