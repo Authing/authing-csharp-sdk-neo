@@ -8,19 +8,21 @@
 		<TargetName>Authing.Library</TargetName>
 		<Copyright>Beijing Steamory Technology Co. Ltd.</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Authors>Authing</Authors>
+		<Authors>Steamory</Authors>
 		<Product>Authing.Library</Product>
 		<Description>通过简单、安全的接口使用 Authing 提供的功能。</Description>
 		<PackageReleaseNotes>
-			Version 0.0.29
-			- 修复 AD 登录接口的错误
+			Version 0.0.30
+			- 修复登录接口的错误
 		</PackageReleaseNotes>
-		<Version>0.0.29</Version>
+		<Version>0.0.30</Version>
 		<PackageId>Authing.Library</PackageId>
-		<AssemblyVersion>0.0.29.0</AssemblyVersion>
-		<FileVersion>0.0.29.0</FileVersion>
+		<AssemblyVersion>0.0.30.0</AssemblyVersion>
+		<FileVersion>0.0.30.0</FileVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Nullable>annotations</Nullable>
+		<Company>Steamory</Company>
+		<PackageProjectUrl></PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net40'">
