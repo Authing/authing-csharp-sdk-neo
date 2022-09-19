@@ -91,7 +91,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     if (payLoadDic.ContainsKey("iss"))
                     {
                         //jwks = client.SendRequest<string, JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json", HttpType.Get, "", null).Result;
-                        jwks = RequestNoGraphQlResponse<JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json",
+                        jwks = RequestNoGraphQlResponseWithHost<JWKS>(payLoadDic["iss"].ToString(), ".well-known/jwks.json",
                             method: HttpMethod.Get).Result;
                     }
                 }
@@ -860,7 +860,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                                                                         string password,
                                                                         AuthingErrorBox authingErrorBox = null)
         {
-            var param = new ResetPasswordByFirstLoginTokenParam(token, EncryptHelper.RsaEncryptWithPublic( password,PublicKey));
+            var param = new ResetPasswordByFirstLoginTokenParam(token, EncryptHelper.RsaEncryptWithPublic(password, PublicKey));
 
             authingErrorBox?.Clear();
 
