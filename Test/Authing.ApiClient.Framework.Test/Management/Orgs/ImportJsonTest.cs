@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Authing.ApiClient.Extensions;
 using Xunit;
 
@@ -10,7 +11,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
         /// 2022-8-9 测试不通过
         /// </summary>
         [Fact]
-        public async void ImprotJson_Test()
+        public  void ImprotJson_Test()
         {
             //TODO:{"uniqueId":"4725f6cc-2f08-4aa6-9f62-a4f6688ab6d2","code":500,"statusCode":499,"apiCode":500,"message":"不支持的导入类型"}
             var client = managementClient;
@@ -22,7 +23,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Orgs
             root.description = "test";
             root.children = new List<TestNode>();
 
-            var result = await client.Orgs.ImportByJson(root.ConvertJson());
+            var result =  client.Orgs.ImportByJson(root.ConvertJson()).Result;
 
             Assert.NotNull(result);
         }
