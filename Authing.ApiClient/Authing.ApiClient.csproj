@@ -12,13 +12,19 @@
 		<Product>Authing.Library</Product>
 		<Description>通过简单、安全的接口使用 Authing 提供的功能。</Description>
 		<PackageReleaseNotes>
-			Version 0.0.30
-			- 修复登录接口的错误
+Version 0.0.31
+认证模块：
+1.下线 子账户登录接口 LoginBySubAccount
+2.下线 关联账户接口 LinkAccount
+3.下线 取消关联账户接口 UnLinkAccount
+
+管理模块：
+1.下线 组织机构管理-导入机构数据接口 ImportByJson
 		</PackageReleaseNotes>
-		<Version>0.0.30</Version>
+		<Version>0.0.31</Version>
 		<PackageId>Authing.Library</PackageId>
-		<AssemblyVersion>0.0.30.0</AssemblyVersion>
-		<FileVersion>0.0.30.0</FileVersion>
+		<AssemblyVersion>0.0.31.0</AssemblyVersion>
+		<FileVersion>0.0.31.0</FileVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Nullable>annotations</Nullable>
 		<Company>Steamory</Company>
