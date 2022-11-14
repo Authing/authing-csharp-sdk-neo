@@ -715,6 +715,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="registerAndLoginOptions">登录配置信息</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
+        [Obsolete("此功能已下线，不要使用，下个版本将删除此接口")]
         public async Task<User> LoginBySubAccount(string account,
                                                   string password,
                                                   RegisterAndLoginOptions registerAndLoginOptions = null,
@@ -1050,6 +1051,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="secondaryUserToken">子账号</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
+        [Obsolete("此功能已下线，不要使用，下个版本将删除此接口")]
         public async Task<CommonMessage> LinkAccount(string primaryUserToken,
                                                      string secondaryUserToken,
                                                      AuthingErrorBox authingErrorBox = null)
@@ -1077,6 +1079,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="provider">提供者</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
+        [Obsolete("此功能已下线，不要使用，下个版本将删除此接口")]
         public async Task<CommonMessage> UnLinkAccount(string primaryUserToken,
                                                        ProviderType provider,
                                                        AuthingErrorBox authingErrorBox = null)

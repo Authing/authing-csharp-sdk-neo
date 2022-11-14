@@ -118,6 +118,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             return res.Data?.Result;
         }
 
+        [Obsolete("此接口不再使用")]
         public async Task<Org> ImportByJson(string json, AuthingErrorBox authingErrorBox = null)
         {
             Dictionary<string, string> keyValuePairs = new Dictionary<string, string>

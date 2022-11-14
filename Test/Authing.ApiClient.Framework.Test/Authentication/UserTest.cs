@@ -235,7 +235,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         }
 
         /// <summary>
-        /// 2022-8-11 测试不通过
+        /// 2022-11-2 子账号功能已下线 
         /// </summary>
         [Fact]
         public async void LoginSubAccount_Test()
@@ -347,7 +347,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         {
             var client = authenticationClient;
 
-            await client.LoginByUsername("qidong11233", "3866364", null);
+            var re=await client.LoginByUsername("qidong5566", "3866364", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
@@ -392,7 +392,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
         public async void ResetPasswordByForceResetToken()
         {
             var client = authenticationClient;
-            var result = await client.LoginByUsername("qidong11233", "3866364", null);
+            //var result = await client.LoginByUsername("qidong11233", "3866364", null);
 
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 

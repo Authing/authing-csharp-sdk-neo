@@ -35,7 +35,8 @@ namespace Authing.ApiClient.Framework.Test.Management
         [Fact]
         public void InitTest()
         {
-            managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient("613189b2eed393affbbf396e", "ccf4951a33e5d54d64e145782a65f0a7");
+
+            managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient("59f86b4832eb28071bdd9214", "3c018c0f1c5230fcccfca79d37674ca7");
 
            var result= managementClient.Users.List().Result;
 
@@ -47,8 +48,9 @@ namespace Authing.ApiClient.Framework.Test.Management
         {
             managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(init =>
             {
-                init.UserPoolId = "613189b2eed393affbbf396e";
-                init.Secret = "ccf4951a33e5d54d64e145782a65f0a7";
+                init.UserPoolId = "59f86b4832eb28071bdd9214";
+                init.Secret = "3c018c0f1c5230fcccfca79d37674ca7";
+                init.Host = "http://core.authing.localhost:3000";
             });
 
             var result = managementClient.Users.List().Result;
