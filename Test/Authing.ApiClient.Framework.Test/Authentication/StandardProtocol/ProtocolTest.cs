@@ -1,5 +1,6 @@
 ﻿using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Types;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Xunit;
@@ -35,7 +36,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 
             string oidcurl = authenticationClient.BuildAuthorizeUrl(new OidcOption()
             { RedirectUri = "https://www.baidu.com", Scope = "openid profile email phone address offline_access" });
-            var res = await authenticationClient.GetAccessTokenByCode("gBJEyRK68s2044gctV5scCUvC_M2GrnTeKUHkLAoBGK");
+            var res = await authenticationClient.GetAccessTokenByCode("xL6gw2EVqD3WF_CE7qby7H7SMFScAAay1WZuU6TxbsJ");
             string oidcout = authenticationClient.BuildLogoutUrl(new LogoutParams()
             { RedirectUri = "https://www.baidu.com", IdToken = res.IdToken, Expert = true });
 
@@ -67,7 +68,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
             #region OIDC 登陆测试
 
             string oidc = authenticationClient.BuildAuthorizeUrl(new OidcOption() { RedirectUri = "https://www.baidu.com", Scope = "password username openid profile email phone address offline_access" });
-            var res = await authenticationClient.GetAccessTokenByCode("dNuBtlzSn4KpZdHXK1afWubf1w_79BeewsiXbuqyBeY");
+            var res = await authenticationClient.GetAccessTokenByCode("QLVfaoA0XA98a0UUEUEq_bIipUbQq6BAhM_3ofYMMOH");
             authenticationClient.SetToken(res.AccessToken);
             var ress = await authenticationClient.GetUdfValue();
             var temp = await authenticationClient.GetUserInfoByAccessToken(res.AccessToken);
@@ -238,6 +239,82 @@ namespace Authing.ApiClient.Framework.Test.Authentication.StandardProtocol
 
 #endif
             Assert.NotNull(check);
+        }
+
+        /// <summary>
+        /// 2022-08-29 测试通过
+        /// </summary>
+        [Fact]
+        public void CAS_BuildAuthorizeUrl_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+        }
+
+        /// <summary>
+        /// 验证 CAS 协议登录的 Ticket
+        /// 2022-08-29 测试通过
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CAS_CheckTicket_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+
+            var result = await authenticationClient.ValidateTicketV1("ST-cd05453d-acb1-4f3f-a783-ef3f98ee4375", "https://www.baidu.com");
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// 2022-08-29 测试通过
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CAS_CheckTicketV2__JSON_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+
+            var result = await authenticationClient.ValidateTicketV2("ST-d3dedbc5-d29d-4330-b265-6cb376e5b8a0", "https://www.baidu.com", ValidateTicketFormat.JSON);
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// 2022-08-29 测试失败
+        /// 500 错误
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CAS_CheckTicketV2__XML_Test()
+        {
+            string casUrl = authenticationClient.BuildAuthorizeUrl(new CasOption() { Service = "https://www.baidu.com" });
+
+            Assert.NotNull(casUrl);
+
+            var result = await authenticationClient.ValidateTicketV2("ST-d3dedbc5-d29d-4330-b265-6cb376e5b8a0", "https://www.baidu.com", ValidateTicketFormat.XML);
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// 测试 SSO 登录状态
+        /// 2022-08-29 测试失败 返回为空
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task CAS_TrackSession_Test()
+        {
+            //2022-08-29 通过网页登录后，返回字符串 session:null
+
+            var result = await authenticationClient.TrackSession();
+
+            Assert.NotNull(result);
         }
     }
 }

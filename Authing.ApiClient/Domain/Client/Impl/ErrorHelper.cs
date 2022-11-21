@@ -39,5 +39,14 @@ namespace Authing.Library.Domain.Client.Impl
                 }
             }
         }
+
+        public static void LoadError(long statusCode,string message,long apiCode, AuthingErrorBox authingErrorBox = null)
+        {
+            authingErrorBox?.Clear();
+            if (statusCode != 200)
+            {
+                authingErrorBox?.Set(statusCode, message, apiCode);
+            }
+        }
     }
 }

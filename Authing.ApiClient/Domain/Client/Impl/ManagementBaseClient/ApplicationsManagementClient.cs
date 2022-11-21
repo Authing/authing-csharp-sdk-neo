@@ -447,7 +447,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<DeleteRolesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -592,7 +592,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             };
             var res = await client.RequestCustomDataWithToken<ListRoleAuthorizedResourcesResponse>(param.CreateRequest()).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
-            if (res.Data.Result == null)
+            if (res.Data?.Result == null)
             {
                 throw new Exception("角色不存在");
             }
@@ -611,6 +611,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "title", agreement.Title},
                 { "required", agreement.Required},
                 { "lang", agreement.Lang.GetEnumMemberValue()},
+                { "availableAt",(int)agreement.AvailableAt}
             }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
@@ -642,6 +643,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
                 { "title", agreement.Title},
                 { "required", agreement.Required},
                 { "lang", agreement.Lang.GetEnumMemberValue()},
+                { "availableAt",(int)agreement.AvailableAt}
             }.ConvertJson(),method: HttpMethod.Put, contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;

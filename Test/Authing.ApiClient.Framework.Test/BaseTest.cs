@@ -25,14 +25,10 @@ namespace Authing.ApiClient.Framework.Test
                     opt.Host = Host;
                     opt.Secret = AppSecret;
                     opt.UserPoolId = UserPoolId;
+                    opt.AppHost = AppHost;
                 }
             );
-            managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(init: opt =>
-            {
-                opt.UserPoolId = UserPoolId;
-                opt.Secret = UserPoolSecret;
-                opt.Host = Host;
-            });
+            managementClient = new Domain.Client.Impl.ManagementBaseClient.ManagementClient(UserPoolId,UserPoolSecret);
 
             mfaAuthenticationClient = new MfaAuthenticationClient(opt =>
             {

@@ -5,9 +5,12 @@ using Authing.ApiClient.Domain.Model;
 using Authing.ApiClient.Domain.Model.Authentication;
 using Authing.ApiClient.Domain.Model.Management.Users;
 using Authing.ApiClient.Domain.Utils;
+using Authing.ApiClient.Extensions;
+using Authing.ApiClient.Infrastructure.GraphQL;
 using Authing.ApiClient.Interfaces;
 using Authing.ApiClient.Interfaces.ManagementClient;
 using Authing.ApiClient.Types;
+using Authing.Library.Domain.Model.Management;
 using Authing.Library.Domain.Model.V3Model;
 using Authing.Library.Domain.Utils;
 
@@ -45,7 +48,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
         public Action<InitAuthenticationClientOptions> Init { get; }
 
-        public MapperService MapperService;
+        //public MapperService MapperService;
 
         public IJsonService JsonService;
 
@@ -63,7 +66,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         private void InitClient()
         {
             JsonService = new JsonService();
-            MapperService = new MapperService();
+            //MapperService = new MapperService();
 
             Users = new UsersManagementClient(this);
             Applications = new ApplicationsManagementClient(this);
@@ -119,10 +122,10 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="password">需要检测的密码</param>
         /// <returns></returns>
-        public async Task<CommonResponse<object>> IsPasswordValid(string password)
+        public async Task<PasswordCheckResponse> IsPasswordValid(string password)
         {
-            var result = await RequestCustomDataWithTokenV3<object>($"api/v2/users/password/check?password={EncryptHelper.RsaEncryptWithPublic(password, PublicKey)}", method: HttpMethod.Get).ConfigureAwait(false);
-            return result;
+            var result = await RequestCustomDataWithToken<PasswordCheckResponse>($"api/v2/password/check",new {password= EncryptHelper.RsaEncryptWithPublic(password, PublicKey) }.ConvertJson(), method: HttpMethod.Post).ConfigureAwait(false);
+            return result.Data;
         }
 
         /// <summary>
@@ -136,7 +139,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         {
             var param = new SendEmailParam(email, scene);
             var res = await RequestCustomDataWithToken<SendEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
         /// 邮箱是否已验证
         /// </summary>
         [JsonProperty("emailVerified")]
-        public bool? EmailVerified { get; set; }
+        public bool? EmailVerified { get; set; } = false;
 
         /// <summary>
         /// 手机号，用户池内唯一
@@ -36,7 +36,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
         /// 手机号是否已验证
         /// </summary>
         [JsonProperty("phoneVerified")]
-        public bool? PhoneVerified { get; set; }
+        public bool? PhoneVerified { get; set; } = false;
 
         [JsonProperty("unionid")]
         public string Unionid { get; set; }
@@ -54,7 +54,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
         /// 头像链接，默认为 https://usercontents.authing.cn/authing-avatar.png
         /// </summary>
         [JsonProperty("photo")]
-        public string Photo { get; set; }
+        public string Photo { get; set; } = "https://usercontents.authing.cn/authing-avatar.png";
 
         [JsonProperty("password")]
         public string Password { get; set; }
@@ -78,7 +78,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
         /// 用户累计登录次数，当你从你原有用户系统向 Authing 迁移的时候可以设置此字段。
         /// </summary>
         [JsonProperty("loginsCount")]
-        public int? LoginsCount { get; set; }
+        public int? LoginsCount { get; set; } = 0;
 
         [JsonProperty("lastLogin")]
         public string LastLogin { get; set; }
@@ -99,7 +99,7 @@ namespace Authing.ApiClient.Domain.Model.Management.Users
         public bool? Blocked { get; set; }
 
         [JsonProperty("isDeleted")]
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [JsonProperty("device")]
         public string Device { get; set; }

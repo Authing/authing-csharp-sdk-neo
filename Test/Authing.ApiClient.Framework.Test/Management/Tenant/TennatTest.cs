@@ -107,7 +107,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
             var client = managementClient;
-            var result = await client.Tennat.Members("62f0dae6f44905bf6d4d435a", new TenantMembersOption() { },authingErrorBox);
+            var result = await client.Tennat.Members("630f01369902322dc6a6e840", new TenantMembersOption() { },authingErrorBox);
             Assert.NotEmpty(result.List);
         }
 
@@ -180,7 +180,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
                 Connections = new ExtIdpConnDetailInput[] { new ExtIdpConnDetailInput() {
                     DisplayName = "weixin2",
                     Type = Types.ExtIdpConnType.WECHATPC,
-                    Identifier = "weixin2",
+                    Identifier = "0123456789az",
                     Fields = new Dictionary<string, object>(){
                         { "clientID", "1234567890" },
                         { "clientSecret", "qwertyuiop" }
@@ -220,7 +220,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         }
 
         /// <summary>
-        /// 2022-8-8 测试不通过
+        /// 2022-9-1 测试通过
         /// </summary>
         [Fact]
         public async void Tenant_CreateExtIdpConnection()
@@ -289,7 +289,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Tenant
         }
 
         /// <summary>
-        /// 2022-8-8 测试不通过
+        /// 2022-9-1 测试通过
         /// </summary>
         [Fact]
         public async void Tenant_ChangeExtIdpConnectionState()

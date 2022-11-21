@@ -30,7 +30,7 @@ namespace Authing.ApiClient.Framework.Test.Authentication
 
             AuthingErrorBox error;
 
-            var result = await client.LoginByUsername("tmgg", "88886666", new RegisterAndLoginOptions { AutoRegister = false },authingErrorBox: error = new AuthingErrorBox());
+            var result = await client.LoginByUsername("qidong11233", "12345678", new RegisterAndLoginOptions { AutoRegister = false },authingErrorBox: error = new AuthingErrorBox());
 
             Assert.NotNull(result);
         }

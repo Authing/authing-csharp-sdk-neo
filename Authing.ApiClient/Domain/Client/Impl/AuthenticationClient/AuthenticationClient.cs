@@ -21,6 +21,7 @@ using Authing.ApiClient.Domain.Model.GraphQLParam;
 using Authing.ApiClient.Domain.Model.GraphQLResponse;
 using Authing.ApiClient.Interfaces.AuthenticationClient;
 using System.Text;
+using Authing.Library.Domain.Client.Impl;
 using Authing.Library.Domain.Utils;
 using Authing.Library.Domain.Model;
 using Authing.Library.Domain.Model.Exceptions;
@@ -90,7 +91,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                     if (payLoadDic.ContainsKey("iss"))
                     {
                         //jwks = client.SendRequest<string, JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json", HttpType.Get, "", null).Result;
-                        jwks = RequestNoGraphQlResponse<JWKS>(payLoadDic["iss"].ToString() + "/.well-known/jwks.json",
+                        jwks = RequestNoGraphQlResponseWithHost<JWKS>(payLoadDic["iss"].ToString(), ".well-known/jwks.json",
                             method: HttpMethod.Get).Result;
                     }
                 }
@@ -139,8 +140,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 header, contenttype: ContentType.JSON).ConfigureAwait(false);
             if (res != null)
             {
-                user = res.Data.Result;
-                return res.Data.Result;
+                user = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -159,8 +160,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             var res = await RequestCustomDataWithOutToken<RegisterByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -208,8 +209,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         [Obsolete("此方法已弃用")]
@@ -229,8 +230,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             var res = await RequestCustomDataWithOutToken<RegisterByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -278,8 +279,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -312,8 +313,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             var res = await RequestCustomDataWithOutToken<RegisterByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -364,8 +365,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -384,7 +385,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -431,8 +432,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             var res = await RequestCustomDataWithOutToken<LoginByEmailResponse>(param.CreateRequest()).ConfigureAwait(false);
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -478,8 +479,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -506,8 +507,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             var res = await RequestCustomDataWithOutToken<LoginByUsernameResponse>(param.CreateRequest()).ConfigureAwait(false);
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -553,8 +554,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
 
@@ -579,8 +580,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             var res = await RequestCustomDataWithOutToken<LoginByPhoneCodeResponse>(param.CreateRequest()).ConfigureAwait(false);
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -625,8 +626,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -653,8 +654,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             );
 
             var res = await RequestCustomDataWithOutToken<LoginByPhonePasswordResponse>(param.CreateRequest()).ConfigureAwait(false);
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -702,8 +703,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -714,6 +715,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="registerAndLoginOptions">登录配置信息</param>
         /// <param name="cancellationToken"></param>
         /// <returns>User</returns>
+        [Obsolete("此功能已下线，不要使用，下个版本将删除此接口")]
         public async Task<User> LoginBySubAccount(string account,
                                                   string password,
                                                   RegisterAndLoginOptions registerAndLoginOptions = null,
@@ -735,8 +737,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res.Data != null)
             {
-                User = res.Data.Result;
-                return res.Data.Result;
+                User = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -762,7 +764,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -787,7 +789,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
             if (res.Data != null)
             {
-                return res.Data.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -817,7 +819,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -845,11 +847,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
         /// 通过首次登录的 Token 重置密码
+        /// 需要在控制台的用户侧配置登录后强制修改密码，在通过获取用户错误信息里面返回的 Token 来修改密码
         /// </summary>
         /// <param name="token">首次登录的Token</param>
         /// <param name="password">修改后的密码</param>
@@ -858,7 +861,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                                                                         string password,
                                                                         AuthingErrorBox authingErrorBox = null)
         {
-            var param = new ResetPasswordByFirstLoginTokenParam(token, password);
+            var param = new ResetPasswordByFirstLoginTokenParam(token, EncryptHelper.RsaEncryptWithPublic(password, PublicKey));
 
             authingErrorBox?.Clear();
 
@@ -868,11 +871,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 authingErrorBox?.Set(result.Errors);
             }
 
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         /// <summary>
         /// 通过密码强制跟临时 Token 修改密码
+        /// 需要在控制台的用户侧配置登录后强制修改密码，在通过获取用户错误信息里面返回的 Token 来修改密码
         /// </summary>
         /// <param name="token">登录的Token</param>
         /// <param name="oldPassword">旧密码</param>
@@ -883,16 +887,17 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                                                                         string newPassword,
                                                                         AuthingErrorBox authingErrorBox = null)
         {
-            var param = new ResetPasswordByForceResetTokenParam(token, oldPassword, newPassword);
+            var param = new ResetPasswordByForceResetTokenParam(token, EncryptHelper.RsaEncryptWithPublic(oldPassword, PublicKey), EncryptHelper.RsaEncryptWithPublic(newPassword, PublicKey));
 
             authingErrorBox?.Clear();
 
             var result = await RequestCustomDataWithToken<ResetPasswordByForceResetTokenResponse>(param.CreateRequest()).ConfigureAwait(false);
+
             if (result.Errors != null)
             {
                 authingErrorBox?.Set(result.Errors);
             }
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         /// <summary>
@@ -912,8 +917,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            User = res.Data.Result;
-            return res.Data.Result;
+            User = res.Data?.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -941,8 +946,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res.Data != null)
             {
-                User = res.Data.Result;
-                return res.Data.Result;
+                User = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -978,8 +983,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res.Data != null)
             {
-                User = res.Data.Result;
-                return res.Data.Result;
+                User = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1014,8 +1019,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
             if (res.Data != null)
             {
-                User = res.Data.Result;
-                return res.Data.Result;
+                User = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1035,8 +1040,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            SetToken(res.Data.Result.Token);
-            return res.Data.Result;
+            SetToken(res.Data?.Result.Token);
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -1046,6 +1051,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="secondaryUserToken">子账号</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
+        [Obsolete("此功能已下线，不要使用，下个版本将删除此接口")]
         public async Task<CommonMessage> LinkAccount(string primaryUserToken,
                                                      string secondaryUserToken,
                                                      AuthingErrorBox authingErrorBox = null)
@@ -1073,6 +1079,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
         /// <param name="provider">提供者</param>
         /// <param name="cancellationToken"></param>
         /// <returns>SimpleResponse</returns>
+        [Obsolete("此功能已下线，不要使用，下个版本将删除此接口")]
         public async Task<CommonMessage> UnLinkAccount(string primaryUserToken,
                                                        ProviderType provider,
                                                        AuthingErrorBox authingErrorBox = null)
@@ -1113,8 +1120,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             }
             if (res.Data != null)
             {
-                User = res.Data.Result;
-                return res.Data.Result;
+                User = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1137,8 +1144,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res.Data != null)
             {
-                User = res.Data.Result;
-                return res.Data.Result;
+                User = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1163,7 +1170,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res.Data != null)
             {
-                return res.Data.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1186,7 +1193,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res.Data != null)
             {
-                return res.Data.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1209,7 +1216,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res.Data != null)
             {
-                return res.Data.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1234,8 +1241,8 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
 
             if (res != null)
             {
-                user = res.Data.Result;
-                return res.Data.Result;
+                user = res.Data?.Result;
+                return res.Data?.Result;
             }
             return null;
         }
@@ -1283,7 +1290,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
+            var resUdv = AuthingUtils.ConvertUdv(res.Data?.Result);
             return resUdv;
         }
 
@@ -1304,7 +1311,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
+            var resUdv = AuthingUtils.ConvertUdv(res.Data?.Result);
             return resUdv;
         }
 
@@ -1329,7 +1336,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            var resUdv = AuthingUtils.ConvertUdv(res.Data.Result);
+            var resUdv = AuthingUtils.ConvertUdv(res.Data?.Result);
             return resUdv;
         }
 
@@ -1380,7 +1387,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            var user = res.Data.Result;
+            var user = res.Data?.Result;
             if (user == null)
             {
                 throw new Exception("用户不存在！");
@@ -1428,10 +1435,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 { "password",password}
             }.ConvertJson()).ConfigureAwait(false);
             authingErrorBox?.Clear();
-            if (result.Errors != null)
-            {
-                authingErrorBox?.Set(result.Errors);
-            }
+            if (authingErrorBox != null) ErrorHelper.LoadError(result, authingErrorBox);
             SetCurrentUser(result.Data);
             return result.Data;
         }
@@ -1455,7 +1459,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            var list = res.Data.Result;
+            var list = res.Data?.Result;
             var resUdvList = AuthingUtils.ConverUdvToKeyValuePair(list);
             return resUdvList;
         }
@@ -1493,7 +1497,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            var list = res.Data.Result;
+            var list = res.Data?.Result;
             var resUdvList = AuthingUtils.ConverUdvToKeyValuePair(list);
             return resUdvList;
         }
@@ -1514,7 +1518,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result != null || res.Data.Result.Count() > 0;
+            return !(res.Data?.Result).Any();
         }
 
         /// <summary>
@@ -1556,7 +1560,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            var user = res.Data.Result;
+            var user = res.Data?.Result;
             if (user == null)
             {
                 throw new Exception("用户不存在");
@@ -1614,7 +1618,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            return res.Data.Result;
+            return res.Data?.Result;
         }
 
         /// <summary>
@@ -1637,12 +1641,12 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(res.Errors);
             }
-            if (res.Data.Result == null)
+            if (res.Data?.Result == null)
             {
                 return false;
             }
 
-            var user = res.Data.Result;
+            var user = res.Data?.Result;
 
             var roleList = user.Roles?.List;
             if (roleList == null || !roleList.Any())
@@ -1705,7 +1709,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
             {
                 authingErrorBox?.Set(result.Errors);
             }
-            return result.Data.Result;
+            return result.Data?.Result;
         }
 
         /// <summary>
@@ -1757,7 +1761,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.AuthenticationClient
                 url += $"app_id={AppId}";
             }
 
-            var result = await RequestCustomDataWithOutToken<User>($"connection/social/wechat:mobile/{UserPoolId}/callback?{url}",method: HttpMethod.Get).ConfigureAwait(false);
+            var result = await RequestCustomDataWithOutToken<User>($"connection/social/wechat:mobile/{UserPoolId}/callback?{url}", method: HttpMethod.Get).ConfigureAwait(false);
             authingErrorBox?.Clear();
             if (result.Errors != null)
             {

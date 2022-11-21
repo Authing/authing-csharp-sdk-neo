@@ -20,6 +20,18 @@ namespace Authing.Library.Domain.Model.Exceptions
             Value = ex;
         }
 
+        public void Set(long statusCode, string message, long apiCode)
+        {
+            Value = new GraphQLError[1];
+
+            Value[0].Message = new GraphQLErrorMessage() 
+            {
+                Code=statusCode,
+                Message=message,
+                ApiCode=apiCode,
+            };
+        }
+
         public void Clear()
         {
             Value = null;

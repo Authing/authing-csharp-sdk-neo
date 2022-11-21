@@ -18,7 +18,7 @@ The Authing CSharp SDK is comprised of two parts: `ManagementClient` and `Authen
 
 | Project         | Status                                                       | Description |
 | --------------- | ------------------------------------------------------------ | ----------- |
-| Authing.Library | [![NuGet version (Authing.Library)](https://img.shields.io/nuget/v/Authing.Library.svg?style=flat-square)](https://https://www.nuget.org/packages/Authing.Library/) | csharp sdk  |
+| Authing.Library | [![NuGet version (Authing.Library)](https://img.shields.io/nuget/v/Authing.Library.svg?style=flat-square)](https://www.nuget.org/packages/Authing.Library/) | csharp sdk  |
 
 ## 👀 Online preview
 

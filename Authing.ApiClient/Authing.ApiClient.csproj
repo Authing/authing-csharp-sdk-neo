@@ -1,76 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net40;net45; netstandard2.0</TargetFrameworks>
 		<LangVersion>9</LangVersion>
 		<RootNamespace>Authing.Library</RootNamespace>
 		<PackageTags>Authing.Library</PackageTags>
 		<TargetName>Authing.Library</TargetName>
 		<Copyright>Beijing Steamory Technology Co. Ltd.</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Authors>Authing</Authors>
+		<Authors>Steamory</Authors>
 		<Product>Authing.Library</Product>
 		<Description>通过简单、安全的接口使用 Authing 提供的功能。</Description>
 		<PackageReleaseNotes>
-			Version 0.0.26
-			- 修复命名错误
-			Version 0.0.25
-			- 添加私有化部署的公钥参数可配置功能
-			Version 0.0.24
-			- 修复密码加密错误的问题
-			Version 0.0.23
-			- 添加获取错误信息的参数
-			Version 0.0.22
-			- 修复一处错误
-			Version 0.0.21
-			- 添加缺少的引用
-			Version 0.0.20
-			- 删除包的强引用
-			Version 0.0.19
-			- 验证签名，修复导出组织机构失败的错误
-			Version 0.0.18
-			- 删除包引用
-			Version 0.0.17
-			- 修复 AD 调用相关问题
-			Version 0.0.16
-			- 修复应用管理相关的异常
-			Version 0.0.15
-			- 修复手机号通过 code 注册时的空异常
-			Version 0.0.14
-			- 修复获取应用详细信息错误的问题
-			Version 0.0.13
-			- 修复不能正确返回消息的问题
-			Version 0.0.12
-			- 修复不能正确返回消息的问题
-			Version 0.0.11
-			- 修复不能读取应用信息的问题
-			Version 0.0.10
-			- 添加了获取应用信息的参数
-			Version 0.0.9
-			- 修复登录协议拼接问题
-			Version 0.0.8
-			- 删除冗余方法
-			Version 0.0.7
-			- 修复 Bug
-			- 添加了获取用户信息的重载
-			Version 0.0.6
-			- 修复部分 Bug
-			Version 0.0.5
-			- 修复部分场景获取组织机构列表会出现的异常
-			Version 0.0.4
-			- 修复 token 获取用户信息地址解析错误的问题
-			Version 0.0.3
-			- 修复 OIDC 登录链接存在的错误
-			Version 0.0.2
-			- 修复认证侧的返回值参数，和一些接口签名的错误
-			Version 0.0.1
-			- SDK 改版升级，支持 Net40 和 NetStandard2.0 平台
+Version 0.0.31
+认证模块：
+1.下线 子账户登录接口 LoginBySubAccount
+2.下线 关联账户接口 LinkAccount
+3.下线 取消关联账户接口 UnLinkAccount
+
+管理模块：
+1.下线 组织机构管理-导入机构数据接口 ImportByJson
 		</PackageReleaseNotes>
-		<Version>0.0.26</Version>
+		<Version>0.0.31</Version>
 		<PackageId>Authing.Library</PackageId>
-		<AssemblyVersion>0.0.26.0</AssemblyVersion>
-		<FileVersion>0.0.26.0</FileVersion>
+		<AssemblyVersion>0.0.31.0</AssemblyVersion>
+		<FileVersion>0.0.31.0</FileVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Nullable>annotations</Nullable>
+		<Company>Steamory</Company>
+		<PackageProjectUrl></PackageProjectUrl>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>tmgg.pfx</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
@@ -84,7 +42,9 @@
 		<Reference Include="System.Net.Http"></Reference>
 	</ItemGroup>
 
-
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+		<Reference Include="System.Net.Http"></Reference>
+	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net45'">
 		<AssemblyTitle>Json.NET</AssemblyTitle>
@@ -113,13 +73,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="Mapster" Version="7.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="Domain\Model\Management\MFA\" />
 	</ItemGroup>
-
 
 	
 </Project>

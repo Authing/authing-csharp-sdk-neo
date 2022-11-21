@@ -63,7 +63,7 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         {
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Applications.FindById("62a99822ff635db21c2ec21c", authingErrorBox);
+            var result = await managementClient.Applications.FindById("62a9902a80f55c22346eb296", authingErrorBox);
 
             Assert.Equal(result.Name, "testresource");
         }
@@ -242,13 +242,13 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
             //TODO:无法在控制台应用访问控制中看到数据
             AuthingErrorBox authingErrorBox = new AuthingErrorBox();
 
-            var result = await managementClient.Applications.DenyAccess("62a99822ff635db21c2ec21c", new AppAccessPolicy()
+            var result = await managementClient.Applications.DenyAccess("62a9902a80f55c22346eb296", new AppAccessPolicy()
             {
-                TargetType = Types.PolicyAssignmentTargetType.ROLE,
-                TargetIdentifiers = new string[] { "62aae37aa44bbb0427991d33" },
+                TargetType = Types.PolicyAssignmentTargetType.USER,
+                TargetIdentifiers = new string[] { "62bc37200d0fc2db637e92ef" },
                 InheritByChildren = true
             },authingErrorBox);
-            Assert.Equal(result.Code, 200);
+            Assert.Equal(200,result.Code );
         }
 
         /// <summary>
@@ -376,28 +376,30 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         }
 
         /// <summary>
-        /// 2022-8-10 测试不通过
+        /// 2022-8-10 测试通过
+        /// qidong 添加在界面展示的参数后测试通过
         /// </summary>
         [Fact]
         public async void Applications_createAgreement()
         {
-            var result = await managementClient.Applications.createAgreement("62a99822ff635db21c2ec21c", new AgreementInput()
+            var result = await managementClient.Applications.createAgreement("6215dd9277d6ef55dfab41f8", new AgreementInput()
             {
                 Title = "userAgreement",
                 Lang = Types.LangEnum.ZH_CN,
                 Required = true
             });
-            Assert.Equal(result.Title, "userAgreement");
+            Assert.Equal("userAgreement",result.Title);
         }
 
         /// <summary>
-        /// 2022-8-10 测试不通过
+        /// 2022-8-12 测试不通过
+        /// qidong  传入的协议 id 要正确，才能删除
         /// </summary>
         [Fact]
         public async void Applications_deleteAgreement()
         {
-            var result = await managementClient.Applications.deleteAgreement("62a99822ff635db21c2ec21c", 0);
-            Assert.Equal(result.Code, 200);
+            var result = await managementClient.Applications.deleteAgreement("6215dd9277d6ef55dfab41f8", 1017);
+            Assert.Equal(200,result.Code );
         }
 
         /// <summary>
@@ -406,11 +408,23 @@ namespace Authing.ApiClient.Framework.Test.Management.Applications
         [Fact]
         public async void Applications_modifyAgreement()
         {
-            var result = await managementClient.Applications.modifyAgreement("62a99822ff635db21c2ec21c", 0, new AgreementInput()
+            var agreement = await managementClient.Applications.createAgreement("6215dd9277d6ef55dfab41f8", new AgreementInput()
             {
-                Title = "userAgreement2",
+                Title = "userAgreement",
+                Lang = Types.LangEnum.ZH_CN,
+                Required = true
             });
-            Assert.Equal(result.Title, "userAgreement2");
+
+            agreement.Title = "userAgreementUpdate";
+
+            var result = await managementClient.Applications.modifyAgreement("62a99822ff635db21c2ec21c", agreement.Id, new AgreementInput 
+            {
+                AvailableAt=agreement.AvailableAt,
+                Lang=LangEnum.ZH_CN,
+                Required=agreement.Required,
+                Title=agreement.Title
+            });
+            Assert.Equal("userAgreementUpdate",result.Title);
         }
 
         /// <summary>

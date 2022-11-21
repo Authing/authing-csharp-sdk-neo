@@ -20,7 +20,7 @@
 
 | 项目   | 状态                                                         | 描述       |
 | ------ | ------------------------------------------------------------ | ---------- |
-| csharp | [![NuGet version (Authing.Library)](https://img.shields.io/nuget/v/Authing.Library.svg?style=flat-square)](https://https://www.nuget.org/packages/Authing.Library/) | csharp sdk |
+| csharp | [![NuGet version (Authing.Library)](https://img.shields.io/nuget/v/Authing.Library.svg?style=flat-square)](https://www.nuget.org/packages/Authing.Library/) | csharp sdk |
 
 ## 👀 在线体验
 
