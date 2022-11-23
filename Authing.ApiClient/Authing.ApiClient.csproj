@@ -12,19 +12,20 @@
 		<Product>Authing.Library</Product>
 		<Description>通过简单、安全的接口使用 Authing 提供的功能。</Description>
 		<PackageReleaseNotes>
-Version 0.0.31
-认证模块：
-1.下线 子账户登录接口 LoginBySubAccount
-2.下线 关联账户接口 LinkAccount
-3.下线 取消关联账户接口 UnLinkAccount
-
+			
+Version 0.0.32
 管理模块：
-1.下线 组织机构管理-导入机构数据接口 ImportByJson
+1.管理模块：用户管理
+批量添加用户接口：
+1.1修复新增用户后，新增加的用户不能登录的错误。
+1.2增加了配置保存用户时，是否保存加密后的密码。
+如果保存明文密码，则需要在控制台-安全设置-密码安全-自定义密码加密方法开启自定义密码加密功能。
+如果保存加密密码，则不需要做设置。
 		</PackageReleaseNotes>
-		<Version>0.0.31</Version>
+		<Version>0.0.32</Version>
 		<PackageId>Authing.Library</PackageId>
-		<AssemblyVersion>0.0.31.0</AssemblyVersion>
-		<FileVersion>0.0.31.0</FileVersion>
+		<AssemblyVersion>0.0.32.0</AssemblyVersion>
+		<FileVersion>0.0.32.0</FileVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Nullable>annotations</Nullable>
 		<Company>Steamory</Company>

@@ -267,8 +267,9 @@ namespace Authing.ApiClient.Interfaces.ManagementClient
         /// 批量导入用户
         /// </summary>
         /// <param name="userInfos">用户信息列表</param>
+        /// <param name="rawPassword">是否加密</param>
         /// <returns></returns>
-        Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos, AuthingErrorBox authingErrorBox = null);
+        Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos,bool rawPassword=true, AuthingErrorBox authingErrorBox = null);
 
         /// <summary>
         /// 获取用户所在租户

@@ -693,7 +693,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
             {
                 query += $"&devicdId={devicdId}";
             }
-            var res = await client.RequestCustomDataWithToken<CheckLoginStatusRes>($"api/v2/users/login-status{query}","",null,HttpMethod.Get).ConfigureAwait(false);
+            var res = await client.RequestCustomDataWithToken<CheckLoginStatusRes>($"api/v2/users/login-status{query}", "", null, HttpMethod.Get).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return res.Data;
         }
@@ -798,7 +798,7 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
         /// </summary>
         /// <param name="userInfos">用户信息列表</param>
         /// <returns></returns>
-        public async Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos, AuthingErrorBox authingErrorBox = null)
+        public async Task<CreateUsersRes> CreateUsers(IEnumerable<CreateUserInput> userInfos, bool rawPassword = true, AuthingErrorBox authingErrorBox = null)
         {
             if (userInfos.Count() > 100)
             {
@@ -817,11 +817,15 @@ namespace Authing.ApiClient.Domain.Client.Impl.ManagementBaseClient
 
                 if (string.IsNullOrWhiteSpace(item.Password))
                 {
-                    item.Password = EncryptHelper.RsaEncryptWithPublic(item.Password, client.PublicKey);
+                    if (rawPassword)
+                    {
+                        item.Password = EncryptHelper.RsaEncryptWithPublic(item.Password, client.PublicKey);
+                    }
                 }
             }
             var res = await client.RequestCustomDataWithToken<CreateUserResult[]>("api/v2/users/create/batch", new Dictionary<string, object>() {
-                { "users", userInfos }
+                { "users", userInfos },
+                { "rawPassword",rawPassword}
             }.ConvertJson(), contenttype: ContentType.JSON).ConfigureAwait(false);
             ErrorHelper.LoadError(res, authingErrorBox);
             return new CreateUsersRes()
